@@ -2,7 +2,7 @@
 version: 1
 slug: "ai-daily-feed-index-html"
 primary_target: "ai-daily-feed/index.html"
-related_targets: ["ai-daily-feed/d/2026-10-21.html"]
+related_targets: ["ai-daily-feed/d/2026-10-21.html", "ai-daily-feed/topics.html"]
 ---
 
 Surface: AI 每日新聞檔案站（靜態 HTML，GitHub Pages 子路徑部署）— index.html（館藏目錄＋最新一期）與每日頁 d/YYYY-MM-DD.html
@@ -24,3 +24,9 @@ FIRST VIEWPORT: 細黏頂欄（館名 wordmark、前/後日箭頭、深淺色切
 FORM: 反收斂指派——7 個 grounded 方向按共鳴排序後取第 7：圖書館卡片目錄（card catalog）。seed: cd6fd985867aec1069f7df50a88d7001
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+## 主題目錄擴充（2026-10-22）
+
+Surface 增補：topics.html —「主題目錄」。資料來源＝Notion「AI 動態資料庫」（notion-export.ts → data/feed.json，連結 URL 為 join key，每日頁 enrichment 同源容錯：缺列照舊）。
+Mode: Read＋檢索。讀者問題：「依主題／來源／關鍵字，找出收集庫裡的館藏。」
+方向：圖書館的卡片目錄櫃 — 9 主題＋「待歸檔」抽屜鈕、來源 chips、索引卡橫線檢索欄；結果以日期分組的索引卡（idx-card）呈現，含重點與摘要；結果數即時蓋章（N / M 筆館藏），查無館藏蓋「查無館藏」章＋重設。同層 OR、跨層 AND；命中詞以 mark.hit 章紅底線標記；URL 狀態可分享。翻譯全文不進站（留在 Notion）。

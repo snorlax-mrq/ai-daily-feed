@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>主題目錄 — AI 每日動態檔案</title>
+<meta name="description" content="依主題、來源與關鍵字檢索 AI 大廠官方發布館藏，共 30 筆。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();</script>
+<link rel="stylesheet" href="./assets/archive.css">
+<link rel="icon" href="./assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="./index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="index.html" class="day-catalog">館藏目錄</a></nav>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+  <div class="day-head">
+    <div class="day-title-row">
+      <h1>主題目錄</h1>
+      <span class="stamp" id="resStamp" aria-live="polite" aria-label="館藏數">30 筆館藏</span>
+    </div>
+    <p class="day-stats">全館 30 筆 · 7 個來源 · 收錄自 Notion「AI 動態資料庫」，匯出於 2026-10-22 12:12 (UTC+8)。</p>
+  </div>
+  <section class="finder" aria-label="館藏檢索">
+    <div class="search-card">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-3.8-3.8"/></svg>
+      <input id="q" type="search" placeholder="檢索館藏：名稱、原文標題、重點、摘要…" autocomplete="off" aria-label="關鍵字檢索">
+      <button id="qClear" class="q-clear" type="button" aria-label="清除檢索" hidden>×</button>
+    </div>
+    <div class="facet-row" role="group" aria-label="主題篩選">
+      <span class="facet-label">主題</span>
+      <div class="facet-tabs" id="topicTabs">
+        <button class="topic-tab" type="button" data-t="企業導入案例" aria-pressed="false">企業導入案例<i>7</i></button><button class="topic-tab" type="button" data-t="合作與收購" aria-pressed="false">合作與收購<i>4</i></button><button class="topic-tab" type="button" data-t="醫療健康" aria-pressed="false">醫療健康<i>3</i></button><button class="topic-tab" type="button" data-t="模型發布" aria-pressed="false">模型發布<i>3</i></button><button class="topic-tab" type="button" data-t="研究與科學" aria-pressed="false">研究與科學<i>4</i></button><button class="topic-tab" type="button" data-t="開源" aria-pressed="false">開源<i>4</i></button><button class="topic-tab" type="button" data-t="產品與功能" aria-pressed="false">產品與功能<i>10</i></button><button class="topic-tab" type="button" data-t="治理與政策" aria-pressed="false">治理與政策<i>7</i></button><button class="topic-tab" type="button" data-t="資安與漏洞" aria-pressed="false">資安與漏洞<i>4</i></button>
+        
+      </div>
+    </div>
+    <div class="facet-row" role="group" aria-label="來源篩選">
+      <span class="facet-label">來源</span>
+      <div class="facet-tabs" id="srcTabs">
+        <button class="src-chip" type="button" data-s="OpenAI" aria-pressed="false">OpenAI<i>13</i></button><button class="src-chip" type="button" data-s="Anthropic" aria-pressed="false">Anthropic<i>5</i></button><button class="src-chip" type="button" data-s="Claude (Resources)" aria-pressed="false">Claude (Resources)<i>4</i></button><button class="src-chip" type="button" data-s="Google Research" aria-pressed="false">Google Research<i>1</i></button><button class="src-chip" type="button" data-s="Google Blog (AI)" aria-pressed="false">Google Blog (AI)<i>4</i></button><button class="src-chip" type="button" data-s="DeepSeek" aria-pressed="false">DeepSeek<i>2</i></button><button class="src-chip" type="button" data-s="xAI (Grok)" aria-pressed="false">xAI (Grok)<i>1</i></button>
+      </div>
+      <button id="resetBtn" class="facet-reset" type="button" hidden>重設篩選</button>
+    </div>
+  </section>
+  <section class="results" id="results" aria-label="檢索結果">
+
+    <section class="res-group">
+      <h2 class="res-date">2026 年 10 月 21 日<span class="res-cnt">15</span></h2>
+      <div class="res-cards">
+        <article class="idx-card" data-topics="治理與政策" data-source="OpenAI" data-text="OpenAI 說明如何以一致標準，讓模型發布負責任地廣泛觸達 Broad access through consistent standards OpenAI 2026-10-21 2026-10-22 治理與政策 OpenAI 制訂政策，要求直接、代管或轉售提供 OpenAI 模型的服務維持一致安全標準。 更新版使用政策 2026 年 11 月 20 日生效，模型路由器與 AI 閘道須先經 OpenAI 審核批准。 推出 SafetyIDs 機制，協助調查個別終端用戶濫用而不讓 OpenAI 得知用戶身分。 涵蓋 GPT-6 Astra 等模型，夥伴須調查潛在違規並協調執法，使限制跨服務有效。 強調執法基於記錄在案的行為與風險，情況改善後會重新檢視限制。 How OpenAI works with distribution partners to uphold consistent safeguards, support responsible access, and clarify expectations in our Usage Policies.">
+          <div class="idx-meta"><span class="idx-src">OpenAI</span><span class="idx-topics"><i class="chip chip--topic">治理與政策</i></span><span class="idx-date">2026-10-21 · 收錄 2026-10-22</span></div>
+          <h3 class="idx-name"><a href="https://openai.com/index/broad-access-through-consistent-standards" target="_blank" rel="noopener">OpenAI 說明如何以一致標準，讓模型發布負責任地廣泛觸達<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Broad access through consistent standards</p>
+          <ul class="idx-points"><li>OpenAI 制訂政策，要求直接、代管或轉售提供 OpenAI 模型的服務維持一致安全標準。</li><li>更新版使用政策 2026 年 11 月 20 日生效，模型路由器與 AI 閘道須先經 OpenAI 審核批准。</li><li>推出 SafetyIDs 機制，協助調查個別終端用戶濫用而不讓 OpenAI 得知用戶身分。</li><li>涵蓋 GPT-6 Astra 等模型，夥伴須調查潛在違規並協調執法，使限制跨服務有效。</li><li>強調執法基於記錄在案的行為與風險，情況改善後會重新檢視限制。</li></ul>
+          <p class="idx-sum">How OpenAI works with distribution partners to uphold consistent safeguards, support responsible access, and clarify expectations in our Usage Policies.</p>
+        </article>
+<article class="idx-card" data-topics="產品與功能" data-source="OpenAI" data-text="ChatGPT Ads 擴張至 26 個新國家，廣告主已突破 10 萬 ChatGPT Ads expands to 26 new countries as over 100,000 advertisers have used the platform OpenAI 2026-10-21 2026-10-22 產品與功能 ChatGPT Ads 擴展至 26 個新國家，總覆蓋達 89 國。 上線 8 個多月已有逾 10 萬廣告主投放；ChatGPT 每週活躍用戶逾 12 億。 新增阿根廷、智利、哥倫比亞等 14 個拉美國家，以及烏克蘭、巴基斯坦、南非等市場。 廣告僅出現在 Free 與 Go 方案，Plus、Pro、Enterprise 維持無廣告。 承諾對話內容不售予廣告主、廣告明確標示，且不影響 ChatGPT 回答。 From local businesses to global brands, more advertisers can now reach people as they explore, compare and decide what to buy in ChatGPT.">
+          <div class="idx-meta"><span class="idx-src">OpenAI</span><span class="idx-topics"><i class="chip chip--topic">產品與功能</i></span><span class="idx-date">2026-10-21 · 收錄 2026-10-22</span></div>
+          <h3 class="idx-name"><a href="https://openai.com/index/chatgpt-ads-expands-26-new-countries" target="_blank" rel="noopener">ChatGPT Ads 擴張至 26 個新國家，廣告主已突破 10 萬<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">ChatGPT Ads expands to 26 new countries as over 100,000 advertisers have used the platform</p>
+          <ul class="idx-points"><li>ChatGPT Ads 擴展至 26 個新國家，總覆蓋達 89 國。</li><li>上線 8 個多月已有逾 10 萬廣告主投放；ChatGPT 每週活躍用戶逾 12 億。</li><li>新增阿根廷、智利、哥倫比亞等 14 個拉美國家，以及烏克蘭、巴基斯坦、南非等市場。</li><li>廣告僅出現在 Free 與 Go 方案，Plus、Pro、Enterprise 維持無廣告。</li><li>承諾對話內容不售予廣告主、廣告明確標示，且不影響 ChatGPT 回答。</li></ul>
+          <p class="idx-sum">From local businesses to global brands, more advertisers can now reach people as they explore, compare and decide what to buy in ChatGPT.</p>
+        </article>
+<article class="idx-card" data-topics="企業導入案例|資安與漏洞" data-source="OpenAI" data-text="Cloudflare 攜手 OpenAI Daybreak：用 AI 代理挖掘漏洞並閉環到防禦 Cloudflare links vulnerability discovery to defense with OpenAI OpenAI 2026-10-21 2026-10-22 企業導入案例 資安與漏洞 Cloudflare 與 OpenAI 合作，透過 Daybreak 模型推出「漏洞發現與修復」早期存取服務。 AI 調查客戶授權程式碼找出漏洞，Cloudflare 加入即時流量與安全訊號排序並提出修補與 WAF 規則建議。 Cloudflare 代理約 20% 全球網路流量，公司三分之一員工是開發者且 100% 使用 Codex。 4 名開發者以 Codex 三天重建原估需數月與約 10 倍人力的產品，token 費用僅 1,100 美元。 Cloudflare uses OpenAI Daybreak to investigate vulnerabilities and propose fixes for review. Its developers use Codex to build faster and improve code quality.">
+          <div class="idx-meta"><span class="idx-src">OpenAI</span><span class="idx-topics"><i class="chip chip--topic">企業導入案例</i><i class="chip chip--topic">資安與漏洞</i></span><span class="idx-date">2026-10-21 · 收錄 2026-10-22</span></div>
+          <h3 class="idx-name"><a href="https://openai.com/index/cloudflare-cyber" target="_blank" rel="noopener">Cloudflare 攜手 OpenAI Daybreak：用 AI 代理挖掘漏洞並閉環到防禦<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Cloudflare links vulnerability discovery to defense with OpenAI</p>
+          <ul class="idx-points"><li>Cloudflare 與 OpenAI 合作，透過 Daybreak 模型推出「漏洞發現與修復」早期存取服務。</li><li>AI 調查客戶授權程式碼找出漏洞，Cloudflare 加入即時流量與安全訊號排序並提出修補與 WAF 規則建議。</li><li>Cloudflare 代理約 20% 全球網路流量，公司三分之一員工是開發者且 100% 使用 Codex。</li><li>4 名開發者以 Codex 三天重建原估需數月與約 10 倍人力的產品，token 費用僅 1,100 美元。</li></ul>
+          <p class="idx-sum">Cloudflare uses OpenAI Daybreak to investigate vulnerabilities and propose fixes for review. Its developers use Codex to build faster and improve code quality.</p>
+        </article>
+<article class="idx-card" data-topics="資安與漏洞|治理與政策" data-source="OpenAI" data-text="OpenAI 發布〈前沿 AI 民主治理〉第二部：賦能網路防禦者，對抗 AI 時代資安威脅 Democratic governance of frontier AI, part II: Empowering cyber defenders OpenAI 2026-10-21 2026-10-22 資安與漏洞 治理與政策 OpenAI 發布「賦能網路防禦者」藍圖，是前緣 AI 民主治理系列第二部。 提出「防禦者窗口」概念：須在攻擊性 AI 能力普及前，先把先進 AI 交到防禦者手中。 三大方向：強化進階 AI 安全與關閉控制、現代化網路防禦、建立有韌性的公共機構。 建議政府強化獨立技術評估、統一事故通報要求並改善協調應變與復原。 OpenAI 以自身模型錯位與安全事件經驗為鑑，呼籲業界加強問責與防護。 OpenAI outlines a blueprint for empowering cyber defenders with frontier AI, stronger safeguards, modernized cybersecurity, and more resilient public institutions.">
+          <div class="idx-meta"><span class="idx-src">OpenAI</span><span class="idx-topics"><i class="chip chip--topic">資安與漏洞</i><i class="chip chip--topic">治理與政策</i></span><span class="idx-date">2026-10-21 · 收錄 2026-10-22</span></div>
+          <h3 class="idx-name"><a href="https://openai.com/index/empowering-cyber-defenders" target="_blank" rel="noopener">OpenAI 發布〈前沿 AI 民主治理〉第二部：賦能網路防禦者，對抗 AI 時代資安威脅<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Democratic governance of frontier AI, part II: Empowering cyber defenders</p>
+          <ul class="idx-points"><li>OpenAI 發布「賦能網路防禦者」藍圖，是前緣 AI 民主治理系列第二部。</li><li>提出「防禦者窗口」概念：須在攻擊性 AI 能力普及前，先把先進 AI 交到防禦者手中。</li><li>三大方向：強化進階 AI 安全與關閉控制、現代化網路防禦、建立有韌性的公共機構。</li><li>建議政府強化獨立技術評估、統一事故通報要求並改善協調應變與復原。</li><li>OpenAI 以自身模型錯位與安全事件經驗為鑑，呼籲業界加強問責與防護。</li></ul>
+          <p class="idx-sum">OpenAI outlines a blueprint for empowering cyber defenders with frontier AI, stronger safeguards, modernized cybersecurity, and more resilient public institutions.</p>
+        </article>
+<article class="idx-card" data-topics="企業導入案例" data-source="OpenAI" data-text="AT&amp;T 以 OpenAI 重塑內部法務：LegalEdge 團隊的實際導入案例 How AT&amp;T is rethinking in-house legal work with OpenAI OpenAI 2026-10-21 2026-10-22 企業導入案例 AT&amp;T 與 OpenAI 合作改造全球數百人規模的內部法務部門工作流程。 合作建基於跨領域團隊 LegalEdge，將 AI 應用於重大法律事務。 規劃自然語言「前門」分案系統，自動分類排序請求並連結判例、研究與過往工作。 法務長 David McAtee 強調決策權始終在律師，AI 負責建置全公司的知識層。 AT&amp;T is working with OpenAI to make legal knowledge easier to access. Learn how its LegalEdge team is rethinking intake and scaling legal judgment.">
+          <div class="idx-meta"><span class="idx-src">OpenAI</span><span class="idx-topics"><i class="chip chip--topic">企業導入案例</i></span><span class="idx-date">2026-10-21 · 收錄 2026-10-22</span></div>
+          <h3 class="idx-name"><a href="https://openai.com/index/att-legal" target="_blank" rel="noopener">AT&amp;T 以 OpenAI 重塑內部法務：LegalEdge 團隊的實際導入案例<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">How AT&amp;T is rethinking in-house legal work with OpenAI</p>
+          <ul class="idx-points"><li>AT&amp;T 與 OpenAI 合作改造全球數百人規模的內部法務部門工作流程。</li><li>合作建基於跨領域團隊 LegalEdge，將 AI 應用於重大法律事務。</li><li>規劃自然語言「前門」分案系統，自動分類排序請求並連結判例、研究與過往工作。</li><li>法務長 David McAtee 強調決策權始終在律師，AI 負責建置全公司的知識層。</li></ul>
+          <p class="idx-sum">AT&amp;T is working with OpenAI to make legal knowledge easier to access. Learn how its LegalEdge team is rethinking intake and scaling legal judgment.</p>
+        </article>
+<article class="idx-card" data-topics="產品與功能" data-source="OpenAI" data-text="ChatGPT 廣告系統技術解析：廣告與答案分離、以信任與相關性為核心 How we built ChatGPT’s novel ad stack for user trust and relevance OpenAI 2026-10-21 2026-10-22 產品與功能 OpenAI 揭露為 ChatGPT 從零打造的廣告投放系統架構與設計決策。 以客製後訓練 LLM「orchestrator」用工具呼叫跑完整廣告流程：檢索、排序、拍賣到投放。 廣告系統採有狀態會話，跨輪次與跨對話記憶使用者意圖，並與回答生成服務完全分離。 上線不到 200 天達 10 億美元年化營收，超過 10 萬名廣告主投放。 廣告須及時抵達才顯示，附中性模型生成的導語，延遲則該輪不出廣告。 Learn how OpenAI built ChatGPT’s LLM-powered ad stack to understand conversational intent, keep ads separate from answers, and deliver relevant ads at scale.">
+          <div class="idx-meta"><span class="idx-src">OpenAI</span><span class="idx-topics"><i class="chip chip--topic">產品與功能</i></span><span class="idx-date">2026-10-21 · 收錄 2026-10-22</span></div>
+          <h3 class="idx-name"><a href="https://openai.com/index/building-chatgpt-ad-stack" target="_blank" rel="noopener">ChatGPT 廣告系統技術解析：廣告與答案分離、以信任與相關性為核心<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">How we built ChatGPT’s novel ad stack for user trust and relevance</p>
+          <ul class="idx-points"><li>OpenAI 揭露為 ChatGPT 從零打造的廣告投放系統架構與設計決策。</li><li>以客製後訓練 LLM「orchestrator」用工具呼叫跑完整廣告流程：檢索、排序、拍賣到投放。</li><li>廣告系統採有狀態會話，跨輪次與跨對話記憶使用者意圖，並與回答生成服務完全分離。</li><li>上線不到 200 天達 10 億美元年化營收，超過 10 萬名廣告主投放。</li><li>廣告須及時抵達才顯示，附中性模型生成的導語，延遲則該輪不出廣告。</li></ul>
+          <p class="idx-sum">Learn how OpenAI built ChatGPT’s LLM-powered ad stack to understand conversational intent, keep ads separate from answers, and deliver relevant ads at scale.</p>
+        </article>
+<article class="idx-card" data-topics="合作與收購|產品與功能" data-source="OpenAI" data-text="OpenAI 模型與 Codex 將進駐 Google Cloud（Gemini Model Garden／Marketplace） OpenAI models are coming to Google Cloud OpenAI 2026-10-21 2026-10-22 合作與收購 產品與功能 OpenAI 與 Google Cloud 合作，將 OpenAI 前緣模型與 Codex 代理工作流導入 Model Garden。 客戶可透過 Google Cloud Marketplace 購買，並以 GCP 承諾消費額度支付。 OpenAI 模型也將進入 Google Antigravity 與 Gemini Agent，預計數週內正式上線。 整合 Google Cloud 存取控制與資料治理，支援受監管產業的大規模企業代理工作流。 聲明 Microsoft 仍是 OpenAI 的主要雲端夥伴。 OpenAI and Google Cloud are bringing frontier models and Codex workflows to Gemini’s Model Garden, available through Google Cloud Marketplace.">
+          <div class="idx-meta"><span class="idx-src">OpenAI</span><span class="idx-topics"><i class="chip chip--topic">合作與收購</i><i class="chip chip--topic">產品與功能</i></span><span class="idx-date">2026-10-21 · 收錄 2026-10-22</span></div>
+          <h3 class="idx-name"><a href="https://openai.com/index/openai-models-google-cloud" target="_blank" rel="noopener">OpenAI 模型與 Codex 將進駐 Google Cloud（Gemini Model Garden／Marketplace）<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">OpenAI models are coming to Google Cloud</p>
+          <ul class="idx-points"><li>OpenAI 與 Google Cloud 合作，將 OpenAI 前緣模型與 Codex 代理工作流導入 Model Garden。</li><li>客戶可透過 Google Cloud Marketplace 購買，並以 GCP 承諾消費額度支付。</li><li>OpenAI 模型也將進入 Google Antigravity 與 Gemini Agent，預計數週內正式上線。</li><li>整合 Google Cloud 存取控制與資料治理，支援受監管產業的大規模企業代理工作流。</li><li>聲明 Microsoft 仍是 OpenAI 的主要雲端夥伴。</li></ul>
+          <p class="idx-sum">OpenAI and Google Cloud are bringing frontier models and Codex workflows to Gemini’s Model Garden, available through Google Cloud Marketplace.</p>
+        </article>
+<article class="idx-card" data-topics="資安與漏洞|治理與政策|開源" data-source="OpenAI" data-text="「Patch the Planet」計畫：AI 代理找漏洞、全球協調修補開源關鍵弱點 Patch the Planet: global response coordination as agents uncover critical vulnerabilities OpenAI 2026-10-21 2026-10-22 資安與漏洞 治理與政策 開源 OpenAI「Patch the Planet」協調全球修復 PHP 兩個重大漏洞，Calif 以 GPT-5.6 Sol 發現，Wiz 亦獨立通報。 OpenAI 稱前緣 AI 搶在攻擊者之前發現漏洞，開啟「防禦者窗口」，是近年影響最深遠的安全議題之一。 提出五階段回應框架：驗證修復、讓受影響組織預作準備、協調政府、準備各產品更新、發布指引支援部署。 已與白宮 Super Intelligence Force、國家網路總監辦公室、CISA 及國際夥伴協調保護關鍵系統。 承諾透過 Daybreak for Frontline Defenders 提供 10 億美元補貼存取，並釋出 PHP 版本檢查 Codex skill。 Patch the Planet connects security researchers, maintainers, and incident responders to help address critical vulnerabilities across open source.">
+          <div class="idx-meta"><span class="idx-src">OpenAI</span><span class="idx-topics"><i class="chip chip--topic">資安與漏洞</i><i class="chip chip--topic">治理與政策</i><i class="chip chip--topic">開源</i></span><span class="idx-date">2026-10-21 · 收錄 2026-10-22</span></div>
+          <h3 class="idx-name"><a href="https://openai.com/index/coordinated-disclosure-of-critical-vulnerabilities" target="_blank" rel="noopener">「Patch the Planet」計畫：AI 代理找漏洞、全球協調修補開源關鍵弱點<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Patch the Planet: global response coordination as agents uncover critical vulnerabilities</p>
+          <ul class="idx-points"><li>OpenAI「Patch the Planet」協調全球修復 PHP 兩個重大漏洞，Calif 以 GPT-5.6 Sol 發現，Wiz 亦獨立通報。</li><li>OpenAI 稱前緣 AI 搶在攻擊者之前發現漏洞，開啟「防禦者窗口」，是近年影響最深遠的安全議題之一。</li><li>提出五階段回應框架：驗證修復、讓受影響組織預作準備、協調政府、準備各產品更新、發布指引支援部署。</li><li>已與白宮 Super Intelligence Force、國家網路總監辦公室、CISA 及國際夥伴協調保護關鍵系統。</li><li>承諾透過 Daybreak for Frontline Defenders 提供 10 億美元補貼存取，並釋出 PHP 版本檢查 Codex skill。</li></ul>
+          <p class="idx-sum">Patch the Planet connects security researchers, maintainers, and incident responders to help address critical vulnerabilities across open source.</p>
+        </article>
+<article class="idx-card" data-topics="研究與科學|醫療健康" data-source="OpenAI" data-text="數千個 AI 代理掃描數百萬腦細胞數據，為生物研究找出新線索 Using thousands of AI agents to uncover new leads in biological data OpenAI 2026-10-21 2026-10-22 研究與科學 醫療健康 OpenAI 與 PerturbAI、Scripps Research 以數千個 GPT-Rosalind AI 代理分析小鼠全腦 CRISPR 圖譜，僅 32 分鐘完成。 採「分散式生物推理」，各代理負責一個基因擾動，串聯細胞效應與科學文獻產出推理圖譜。 分散式代理引用逾 700 篇文獻，單一代理僅 11 篇；盲測中人類專家 75% 偏好分散式報告。 找出 Tsc1/Tsc2 在小腦的差異、DCTN1 與膽固醇代謝關聯等神經退化疾病研究新線索。 推理圖譜已於 GitHub 開放，人類做同等分析估需數月至一年。 See how OpenAI, PerturbAI, and Scripps Research used distributed AI agents to uncover promising research leads in data from millions of brain cells.">
+          <div class="idx-meta"><span class="idx-src">OpenAI</span><span class="idx-topics"><i class="chip chip--topic">研究與科學</i><i class="chip chip--topic">醫療健康</i></span><span class="idx-date">2026-10-21 · 收錄 2026-10-22</span></div>
+          <h3 class="idx-name"><a href="https://openai.com/index/scaling-ai-research-for-complex-biological-data" target="_blank" rel="noopener">數千個 AI 代理掃描數百萬腦細胞數據，為生物研究找出新線索<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Using thousands of AI agents to uncover new leads in biological data</p>
+          <ul class="idx-points"><li>OpenAI 與 PerturbAI、Scripps Research 以數千個 GPT-Rosalind AI 代理分析小鼠全腦 CRISPR 圖譜，僅 32 分鐘完成。</li><li>採「分散式生物推理」，各代理負責一個基因擾動，串聯細胞效應與科學文獻產出推理圖譜。</li><li>分散式代理引用逾 700 篇文獻，單一代理僅 11 篇；盲測中人類專家 75% 偏好分散式報告。</li><li>找出 Tsc1/Tsc2 在小腦的差異、DCTN1 與膽固醇代謝關聯等神經退化疾病研究新線索。</li><li>推理圖譜已於 GitHub 開放，人類做同等分析估需數月至一年。</li></ul>
+          <p class="idx-sum">See how OpenAI, PerturbAI, and Scripps Research used distributed AI agents to uncover promising research leads in data from millions of brain cells.</p>
+        </article>
+<article class="idx-card" data-topics="治理與政策" data-source="Anthropic" data-text="Anthropic 成立 Public Benefit Fund：撥出部分持股，並隨公司成長提高公益比重 Investing in the public benefit Anthropic 2026-10-21 2026-10-21 治理與政策 Anthropic 成立全資持有的 Public Benefit Fund，承諾投入公司 5% 股份（待股東批准）。 公司估值每較基準成長 50%，董事會可再增撥 2% 股份，成長越多公益比重越大。 基金採 LLC 形式以便彈性調整捐贈方式，股份不得用於遊說或政治獻金。 加計創辦人捐股 80% 承諾與約半數員工參與的配捐計畫，合計約 20% 股份投入公益。 Anthropic 已投入 2 億美元研究 AI 對勞動市場的衝擊，基金可支應更大膽的因應作為。 We’re committing a portion of Anthropic’s shares to the Anthropic Public Benefit Fund, a new entity with a structure that increases the stake as the company grows.">
+          <div class="idx-meta"><span class="idx-src">Anthropic</span><span class="idx-topics"><i class="chip chip--topic">治理與政策</i></span><span class="idx-date">2026-10-21</span></div>
+          <h3 class="idx-name"><a href="https://www.anthropic.com/news/public-benefit-fund" target="_blank" rel="noopener">Anthropic 成立 Public Benefit Fund：撥出部分持股，並隨公司成長提高公益比重<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Investing in the public benefit</p>
+          <ul class="idx-points"><li>Anthropic 成立全資持有的 Public Benefit Fund，承諾投入公司 5% 股份（待股東批准）。</li><li>公司估值每較基準成長 50%，董事會可再增撥 2% 股份，成長越多公益比重越大。</li><li>基金採 LLC 形式以便彈性調整捐贈方式，股份不得用於遊說或政治獻金。</li><li>加計創辦人捐股 80% 承諾與約半數員工參與的配捐計畫，合計約 20% 股份投入公益。</li><li>Anthropic 已投入 2 億美元研究 AI 對勞動市場的衝擊，基金可支應更大膽的因應作為。</li></ul>
+          <p class="idx-sum">We’re committing a portion of Anthropic’s shares to the Anthropic Public Benefit Fund, a new entity with a structure that increases the stake as the company grows.</p>
+        </article>
+<article class="idx-card" data-topics="治理與政策" data-source="Anthropic" data-text="物理學家 Christopher Stubbs 加入 Anthropic 長期受益信託（LTBT） Physicist Christopher Stubbs joins Anthropic&#39;s Long-Term Benefit Trust Anthropic 2026-10-21 2026-10-22 治理與政策 哈佛實驗物理學家 Christopher Stubbs 加入 Anthropic 長期利益信託，為信託首位物理學家。 Stubbs 曾任哈佛理學院院長（2018-2024），參與發現宇宙加速膨脹，團隊獲基礎物理學突破獎。 他也是 JASON 成員，曾就國家安全與軍備控制向美國政府提供諮詢。 該信託有權任命 Anthropic 董事會過半席位，成員獨立於管理層與投資人。 Anthropic 本週發布首份公共利益報告，並計畫撥股成立公共利益基金。 ">
+          <div class="idx-meta"><span class="idx-src">Anthropic</span><span class="idx-topics"><i class="chip chip--topic">治理與政策</i></span><span class="idx-date">2026-10-21 · 收錄 2026-10-22</span></div>
+          <h3 class="idx-name"><a href="https://www.anthropic.com/news/christopher-stubbs-joins-long-term-benefit-trust" target="_blank" rel="noopener">物理學家 Christopher Stubbs 加入 Anthropic 長期受益信託（LTBT）<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Physicist Christopher Stubbs joins Anthropic&#39;s Long-Term Benefit Trust</p>
+          <ul class="idx-points"><li>哈佛實驗物理學家 Christopher Stubbs 加入 Anthropic 長期利益信託，為信託首位物理學家。</li><li>Stubbs 曾任哈佛理學院院長（2018-2024），參與發現宇宙加速膨脹，團隊獲基礎物理學突破獎。</li><li>他也是 JASON 成員，曾就國家安全與軍備控制向美國政府提供諮詢。</li><li>該信託有權任命 Anthropic 董事會過半席位，成員獨立於管理層與投資人。</li><li>Anthropic 本週發布首份公共利益報告，並計畫撥股成立公共利益基金。</li></ul>
+          
+        </article>
+<article class="idx-card" data-topics="產品與功能|資安與漏洞" data-source="Claude (Resources)" data-text="Claude Security 公開 beta：持續掃描 repo 變更、追蹤修復進度、支援 API 與 MCP 整合 Claude Security now scans continuously and tracks fixes Claude (Resources) 2026-10-21 2026-10-22 產品與功能 資安與漏洞 Claude Security 更新：從單次掃描改為持續監控，程式碼一變更即跟進掃描並追蹤修復狀態。 4 月公開 beta 以來，數千個組織用它找出逾 100 萬個漏洞。 可跨多 repo 建專案，抓出服務之間的信任邊界問題；修復上線後自動標記已修復。 由 Claude 全模型家族（含 Mythos）驅動，不需 Cyber Verification Program 存取。 Claude Enterprise 客戶 public beta；連續兩個月每月 25,000 美元免費額度（至 2026-12-31）。 Claude Security now keeps up with your repositories as code changes, tracks findings until they’re fixed, learns from the context your team adds, and connects to your tools through an API and MCP. Available in public bet">
+          <div class="idx-meta"><span class="idx-src">Claude (Resources)</span><span class="idx-topics"><i class="chip chip--topic">產品與功能</i><i class="chip chip--topic">資安與漏洞</i></span><span class="idx-date">2026-10-21 · 收錄 2026-10-22</span></div>
+          <h3 class="idx-name"><a href="https://claude.com/resources/articles/claude-security-now-scans-continuously-and-tracks-fixes" target="_blank" rel="noopener">Claude Security 公開 beta：持續掃描 repo 變更、追蹤修復進度、支援 API 與 MCP 整合<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Claude Security now scans continuously and tracks fixes</p>
+          <ul class="idx-points"><li>Claude Security 更新：從單次掃描改為持續監控，程式碼一變更即跟進掃描並追蹤修復狀態。</li><li>4 月公開 beta 以來，數千個組織用它找出逾 100 萬個漏洞。</li><li>可跨多 repo 建專案，抓出服務之間的信任邊界問題；修復上線後自動標記已修復。</li><li>由 Claude 全模型家族（含 Mythos）驅動，不需 Cyber Verification Program 存取。</li><li>Claude Enterprise 客戶 public beta；連續兩個月每月 25,000 美元免費額度（至 2026-12-31）。</li></ul>
+          <p class="idx-sum">Claude Security now keeps up with your repositories as code changes, tracks findings until they’re fixed, learns from the context your team adds, and connects to your tools through an API and MCP. Available in public bet</p>
+        </article>
+<article class="idx-card" data-topics="合作與收購|企業導入案例" data-source="Claude (Resources)" data-text="HCLTech 加入 Claude Partner Network 全球 Premier 夥伴，把 Claude 帶進金融／醫療／電信製造方案 HCLTech joins the Claude Partner Network as a Global Premier partner Claude (Resources) 2026-10-21 2026-10-22 合作與收購 企業導入案例 HCLTech（23 萬人、60 國）加入 Claude Partner Network 成為全球 Premier 夥伴。 設專責 Anthropic Business Unit 與 Center of Excellence，為客戶打造 agentic 解決方案。 Claude 將嵌入 HCLSoftware 產品線與 IT 服務平台 AI Force。 鎖定金融、製造、生技醫療、電信等高合規產業，設計含 guardrails 與人工審查。 HCLTech will bring Claude into the solutions it provides for banks, hospitals, telecom companies, and manufacturers.">
+          <div class="idx-meta"><span class="idx-src">Claude (Resources)</span><span class="idx-topics"><i class="chip chip--topic">合作與收購</i><i class="chip chip--topic">企業導入案例</i></span><span class="idx-date">2026-10-21 · 收錄 2026-10-22</span></div>
+          <h3 class="idx-name"><a href="https://claude.com/resources/articles/hcltech-joins-claude-partner-network" target="_blank" rel="noopener">HCLTech 加入 Claude Partner Network 全球 Premier 夥伴，把 Claude 帶進金融／醫療／電信製造方案<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">HCLTech joins the Claude Partner Network as a Global Premier partner</p>
+          <ul class="idx-points"><li>HCLTech（23 萬人、60 國）加入 Claude Partner Network 成為全球 Premier 夥伴。</li><li>設專責 Anthropic Business Unit 與 Center of Excellence，為客戶打造 agentic 解決方案。</li><li>Claude 將嵌入 HCLSoftware 產品線與 IT 服務平台 AI Force。</li><li>鎖定金融、製造、生技醫療、電信等高合規產業，設計含 guardrails 與人工審查。</li></ul>
+          <p class="idx-sum">HCLTech will bring Claude into the solutions it provides for banks, hospitals, telecom companies, and manufacturers.</p>
+        </article>
+<article class="idx-card" data-topics="產品與功能" data-source="Claude (Resources)" data-text="推出 Claude Duet 研究預覽（waitlist），美國 Pro／Max 訂閱者優先 Introducing Claude Duet Claude (Resources) 2026-10-21 2026-10-22 產品與功能 推出 Claude Duet 研究預覽：主動式代理 app，iOS／Android 與 claude.ai 都可用。 每天早晨送重點簡報、只主動通知需要關注的事項，你離開時它仍持續工作。 以 Claude Opus 5.5 為基礎設計，判斷何事需要你、何事可等、何時先徵得同意。 研究預覽含在 Pro／Max 方案（waitlist 制），與 Claude 共用用量額度。 可交付任務從排會議到建儀表板、財務與銷售預測、原型與 web app。 A research preview is available by waitlist today, starting with US Pro and Max subscribers.">
+          <div class="idx-meta"><span class="idx-src">Claude (Resources)</span><span class="idx-topics"><i class="chip chip--topic">產品與功能</i></span><span class="idx-date">2026-10-21 · 收錄 2026-10-22</span></div>
+          <h3 class="idx-name"><a href="https://claude.com/resources/articles/claude-duet" target="_blank" rel="noopener">推出 Claude Duet 研究預覽（waitlist），美國 Pro／Max 訂閱者優先<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Introducing Claude Duet</p>
+          <ul class="idx-points"><li>推出 Claude Duet 研究預覽：主動式代理 app，iOS／Android 與 claude.ai 都可用。</li><li>每天早晨送重點簡報、只主動通知需要關注的事項，你離開時它仍持續工作。</li><li>以 Claude Opus 5.5 為基礎設計，判斷何事需要你、何事可等、何時先徵得同意。</li><li>研究預覽含在 Pro／Max 方案（waitlist 制），與 Claude 共用用量額度。</li><li>可交付任務從排會議到建儀表板、財務與銷售預測、原型與 web app。</li></ul>
+          <p class="idx-sum">A research preview is available by waitlist today, starting with US Pro and Max subscribers.</p>
+        </article>
+<article class="idx-card" data-topics="醫療健康|研究與科學" data-source="Google Research" data-text="Google Research：AI 輔助超音波，強化第一線孕產照護 Empowering frontline maternal care with AI-assisted ultrasound Google Research 2026-10-21 2026-10-22 醫療健康 研究與科學 Google 發表前瞻多中心研究，AI「盲掃」超音波讓未受超音波訓練的基層人員也能評估妊娠週數。 論文刊於 JAMA Network Open，AI 判讀誤差 4.18 天，不遜於專家超音波師的 4.48 天。 模型以北卡羅來納與尚比亞 1,968 人資料訓練，芝加哥 120 人微調後前瞻測試 385 人。 奈洛比資料未參與微調仍達 4.27 天誤差，驗證跨臨床場域與硬體（Clarius C3 手持探頭）泛化力。 WHO 估計每年逾 25 萬人死於可預防的妊娠併發症，全球三分之二人口缺乏影像診斷資源。 Health &amp; Bioscience">
+          <div class="idx-meta"><span class="idx-src">Google Research</span><span class="idx-topics"><i class="chip chip--topic">醫療健康</i><i class="chip chip--topic">研究與科學</i></span><span class="idx-date">2026-10-21 · 收錄 2026-10-22</span></div>
+          <h3 class="idx-name"><a href="https://research.google/blog/empowering-frontline-maternal-care-with-ai-assisted-ultrasound/" target="_blank" rel="noopener">Google Research：AI 輔助超音波，強化第一線孕產照護<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Empowering frontline maternal care with AI-assisted ultrasound</p>
+          <ul class="idx-points"><li>Google 發表前瞻多中心研究，AI「盲掃」超音波讓未受超音波訓練的基層人員也能評估妊娠週數。</li><li>論文刊於 JAMA Network Open，AI 判讀誤差 4.18 天，不遜於專家超音波師的 4.48 天。</li><li>模型以北卡羅來納與尚比亞 1,968 人資料訓練，芝加哥 120 人微調後前瞻測試 385 人。</li><li>奈洛比資料未參與微調仍達 4.27 天誤差，驗證跨臨床場域與硬體（Clarius C3 手持探頭）泛化力。</li><li>WHO 估計每年逾 25 萬人死於可預防的妊娠併發症，全球三分之二人口缺乏影像診斷資源。</li></ul>
+          <p class="idx-sum">Health &amp; Bioscience</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="res-group">
+      <h2 class="res-date">2026 年 10 月 20 日<span class="res-cnt">7</span></h2>
+      <div class="res-cards">
+        <article class="idx-card" data-topics="企業導入案例" data-source="OpenAI" data-text="連鎖餐飲加盟主用 ChatGPT Work：菜單重新定價時間砍 95%，釋出約 10 萬美元現金流 Franchisee reconciles cash in 94% less time with ChatGPT Work OpenAI 2026-10-20 2026-10-21 企業導入案例 OpenAI 企業案例：新墨西哥州餐廳加盟主 Ted Taylor 用 ChatGPT Work 管理旗下三家連鎖餐廳。 菜單重新定價分析從 5 天縮短到 1-2 小時，時間減少 95%，涵蓋店內與外送價格建議。 每月現金對帳由 3 小時縮至 5-10 分鐘，每個薪資週期省下 4 小時人工。 以 ChatGPT Work 建立排班與人力分析，估計每年可增加 5 萬至 10 萬美元自由現金流。 另用於 30 秒起草體液事故處理程序、員工申請物資與維修的入口網站等後勤工作。 An independent Schlotzsky’s and Cinnabon franchisee cut menu repricing time by 95% and built a workflow that could free up $100K in cash flow.">
+          <div class="idx-meta"><span class="idx-src">OpenAI</span><span class="idx-topics"><i class="chip chip--topic">企業導入案例</i></span><span class="idx-date">2026-10-20 · 收錄 2026-10-21</span></div>
+          <h3 class="idx-name"><a href="https://openai.com/index/ted-taylor-restaurant" target="_blank" rel="noopener">連鎖餐飲加盟主用 ChatGPT Work：菜單重新定價時間砍 95%，釋出約 10 萬美元現金流<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Franchisee reconciles cash in 94% less time with ChatGPT Work</p>
+          <ul class="idx-points"><li>OpenAI 企業案例：新墨西哥州餐廳加盟主 Ted Taylor 用 ChatGPT Work 管理旗下三家連鎖餐廳。</li><li>菜單重新定價分析從 5 天縮短到 1-2 小時，時間減少 95%，涵蓋店內與外送價格建議。</li><li>每月現金對帳由 3 小時縮至 5-10 分鐘，每個薪資週期省下 4 小時人工。</li><li>以 ChatGPT Work 建立排班與人力分析，估計每年可增加 5 萬至 10 萬美元自由現金流。</li><li>另用於 30 秒起草體液事故處理程序、員工申請物資與維修的入口網站等後勤工作。</li></ul>
+          <p class="idx-sum">An independent Schlotzsky’s and Cinnabon franchisee cut menu repricing time by 95% and built a workflow that could free up $100K in cash flow.</p>
+        </article>
+<article class="idx-card" data-topics="合作與收購|醫療健康" data-source="OpenAI" data-text="OpenAI 收購 Orchestra Bio：把 AI 驅動營運帶進生命科學研發、加速藥物開發 OpenAI acquires Orchestra Bio OpenAI 2026-10-20 2026-10-21 合作與收購 醫療健康 OpenAI 收購協助藥廠協調藥物開發流程的平台 Orchestra Bio。 團隊與技術將併入生命科學產品線 Rosalind，攜手打造協調新藥計畫的 AI agents。 開發新藥平均需 10 到 15 年，Orchestra 的 agents 可追蹤研究時程並評估延誤的連鎖影響。 OpenAI 生命科學夥伴含 Novo Nordisk 與 Moderna，目標加速新藥研發到上市。 OpenAI is acquiring Orchestra Bio to bring AI-powered operations to life sciences R&amp;D, helping biopharma teams accelerate drug development and advance new treatments.">
+          <div class="idx-meta"><span class="idx-src">OpenAI</span><span class="idx-topics"><i class="chip chip--topic">合作與收購</i><i class="chip chip--topic">醫療健康</i></span><span class="idx-date">2026-10-20 · 收錄 2026-10-21</span></div>
+          <h3 class="idx-name"><a href="https://openai.com/index/openai-to-acquire-orchestra-bio" target="_blank" rel="noopener">OpenAI 收購 Orchestra Bio：把 AI 驅動營運帶進生命科學研發、加速藥物開發<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">OpenAI acquires Orchestra Bio</p>
+          <ul class="idx-points"><li>OpenAI 收購協助藥廠協調藥物開發流程的平台 Orchestra Bio。</li><li>團隊與技術將併入生命科學產品線 Rosalind，攜手打造協調新藥計畫的 AI agents。</li><li>開發新藥平均需 10 到 15 年，Orchestra 的 agents 可追蹤研究時程並評估延誤的連鎖影響。</li><li>OpenAI 生命科學夥伴含 Novo Nordisk 與 Moderna，目標加速新藥研發到上市。</li></ul>
+          <p class="idx-sum">OpenAI is acquiring Orchestra Bio to bring AI-powered operations to life sciences R&amp;D, helping biopharma teams accelerate drug development and advance new treatments.</p>
+        </article>
+<article class="idx-card" data-topics="企業導入案例" data-source="OpenAI" data-text="Terminal X 以 GPT-6.1 的 Eval Agent（54 項評分準則）達成 88.6% 資深投資人判斷一致性 Terminal X matches senior investor judgment 88.6% with GPT-6.1 OpenAI 2026-10-20 2026-10-21 企業導入案例 OpenAI 案例：投資新創 Terminal X 把投資判斷編碼成 GPT-6.1 Sol 驅動的 agents。 Capital Memory 用數百個 agents 重現資深投資人流程，Eval Agent 依 54 項標準評分。 在 500 項評分判斷中，GPT-6.1 Sol 與資深審查者一致率 88.6%，高出次佳模型 220 個基點。 GPT-6.1 Sol 多抓到約 25% 偏離基金授權的建議，每筆查詢成本約低 30%。 已建立 1,700 個 firm Memories 與逾百萬個工作流程，一家私募基金年省 240 萬美元。 Terminal X’s Eval Agent grades outputs against a 54-criterion rubric, catching 25% more deviances from a fund’s mandate with GPT-6.1 Sol.">
+          <div class="idx-meta"><span class="idx-src">OpenAI</span><span class="idx-topics"><i class="chip chip--topic">企業導入案例</i></span><span class="idx-date">2026-10-20 · 收錄 2026-10-21</span></div>
+          <h3 class="idx-name"><a href="https://openai.com/index/terminal-x" target="_blank" rel="noopener">Terminal X 以 GPT-6.1 的 Eval Agent（54 項評分準則）達成 88.6% 資深投資人判斷一致性<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Terminal X matches senior investor judgment 88.6% with GPT-6.1</p>
+          <ul class="idx-points"><li>OpenAI 案例：投資新創 Terminal X 把投資判斷編碼成 GPT-6.1 Sol 驅動的 agents。</li><li>Capital Memory 用數百個 agents 重現資深投資人流程，Eval Agent 依 54 項標準評分。</li><li>在 500 項評分判斷中，GPT-6.1 Sol 與資深審查者一致率 88.6%，高出次佳模型 220 個基點。</li><li>GPT-6.1 Sol 多抓到約 25% 偏離基金授權的建議，每筆查詢成本約低 30%。</li><li>已建立 1,700 個 firm Memories 與逾百萬個工作流程，一家私募基金年省 240 萬美元。</li></ul>
+          <p class="idx-sum">Terminal X’s Eval Agent grades outputs against a 54-criterion rubric, catching 25% more deviances from a fund’s mandate with GPT-6.1 Sol.</p>
+        </article>
+<article class="idx-card" data-topics="治理與政策" data-source="Anthropic" data-text="Anthropic 獨立評估機制（independent evaluators）進展更新 An update on independent evaluators Anthropic 2026-10-20 2026-10-21 治理與政策 Anthropic 公布獨立評估進展：METR 六名員工已進駐，存取權近似內部風險團隊。 METR 可自行發布風險評估結果，Anthropic 不能否決，但可要求遮蔽特定機密類別。 SecureBio 正審查風險報告的化生武器章節，Accenture 亦參與，並洽談 Hugging Face。 設計三級評估存取制度，第三級即 METR 式的員工級存取與近乎獨立的發布權。 此機制呼應上月簽署的白宮超級智慧協議，並借鑑銀行監理派駐檢查員的模式。 ">
+          <div class="idx-meta"><span class="idx-src">Anthropic</span><span class="idx-topics"><i class="chip chip--topic">治理與政策</i></span><span class="idx-date">2026-10-20 · 收錄 2026-10-21</span></div>
+          <h3 class="idx-name"><a href="https://www.anthropic.com/news/an-update-on-independent-evaluators" target="_blank" rel="noopener">Anthropic 獨立評估機制（independent evaluators）進展更新<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">An update on independent evaluators</p>
+          <ul class="idx-points"><li>Anthropic 公布獨立評估進展：METR 六名員工已進駐，存取權近似內部風險團隊。</li><li>METR 可自行發布風險評估結果，Anthropic 不能否決，但可要求遮蔽特定機密類別。</li><li>SecureBio 正審查風險報告的化生武器章節，Accenture 亦參與，並洽談 Hugging Face。</li><li>設計三級評估存取制度，第三級即 METR 式的員工級存取與近乎獨立的發布權。</li><li>此機制呼應上月簽署的白宮超級智慧協議，並借鑑銀行監理派駐檢查員的模式。</li></ul>
+          
+        </article>
+<article class="idx-card" data-topics="產品與功能" data-source="Google Blog (AI)" data-text="Gemini 進駐全球車輛：Android Auto 免手持個人化助理，眼睛不看路也能用 Get hands-free personalized help on the road with Gemini Google Blog (AI) 2026-10-20 2026-10-21 產品與功能 Gemini 進駐 Android Auto 與 Google built-in 車款，駕駛可用自然語音免持完成任務。 Personal Intelligence 經同意後可讀取 Gmail、日曆、相片、地圖等資料，給出個人化答案。 隱私採主動開關設計，可隨時在 Gemini 設定關閉，車內僅在連接手機時提供個人化回應。 Android Auto 即日推出，Google built-in 車款數月內跟進；歐洲經濟區與英國等地暫不提供。 Gemini is available in cars globally. With Personal Intelligence, get uniquely tailored help while keeping your eyes on the road.">
+          <div class="idx-meta"><span class="idx-src">Google Blog (AI)</span><span class="idx-topics"><i class="chip chip--topic">產品與功能</i></span><span class="idx-date">2026-10-20 · 收錄 2026-10-21</span></div>
+          <h3 class="idx-name"><a href="https://blog.google/products-and-platforms/platforms/android/android-auto-cars-with-google-built-in-gemini-personal-intelligence/" target="_blank" rel="noopener">Gemini 進駐全球車輛：Android Auto 免手持個人化助理，眼睛不看路也能用<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Get hands-free personalized help on the road with Gemini</p>
+          <ul class="idx-points"><li>Gemini 進駐 Android Auto 與 Google built-in 車款，駕駛可用自然語音免持完成任務。</li><li>Personal Intelligence 經同意後可讀取 Gmail、日曆、相片、地圖等資料，給出個人化答案。</li><li>隱私採主動開關設計，可隨時在 Gemini 設定關閉，車內僅在連接手機時提供個人化回應。</li><li>Android Auto 即日推出，Google built-in 車款數月內跟進；歐洲經濟區與英國等地暫不提供。</li></ul>
+          <p class="idx-sum">Gemini is available in cars globally. With Personal Intelligence, get uniquely tailored help while keeping your eyes on the road.</p>
+        </article>
+<article class="idx-card" data-topics="產品與功能" data-source="Google Blog (AI)" data-text="Gemini 推出小型企業主專屬工具與商家專屬落地頁 New Gemini tools for small business owners Google Blog (AI) 2026-10-20 2026-10-21 產品與功能 Google 為小型企業主推出 Gemini 新工具，以商務專屬登陸頁整合任務、財務與行銷管理。 可連結 Google 商家檔案、Ads、Workspace 及 Shopify、Canva 等第三方App。 上傳品牌素材後，搭配最新圖像模型 Nano Banana 2.1 可持續產出符合品牌風格的視覺內容。 Gemini 能把零散試算表、收據轉成財務圖表與互動模型，全球已有數千萬小企業主使用。 功能將於近日向全球所有 Gemini 應用程式用戶推出，文內附多國小企業主實例。 We’re announcing new tools for Gemini — including a dedicated business landing page — to help small business owners around the world.">
+          <div class="idx-meta"><span class="idx-src">Google Blog (AI)</span><span class="idx-topics"><i class="chip chip--topic">產品與功能</i></span><span class="idx-date">2026-10-20 · 收錄 2026-10-21</span></div>
+          <h3 class="idx-name"><a href="https://blog.google/innovation-and-ai/products/gemini-app/new-tools-small-business-owners/" target="_blank" rel="noopener">Gemini 推出小型企業主專屬工具與商家專屬落地頁<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">New Gemini tools for small business owners</p>
+          <ul class="idx-points"><li>Google 為小型企業主推出 Gemini 新工具，以商務專屬登陸頁整合任務、財務與行銷管理。</li><li>可連結 Google 商家檔案、Ads、Workspace 及 Shopify、Canva 等第三方App。</li><li>上傳品牌素材後，搭配最新圖像模型 Nano Banana 2.1 可持續產出符合品牌風格的視覺內容。</li><li>Gemini 能把零散試算表、收據轉成財務圖表與互動模型，全球已有數千萬小企業主使用。</li><li>功能將於近日向全球所有 Gemini 應用程式用戶推出，文內附多國小企業主實例。</li></ul>
+          <p class="idx-sum">We’re announcing new tools for Gemini — including a dedicated business landing page — to help small business owners around the world.</p>
+        </article>
+<article class="idx-card" data-topics="產品與功能|企業導入案例" data-source="xAI (Grok)" data-text="xAI 示範用 Grok Bot 偵測與回應事故（incident sweep） Using Grok Bot to detect and respond to incidents xAI (Grok) 2026-10-20 2026-10-21 產品與功能 企業導入案例 x.ai 客服團隊以 Grok Bot 打造 AI 隊友，自動偵測與清理產品事故工單。 IncidentWatch 每 5 分鐘檢視前 15 分鐘工單，發現同類申訴暴增即通知值班工程師。 IncidentSweep 依指定條件篩出受影響工單，經工程師核可後分批發送回覆並全程記錄。 9 月 18 日一次事故中，IncidentSweep 約 10 分鐘內清理 204 張工單，過去需耗費數小時。 ">
+          <div class="idx-meta"><span class="idx-src">xAI (Grok)</span><span class="idx-topics"><i class="chip chip--topic">產品與功能</i><i class="chip chip--topic">企業導入案例</i></span><span class="idx-date">2026-10-20 · 收錄 2026-10-21</span></div>
+          <h3 class="idx-name"><a href="https://x.ai/news/incident-sweep" target="_blank" rel="noopener">xAI 示範用 Grok Bot 偵測與回應事故（incident sweep）<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Using Grok Bot to detect and respond to incidents</p>
+          <ul class="idx-points"><li>x.ai 客服團隊以 Grok Bot 打造 AI 隊友，自動偵測與清理產品事故工單。</li><li>IncidentWatch 每 5 分鐘檢視前 15 分鐘工單，發現同類申訴暴增即通知值班工程師。</li><li>IncidentSweep 依指定條件篩出受影響工單，經工程師核可後分批發送回覆並全程記錄。</li><li>9 月 18 日一次事故中，IncidentSweep 約 10 分鐘內清理 204 張工單，過去需耗費數小時。</li></ul>
+          
+        </article>
+      </div>
+    </section>
+
+    <section class="res-group">
+      <h2 class="res-date">2026 年 10 月 19 日<span class="res-cnt">6</span></h2>
+      <div class="res-cards">
+        <article class="idx-card" data-topics="模型發布|研究與科學|開源" data-source="OpenAI" data-text="OpenAI 改善低資源程式語言編碼能力，新增軟體工程／SQLite／COBOL 遷移評測 Advancing coding in low‑resource programming languages OpenAI 2026-10-19 2026-10-21 模型發布 研究與科學 開源 OpenAI 發布 COBOL、Fortran 等低資源語言的模型編碼進展，含兩項新評測。 COBOL 撐起逾 40% 線上銀行、80% 實體刷卡與 95% ATM 交易，Fortran 用於氣象預報。 MultiLangBench 測 20 語言從零建 SQLite 引擎，GPT-6 Astra 通過率 87.4%。 COBOL 子項由 10.9% 升至 72.1%；GPT-6 Luna 成本較前代低約 78%。 COBOL 遷移評測：GPT-6.1 Sol 低強度準確率 86.6%（前代僅 5.4%），高強度達 97.9%。 Learn how OpenAI is improving ChatGPT across low-resource programming languages, with new evaluations for software engineering, SQLite, and COBOL migration.">
+          <div class="idx-meta"><span class="idx-src">OpenAI</span><span class="idx-topics"><i class="chip chip--topic">模型發布</i><i class="chip chip--topic">研究與科學</i><i class="chip chip--topic">開源</i></span><span class="idx-date">2026-10-19 · 收錄 2026-10-21</span></div>
+          <h3 class="idx-name"><a href="https://openai.com/index/low-resource-programming-languages" target="_blank" rel="noopener">OpenAI 改善低資源程式語言編碼能力，新增軟體工程／SQLite／COBOL 遷移評測<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Advancing coding in low‑resource programming languages</p>
+          <ul class="idx-points"><li>OpenAI 發布 COBOL、Fortran 等低資源語言的模型編碼進展，含兩項新評測。</li><li>COBOL 撐起逾 40% 線上銀行、80% 實體刷卡與 95% ATM 交易，Fortran 用於氣象預報。</li><li>MultiLangBench 測 20 語言從零建 SQLite 引擎，GPT-6 Astra 通過率 87.4%。</li><li>COBOL 子項由 10.9% 升至 72.1%；GPT-6 Luna 成本較前代低約 78%。</li><li>COBOL 遷移評測：GPT-6.1 Sol 低強度準確率 86.6%（前代僅 5.4%），高強度達 97.9%。</li></ul>
+          <p class="idx-sum">Learn how OpenAI is improving ChatGPT across low-resource programming languages, with new evaluations for software engineering, SQLite, and COBOL migration.</p>
+        </article>
+<article class="idx-card" data-topics="研究與科學" data-source="Anthropic" data-text="Anthropic 擴大對科學家的支持方案 Expanding our support for scientists Anthropic 2026-10-19 2026-10-21 研究與科學 Anthropic 開放 1 萬個科學家版 Claude 團隊方案名額，標準席免費使用一年。 進階席提供 5 倍用量上限、每月 15 美元，名額未來將大幅擴充。 AI for Science 計畫擴及生物學以外的領域，每個專案最高可申請 5 萬美元運算額度。 資格限學術或非營利研究機構的主要研究者（PI），通過驗證後可納入實驗室成員。 Claude Fable 系列仍阻擋生物與藥物開發查詢；與美國政府合作的生命科學存取計畫已招首批參與者。 ">
+          <div class="idx-meta"><span class="idx-src">Anthropic</span><span class="idx-topics"><i class="chip chip--topic">研究與科學</i></span><span class="idx-date">2026-10-19 · 收錄 2026-10-21</span></div>
+          <h3 class="idx-name"><a href="https://www.anthropic.com/news/expanding-support-for-scientists" target="_blank" rel="noopener">Anthropic 擴大對科學家的支持方案<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Expanding our support for scientists</p>
+          <ul class="idx-points"><li>Anthropic 開放 1 萬個科學家版 Claude 團隊方案名額，標準席免費使用一年。</li><li>進階席提供 5 倍用量上限、每月 15 美元，名額未來將大幅擴充。</li><li>AI for Science 計畫擴及生物學以外的領域，每個專案最高可申請 5 萬美元運算額度。</li><li>資格限學術或非營利研究機構的主要研究者（PI），通過驗證後可納入實驗室成員。</li><li>Claude Fable 系列仍阻擋生物與藥物開發查詢；與美國政府合作的生命科學存取計畫已招首批參與者。</li></ul>
+          
+        </article>
+<article class="idx-card" data-topics="治理與政策|合作與收購" data-source="Anthropic" data-text="Anthropic 與 Accenture 合作嵌入式評估（embedded evaluation） Partnering with Accenture on embedded evaluation Anthropic 2026-10-19 2026-10-21 治理與政策 合作與收購 Anthropic 與 Accenture 合作推動嵌入式獨立評估，由其 AI 部門 Faculty 主導。 工作含紅隊測試、對齊評估與安全防護測試，雙方五年內各投資至少 10 億美元。 嵌入式評估員在公司內部取得近似員工的存取權，可觀察模型訓練並驗證安全承諾。 合作不具排他性，Anthropic 將陸續公布其他評估機構，並與 METR 洽談試點。 ">
+          <div class="idx-meta"><span class="idx-src">Anthropic</span><span class="idx-topics"><i class="chip chip--topic">治理與政策</i><i class="chip chip--topic">合作與收購</i></span><span class="idx-date">2026-10-19 · 收錄 2026-10-21</span></div>
+          <h3 class="idx-name"><a href="https://www.anthropic.com/news/accenture-embedded-evaluation" target="_blank" rel="noopener">Anthropic 與 Accenture 合作嵌入式評估（embedded evaluation）<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Partnering with Accenture on embedded evaluation</p>
+          <ul class="idx-points"><li>Anthropic 與 Accenture 合作推動嵌入式獨立評估，由其 AI 部門 Faculty 主導。</li><li>工作含紅隊測試、對齊評估與安全防護測試，雙方五年內各投資至少 10 億美元。</li><li>嵌入式評估員在公司內部取得近似員工的存取權，可觀察模型訓練並驗證安全承諾。</li><li>合作不具排他性，Anthropic 將陸續公布其他評估機構，並與 METR 洽談試點。</li></ul>
+          
+        </article>
+<article class="idx-card" data-topics="企業導入案例" data-source="Claude (Resources)" data-text="Anthropic 開源工程實錄：monorepo 日合併從 2,500 成長到 3 萬，五個月遷出 git 自建版控 Scion Redesigning source control at Anthropic Claude (Resources) 2026-10-19 2026-10-22 企業導入案例 Anthropic 工程實錄：自建版本控制系統 Scion，五個月內把 monorepo 完全遷出 git。 日合併量從 2026 年 5 月約 2,500 成長到 9 月超過 30,000，Claude 自主寫碼是主因。 瓶頸從寫碼本身轉移到為人類規模設計的基礎設施：版控、build、CI。 同期還交付 code review 介面（Antique）、code search 與細粒度版控 IAM 系統。 As merges to Anthropic&#39;s monorepo grew from about 2,500 to more than 30,000 a day, source control became the biggest development bottleneck. Here is how the team built Scion, an in-house version control system designed f">
+          <div class="idx-meta"><span class="idx-src">Claude (Resources)</span><span class="idx-topics"><i class="chip chip--topic">企業導入案例</i></span><span class="idx-date">2026-10-19 · 收錄 2026-10-22</span></div>
+          <h3 class="idx-name"><a href="https://www.anthropic.com/engineering/redesigning-source-control" target="_blank" rel="noopener">Anthropic 開源工程實錄：monorepo 日合併從 2,500 成長到 3 萬，五個月遷出 git 自建版控 Scion<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">Redesigning source control at Anthropic</p>
+          <ul class="idx-points"><li>Anthropic 工程實錄：自建版本控制系統 Scion，五個月內把 monorepo 完全遷出 git。</li><li>日合併量從 2026 年 5 月約 2,500 成長到 9 月超過 30,000，Claude 自主寫碼是主因。</li><li>瓶頸從寫碼本身轉移到為人類規模設計的基礎設施：版控、build、CI。</li><li>同期還交付 code review 介面（Antique）、code search 與細粒度版控 IAM 系統。</li></ul>
+          <p class="idx-sum">As merges to Anthropic&#39;s monorepo grew from about 2,500 to more than 30,000 a day, source control became the biggest development bottleneck. Here is how the team built Scion, an in-house version control system designed f</p>
+        </article>
+<article class="idx-card" data-topics="產品與功能" data-source="Google Blog (AI)" data-text="運動造型師示範：用 Gemini 為客戶打造穿搭的 4 個技巧 4 tips for styling outfits with Gemini Google Blog (AI) 2026-10-19 2026-10-21 產品與功能 Google 分享運動員造型師 Sydney Bordonaro 用 Gemini 遠端為客戶搭配服裝的 4 個技巧。 上傳衣物與客戶照片可合成完整穿搭圖，並能用對話微調單一細節而無須重來。 另可拍衣物污漬照片取得清潔步驟；屬行銷導向的實用技巧文，內容較淺。 Here’s how athlete stylist Sydney Bordonaro uses Gemini to build looks for clients — and how you can build your own, too.">
+          <div class="idx-meta"><span class="idx-src">Google Blog (AI)</span><span class="idx-topics"><i class="chip chip--topic">產品與功能</i></span><span class="idx-date">2026-10-19 · 收錄 2026-10-21</span></div>
+          <h3 class="idx-name"><a href="https://blog.google/products-and-platforms/products/gemini/stylist-outfit-tips-gemini/" target="_blank" rel="noopener">運動造型師示範：用 Gemini 為客戶打造穿搭的 4 個技巧<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">4 tips for styling outfits with Gemini</p>
+          <ul class="idx-points"><li>Google 分享運動員造型師 Sydney Bordonaro 用 Gemini 遠端為客戶搭配服裝的 4 個技巧。</li><li>上傳衣物與客戶照片可合成完整穿搭圖，並能用對話微調單一細節而無須重來。</li><li>另可拍衣物污漬照片取得清潔步驟；屬行銷導向的實用技巧文，內容較淺。</li></ul>
+          <p class="idx-sum">Here’s how athlete stylist Sydney Bordonaro uses Gemini to build looks for clients — and how you can build your own, too.</p>
+        </article>
+<article class="idx-card" data-topics="產品與功能" data-source="Google Blog (AI)" data-text="Gemini Notebook 強化簡報與影片總覽的創作控制權 How to shape your slides and videos with Gemini Notebook Google Blog (AI) 2026-10-19 2026-10-21 產品與功能 Google 為 Gemini Notebook 的簡報投影片與影片摘要新增共創流程，強化使用者創意控制權。 系統先依來源建議應納入的主題，確認後可再引導內容、視覺風格與格式。 新增 Review 開關，渲染前可審閱大綱或製作人筆記並修改，如加入執行摘要或調整場景順序。 也可跳過審核直接快速產出；功能將於一週內向全球所有 Gemini Notebook 用戶推出。 Gemini Notebook is giving more creative control in the creation of Slide Decks and Video Overviews.">
+          <div class="idx-meta"><span class="idx-src">Google Blog (AI)</span><span class="idx-topics"><i class="chip chip--topic">產品與功能</i></span><span class="idx-date">2026-10-19 · 收錄 2026-10-21</span></div>
+          <h3 class="idx-name"><a href="https://blog.google/innovation-and-ai/products/gemini-notebook/co-create-slides-videos/" target="_blank" rel="noopener">Gemini Notebook 強化簡報與影片總覽的創作控制權<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">How to shape your slides and videos with Gemini Notebook</p>
+          <ul class="idx-points"><li>Google 為 Gemini Notebook 的簡報投影片與影片摘要新增共創流程，強化使用者創意控制權。</li><li>系統先依來源建議應納入的主題，確認後可再引導內容、視覺風格與格式。</li><li>新增 Review 開關，渲染前可審閱大綱或製作人筆記並修改，如加入執行摘要或調整場景順序。</li><li>也可跳過審核直接快速產出；功能將於一週內向全球所有 Gemini Notebook 用戶推出。</li></ul>
+          <p class="idx-sum">Gemini Notebook is giving more creative control in the creation of Slide Decks and Video Overviews.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="res-group">
+      <h2 class="res-date">2026 年 10 月 17 日<span class="res-cnt">2</span></h2>
+      <div class="res-cards">
+        <article class="idx-card" data-topics="模型發布|開源" data-source="DeepSeek" data-text="DeepSeek-V4.1-Flash-1017 權重於 Hugging Face 開源，上線即累計 4.2 萬下載 DeepSeek-V4.1-Flash-1017 DeepSeek 2026-10-17 2026-10-22 模型發布 開源 DeepSeek-V4.1-Flash-1017 模型權重上架 Hugging Face（deepseek-ai org）。 2026-10-17 發布，上線數日累計下載已達 4.2 萬。 與官方公告同步：主打端到端專案開發與更短輸出的輕量 Flash 版本。 Hugging Face 新模型（累計下載 42,122）">
+          <div class="idx-meta"><span class="idx-src">DeepSeek</span><span class="idx-topics"><i class="chip chip--topic">模型發布</i><i class="chip chip--topic">開源</i></span><span class="idx-date">2026-10-17 · 收錄 2026-10-22</span></div>
+          <h3 class="idx-name"><a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017" target="_blank" rel="noopener">DeepSeek-V4.1-Flash-1017 權重於 Hugging Face 開源，上線即累計 4.2 萬下載<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">DeepSeek-V4.1-Flash-1017</p>
+          <ul class="idx-points"><li>DeepSeek-V4.1-Flash-1017 模型權重上架 Hugging Face（deepseek-ai org）。</li><li>2026-10-17 發布，上線數日累計下載已達 4.2 萬。</li><li>與官方公告同步：主打端到端專案開發與更短輸出的輕量 Flash 版本。</li></ul>
+          <p class="idx-sum">Hugging Face 新模型（累計下載 42,122）</p>
+        </article>
+<article class="idx-card" data-topics="模型發布|開源" data-source="DeepSeek" data-text="DeepSeek 發布 V4.1-Flash-1017：主打「願望驅動程式設計」（Wish-Driven Programming） DeepSeek-V4.1-Flash-1017: Wish-Driven Programming Made Real DeepSeek 2026-10-17 2026-10-22 模型發布 開源 DeepSeek 發布 V4.1-Flash-1017：效能更強、任務完成更快、輸出更短，宣稱為效能與成本的 Pareto 改進。 主打「願望驅動程式設計」（Wish-Driven Programming）：以強化學習＋自我回饋改進端到端專案開發。 展示案例含紫禁城 3D 建模、Godot 引擎重製 Portal 2、3D 場景演化動畫。 針對 DeepSeek Harness v0.2.1-rc.1+ 優化，支援 Tencent CodeBuddy、WorkBuddy 等工具。 Search &amp; Fetch API 開放所有用戶，由自研搜尋引擎驅動。 🚀 DeepSeek-V4.1-Flash-1017 is here!">
+          <div class="idx-meta"><span class="idx-src">DeepSeek</span><span class="idx-topics"><i class="chip chip--topic">模型發布</i><i class="chip chip--topic">開源</i></span><span class="idx-date">2026-10-17 · 收錄 2026-10-22</span></div>
+          <h3 class="idx-name"><a href="https://api-docs.deepseek.com/news/news261017" target="_blank" rel="noopener">DeepSeek 發布 V4.1-Flash-1017：主打「願望驅動程式設計」（Wish-Driven Programming）<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="idx-orig">DeepSeek-V4.1-Flash-1017: Wish-Driven Programming Made Real</p>
+          <ul class="idx-points"><li>DeepSeek 發布 V4.1-Flash-1017：效能更強、任務完成更快、輸出更短，宣稱為效能與成本的 Pareto 改進。</li><li>主打「願望驅動程式設計」（Wish-Driven Programming）：以強化學習＋自我回饋改進端到端專案開發。</li><li>展示案例含紫禁城 3D 建模、Godot 引擎重製 Portal 2、3D 場景演化動畫。</li><li>針對 DeepSeek Harness v0.2.1-rc.1+ 優化，支援 Tencent CodeBuddy、WorkBuddy 等工具。</li><li>Search &amp; Fetch API 開放所有用戶，由自研搜尋引擎驅動。</li></ul>
+          <p class="idx-sum">🚀 DeepSeek-V4.1-Flash-1017 is here!</p>
+        </article>
+      </div>
+    </section>
+  </section>
+  <div class="empty" id="empty" role="status" hidden>
+    <span class="stamp">查無館藏</span>
+    <p>換個關鍵字，或重設主題與來源篩選。</p>
+    <button id="emptyReset" class="read-full" type="button">重設所有篩選</button>
+  </div>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">資料來源：OpenAI · Anthropic · Google DeepMind · Google Research · Google Blog · xAI · Meta AI — 僅收錄官方第一手公告。</p>
+  <p class="foot-md">收錄範圍以 Notion「AI 動態資料庫」為準（每列含收錄日）。</p>
+  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-10-22 12:19 (UTC+8)</p>
+</div></footer>
+<script src="./assets/site.js" defer></script>
+</body>
+</html>
