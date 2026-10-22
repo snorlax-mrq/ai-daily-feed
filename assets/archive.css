@@ -177,6 +177,8 @@ h1 a:hover{color:var(--stamp)}
 /* \u2500\u2500 \u6BCF\u65E5\u9801\uFF1A\u4E3B\u984C chips \u8207\u91CD\u9EDE \u2500\u2500\u2500\u2500\u2500 */
 .item-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .chip--topic{font-style:normal;font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:.05em;color:var(--stamp-ink);border:1px solid color-mix(in srgb,var(--stamp) 38%,var(--line));border-radius:5px;padding:2px 8px 1.5px;background:color-mix(in srgb,var(--stamp) 7%,var(--paper-2));white-space:nowrap}
+.guide-badge{display:inline-flex;align-items:center;margin-left:9px;font-family:'Archivo',sans-serif;font-weight:700;font-size:11px;letter-spacing:.08em;color:var(--stamp-ink);border:1.5px solid var(--stamp);border-radius:5px;padding:1.5px 8px;text-decoration:none;transform:rotate(-2deg);background:color-mix(in srgb,var(--stamp) 6%,transparent);transition:background-color .15s,color .15s;vertical-align:2px}
+.guide-badge:hover{background:var(--stamp);color:var(--paper)}
 .item-points{list-style:none;margin-top:9px;display:flex;flex-direction:column;gap:4px;max-width:70ch}
 .item-points li{position:relative;padding-left:15px;font-size:14.5px;line-height:1.66;color:var(--ink-2)}
 .item-points li::before{content:"\2013";position:absolute;left:0;color:var(--stamp);opacity:.75}
