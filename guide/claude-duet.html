@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — Claude Duet：會先開口、也會先請示的代理 · AI 每日動態檔案</title>
+<meta name="description" content="深入淺出導讀 Anthropic 的 Claude Duet 研究預覽公告：主動式代理的四個行為設計、分級授權與安全把關。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>Claude Duet：會先開口、也會先請示的主動式代理</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Claude Duet research preview 公告</p>
+    <p class="g-meta">
+      <span>Claude (Resources)</span>·<span>2026-10-21 發布</span>·<span>2026-10-22 收錄</span>·
+      <a href="https://claude.com/resources/articles/claude-duet" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>iOS／Android＋網頁</b><span>獨立 app 與 claude.ai</span></div>
+    <div class="g-stat"><b>Opus 5.5</b><span>判斷力為設計核心</span></div>
+    <div class="g-stat"><b>6,000+</b><span>市集連接器與外掛</span></div>
+    <div class="g-stat"><b>每幾小時</b><span>檢查連動帳號（省方案額度）</span></div>
+    <div class="g-stat"><b>Pro／Max</b><span>含在方案、共用用量額度；waitlist 美國優先</span></div>
+  </div>
+
+  <section class="g-sec">
+    <div class="g-tldr">
+      <h2 class="g-tldr-h">30 秒版本</h2>
+      <p class="one">Claude Duet 是一個「會主動找你」的代理 app：每天早上送重點簡報、你離開時它用自帶瀏覽器的虛擬機繼續做事、只在需要你時才通知——而寄信、付款、簽文件、刪除這類動作，一律先徵得同意。研究預覽以 waitlist 開放，美國 Pro／Max 訂閱者優先。</p>
+      <ul>
+        <li>以 Claude Opus 5.5 為基礎設計，核心是判斷：何事需要你、何事可等、何時先徵得同意。</li>
+        <li>自帶虛擬機與瀏覽器，不需要你的電腦或手機開著；沿用你 Claude 帳號的記憶、技能與連動 app。</li>
+        <li>新增專用分類器把關敏感資訊：設計上會拒傳最嚴格層級的資訊（包括信用卡號、政府證件）；健康與個人財務須你明確指示才放行。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">它是什麼：四個行為特徵</h2>
+    <p class="g-p">原文開場把 Duet 定義成「<strong>主動式代理（proactive agent）</strong>」，目標使用者是<strong>事情多到追不完的專業工作者與小店老闆</strong>。它與一般聊天機器人的差別，在四個被刻意設計的行為：<em>帶著需要你關注的事主動來找你</em>、<em>完成你交辦的任務</em>、<em>你離開時仍持續工作</em>、<em>代你行動前先確認</em>。任務範圍從排會議這類行政雜事，一路到用數十種工具建儀表板、做財務或銷售預測、做原型與 web app——一條對話串同時裝得下「快速回覆」與「一週專案」。</p>
+
+    <figure class="g-dg">
+      <figcaption class="g-dg-h">圖解 · <b>自主光譜</b>：什麼自己做、什麼先問、什麼絕不做 · 示意</figcaption>
+      <div class="g-glos">
+        <div class="g-card"><b>① 自主完成</b><span class="w">閱讀、草擬、準備工作、背景執行任務——不需逐項請示。</span><span class="why">判斷「何事可等」是以 Opus 5.5 為基礎的設計核心。</span></div>
+        <div class="g-card"><b>② 先徵得同意</b><span class="w">寄送訊息、付款、簽署文件、刪除任何東西——顯示將執行的動作並等待批准。</span><span class="why">「重要決策留給你」是產品承諾。</span></div>
+        <div class="g-card"><b>③ 批准也不做</b><span class="w">如證券交易、帳戶之間搬錢等——明定即使批准也不做。</span><span class="why">紅線寫死，不隨對話浮動。</span></div>
+      </div>
+      <div class="g-know">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg>
+        <p><b>敏感資訊分類器</b>：逐訊息檢查的專用分類器＋安全系統提示。最嚴格層級的資訊（包括信用卡號、政府證件）設計上直接拒傳；健康、個人財務等敏感資訊，僅在你明確指示要送出時放行。任何 app 的授權都可隨時斷開。</p>
+      </div>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">怎麼工作：四個機制</h2>
+    <div class="g-steps">
+      <div class="g-steprow"><div class="n">01<small>早晨簡報</small></div><div><h3>每天開場先給重點，之後只說必要的</h3><p>早上送一份跨連動 app 的重點短簡報；整天只在你需要時才通知。帳號檢查是<strong>每幾小時一次</strong>——原文解釋，不停檢查會快速燒掉方案額度；你能自訂想聽什麼、多久聽一次。</p></div></div>
+      <div class="g-steprow"><div class="n">02<small>背景執行</small></div><div><h3>虛擬機自帶瀏覽器，你的設備可以關機</h3><p>一句簡短訊息描述任務，它自己決定用哪些 app、走哪些步驟，在背景做完——完成或需要你審核時通知你。不佔你的筆電、不佔你的手機。（研究預覽限制：早期版本可能誤讀對話串、誤判緊急程度，且它的瀏覽器畫面暫時無法顯示給你看。）</p></div></div>
+      <div class="g-steprow"><div class="n">03<small>判斷分寸</small></div><div><h3>「何事需要你、何事可等、何時先問」</h3><p>以 Claude Opus 5.5 為基礎設計；原文坦言仍在根據測試者回饋持續調整這套判斷。實例：Mya 的潛在客戶電話緊接在航班前，它主動提議改期。</p></div></div>
+      <div class="g-steprow"><div class="n">04<small>無縫接手</small></div><div><h3>記憶、技能、連動 app 直接沿用</h3><p>Duet 帶著你 Claude 帳號的記憶、技能與連動 app 而來，設定成本極低；透過 6,000+ 個市集連接器與外掛接上工具，還能用 Link（Stripe 數位錢包）代你購物——先與你確認品項，再由 Link 批准支出、以虛擬卡付款（真卡號不外洩）。</p></div></div>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">使用者現場</h2>
+    <p class="g-p">內部：Claude Code 負責人 Boris Cherny 散步時對它傾倒腦內待辦；模型與產品行為設計團隊負責人 Chelsea Larsson 出門陪孩子前交辦事項，晚上回收結果報告；Duet 團隊負責人 Karan Ahuja 拿它排使用者訪談、協作原型、甚至出碼。早期使用的小型企業主與創業者：</p>
+    <div class="g-take">
+      <p><b>Jess Provencher（房仲）</b>——沒被要求就抓到行事曆上放錯天的看房行程：「正是我不用開口就希望被抓到的那種事。」</p>
+      <p><b>Amin Ebrahimi（Shahs of Kabob 店主，南佛羅里達，約 110 名員工）</b>——用它做會計、客服、行銷，逐店處理發票：「它把全部整合在一起，我不用開 100 個分頁。」</p>
+      <p><b>Mya Dalton（品牌策略師）</b>——潛在客戶電話前自動備好簡報，還發現時間緊接在航班前、主動提議改期：「我很喜歡這種主動性。」</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="g-take">
+      <p><b>主動性是被設計的，不是模型附贈。</b>簡報節奏、通知判斷、批准閘門——每個「貼心」的瞬間背後都是明確的產品決策。</p>
+      <p><b>信任靠分級授權，不靠萬能。</b>該自己做的自己做、該問的先問、永遠不做的寫死——界線清晰的代理，反而比「全能助理」敢用。</p>
+      <p><b>代理的價值在你不看著的時候。</b>VM 背景執行＋只在需要時通知：把「盯著 AI 工作」的時間還給你，這才是主動式的本意。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Meta Engineering</span><a href="thin-orchestrator.html">The Thin Orchestrator：讓中央「少做事」，AI 代理反而更可靠</a><span class="d">2026-10-19</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="distributed-biological-reasoning.html">數千個 AI 代理掃描數百萬腦細胞數據，為生物研究找出新線索</a><span class="d">2026-10-21</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="adk-voice-agent.html">ADK ＋ gemini-3.8-live 教學：用非阻塞串流工具打造不中斷的語音 agent</a><span class="d">2026-10-19</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據出自原文，示意圖與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-22 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
