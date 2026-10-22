@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 薄層編排器 · AI 每日動態檔案</title>
+<meta name="description" content="深入淺出導讀 Meta Engineering〈The Thin Orchestrator〉：為什麼把中央路由變薄，AI 代理反而更可靠。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<style>
+/* ── 導讀頁（mockup）— 沿用 card catalog 語彙 ── */
+.g-crumb{font-family:'Archivo',sans-serif;font-weight:600;font-size:12px;letter-spacing:.06em;color:var(--ink-3)}
+.g-crumb a{text-decoration:none}
+.g-crumb a:hover{color:var(--stamp)}
+.g-head{margin-top:18px}
+.g-head h1{font-size:clamp(28px,4.6vw,40px);margin-top:14px}
+.g-orig{margin-top:8px;font-family:'Archivo',sans-serif;font-weight:500;font-size:13px;letter-spacing:.02em;color:var(--ink-3)}
+.g-meta{margin-top:12px;font-family:'Archivo',sans-serif;font-weight:500;font-size:12.5px;letter-spacing:.02em;color:var(--ink-2);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.g-meta a{text-decoration:none;color:var(--stamp-ink);display:inline-flex;align-items:center;gap:3px;border-bottom:1px solid color-mix(in srgb,var(--stamp) 35%,transparent)}
+.g-meta a:hover{color:var(--stamp)}
+.g-meta .ext{width:12px;height:12px;opacity:.7}
+.g-sec{margin-top:52px}
+.g-h2{font-family:'Archivo',sans-serif;font-weight:700;font-size:21px;letter-spacing:-.01em;color:var(--ink);display:flex;align-items:center;gap:14px}
+.g-h2::before{content:"";width:9px;height:9px;border:2px solid var(--stamp);border-radius:2px;transform:rotate(-6deg);flex:none}
+.g-h2::after{content:"";flex:1;height:1px;background:var(--line)}
+.g-p{margin-top:16px;line-height:1.85;color:var(--ink-2);max-width:72ch}
+.g-p strong{color:var(--ink);font-weight:600}
+.g-p em{font-style:normal;color:var(--stamp-ink);font-weight:600}
+.g-pain{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.g-pain i{font-style:normal;font-family:'Archivo',sans-serif;font-weight:600;font-size:12px;letter-spacing:.04em;color:var(--stamp-ink);border:1px dashed color-mix(in srgb,var(--stamp) 45%,transparent);border-radius:6px;padding:5px 11px;background:color-mix(in srgb,var(--stamp) 5%,transparent)}
+
+/* 數字條 */
+.g-stats{margin-top:26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px}
+.g-stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-soft);padding:13px 15px;text-align:center}
+.g-stat b{display:block;font-family:'Archivo',sans-serif;font-weight:700;font-size:21px;letter-spacing:-.01em;color:var(--stamp-ink)}
+.g-stat span{display:block;margin-top:3px;font-family:'Archivo',sans-serif;font-weight:500;font-size:11.5px;letter-spacing:.04em;color:var(--ink-3)}
+
+/* 30 秒版本（索引卡橫線） */
+.g-tldr{margin-top:26px;background:var(--paper);border:1px solid var(--line);border-radius:4px 14px 14px 14px;box-shadow:var(--shadow);padding:24px 26px 22px;background-image:repeating-linear-gradient(to bottom,transparent 0 30px,var(--rule) 30px 31px)}
+.g-tldr-h{font-family:'Archivo',sans-serif;font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;gap:12px}
+.g-tldr-h::after{content:"";flex:1;height:1px;background:var(--line)}
+.g-tldr p.one{margin-top:14px;font-size:17.5px;line-height:1.8;color:var(--ink);font-weight:600;max-width:70ch}
+.g-tldr ul{margin-top:10px;list-style:none;display:flex;flex-direction:column;gap:5px}
+.g-tldr li{position:relative;padding-left:16px;font-size:14.5px;line-height:1.75;color:var(--ink-2);max-width:72ch}
+.g-tldr li::before{content:"–";position:absolute;left:0;color:var(--stamp);opacity:.75}
+
+/* 圖解卡 */
+.g-dg{margin-top:22px;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:22px 22px 20px}
+.g-dg-h{font-family:'Archivo',sans-serif;font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;gap:12px}
+.g-dg-h::after{content:"";flex:1;height:1px;background:var(--rule)}
+.g-dg-h b{color:var(--stamp-ink)}
+.nd{background:var(--paper-2);border:1px solid var(--line);border-radius:9px;padding:10px 14px;text-align:center}
+.nd b{display:block;font-family:'Archivo',sans-serif;font-weight:700;font-size:13px;letter-spacing:.03em;color:var(--ink)}
+.nd span{display:block;margin-top:2px;font-size:12.5px;line-height:1.5;color:var(--ink-3)}
+.arr{display:flex;justify-content:center;padding:4px 0;color:var(--stamp)}
+.arr svg{width:16px;height:16px}
+.g-hub{position:relative;margin-top:16px}
+.g-hub>.nd--fat{background:color-mix(in srgb,var(--stamp) 7%,var(--paper));border-color:color-mix(in srgb,var(--stamp) 40%,var(--line));max-width:340px;margin:0 auto}
+.g-hub>.nd--fat b{color:var(--stamp-ink)}
+.g-spokes{margin-top:6px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;position:relative;padding-top:26px}
+.g-spokes::before{content:"";position:absolute;top:12px;left:10%;right:10%;height:1px;background:var(--line)}
+.g-spoke{position:relative;background:var(--paper-2);border:1px solid var(--line);border-radius:7px;padding:7px 4px;text-align:center;font-family:'Archivo',sans-serif;font-weight:600;font-size:11.5px;letter-spacing:.02em;color:var(--ink-2)}
+.g-spoke::before{content:"";position:absolute;top:-14px;left:50%;width:1px;height:14px;background:var(--line)}
+.g-loop{margin-top:14px;display:flex;align-items:center;gap:10px;justify-content:center;font-family:'Archivo',sans-serif;font-weight:500;font-size:12.5px;letter-spacing:.02em;color:var(--ink-2)}
+.g-loop svg{width:15px;height:15px;color:var(--stamp);flex:none}
+
+/* 7 步協定 */
+.g-proto{margin-top:16px;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.g-step{width:38px;height:38px;border:1px solid var(--line);border-radius:9px;background:var(--paper-2);display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:700;font-size:14px;color:var(--ink-3);position:relative}
+.g-step--llm{border:2px solid var(--stamp);color:var(--stamp-ink);background:color-mix(in srgb,var(--stamp) 9%,var(--paper));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--stamp) 20%,transparent)}
+.g-step small{position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);font-weight:600;font-size:10px;letter-spacing:.04em;color:var(--ink-3);white-space:nowrap}
+.g-step--llm small{color:var(--stamp-ink)}
+.g-legend{margin-top:30px;display:flex;flex-direction:column;gap:6px}
+.g-legend p{position:relative;padding-left:18px;font-size:13.5px;line-height:1.7;color:var(--ink-2)}
+.g-legend p::before{content:"";position:absolute;left:0;top:7px;width:9px;height:9px;border-radius:2px}
+.g-legend p.det::before{border:1px solid var(--line);background:var(--paper-2)}
+.g-legend p.llm::before{border:2px solid var(--stamp);background:color-mix(in srgb,var(--stamp) 12%,transparent)}
+.g-legend p b{color:var(--ink)}
+
+/* 模板 lanes 與代理池 */
+.g-lanes{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g-lane{background:var(--paper-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.g-lane b{font-family:'Archivo',sans-serif;font-weight:700;font-size:12.5px;letter-spacing:.06em;color:var(--ink-2);display:block}
+.g-lane .seq{margin-top:10px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.g-agent{width:30px;height:30px;border:1px solid var(--line);border-radius:7px;background:var(--paper);display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:700;font-size:12px;color:var(--ink-2)}
+.g-sep{color:var(--stamp);font-family:'Archivo',sans-serif;font-weight:700}
+.g-lane small{display:block;margin-top:9px;font-size:12px;line-height:1.6;color:var(--ink-3)}
+.g-pool{margin-top:16px;border:1px dashed var(--line);border-radius:10px;padding:14px 16px}
+.g-pool b{font-family:'Archivo',sans-serif;font-weight:600;font-size:12px;letter-spacing:.06em;color:var(--ink-3)}
+.g-pool .chips{margin-top:10px;display:flex;gap:6px;flex-wrap:wrap}
+.g-know{margin-top:14px;display:flex;gap:12px;align-items:flex-start;background:var(--paper-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.g-know svg{width:18px;height:18px;color:var(--stamp);flex:none;margin-top:2px}
+.g-know p{font-size:13.5px;line-height:1.7;color:var(--ink-2)}
+.g-know p b{color:var(--ink)}
+
+/* 逐步拆解 */
+.g-steps{margin-top:20px;border-top:1px solid var(--line)}
+.g-steprow{display:grid;grid-template-columns:64px 1fr;gap:18px;padding:20px 4px;border-bottom:1px solid var(--rule)}
+.g-steprow .n{font-family:'Archivo',sans-serif;font-weight:700;font-size:27px;color:var(--stamp);opacity:.85;line-height:1}
+.g-steprow .n small{display:block;font-size:10px;letter-spacing:.14em;color:var(--ink-3);font-weight:600;margin-top:4px}
+.g-steprow h3{font-family:'Source Serif 4',serif;font-weight:600;font-size:17.5px;line-height:1.5;color:var(--ink)}
+.g-steprow p{margin-top:6px;font-size:14.5px;line-height:1.8;color:var(--ink-2);max-width:70ch}
+
+/* 術語小卡 */
+.g-glos{margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.g-card{background:var(--paper);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-soft);padding:15px 17px}
+.g-card b{font-family:'Archivo',sans-serif;font-weight:700;font-size:13.5px;letter-spacing:.04em;color:var(--stamp-ink);display:block}
+.g-card .w{margin-top:7px;font-size:13.5px;line-height:1.7;color:var(--ink)}
+.g-card .why{margin-top:7px;font-size:12px;line-height:1.65;color:var(--ink-3)}
+
+/* 成效時間軸 */
+.g-eco{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g-eff{background:var(--paper);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-soft);padding:17px 19px}
+.g-eff b{font-family:'Archivo',sans-serif;font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);display:block}
+.g-eff .flow{margin-top:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:'Archivo',sans-serif;font-weight:700;font-size:14px}
+.g-eff .flow i{font-style:normal;color:var(--ink-3);font-weight:500}
+.g-eff .flow .hit{color:var(--stamp-ink)}
+.g-eff .flow svg{width:14px;height:14px;color:var(--stamp)}
+.g-eff p{margin-top:10px;font-size:13px;line-height:1.7;color:var(--ink-2)}
+
+/* 帶走三件事 */
+.g-take{margin-top:20px;display:flex;flex-direction:column;gap:12px}
+.g-take p{border-left:3px solid var(--stamp);padding:4px 0 4px 16px;font-size:15.5px;line-height:1.8;color:var(--ink);max-width:70ch}
+.g-take p b{color:var(--stamp-ink)}
+
+/* 相關館藏 */
+.g-rel{margin-top:20px;display:flex;flex-direction:column;gap:10px}
+.g-relrow{display:flex;align-items:baseline;gap:12px;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:13px 17px;box-shadow:var(--shadow-soft)}
+.g-relrow .s{flex:none;font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);width:130px}
+.g-relrow a{font-family:'Source Serif 4',serif;font-weight:600;font-size:15.5px;line-height:1.5;text-decoration:none;width:fit-content}
+.g-relrow a:hover{color:var(--stamp)}
+.g-relrow .d{margin-left:auto;flex:none;font-family:'Archivo',sans-serif;font-weight:500;font-size:11px;color:var(--ink-3)}
+.g-note{margin-top:44px;font-family:'Archivo',sans-serif;font-weight:500;font-size:12px;line-height:1.8;color:var(--ink-3);border-top:1px solid var(--rule);padding-top:14px;max-width:72ch}
+@media (max-width:640px){
+  .g-spokes{grid-template-columns:repeat(2,1fr);gap:8px;padding-top:0}
+  .g-spokes::before,.g-spoke::before{display:none}
+  .g-lanes,.g-eco{grid-template-columns:1fr}
+  .g-relrow{flex-wrap:wrap;gap:6px}
+  .g-relrow .s{width:auto}
+  .g-relrow .d{margin-left:0;width:100%}
+  .g-steprow{grid-template-columns:48px 1fr;gap:12px}
+}
+</style>
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>薄層編排器：讓中央「少做事」，AI 代理反而更可靠</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：The Thin Orchestrator — How We Made Our AI Agents More Reliable by Giving the Router Less to Do</p>
+    <p class="g-meta">
+      <span>Meta Engineering</span>·<span>2026-10-19 發布</span>·<span>2026-10-22 收錄</span>·
+      <a href="https://engineering.fb.com/2026/10/19/ml-applications/thin-orchestrator-ai-agent-architecture/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>1,300</b><span>行編排器程式碼</span></div>
+    <div class="g-stat"><b>20+</b><span>條工作流</span></div>
+    <div class="g-stat"><b>14</b><span>個專家代理</span></div>
+    <div class="g-stat"><b>25+</b><span>份知識檔</span></div>
+    <div class="g-stat"><b>&lt;1 小時</b><span>欄位上線（原 3–4 天）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <div class="g-tldr">
+      <h2 class="g-tldr-h">30 秒版本</h2>
+      <p class="one">Meta 用一個只有 1,300 行、自己「零領域工作」的小路由器，把 20 多種工作流分派給 14 個專家代理——結果比當年那個「什麼都懂」的大代理穩定得多。核心啟示：<em>代理系統的可靠性是架構問題，不是 prompt 問題。</em></p>
+      <ul>
+        <li>單一全能代理在生產環境出現幻覺與「概念交叉污染」；沒有人工客製 prompt 時，成功率只有 10–20%。</li>
+        <li>路由器走固定 7 步協定，其中只有第 6 步由「隔離子代理」做 LLM 推理，其餘全是確定性程式碼。</li>
+        <li>新用例不必寫新代理：寫一份新的工作流模板、重排既有 14 個代理即可；知識檔更新即生效。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">問題：一顆聰明大腦，撐不起生產環境</h2>
+    <p class="g-p">場景是 Meta 推薦系統的<strong>資料欄位 onboarding</strong>：一個欄位從設定到生效，要跨 <strong>3 個程式庫、3 種語言、最多 6 個管線階段</strong>（Python 設定 → C++ 程式碼生成 → 資料處理服務 → 分析系統），而且各階段必須同步。團隊的第一版做法和大多數人一樣：<em>養一個裝了所有知識的大代理</em>——設定 schema、生成規則、管線路由、驗證要求、10 多個資料源的慣例，全塞給它。</p>
+    <p class="g-p">Demo 很漂亮，上線就開始幻覺。知識超過某個門檻後，<strong>懂得越多反而表現越差</strong>：把 A 子系統的命名慣例套到 B、把張三的程式生成模式用在李四的資料源——文章稱之為「概念交叉污染」。團隊也試過折衷版：單代理＋為每個任務手工打造 prompt 可以到 70–80%，但拿掉這層呵護就掉到 10–20%。這說明<strong>問題出在架構，不是 prompt 寫得好不好</strong>。文章引用 Mount Sinai 的研究佐證：80 個任務批次下，多代理編排命中率 65.3%，單代理只剩 16.6%，token 還省 65 倍——隔离任務、避免 context 互相干擾，才是關鍵。</p>
+    <div class="g-pain"><i>幻覺</i><i>概念交叉污染</i><i>無客製 prompt 成功率 10–20%</i><i>context 越滾越大</i><i>出錯難以歸因</i></div>
+
+    <figure class="g-dg">
+      <figcaption class="g-dg-h">圖解 A · 改之前 — <b>厚編排器</b>（一顆大腦做所有事）</figcaption>
+      <div class="g-hub">
+        <div class="nd nd--fat"><b>單一全能代理（LLM）</b><span>規劃、選工具、寫碼、驗證……每一步都靠同一個 context 重新推理</span></div>
+        <div class="g-spokes">
+          <div class="g-spoke">設定 schema</div>
+          <div class="g-spoke">程式碼生成</div>
+          <div class="g-spoke">管線路由</div>
+          <div class="g-spoke">驗證規則</div>
+          <div class="g-spoke">資料源慣例</div>
+        </div>
+      </div>
+      <div class="g-loop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4"/></svg>每個子任務都回到大腦重跑一次推理——知識全在腦內，錯一處、處處錯</div>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">解法：把中央變薄，把聰明留給專家</h2>
+    <p class="g-p">Thin orchestrator 的分工原則只有一句話：<strong>中央只擁有「順序」與「可靠性檢查」，所有領域判斷交給專家。</strong>每個請求都走同一套<strong>固定 7 步協定</strong>——其中 6 步是寫死的確定性程式碼（排序、前置檢查、交接、把關），唯一動用 LLM 的是第 6 步，而且被關在<strong>隔離子代理</strong>裡：它只載入自己那個領域的知識檔，看不到全局，所以幻覺既不容易發生、發生了也燒不出自己的艙位。</p>
+
+    <figure class="g-dg">
+      <figcaption class="g-dg-h">圖解 B · 改之後 — <b>薄編排器</b>（固定協定＋專家代理池）</figcaption>
+      <div class="nd"><b>請求進場</b><span>路由器只做兩件事：排順序、做可靠性檢查（零領域工作）</span></div>
+      <div class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></div>
+      <div class="g-proto">
+        <div class="g-step">1</div><div class="g-step">2</div><div class="g-step">3</div><div class="g-step">4</div><div class="g-step">5</div><div class="g-step g-step--llm">6<small>LLM 推理</small></div><div class="g-step">7</div>
+      </div>
+      <div class="g-legend">
+        <p class="det"><b>步驟 1–5、7＝確定性程式碼</b>：排序、前置檢查、資料交接、可靠性把關——不靠 LLM，所以幾乎沒有幻覺空間。</p>
+        <p class="llm"><b>第 6 步＝唯一的 LLM 推理</b>：發生在隔離子代理內，只載入該領域的知識檔；創造力在這裡，風險也被隔離在這裡。</p>
+      </div>
+      <div class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></div>
+      <div class="g-lanes">
+        <div class="g-lane"><b>工作流模板 A（確定性狀態機）</b><span class="seq"><span class="g-agent">3</span><span class="g-sep">→</span><span class="g-agent">7</span><span class="g-sep">→</span><span class="g-agent">12</span></span><small>步驟順序寫死在模板裡，約束 LLM 的決策空間；示意。</small></div>
+        <div class="g-lane"><b>工作流模板 B（另一個用例）</b><span class="seq"><span class="g-agent">5</span><span class="g-sep">→</span><span class="g-agent">2</span><span class="g-sep">→</span><span class="g-agent">9</span></span><small>新用例＝新模板重排同一池代理，零新代理程式碼；示意。</small></div>
+      </div>
+      <div class="g-pool">
+        <b>專家代理池 ×14 — 每個只做窄任務、結構標準化（第 15 個長得跟第 1 個一樣）</b>
+        <div class="chips"><span class="g-agent">1</span><span class="g-agent">2</span><span class="g-agent">3</span><span class="g-agent">4</span><span class="g-agent">5</span><span class="g-agent">6</span><span class="g-agent">7</span><span class="g-agent">8</span><span class="g-agent">9</span><span class="g-agent">10</span><span class="g-agent">11</span><span class="g-agent">12</span><span class="g-agent">13</span><span class="g-agent">14</span></div>
+      </div>
+      <div class="g-know">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+        <p><b>知識檔 25+ 份，執行時按需載入</b>：不埋在編排器裡；更新後下一個 session 自動用新版，不用改編排器，同一份知識檔還能跨平台重用。</p>
+      </div>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">逐步拆解</h2>
+    <div class="g-steps">
+      <div class="g-steprow"><div class="n">01<small>分派</small></div><div><h3>路由器唯一的工作：把請求放進正確的工作流</h3><p>判斷「這件事屬於哪條流程」用確定性規則完成；之後每一步怎麼走，都由工作流模板（狀態機）說了算，LLM 不參與路線規劃。</p></div></div>
+      <div class="g-steprow"><div class="n">02<small>約束</small></div><div><h3>工作流模板＝確定性狀態機，先圈住決策空間</h3><p>「要做哪些階段、按什麼順序」與「每階段怎麼做」被刻意分開：順序寫死在模板，把 LLM 的自由度壓到只剩階段內的專業判斷。</p></div></div>
+      <div class="g-steprow"><div class="n">03<small>專注</small></div><div><h3>14 個專家代理各管一類窄任務</h3><p>結構標準化，新增第 15 個代理是「套模板」而非重新發明。代理之間互不看不見對方的 context，交叉污染失去傳播路徑。</p></div></div>
+      <div class="g-steprow"><div class="n">04<small>餵養</small></div><div><h3>知識以檔案外掛，執行時才載入</h3><p>25+ 份知識檔按領域組織；改檔案即全體生效、無需動程式，同一份檔案服務多個平台實作——知識運維從「改 prompt」變成「改文件」。</p></div></div>
+      <div class="g-steprow"><div class="n">05<small>擴展</small></div><div><h3>規模化的成本＝新增模板與知識檔</h3><p>支援管線遷移這種全新用例時，團隊沒寫任何新代理，只寫了一份新模板重排既有代理。擴展是組合，不是重建。</p></div></div>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">五個關鍵詞</h2>
+    <div class="g-glos">
+      <div class="g-card"><b>Orchestrator 編排器</b><span class="w">指揮流程的中央層：決定先做什麼、後做什麼、結果怎麼交接。</span><span class="why">關鍵在讓它「薄」——越聰明越危險。</span></div>
+      <div class="g-card"><b>Router 路由</b><span class="w">編排器的分派動作：把請求放進正確的工作流。</span><span class="why">用確定性規則做，不交給 LLM 猜。</span></div>
+      <div class="g-card"><b>工作流模板</b><span class="w">寫死步驟順序的狀態機，是流程的「樂譜」。</span><span class="why">新用例寫新譜，不必買新樂器（代理）。</span></div>
+      <div class="g-card"><b>窄工具／專家代理</b><span class="w">只做一類任務的小代理，context 互相隔離。</span><span class="why">錯誤被關在單一艙位，不會連環爆。</span></div>
+      <div class="g-card"><b>知識檔</b><span class="w">按領域外掛的知識文件，執行時載入。</span><span class="why">更新即生效，知識運維像改 wiki。</span></div>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">成效</h2>
+    <div class="g-eco">
+      <div class="g-eff"><b>欄位 onboarding 時間</b>
+        <div class="flow"><i>人工</i> 3–4 天 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg> <i>設定驅動</i> 約 1 天 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg> <span class="hit">&lt;1 小時</span></div>
+        <p>跨 3 個程式庫、3 種語言、6 個管線階段的協調變更，壓縮到一小時內完成。</p>
+      </div>
+      <div class="g-eff"><b>變更免人工比例</b>
+        <div class="flow"><span class="hit">約 2/3</span> <i>的系統變更</i></div>
+        <p>不需重大人工修改即直接生效；代價是放棄「通用大腦」，換取深度領域知識——刻意為之的架構取捨。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="g-take">
+      <p><b>可靠性是架構問題。</b>同一批模型，換了編排方式就從 10–20% 到可用——先看結構，再調 prompt。</p>
+      <p><b>讓 LLM 只做「只有 LLM 會做的事」。</b>排序、檢查、交接交給確定性程式碼；創造力關在隔離艙裡發揮。</p>
+      <p><b>擴展靠組合，不靠重建。</b>薄中央＋專家池＋外掛知識檔：新增用例＝新模板，知識更新＝改文件。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="https://openai.com/index/scaling-ai-research-for-complex-biological-data" target="_blank" rel="noopener">數千個 AI 代理掃描數百萬腦細胞數據，為生物研究找出新線索</a><span class="d">2026-10-21</span></div>
+      <div class="g-relrow"><span class="s">Claude (Resources)</span><a href="https://claude.com/resources/articles/claude-duet" target="_blank" rel="noopener">推出 Claude Duet 研究預覽（waitlist），美國 Pro／Max 訂閱者優先</a><span class="d">2026-10-21</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="https://developers.googleblog.com/step-by-step-guide-build-a-voice-agent-that-never-goes-silent-using-adk/" target="_blank" rel="noopener">ADK ＋ gemini-3.8-live 教學：用非阻塞串流工具打造不中斷的語音 agent</a><span class="d">2026-10-19</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據皆出自原文。mockup 提案版 · 尚未納入站內導覽。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀（mockup）· 建置於 2026-10-22 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
