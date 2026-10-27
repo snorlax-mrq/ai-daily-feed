@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — Project Chrysalis：自我進化的 SRE 代理，每個補丁都要過四道閘 · AI 每日動態檔案</title>
+<meta name="description" content="深入淺出導讀 Google Cloud 研究參考架構 Project Chrysalis：自我進化的 AI 代理在模擬黑色星期五快取雪崩中把首次緩解從 15–45 分鐘壓到 1.8 秒、HTTP 5xx 降到 0.0%，並以 Model Armor、Cloud KMS＋Binary Authorization、OPA、雙人複核 HITL 四道治理閘門約束每個自主動作。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>Project Chrysalis：自我進化的 SRE 代理，每個補丁都要過四道閘</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Google Cloud 研究參考架構「Project Chrysalis」— 在 Gemini 平台與 ADK 上架構受治理、自我演進的 AI 代理</p>
+    <p class="g-meta">
+      <span>Google Developers</span>·<span>2026-10-22 發布</span>·<span>2026-10-23 收錄</span>·
+      <a href="https://developers.googleblog.com/architecting-governed-self-evolving-ai-agents-on-gemini-agent-platform/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>1.8 秒</b><span>模擬 Black Friday 快取雪崩中的首次緩解時間（基準 15–45 分鐘）</span></div>
+    <div class="g-stat"><b>0.0%</b><span>HTTP 5xx 錯誤率（自 72.7%–80.0% 的基準降到零）</span></div>
+    <div class="g-stat"><b>18.2 ms</b><span>P99 延遲，自 519.8 ms 下降</span></div>
+    <div class="g-stat"><b>~0.5 ms</b><span>在 BigQuery 反事實評估 400 組流量政策的耗時</span></div>
+    <div class="g-stat"><b>4 道閘門</b><span>每個合成補丁、記憶與拓撲更新都須依序通過的治理鏈</span></div>
+  </div>
+
+  <section class="g-sec">
+    <div class="g-tldr">
+      <h2 class="g-tldr-h">30 秒版本</h2>
+      <p class="one">Google Cloud 研究參考架構 Project Chrysalis 把三項研究突破組成一套跑在 Gemini 平台與 ADK 上的自我進化 SRE 代理：Dream-RSI 把生產流量軌跡送進 BigQuery 離線重放數百組候選政策、APEX 把 agent 進化拆到三個受治理的時間尺度、AgentEvolver 用逐步 Shapley 歸因分辨哪一步救了服務、哪一步造成附帶損害。模擬 Black Friday 快取雪崩中，首次緩解從 15–45 分鐘縮到 1.8 秒、HTTP 5xx 降到 0.0%；而每個自主動作都被四道防禦縱深閘門以密碼學方式約束，永久變更更需 SRE 明確簽核。</p>
+      <ul>
+        <li>傳統 agent 部署後即凍結：固定 system prompt＋預註冊工具，遇新型瓶頸只能等人工。</li>
+        <li>三支柱對應「SRE 三難」：探索安全、結構可變性、多步功勞分配，各解一環。</li>
+        <li>自我進化不是黑箱：Model Armor、KMS 簽章、OPA 護欄、雙人複核，層層把關。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">問題：事故現場不需要建議，需要緩解</h2>
+    <p class="g-p">企業雲平台要服務<em>數百萬並發使用者</em>，緊耦合的微服務會產生靜態 runbook 與閾值告警都預料不到的級聯故障。在 Black Friday 快閃特賣這種高速度事件裡，SRE 面對的是不留情面的現實：<em>幾秒內診斷嘈雜的分散式遙測，否則承受每分鐘數百萬美元的級聯中斷</em>。</p>
+    <p class="g-p">生成式 AI copilot 已加速寫碼與日誌摘要，但 AI 代理始終難以<em>可靠地修復線上生產事故</em>。原文的例子很傳神：正在對抗連線池耗盡（connection pool starvation）的值班工程師，不需要一個提供「故障排查建議」或提出未經驗證 PR 的 agent——他需要的是一個<em>受治理、能自我進化</em>的系統。傳統 agent 部署後即凍結（固定 system prompt＋預註冊工具），遇到新型基礎設施瓶頸便束手無策；自我進化架構則在執行期<em>合成情境專屬的緩解工具</em>、為每次介入評分其遙測影響、並把驗證過的護欄編纂下來留給未來的事故——進化的依據必須是<em>「什麼有效、什麼失敗」的實證</em>。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三根研究支柱</h2>
+    <p class="g-p">原文把自我進化雲端代理定位為應用研究的活躍領域，核心難題是 <strong>SRE 三難（SRE Trilemma）</strong>：平衡探索安全、結構可變性、多步功勞分配——三個支柱各解一環。</p>
+
+    <figure class="g-dg">
+      <figcaption class="g-dg-h">圖解 · <b>三支柱</b>：自我進化的三個環節 · 依原文整理</figcaption>
+      <div class="g-glos">
+        <div class="g-card"><b>① Dream-RSI · 無伺服器反事實模擬</b><span class="w">把生產請求軌跡匯出到 BigQuery，以次毫秒的向量化記憶體掃描重放數百組 token-bucket 候選限流設定，離線找出 Pareto 最優政策。</span><span class="why">在生產環境直接試未經審核的限流參數，可能誤傷正常營收，或再次觸發事故。</span></div>
+        <div class="g-card"><b>② APEX · 三層共進化</b><span class="w">把 agent 的進化分離到三個受治理的時間尺度上推進（收錄原文未展開各層細節）。</span><span class="why">單層 prompt 調校只是脆弱的繃帶；毫無約束的代碼自我修改，又會動搖系統穩定。</span></div>
+        <div class="g-card"><b>③ AgentEvolver · 逐步 Shapley 歸因</b><span class="w">以介入前後的遙測差值（P99 延遲、HTTP 5xx 率、資料庫連線池飽和度）計算每個執行跨段的邊際 Shapley 功勞，把有效補丁與錯誤補丁分開。</span><span class="why">混亂事故中多次介入接連發生，粗粒度的成敗獎勵分不清哪步治好了服務、哪步造成附帶損害。</span></div>
+      </div>
+      <div class="g-know">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg>
+        <p><b>閉環工作流</b>：此架構以互動應用的形式實作在 Gemini 平台上，橫跨 Production Target Service、ADK 多代理平面（Multi-Agent Plane）、自我進化引擎與防禦縱深治理管線。收錄原文列出的階段：Phase 2「ADK 快迴圈分診＋受治理的 APEX 第一層熱修」、Phase 3「AgentEvolver 歸因＋Tier-2 HITL 記憶體內拓撲重接」、Phase 4「BigQuery 反事實重放＋好奇混沌驗證」。</p>
+      </div>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">不當黑箱：四道防禦縱深閘門</h2>
+    <p class="g-p">自我進化最可怕的想像，是不受控的黑箱。原文明言這套架構<em>並非無約束的黑箱</em>：每個自主動作都被 Google Cloud 的防禦縱深安全棧以<strong>密碼學方式框限</strong>；且每個合成的補丁、蒸餾的記憶與拓撲更新，都必須依序通過四道驗證邊界——一條不間斷的監管鏈（chain of custody）。</p>
+    <div class="g-steps">
+      <div class="g-steprow"><div class="n">01<small>入口消毒</small></div><div><h3>Model Armor：遙測進來先過安檢</h3><p>對送進 agent 的遙測資料消毒，防範<em>提示注入（prompt injection）</em>與<em>資料外洩</em>——事故期間滿天飛的日誌與告警，正是夾帶惡意指令的高風險通道。</p></div></div>
+      <div class="g-steprow"><div class="n">02<small>補丁簽章</small></div><div><h3>Cloud KMS＋Binary Authorization：沒簽章的代碼掛不上</h3><p>以 Cloud Key Management Service 與 Binary Authorization 中介層，為 agent 合成的補丁做<strong>密碼學簽署</strong>，阻擋未經驗證的代碼被掛載執行。</p></div></div>
+      <div class="g-steprow"><div class="n">03<small>政策護欄</small></div><div><h3>OPA Policy Controller：SLA 紅線寫進政策</h3><p>以 Open Policy Agent 政策強制嚴格的 SLA 護欄，防止 agent<em>自我造成的服務中斷</em>——進化不能以犧牲可用性為代價。</p></div></div>
+      <div class="g-steprow"><div class="n">04<small>雙人複核</small></div><div><h3>Dual-Custody HITL：永久變更需 SRE 明確簽核</h3><p>雙重保管人的人機協同治理（Human-in-the-Loop）：對 agent 層級（hierarchy）的任何<strong>永久變更</strong>，都必須有 SRE 的明確簽核才放行。</p></div></div>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">實測結果怎麼讀</h2>
+    <p class="g-p">在對 Black Friday 快取雪崩（cache-stampede）工作負載的自動化評估中，這套受治理架構對比<em>人工分診</em>與<em>靜態建議式 copilot</em> 交出的數字：首次緩解時間（time-to-first-mitigation）從 <em>15–45 分鐘</em>壓到 <strong>1.8 秒</strong>；HTTP 5xx 錯誤率從 72.7%–80.0% 的基準降到 <strong>0.0%</strong>；P99 延遲從 <em>519.8 ms</em> 降到 <strong>18.2 ms</strong>；並在 BigQuery 上以約 <strong>0.5 ms</strong> 評估了 <strong>400 組反事實流量政策</strong>。</p>
+    <p class="g-p">讀這組數字要記住脈絡：它出自<em>模擬示範（demo simulation）的自動化評估</em>，而非真實生產環境的事故；原文的定位是「研究參考架構」，文末提供參考實作與 Google Cloud 文件供自行驗證。它的價值不在「1.8 秒」這個絕對值，而在於展示了一個反直覺的組合：<em>治理成本不必以犧牲反應速度為代價</em>。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="g-take">
+      <p><b>自我進化的前提是可歸因。</b>沒有 step 級的 Shapley 歸因，agent 只知道「最後修好了」，不知道哪一步立功、哪一步闖禍——那樣的進化只是在放大運氣。</p>
+      <p><b>自主性與治理是一體設計，不是事後上鎖。</b>四道閘門沿著補丁的生命週期排列（入口消毒→簽章→政策→雙人複核），這讓「放手讓 agent 動手」成為可以簽字的決策。</p>
+      <p><b>先在離線世界演練，再到線上動手。</b>把生產流量軌跡丟進 BigQuery 重放、0.5 ms 掃 400 組政策——危險參數不必在生產環境裡試錯，這是 self-evolving 不等於 reckless 的關鍵。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="adk-voice-agent.html">ADK ＋ gemini-3.8-live 教學：用非阻塞串流工具打造不中斷的語音 agent</a><span class="d">2026-10-19</span></div>
+      <div class="g-relrow"><span class="s">Claude (Resources)</span><a href="fold-subagents.html">子代理不是組織圖：把 router、planner 摺回主 agent 迴圈的減法設計</a><span class="d">2026-10-22</span></div>
+      <div class="g-relrow"><span class="s">Meta Engineering</span><a href="thin-orchestrator.html">The Thin Orchestrator：讓中央「少做事」，AI 代理反而更可靠</a><span class="d">2026-10-19</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據與架構名稱均出自原文，小標與分節為編輯整理。成效數據出自原文的模擬示範評估。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-27 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
