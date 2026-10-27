@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>導讀 — 讀 code 之外，真的把 app 跑起來：Greptile 用 GPT-6 Astra 自動化應用測試 · AI 每日動態檔案</title>
-<meta name="description" content="導讀 OpenAI 客戶案例〈Greptile takes bug detection beyond code review with GPT-6 Astra〉：以 computer use 替 PR 起開發伺服器、縮出 iPhone 視窗模擬使用者、抓出消失的按鈕；Knowledge Base 經 MCP server 餵給 Codex、數千客戶接上、以 revert 率量測成效；並以 Daybreak 強化防禦、期待 Ultrafast 加速開發。">
+<meta name="description" content="導讀 OpenAI 客戶案例〈Greptile takes bug detection beyond code review with GPT-6 Astra〉：以 computer use 替 PR 起開發伺服器、縮出 iPhone 視窗模擬使用者、抓出消失的按鈕；Knowledge Base 經 MCP server 餵給 Codex、據創辦人自述已有數千客戶接上、以 revert 率量測成效；並以 Daybreak 強化防禦、期待 Ultrafast 加速開發。">
 <script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
 <link rel="stylesheet" href="../assets/archive.css">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -37,7 +37,7 @@
   <div class="g-stats">
     <div class="g-stat"><b>4 道驗證</b><span>一個 PR 要驗：邏輯正確、符合開發者意圖、安全、不破壞既有功能——有些得真的執行才看得出來</span></div>
     <div class="g-stat"><b>iPhone 視窗</b><span>替 PR 起開發伺服器、把瀏覽器縮到 iPhone 尺寸、模擬使用者操作，靠視覺理解抓出消失的按鈕</span></div>
-    <div class="g-stat"><b>數千客戶</b><span>已把 Codex 連上 Greptile 的 Knowledge Base——透過 MCP server 開給 Codex</span></div>
+    <div class="g-stat"><b>數千客戶</b><span>據創辦人自述，已把 Codex 連上 Greptile 的 Knowledge Base——透過 MCP server 開給 Codex</span></div>
     <div class="g-stat"><b>revert 率</b><span>成效指標：給 agent 脈絡後，AI 產生的程式碼被退回的次數變少，省時間也省 inference</span></div>
     <div class="g-stat"><b>Daybreak</b><span>面對強模型同樣放大攻擊能力，Greptile 以 Daybreak 強化客戶防禦（原文僅以引述帶過）</span></div>
   </div>
@@ -45,7 +45,7 @@
   <section class="g-sec">
     <div class="g-tldr">
       <h2 class="g-tldr-h">30 秒版本</h2>
-      <p class="one">Greptile 做的是「帶著整個 codebase 脈絡」審查並測試程式碼變更的 AI agent。這篇 OpenAI 客戶案例記錄它的三個做法：用 GPT-6 Astra 的 computer use，不只讀 code，還替 PR 起開發伺服器、把瀏覽器縮成 iPhone 視窗、模擬使用者操作，抓出只有執行才看得到的 bug；把 Knowledge Base 透過 MCP server 開給 Codex，讓 AI 寫出符合客戶既有模式的程式——數千客戶已接上，並以「AI 程式碼被 revert 的頻率」量測成效；執行長 Daksh Gupta 認為唯一真正的瓶頸是把想法變成軟體的速度，將 Ultrafast 視為加速開發的方向。</p>
+      <p class="one">Greptile 做的是「帶著整個 codebase 脈絡」審查並測試程式碼變更的 AI agent。這篇 OpenAI 客戶案例記錄它的兩個做法與一個展望：用 GPT-6 Astra 的 computer use，不只讀 code，還替 PR 起開發伺服器、把瀏覽器縮成 iPhone 視窗、模擬使用者操作，抓出只有執行才看得到的 bug；把 Knowledge Base 透過 MCP server 開給 Codex，讓 AI 寫出符合客戶既有模式的程式——據 Gupta 說法，數千客戶已接上，並以「AI 程式碼被 revert 的頻率」量測成效；執行長 Daksh Gupta 認為對 Greptile 而言，唯一真正的瓶頸是把想法變成軟體的速度，將 Ultrafast 視為加速開發的方向。</p>
       <ul>
         <li>有些 bug 讀不出來：按鈕在 iPhone 視窗上消失，要真的跑起來、看畫面才抓得到。</li>
         <li>脈絡是可量測的投資：Knowledge Base 經 MCP 餵給 Codex，以 revert 率驗證「有脈絡，較少被退回」。</li>
@@ -56,8 +56,8 @@
 
   <section class="g-sec">
     <h2 class="g-h2">為什麼只讀 code 不夠：把「執行」交給 computer use</h2>
-    <p class="g-p">Greptile 的 agent 帶著整個 codebase 的脈絡，審查並測試程式碼變更；共同創辦人兼執行長 Daksh Gupta 的使命宣言是 <em>「We are in the business of reducing bugs and making the world's software more reliable」</em>。原文把 PR 驗證拆成四件事：程式<em>邏輯正確、做了開發者想做的事、安全、不破壞既有功能</em>——而其中一部分，<strong>非得真的把應用跑起來不可</strong>，光讀 code 看不出問題。</p>
-    <p class="g-p">具體例子：一個按鈕，在 iPhone 上檢視網站時會消失。有 GPT-6 Astra 的 <strong>computer use</strong>，Greptile 可以替這個 PR 起一台開發伺服器、把瀏覽器縮成 <strong>iPhone 尺寸的 viewport</strong>、模擬使用者在應用裡走一遍——模型靠<em>視覺理解</em>檢查畫面、抓出那顆消失的按鈕。Gupta 的對比很直接：<em>「A QA firm testing all of your changes is just impractically slow considering how fast we're able to ship code with these models.」</em>——人工 QA 跟不上模型時代的出貨速度，所以這類測試要自動化到 scale。</p>
+    <p class="g-p">Greptile 的 agent 帶著整個 codebase 的脈絡，審查並測試程式碼變更；共同創辦人兼執行長 Daksh Gupta 的使命宣言是 <em>「We are in the business of reducing bugs and making the world's software more reliable」</em>。原文把 PR 驗證拆成四件事：程式<em>邏輯正確、做了開發者想做的事、安全、不破壞既有功能</em>——而其中一部分，<strong>非得真的把應用跑起來不可</strong>，光讀 code 未必看得出問題。</p>
+    <p class="g-p">具體例子：一個按鈕，在 iPhone 上檢視網站時會消失。有 GPT-6 Astra 的 <strong>computer use</strong>，Greptile 可以替這個 PR 起一台開發伺服器、把瀏覽器縮成 <strong>iPhone 尺寸的 viewport</strong>、模擬使用者在應用裡走一遍——模型靠<em>視覺理解</em>檢查畫面、抓出那顆消失的按鈕。Gupta 的對比很直接：<em>「A QA firm testing all of your changes is just impractically slow considering how fast we're able to ship code with these models.」</em>——人工 QA 跟不上模型時代的出貨速度，所以這類測試得以自動化到 scale。</p>
   </section>
 
   <section class="g-sec">
@@ -75,9 +75,9 @@
   <section class="g-sec">
     <h2 class="g-h2">帶走三件事</h2>
     <div class="g-take">
-      <p><b>Code review 的下一站是應用測試。</b>邏輯、意圖、安全、回歸四關之外，「跑起來看畫面」正在被 computer use 自動化——iPhone 視窗上消失的按鈕，是典型只有執行才找得到的 bug。</p>
-      <p><b>給 agent 脈絡，是可以量測的投資。</b>Greptile 挑了 revert 率當指標：有 Knowledge Base 的 agent 改動較少被退回——脈絡的報酬率可以直接用時間與 inference 成本計算。</p>
-      <p><b>強模型同時放大攻與防。</b>同一批能力既能自動化測試、也能自動化攻擊；Greptile 把「讓防禦比攻擊更細膩」寫進說法，防禦自動化與測試自動化是同一枚硬幣的兩面。</p>
+      <p><b>Code review 的下一站是應用測試。</b>邏輯、意圖、安全、回歸四關之中，有些非跑起來不可，這部分得以用 computer use 自動化——iPhone 視窗上消失的按鈕，是典型只有執行才找得到的 bug。</p>
+      <p><b>給 agent 脈絡，是可以量測的投資。</b>Greptile 挑了 revert 率當指標：有 Knowledge Base 的 agent 改動較少被退回——脈絡的投資報酬，反映在省下的時間與 inference 成本上（編輯推論）。</p>
+      <p><b>強模型同時放大攻與防。</b>更強的模型同時讓測試與攻擊都變更容易（編輯推論：防禦自動化與測試自動化是同一枚硬幣的兩面）；Greptile 把「讓防禦比攻擊更細膩」寫進說法。</p>
     </div>
   </section>
 
@@ -90,7 +90,7 @@
     </div>
   </section>
 
-  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據與做法均出自原文，小標與分節為編輯整理。</p>
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據與做法均出自原文，小標與分節為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
 </main>
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
