@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 共用機器人：把銷售流程切成三個有權限邊界的工作角色 · AI 每日動態檔案</title>
+<meta name="description" content="深入導讀 xAI（官網現以 SpaceXSI 品牌呈現）業務團隊的 Shared Bots 實作：業務團隊把各自打造的 Grok Bot 收斂成 Account Intel、Quote、Deal 三個共用機器人，各自綁定職務知識、以使用者本人權限執行、加上速率限制與人工覆核關卡——把代理設計問題變成組織設計問題。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>共用機器人：把銷售流程切成三個有權限邊界的工作角色</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Your next sales teammate should be a Grok Bot（SpaceXSI 業務團隊自述的 Shared Bots 導入經驗）</p>
+    <p class="g-meta">
+      <span>xAI (Grok)</span>·<span>2026-10-27 發布</span>·<span>2026-10-28 收錄</span>·
+      <a href="https://x.ai/news/grok-bot-sales" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>3 個</b><span>先行導入的共用機器人（Account Intel／Quote／Deal）</span></div>
+    <div class="g-stat"><b>以本人權限執行</b><span>機器人以「使用者本人權限」執行，敏感動作再收窄</span></div>
+    <div class="g-stat"><b>1 次更新</b><span>流程改了只改一次，全隊同步生效</span></div>
+    <div class="g-stat"><b>2 種情境</b><span>保留人工覆核：準則說不清、或要對客戶發話</span></div>
+  </div>
+
+  <section class="g-sec">
+    <div class="g-tldr">
+      <h2 class="g-tldr-h">30 秒版本</h2>
+      <p class="one">SpaceXSI 業務團隊一開始是每個業務各自養一隻 Grok Bot：自己研究客戶、自己準備會議、自己維護 pipeline。他們把這件事收斂成<strong>共用機器人（Shared Bots）</strong>——由最熟該職務的人共同建置與維護，全隊共用同一份知識與規則。首波三個角色分別吃掉成交週期的三段：Account Intel Bot（找名單、會前簡報、會後更新 CRM 並草擬跟進信）、Quote Bot（用 CPQ 產報價、送審、產訂單）、Deal Bot（審非標準條款與核准）。真正的設計重點不在能力而在邊界：以使用者本人權限執行、敏感動作保留給特定機器人、加上速率限制與人工覆核。</p>
+      <ul>
+        <li>共用，是為了讓「最好的那個做法」變成全隊預設值，而不是各自重造。</li>
+        <li>每個機器人是一份職務的封裝：懂哪些系統、守哪些商業規則、什麼時候要停手找人。</li>
+        <li>權限設計比提示詞重要：業務不能用 Quote Bot 核准自己的折扣，核准權留在 Deal Desk。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">從「每人一隻」到「每職務一隻」</h2>
+    <p class="g-p">原文的起點很樸素：業務自己動手做機器人，用來研究帳戶、準備會議、管理 pipeline。每個人都在解同一道題，解法各不相同。於是把「大家各自做的最好部分」抽出來，做成整個團隊都能用的版本——也就是 Shared Bots。</p>
+    <p class="g-p">關鍵的組織安排是<strong>維護權跟著職務走</strong>：最懂這份工作的人負責建置與維護那個機器人。好處有兩層，一是知識品質（規則由專家定義，而不是由最會寫提示詞的人定義），二是<strong>擴散成本幾乎為零</strong>——機器人改善後，所有使用者自動受惠，不必各自更新自己的設定。</p>
+    <p class="g-p">反過來說，這也把「代理治理」從個人習慣升級成團隊資產：規則改成一份共用的、可被單點更新的東西，而不是散落在每個人私下的 bot 設定裡。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三個角色，吃掉成交週期的三段</h2>
+    <div class="g-glos">
+      <div class="g-card"><b>Account Intel Bot</b><span class="w">找候選帳戶、準備客戶對話、維持 Salesforce 最新狀態。</span><span class="why">會前依帳戶歷史產出 briefing；會後讀 Gong 逐字稿、判斷該更新哪些欄位、草擬跟進信給業務審閱，且可排程自動執行。</span></div>
+      <div class="g-card"><b>Quote Bot</b><span class="w">用 CPQ 工具產生報價與訂單文件。</span><span class="why">可一次準備多組產品與折扣組合，在 Grok Bot 應用裡並排比較（不必進 CPQ 工具）；送審、追蹤狀態、把例外轉給 Deal Bot，核准後於 Ironclad 產訂單並下載可執行合約。</span></div>
+      <div class="g-card"><b>Deal Bot</b><span class="w">支援 Deal Desk 審查非標準條款與例外核准。</span><span class="why">對照已核准的政策與合約語言、在 Slack 分流業務的請求、轉給正確的跨部門負責人，並先確認法務是否已有類似條款草稿。</span></div>
+      <div class="g-card"><b>其他角色</b><span class="w">Competitive Intel Bot（維持競品情報、幫業務準備競品對話）、Sales Training Bot（新人上手與技能養成）。</span><span class="why">看得出方向：不是做一個萬用助理，而是把一個部門拆成若干「可被指名的職務」，逐一封裝。</span></div>
+    </div>
+    <p class="g-p">值得注意的是這些機器人之間<strong>會互相交棒</strong>：Quote Bot 遇到特殊定價或非標準條款就把工作交給 Deal Bot；Deal Bot 對照已核准的政策與合約語言，備妥推進交易所需的變更。<em>「Each brings its own expertise to the process」</em>——原文的說法是讓團隊能把成交週期更大塊地交出去，人留在客戶與需要判斷的決策上。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">治理：權限、速率、覆核三個旋鈕</h2>
+    <p class="g-p">這篇最值得抄的不是功能清單，而是它對「能做什麼」的處理方式。原文把共用機器人的設計問題拆成三題：<strong>它知道什麼、它能做什麼、什麼時候人要介入</strong>。</p>
+    <div class="g-steps">
+      <div class="g-steprow"><div class="n">01<small>知識</small></div><div><h3>用共用技能與內部真實來源餵養</h3><p>每個機器人要理解它操作的系統與遵守的商業規則。做法是共用 skills 加上連接內部 source of truth，讓所有人站在同一份最新規則上；流程一改，改一次就好。</p></div></div>
+      <div class="g-steprow"><div class="n">02<small>權限</small></div><div><h3>以使用者本人權限執行，敏感動作再收窄</h3><p>機器人不自帶超級權限，而是繼承當下使用者的權限，另對敏感動作加限制。業務不能用 Quote Bot 核准自己的折扣——核准與例外仍屬 Deal Desk 職權；Deal Bot 才具備業務沒有的權限。</p></div></div>
+      <div class="g-steprow"><div class="n">03<small>規模護欄</small></div><div><h3>速率限制，加上寫入前預覽</h3><p>為避免「一次改太多」，設了 rate limits；Quote Bot 在動 Salesforce 之前會先給業務看預覽並要求確認。</p></div></div>
+      <div class="g-steprow"><div class="n">04<small>人在圈內</small></div><div><h3>目前只有兩條硬性覆核線</h3><p>只要<strong>無法明確定義判斷準則</strong>，或機器人要產出<strong>對客戶的溝通內容</strong>，在目前階段就必須人工覆核。Deal Bot 的做法是準備建議案＋請 Deal Desk 專員核准後才動。</p></div></div>
+      <div class="g-steprow"><div class="n">05<small>可追溯</small></div><div><h3>每筆核准都蓋章</h3><p>Deal Bot 經手的每一次 Salesforce 核准，都會在系統留下決策、理由與它所支援的 DRI（直接負責人），以符合問責、可追溯與公司政策。</p></div></div>
+    </div>
+    <div class="g-know">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+        <p><b>原文對「自主」的態度是分階段的</b>：目前只要判斷準則說不清、或涉及對客戶發話，就維持人工覆核；隨著工作品質可被衡量、對決策有信心，才逐步下放責任。換句話說，自動化的邊界是被「能不能驗證」推著走的，不是被「能不能做到」推著走。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">這套做法真正解決的問題</h2>
+    <p class="g-p">把三個角色攤開看，會發現它們都在做同一件事：<strong>把散落在多個系統（Salesforce、CPQ、Ironclad、Slack、Gong）的長流程，收攏進 Grok Bot 裡的一段對話</strong>。原文對 Quote Bot 的說法是「可以在一次對話裡完成這道流程的一大部分」，不必在系統間切換、等別人有空回覆。這也是原文反覆強調「keeping people focused on customers」的實際含義。</p>
+    <p class="g-p">另一個訊號是方法論：GTM 工程團隊不是先問「Grok 能做什麼」，而是先讓 Grok Bot <strong>分析 Salesforce 活動紀錄，找出最值得自動化的工作</strong>，發現業務花大量時間在會後更新 opportunity，才把這條流程的工具與商業規則補上（編輯推論：這種「先量足跡、再補能力」的順序，是它在真實流程裡站得住的原因）。</p>
+    <p class="g-p">最後，原文自己承認「還很早」（still early），期待未來共用機器人承擔更多責任、並且彼此協調工作。對想照抄的團隊，這句話反而是最有用的提醒：先挑幾條<strong>規則清楚、可驗證成果</strong>的流程做成角色，再談跨角色協作。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="g-take">
+      <p><b>單位是「職務」，不是「助理」。</b>Account Intel、Quote、Deal 對應的是組織裡本來就存在的角色，所以規則有專家、成果有驗收人、權限有既有邊界可依。做一個萬用業務助理，反而找不到誰該為它的輸負責。</p>
+      <p><b>權限設計就是產品設計。</b>「以使用者本人權限執行＋敏感動作收窄＋速率限制＋寫入前預覽」這四件事，比任何提示詞技巧都更能決定代理能不能進到核心流程——業務不能自己核准折扣，正是這套系統能被信任的原因。</p>
+      <p><b>覆核線畫在「說不清準則」與「對外發話」。</b>這是可直接搬用的兩條判準；再加上每筆核准留下決策、理由與 DRI，代理才從「聰明工具」變成可審計的同事。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="commerce-agent-swarm.html">多代理蜂群賣雜貨：三層解耦、兩個護欄，一筆訂單 0.6 美分</a><span class="d">2026-10-27</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="a2ui-express.html">生成式 UI 不再逐字吐 JSON：把「設計介面」與「編譯介面」拆開</a><span class="d">2026-10-27</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="retell-voice-agents.html">每月 1 億通電話的語音代理：把「選哪個模型」變成可重跑的評測</a><span class="d">2026-10-27</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據出自原文，示意圖與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-28 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

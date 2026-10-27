@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 每月 1 億通電話的語音代理：把「選哪個模型」變成可重跑的評測 · AI 每日動態檔案</title>
+<meta name="description" content="深入導讀 Retell 的語音代理規模化實例：月通話量從 3,000 萬成長到破 1 億通、80% 通話回應由 OpenAI 模型產生；自建 vCX 評測中 GPT-6 Astra 指令遵循 89.7% 第一；Anker 案件解決率 80.4%、Pine Park Health 省下相當 2.1 名全職人力。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>每月 1 億通電話的語音代理：把「選哪個模型」變成可重跑的評測</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Retell uses OpenAI models to help power 100M monthly calls（OpenAI 客戶案例，含延遲、評測與導入數據）</p>
+    <p class="g-meta">
+      <span>OpenAI</span>·<span>2026-10-27 發布</span>·<span>2026-10-28 收錄</span>·
+      <a href="https://openai.com/index/retell-ai" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>1 億通／月</b><span>通話量從 2026 年初 3,000 萬通成長</span></div>
+    <div class="g-stat"><b>80%</b><span>通話回應由 OpenAI 模型產生</span></div>
+    <div class="g-stat"><b>89.7%</b><span>GPT-6 Astra 在 vCX 指令遵循排第一</span></div>
+    <div class="g-stat"><b>883ms</b><span>GPT-6 Astra／Sol 首句延遲中位數</span></div>
+    <div class="g-stat"><b>$1.6M</b><span>人均年營收跑率</span></div>
+  </div>
+
+  <section class="g-sec">
+    <div class="g-tldr">
+      <h2 class="g-tldr-h">30 秒版本</h2>
+      <p class="one">Retell 是給客服中心用的語音 AI 平台，目前服務超過 4,000 家企業，月通話量從 2026 年初的 3,000 萬通長到 9 月破 1 億通。它用 OpenAI 模型產生 <strong>80% 通話</strong>的回應，客戶案件解決率超過 80%，累計已消耗超過 1 兆 token。最值得看的是它的選型方式：自建 <strong>vCX 評測</strong>，用真實生產場景的困難多輪對話比較數十款模型——2026 年 10 月 13 日的榜單中，GPT-6 Astra 以 89.7% 在指令遵循拿第一。</p>
+      <ul>
+        <li>模型選擇靠評測而非 demo：vCX 測指令遵循、資訊接地、工具呼叫與口語自然度。</li>
+        <li>編輯觀察：規模化的真考題是延遲與資料落地，不是模型能力。</li>
+        <li>人機接手要簡報：轉接前先向真人客服交代脈絡，確認準備好才接通。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">選型：用真實通話當考卷</h2>
+    <p class="g-p">Retell 的 vCX 評測刻意不用漂亮的展示題，而是<strong>從真實生產情境抽出的困難多輪對話</strong>，測四件事：能不能守住指令、能不能貼著給定的資訊回答、會不會呼叫正確的工具、講話像不像人。這種題目設計直接對應企業語音代理的死因——不守政策、亂編資訊、叫錯工具、講得像讀稿機。</p>
+    <p class="g-p">結果分兩層看。2026 年 10 月 13 日的評測中，GPT-6 Astra 以 <strong>89.7%</strong> 在指令遵循排第一。另一組是 GPT-6 Astra 上線前的評測：推理開啟時，GPT-5.5 在<strong>非幻覺率 88.0%</strong> 與<strong>工具呼叫正確率 88.3%</strong> 兩項都最高，且兩項都優於 Gemini-3.1-Pro 與 Claude-4.6；關閉推理時，它在非幻覺率同樣領先。</p>
+    <p class="g-p">幾個營運細節也值得記：Retell 會在新模型上線當天就開放，並隨模型進步重跑評測；Retell 表示，新客戶一旦選用 OpenAI 模型就會持續使用；客戶也能透過 Realtime API 取用 Realtime 模型、以 OpenAI TTS 當語音引擎。換句話說，<strong>評測是常設機制，不是一次性的採購決策</strong>。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">上線：80% 解決率背後的兩個真實案例</h2>
+    <div class="g-glos">
+      <div class="g-card"><b>Anker（消費電子）</b><span class="w">在美、英處理售後第一線：訂單追蹤、保固查詢、故障排除。</span><span class="why">案件解決率 80.4%、NPS 63；團隊表示代理的語氣、節奏與溫度達到他們對真人客服的期待。</span></div>
+      <div class="g-card"><b>Pine Park Health</b><span class="w">預約提醒與主動排程，並把結果寫回病歷。</span><span class="why">回收的醫助工時相當於 2.1 名全職人力，轉投入病患照護；排程代理接通病患後的預約轉換率 55.7%。</span></div>
+    </div>
+    <p class="g-p">對話流程的設計有一個容易被忽略的環節：<strong>需要人判斷時怎麼交接</strong>。原文的描述是，語音代理會先向真人客服簡報脈絡、回答對方的追問、確認對方準備好了才把客戶接進來——這比「直接轉接」多了一步，但決定了客戶會不會被迫重講一次。</p>
+    <p class="g-p">通話結束後還有一步：用 GPT-5.6 Terra 分析逐字稿，抽出處理結果等結構化資料，寫回客戶紀錄。也就是說模型在系統裡不是單一角色，而是<strong>即時應答與工具呼叫、會後摘要</strong>分工：應答與工具呼叫由 GPT-6.1 Sol／GPT-6 Astra／GPT-5.5 混用，會後摘要交給 GPT-5.6 Terra。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">延遲與資料落地：規模化的真考題</h2>
+    <p class="g-p">Retell 平台的白天流量可以達到夜間離峰的 <strong>50 倍以上</strong>。為了在尖峰維持通話品質，它用 OpenAI 的專用伺服器（由其客戶共享），並自建電信堆疊（含第二套可接手的備援）與語音／模型服務備援，以降低單一服務失效時斷話的風險。</p>
+    <p class="g-p">延遲數字要看限定語與基準日：在 2026 年 10 月 13 日的評測中，<strong>GPT-6 Astra 與 GPT-6 Sol 的首句延遲中位數各為 883 毫秒</strong>，而 <strong>GPT-5.6 Luna 最高（最佳）為 497 毫秒</strong>——同一份榜單裡，最快的那個不是最強的那個，這正是語音產品必須分層用模型的原因。</p>
+    <p class="g-p">另一個企業採購的硬門檻是資料落地。OpenAI 的區域化 API 端點讓開發者把流量導到指定地理區域，Retell 用它縮短網路往返，同時滿足醫療與金融業的資料存放要求（編輯推論：對這兩個產業而言，能不能指定區域往往比多 100 毫秒更決定能不能成交）。</p>
+    <div class="g-know">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+        <p><b>工程端的第三種用法：Codex 當研究員與測試員</b>。Retell 的工程師在動手前把高層次需求丟給 Codex，讓它先讀陌生程式庫、對照實際資料、說明要改哪裡；除錯時讓它交叉比對 log、資料庫紀錄與程式碼。前端則交給 GPT-6 Astra 的電腦操作：開 PR 後自動打開介面、點過流程、試著弄壞它並回報問題——原文說更早的模型無法穩定做到這件事。結果是業務成長但工程團隊不必等比例擴編，人均年營收跑率 160 萬美元。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="g-take">
+      <p><b>把「模型選擇」做成常設評測，而不是一次性採購。</b>vCX 的價值不在某一版的 89.7%，而在它讓每次新模型上線都能用同一份真實題目重跑——這才是模型月月更新時代唯一可持續的選型方式。</p>
+      <p><b>延遲、落地、備援是語音代理的三張門票。</b>指令遵循排第一的 GPT-6 Astra 首句延遲中位數是 883 毫秒、最快的 GPT-5.6 Luna 只要 497 毫秒，所以真實系統一定混用模型；而區域端點與多層備援，往往比再多一項模型能力更能決定企業敢不敢把客服外包給它。</p>
+      <p><b>代理的品質包含「怎麼交棒」。</b>先向真人簡報脈絡、確認準備好才轉接，以及會後用另一顆模型抽出結構化結果寫回系統——這些不起眼的環節，往往是 80% 案件解決率能站得住的原因。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">xAI (Grok)</span><a href="grok-shared-bots.html">共用機器人：把銷售流程切成三個有權限邊界的工作角色</a><span class="d">2026-10-27</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="commerce-agent-swarm.html">多代理蜂群賣雜貨：三層解耦、兩個護欄，一筆訂單 0.6 美分</a><span class="d">2026-10-27</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="a2ui-express.html">生成式 UI 不再逐字吐 JSON：把「設計介面」與「編譯介面」拆開</a><span class="d">2026-10-27</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據出自原文，示意圖與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-28 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
