@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 別再問「該用哪個 Claude」：Chat 與 Cowork 合一進 Enterprise · AI 每日動態檔案</title>
+<meta name="description" content="導讀 Claude 官方公告〈Claude Cowork and chat come together for Enterprise〉：統一體驗 GA 到 Enterprise、agentic 工作跑在獨立隔離 VM（egress 預設關閉、連接器憑證在沙盒外）、Efficient mode 等四種用量控制，Opus 5.5 比 Opus 5 省 40%、Sonnet 5.5 最多省 30%。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>別再問「該用哪個 Claude」：Chat 與 Cowork 合一進 Enterprise</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Claude Cowork 與 chat 在 Enterprise 方案合而為一（GA 公告，含客戶引述）</p>
+    <p class="g-meta">
+      <span>Claude (Resources)</span>·<span>2026-10-23 發布</span>·<span>2026-10-24 收錄</span>·
+      <a href="https://claude.com/resources/articles/unified-claude-enterprise" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>9 月 → GA</b><span>Chat 與 Cowork 9 月先合給 Pro/Max，同一體驗現已 GA 到 Claude Enterprise</span></div>
+    <div class="g-stat"><b>一個對話</b><span>從快問快答無縫升級成整個專案：要跑程式、碰檔案時，Claude 接手到 Anthropic 管理的雲端環境</span></div>
+    <div class="g-stat"><b>獨立 VM</b><span>每個 agentic 工作階段跑在自己的隔離 VM，網路 egress 對 Enterprise 預設關閉，連接器憑證留在沙盒外</span></div>
+    <div class="g-stat"><b>-40%／-30%</b><span>以用量計費：Opus 5.5 在典型工作負載下比 Opus 5 省 40%；Sonnet 5.5 對多數工作最多省 30%</span></div>
+    <div class="g-stat"><b>4 種用量控制</b><span>Efficient mode（鎖定 Sonnet＋Haiku）、model entitlements、spend limits 等，交給 admin 分角色管理</span></div>
+  </div>
+
+  <section class="g-sec">
+    <div class="g-tldr">
+      <h2 class="g-tldr-h">30 秒版本</h2>
+      <p class="one">同一份 Claude 在 web、桌面與手機合而為一：對話從 chat 起步，簡單問題照樣快答；當任務需要跑程式碼或處理檔案，Claude 接手到 Anthropic 管理的雲端環境執行 agentic 工作，闔上筆電也繼續跑，完成的文件、分析或簡報回到對話裡。這體驗 9 月先給 Pro/Max，現已 GA 到 Claude Enterprise：chats、projects、connectors、skills、plugins 直接沿用，SSO 與 Compliance API 照舊；雲端工作階段各自隔離 VM、egress 預設關閉；定價維持用量計價，新增 Efficient mode 等四種用量控制交給 admin。</p>
+      <ul>
+        <li>使用者不必再選工具：chat 與 agentic 工作在同一條對話軸上切換，跨 web／桌面／手機接手。</li>
+        <li>企業買單的是可控性：角色存取、SSO、Compliance API、隔離 VM、egress 預設關、憑證在沙盒外、預設不訓練。</li>
+        <li>Agentic 工作比聊天吃 token，官方以「更便宜的模型＋四種 admin 開關」回應成本治理。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">從「該用哪個 Claude」到開口就好：統一體驗怎麼運作</h2>
+    <p class="g-p">這個問題原本是真的存在：顧問公司 Quantium 說，客戶不斷問他們 <em>「which Claude should I use」</em>、<em>「which one does what」</em>。統一之後，團隊成員開工前不再先做選擇題：對話以 chat 開始，簡單問題照樣快答；需要跑程式碼或處理檔案時，Claude <strong>在同一條對話裡轉入雲端</strong>，完成後把文件、分析或簡報交回。因為工作跑在雲端，<em>闔上筆電也不中斷</em>，可以在 web、桌面或手機接手——Carvana 的用法正是如此：桌機起頭、手機接續，Claude 有結果或需要輸入時推播通知。</p>
+    <p class="g-p">遷移成本被刻意壓低：chats、projects、connectors、skills、plugins <strong>全部沿用</strong>；有客戶引述整個過程 seamless，<em>connectors、skills、MCP 沒有壞任何東西</em>。成效引述裡最具體的一則：有組織用<em>不到十分鐘的提示</em>，讓 Claude 讀完整疊郡、州與聯邦預算及公開會議文件、畫出資金流之間的連接，產出一份<em>原本要花團隊數週</em>的綜合報告——整趟過程使用者不必決定哪一步該用哪個工具，報告將影響其策略規劃與預算流程。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">企業級安全：隔離 VM、egress 預設關、憑證在沙盒外</h2>
+    <p class="g-p">對已核准 Claude chat 的組織，這次合一建立在既有企業控制上：<strong>SSO</strong> 與 <strong>Compliance API</strong> 照用；Anthropic 持續在傳輸與靜態時加密資料，且<em>預設不用於模型訓練</em>。</p>
+    <p class="g-p">Agentic 工作跑在雲端工作階段（cloud sessions），<strong>每個階段一台隔離 VM</strong>，網路 egress 對 Claude Enterprise <em>預設關閉</em>，連接器憑證留在沙盒之外。因為工作集中在 Anthropic 管理的同一環境，安全團隊能取得<em>中央可視性與控制</em>；完整架構見 Anthropic Trust Center 的安全最佳實務指南。</p>
+    <div class="g-know">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg>
+      <p><b>為什麼「集中在一家管理的環境」反而是賣點。</b>原文的邏輯：正因為 agentic 工作全部發生在同一個由 Anthropic 管理的環境裡，企業安全團隊才有一個單點可以建立可視性與控制——散落在各端點裡跑的 agent，治理成本反而更高。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">用量與成本：Efficient mode 與四種管理控制</h2>
+    <p class="g-p">定價維持<strong>用量計價</strong>。官方同時給了降本數字：以用量計費，<strong>Claude Opus 5.5 在典型工作負載下比 Opus 5 便宜 40%</strong>；<strong>Claude Sonnet 5.5 對多數工作最多便宜 30%</strong>。但硬幣的另一面也被直白說出：<em>依任務不同，agentic 工作的 token 消耗可能高於一次快問快答</em>——所以官方給 admins <strong>四種控制</strong>來管理這類用量。</p>
+    <p class="g-p">收錄全文可辨識出三種：<strong>Efficient mode</strong>（新設定，讓統一體驗維持在 Sonnet 與 Haiku 模型上）、<strong>model entitlements</strong>（按角色設定各角色可用哪些模型）、<strong>spend limits</strong>（套用在組織層級的花費上限，原文說明在此截斷）。第四種控制的名稱與細節落在截斷處之後，無法從收錄文字驗證。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="g-take">
+      <p><b>介面的終點是取消選擇題。</b>統一把「何時用 chat、何時用 agent」的判斷從使用者手上拿走——你描述意圖，切換工具變成模型與平台的事；Quantium 聽膩的那兩個問題，正是這類產品要消滅的摩擦。</p>
+      <p><b>企業採用的門票是治理面。</b>公告用同等篇幅講功能與控制：角色存取、SSO、Compliance API、隔離 VM、egress 預設關閉——雲端 agent 得先「可管」，才敢「可用」。</p>
+      <p><b>成本已是 agent 產品的一級問題。</b>Agentic 工作天然比聊天吃 token；官方的回應是兩端同時做：模型更便宜（-40%／-30%）＋admin 端四種開關——用量治理是內建功能，不是事後補丁。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Claude (Resources)</span><a href="claude-duet.html">Claude Duet：會先開口、也會先請示的主動式代理</a><span class="d">2026-10-21</span></div>
+      <div class="g-relrow"><span class="s">Claude (Resources)</span><a href="fold-subagents.html">子代理不是組織圖：把 router、planner 摺回主 agent 迴圈的減法設計</a><span class="d">2026-10-22</span></div>
+      <div class="g-relrow"><span class="s">Meta Engineering</span><a href="thin-orchestrator.html">The Thin Orchestrator：讓中央「少做事」，AI 代理反而更可靠</a><span class="d">2026-10-19</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據與做法均出自原文，小標與分節為編輯整理。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-27 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

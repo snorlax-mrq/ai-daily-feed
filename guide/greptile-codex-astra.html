@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 讀 code 之外，真的把 app 跑起來：Greptile 用 GPT-6 Astra 自動化應用測試 · AI 每日動態檔案</title>
+<meta name="description" content="導讀 OpenAI 客戶案例〈Greptile takes bug detection beyond code review with GPT-6 Astra〉：以 computer use 替 PR 起開發伺服器、縮出 iPhone 視窗模擬使用者、抓出消失的按鈕；Knowledge Base 經 MCP server 餵給 Codex、數千客戶接上、以 revert 率量測成效；並以 Daybreak 強化防禦、期待 Ultrafast 加速開發。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>讀 code 之外，真的把 app 跑起來：Greptile 用 GPT-6 Astra 自動化應用測試</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：OpenAI 客戶案例——Greptile 以 GPT-6 Astra 把 bug 偵測做到 code review 之外</p>
+    <p class="g-meta">
+      <span>OpenAI</span>·<span>2026-10-26 發布</span>·<span>2026-10-27 收錄</span>·
+      <a href="https://openai.com/index/greptile-code-review-codex-astra" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>4 道驗證</b><span>一個 PR 要驗：邏輯正確、符合開發者意圖、安全、不破壞既有功能——有些得真的執行才看得出來</span></div>
+    <div class="g-stat"><b>iPhone 視窗</b><span>替 PR 起開發伺服器、把瀏覽器縮到 iPhone 尺寸、模擬使用者操作，靠視覺理解抓出消失的按鈕</span></div>
+    <div class="g-stat"><b>數千客戶</b><span>已把 Codex 連上 Greptile 的 Knowledge Base——透過 MCP server 開給 Codex</span></div>
+    <div class="g-stat"><b>revert 率</b><span>成效指標：給 agent 脈絡後，AI 產生的程式碼被退回的次數變少，省時間也省 inference</span></div>
+    <div class="g-stat"><b>Daybreak</b><span>面對強模型同樣放大攻擊能力，Greptile 以 Daybreak 強化客戶防禦（原文僅以引述帶過）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <div class="g-tldr">
+      <h2 class="g-tldr-h">30 秒版本</h2>
+      <p class="one">Greptile 做的是「帶著整個 codebase 脈絡」審查並測試程式碼變更的 AI agent。這篇 OpenAI 客戶案例記錄它的三個做法：用 GPT-6 Astra 的 computer use，不只讀 code，還替 PR 起開發伺服器、把瀏覽器縮成 iPhone 視窗、模擬使用者操作，抓出只有執行才看得到的 bug；把 Knowledge Base 透過 MCP server 開給 Codex，讓 AI 寫出符合客戶既有模式的程式——數千客戶已接上，並以「AI 程式碼被 revert 的頻率」量測成效；執行長 Daksh Gupta 認為唯一真正的瓶頸是把想法變成軟體的速度，將 Ultrafast 視為加速開發的方向。</p>
+      <ul>
+        <li>有些 bug 讀不出來：按鈕在 iPhone 視窗上消失，要真的跑起來、看畫面才抓得到。</li>
+        <li>脈絡是可量測的投資：Knowledge Base 經 MCP 餵給 Codex，以 revert 率驗證「有脈絡，較少被退回」。</li>
+        <li>模型越強、攻防同時加速：Daybreak 要讓「即使新創」也能有比攻擊者更細膩的防禦。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">為什麼只讀 code 不夠：把「執行」交給 computer use</h2>
+    <p class="g-p">Greptile 的 agent 帶著整個 codebase 的脈絡，審查並測試程式碼變更；共同創辦人兼執行長 Daksh Gupta 的使命宣言是 <em>「We are in the business of reducing bugs and making the world's software more reliable」</em>。原文把 PR 驗證拆成四件事：程式<em>邏輯正確、做了開發者想做的事、安全、不破壞既有功能</em>——而其中一部分，<strong>非得真的把應用跑起來不可</strong>，光讀 code 看不出問題。</p>
+    <p class="g-p">具體例子：一個按鈕，在 iPhone 上檢視網站時會消失。有 GPT-6 Astra 的 <strong>computer use</strong>，Greptile 可以替這個 PR 起一台開發伺服器、把瀏覽器縮成 <strong>iPhone 尺寸的 viewport</strong>、模擬使用者在應用裡走一遍——模型靠<em>視覺理解</em>檢查畫面、抓出那顆消失的按鈕。Gupta 的對比很直接：<em>「A QA firm testing all of your changes is just impractically slow considering how fast we're able to ship code with these models.」</em>——人工 QA 跟不上模型時代的出貨速度，所以這類測試要自動化到 scale。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">Codex＋Knowledge Base：讓 AI 寫出「像這家公司」的程式</h2>
+    <p class="g-p">Greptile 的 <strong>Knowledge Base</strong> 為公司 codebase 建索引，把「它怎麼運作」文件化成<em>人與 agent 都讀得懂</em>的形式，再透過 <strong>MCP（Model Context Protocol）server</strong> 開給 Codex。效果是 Codex 寫出的程式會遵循客戶的既有模式；據 Gupta 說法，已有<strong>數千名客戶</strong>把 Codex 連上這套知識庫。</p>
+    <p class="g-p">成效怎麼量？團隊追蹤 <strong>AI 產生程式碼被 revert 的頻率</strong>：<em>「When we provide agents with context, fewer reverts happen and customers save time and save inference.」</em>——有脈絡的 agent 較少被退回，省下的時間與 inference 成本可以轉投新工作，而不是重做同樣的修改。Greptile 自己也是重度用戶：<em>「We are massive users of Codex」</em>，每個職能都有大量用量，工程部門尤甚。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">著墨短但值得留意：Daybreak 與 Ultrafast</h2>
+    <p class="g-p"><strong>Daybreak</strong>：Gupta 觀察到，更強的模型同時讓攻擊者更容易利用應用程式的漏洞，連過去不是典型目標的公司都暴露在風險中。他的說法：<em>「We want to make it very easy for even a startup to secure their systems」</em>；而 Daybreak 能以「非常安全」的方式做到這件事，讓客戶的<strong>防禦機制比對手的攻擊機制更細膩</strong>。要注意的是：原文對 Daybreak 本身沒有產品細節，收錄文字能驗證的就到這裡。</p>
+    <p class="g-p"><strong>Ultrafast</strong>：Gupta 認為對 Greptile 來說，<em>唯一真正的瓶頸是把想法變成可用軟體的速度</em>——模型智慧對許多任務已經足夠，所以他視 Ultrafast 為加速開發的方法。長期目標：讓修改與發布關鍵企業軟體，變得像發布 side project 一樣簡單，OpenAI 則協助 Greptile 建構所需的驗證。同樣地，原文未展開 Ultrafast 的技術細節，這裡只忠實轉述其定位。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="g-take">
+      <p><b>Code review 的下一站是應用測試。</b>邏輯、意圖、安全、回歸四關之外，「跑起來看畫面」正在被 computer use 自動化——iPhone 視窗上消失的按鈕，是典型只有執行才找得到的 bug。</p>
+      <p><b>給 agent 脈絡，是可以量測的投資。</b>Greptile 挑了 revert 率當指標：有 Knowledge Base 的 agent 改動較少被退回——脈絡的報酬率可以直接用時間與 inference 成本計算。</p>
+      <p><b>強模型同時放大攻與防。</b>同一批能力既能自動化測試、也能自動化攻擊；Greptile 把「讓防禦比攻擊更細膩」寫進說法，防禦自動化與測試自動化是同一枚硬幣的兩面。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Claude (Resources)</span><a href="fold-subagents.html">子代理不是組織圖：把 router、planner 摺回主 agent 迴圈的減法設計</a><span class="d">2026-10-22</span></div>
+      <div class="g-relrow"><span class="s">Meta Engineering</span><a href="thin-orchestrator.html">The Thin Orchestrator：讓中央「少做事」，AI 代理反而更可靠</a><span class="d">2026-10-19</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="adk-voice-agent.html">讓語音 agent 不冷場：把「卡住 13 秒」變成「先說一聲」</a><span class="d">2026-10-19</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據與做法均出自原文，小標與分節為編輯整理。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-27 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
