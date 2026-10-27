@@ -300,7 +300,7 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .g-tldr p.one{margin-top:14px;font-size:17.5px;line-height:1.8;color:var(--ink);font-weight:600;max-width:70ch}
 .g-tldr ul{margin-top:10px;list-style:none;display:flex;flex-direction:column;gap:5px}
 .g-tldr li{position:relative;padding-left:16px;font-size:14.5px;line-height:1.75;color:var(--ink-2);max-width:72ch}
-.g-tldr li::before{content:"\u2013";position:absolute;left:0;color:var(--stamp);opacity:.75}
+.g-tldr li::before{content:"\2013";position:absolute;left:0;color:var(--stamp);opacity:.75}
 
 /* \u5716\u89E3\u5361 */
 .g-dg{margin-top:22px;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:22px 22px 20px}
