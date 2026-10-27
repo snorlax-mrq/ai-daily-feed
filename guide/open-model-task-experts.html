@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>導讀 — 任務專家工廠 · AI 每日動態檔案</title>
-<meta name="description" content="深入淺出導讀 Shopify Engineering〈How Shopify turns open models into task experts〉：Sidekick 用後訓練的開源模型接下 token 重的子代理工作，品質追平前沿模型、快 7 倍、成本低約 90%。">
+<meta name="description" content="深入淺出導讀 Shopify Engineering〈How Shopify turns open models into task experts〉：Sidekick 用後訓練的開源模型接下 token 重的子代理工作，品質略高於前沿模型、回應快 7 倍、服務成本低約 90%。">
 <script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
 <link rel="stylesheet" href="../assets/archive.css">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -37,7 +37,7 @@
 
   <div class="g-stats">
     <div class="g-stat"><b>74.5</b><span>品質分（前沿模型 73）</span></div>
-    <div class="g-stat"><b>7×</b><span>回應速度（0.87 秒 vs 6.50 秒）</span></div>
+    <div class="g-stat"><b>7×</b><span>回應速度（中位數 0.87 秒 vs 6.50 秒）</span></div>
     <div class="g-stat"><b>−90%</b><span>服務成本</span></div>
     <div class="g-stat"><b>61,000</b><span>自我修復訓練範例</span></div>
     <div class="g-stat"><b>69%</b><span>夜間修復成功率（86 批）</span></div>
@@ -48,7 +48,7 @@
       <h2 class="g-tldr-h">30 秒版本</h2>
       <p class="one">Shopify 的 AI 購物助理 Sidekick 由前沿模型負責對話與規劃，token 重的專門工作交給「任務專家」——針對單一任務後訓練的開源模型。GraphQL 子代理換上後訓的 Nemotron 3.5 Lightning 之後：品質分 74.5 微超前沿模型的 73、回應快 7 倍、服務成本低約 90%，秘訣是一條每晚自我修復、持續轉動的學習飛輪。</p>
       <ul>
-        <li>子代理的工作極度「讀多寫少」：GraphQL 子代理每寫 1 個 token 要讀約 40 個，而前沿模型 API 逐 token 計費——成本幾乎全燒在 context 上。</li>
+        <li>子代理的工作極度「讀多寫少」：GraphQL 子代理每寫 1 個 token 要讀約 40 個，而前沿模型 API 逐 token 計費——換算下來，成本主要壓在 context 上。</li>
         <li>飛輪六步：定義品質（rubric → LLM 評審）→ 先榨乾前沿代理 → 實測選開源模型 → 推論優化 → 失敗對話自動變訓練料 → Blackwell 上後訓練；評審重新打分後再轉下一圈。</li>
         <li>自我修復機制在 86 個夜間批次修好 59,535 則失敗對話（成功率 69%）；修不好的由人類修正，修正結果回頭校準評審。</li>
       </ul>
@@ -57,13 +57,13 @@
 
   <section class="g-sec">
     <h2 class="g-h2">問題：子代理是「token 大胃王」</h2>
-    <p class="g-p">Sidekick 的分工是典型的主從架構：<strong>前沿模型負責跟商家對話、規劃工作、決定呼叫哪些工具</strong>；聚焦的子任務則交給子代理。以 GraphQL 子代理為例——商家問「哪些商品快缺貨了」，它要讀 Shopify 的 API schema、查文件、寫出查詢、跑出結果再回報。這種工作有個成本結構上的致命傷：<strong>每寫 1 個 token，就要讀約 40 個 token</strong>，而前沿模型 API 是逐 token 計費的，帳單幾乎全在 context 上。</p>
-    <p class="g-p">Shopify 的解法不是換更便宜的前沿模型，而是<strong>為這個任務專門後訓練一個開源模型</strong>：GraphQL 子代理換上後訓的 Nemotron 3.5 Lightning，品質略高於前沿模型、回應快 7 倍、服務成本低約 90%。更關鍵的是主權——<strong>後訓練的權重歸 Shopify 所有</strong>，跑在自己的 GPU 上，何時更新、怎麼更新自己決定。這些「任務專家」的生產線，是一條帶硬體加成的持續學習飛輪。</p>
-    <div class="g-pain"><i>讀寫比 40:1</i><i>逐 token 計費</i><i>context 多是 schema 與文件</i><i>專門任務用不到通用智能</i><i>權重在別人手上</i></div>
+    <p class="g-p">Sidekick 的分工是典型的主從架構：<strong>前沿模型負責跟商家對話、規劃工作、決定呼叫哪些工具</strong>；聚焦的子任務則交給子代理。以 GraphQL 子代理為例——商家問「哪些商品快缺貨了」，它要讀 Shopify 的 API schema、查文件、寫出查詢、跑出結果再回報。這種工作有個成本結構上的致命傷：<strong>每寫 1 個 token，就要讀約 40 個 token</strong>，而前沿模型 API 是逐 token 計費的——40:1 的讀寫比加上計費方式，成本主要壓在 context 上（由讀寫比推算）。</p>
+    <p class="g-p">Shopify 的解法不是換更便宜的前沿模型，而是<strong>為這個任務專門後訓練一個開源模型</strong>：GraphQL 子代理換上後訓的 Nemotron 3.5 Lightning，品質略高於前沿模型、回應快 7 倍、服務成本低約 90%。更關鍵的是主權——<strong>後訓練的權重歸 Shopify 所有</strong>，跑在自己的 GPU 上，何時更新自己決定。這些「任務專家」的生產線，是一條帶硬體加成的持續學習飛輪。</p>
+    <div class="g-pain"><i>讀寫比約 40:1</i><i>逐 token 計費</i><i>context 多是 schema 與文件</i><i>專門任務用不到通用智能</i><i>權重在別人手上</i></div>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">飛輪總覽：三步設定，四步循環</h2>
+    <h2 class="g-h2">飛輪總覽：三步設定定目標，迴圈帶著新資料反覆轉</h2>
     <figure class="g-dg">
       <figcaption class="g-dg-h">圖解 · 模型優化飛輪（Model Optimization Flywheel）</figcaption>
       <div class="g-proto">
@@ -74,7 +74,7 @@
         <p class="det"><b>第 1、5 步＝飛輪的心臟</b>：品質判斷集中在這兩步——rubric 由人類領域專家撰寫、評審校準到與人類一致；自我修復由前沿模型當 critic，人類只出手修正修不好的個案。</p>
         <p class="llm"><b>第 2、3、4、6 步＝可複用的標準工程管線</b>：autoresearch 調 prompt、真實子代理實測選模、AIPerf 測速、Megatron Bridge 後訓練——都有開源工具與固定流程。</p>
       </div>
-      <div class="g-loop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4"/></svg>每轉一圈：評審重新給新 checkpoint 打分，飛輪帶著更多生產資料與修復範例，進入下一輪——而且新硬體讓每一輪都比上一輪便宜</div>
+      <div class="g-loop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4"/></svg>每轉一圈：評審重新給新 checkpoint 打分，飛輪帶著更多生產環境資料與修復範例，進入下一輪——而且新硬體讓每一輪都轉得更快、更便宜</div>
     </figure>
   </section>
 
@@ -83,7 +83,7 @@
     <div class="g-steps">
       <div class="g-steprow"><div class="n">01<small>定錨</small></div><div><h3>定義品質：先造尺，再做事</h3><p>產品專家把需求寫成評分 rubric（GraphQL 覆蓋完整性、執行、回應品質三個構面）；兩位專家對同一批對話的評分一致程度，設為評審必須達到的門檻。接著用 GEPA 與 ACE 優化器調校 LLM 評審，直到它與留出的人類標籤一樣準。此後，所有 agent 變更、候選模型、訓練 run 都由這把尺打分。</p></div></div>
       <div class="g-steprow"><div class="n">02<small>墊高</small></div><div><h3>先榨乾前沿代理，再談換模型</h3><p>開源模型進場之前，先用 autoresearch 迴圈把前沿模型版本推到極限：一次只提一個小改動（prompt、工具描述或控制流），評審分數提高才保留。改良後的前沿代理，就是開源模型必須打敗的基準線。</p></div></div>
-      <div class="g-steprow"><div class="n">03<small>實測</small></div><div><h3>選模：放進真實子代理裡比，不是看榜單</h3><p>Shopify 不做預訓練。候選開源模型放進真實子代理，用同樣的工具與評審實測，權衡三件事：起始品質、服務速度、以及 NVIDIA Megatron Bridge 的支援度（他們用它訓練）。GraphQL 選了 Nemotron 3.5 Lightning——混合專家（MoE）架構，300 億參數中每個 token 只激活 30 億。</p></div></div>
+      <div class="g-steprow"><div class="n">03<small>實測</small></div><div><h3>選模：放進真實子代理裡比，不是看榜單</h3><p>Shopify 不做預訓練。候選開源模型放進真實子代理，用同樣的工具與評審實測，權衡三件事：起始品質、服務速度、以及 NVIDIA Megatron Bridge 的支援度（他們用它訓練）。GraphQL 選了 Nemotron 3.5 Lightning——混合專家（MoE）架構，300 億參數中每個 token 只活化 30 億。</p></div></div>
       <div class="g-steprow"><div class="n">04<small>測速</small></div><div><h3>推論優化：太慢的模型不值得訓練</h3><p>從第一天就測服務效能：用 NVIDIA Dynamo 裡的開源負載測試器 AIPerf，以合成文字重播生產軌跡（不碰客戶資料）；Shopify 貢獻的 live-response replay 讓多輪測試能像生產環境一樣命中伺服器的 prefix cache。選堆疊也靠數據：Buyer Profile 批次工作負載比較 vLLM、SGLang、TensorRT-LLM，結果 TensorRT-LLM 每 GPU 產出最高。</p></div></div>
       <div class="g-steprow"><div class="n">05<small>修復</small></div><div><h3>失敗變訓練料：每晚的自我修復迴圈</h3><p>每晚評審抽測一批生產 GraphQL 對話，未達滿分就進自我修復（見下圖）。近期 86 個夜間批次修復了 59,535 則對話——占嘗試修復件數的 69%；修不好的由人類標註員修正，這些修正同時成為校準評審的 ground truth。</p></div></div>
       <div class="g-steprow"><div class="n">06<small>練兵</small></div><div><h3>Blackwell 上後訓練：硬體讓每圈更便宜</h3><p>後訓練用 NVIDIA Megatron Bridge：把標準 Hugging Face checkpoint 接上 Megatron Core 訓練庫，不必重寫模型；跨節點擴展在 Nebius 上只需改設定、不必改程式。同樣的 FP8 後訓練（Analytics 模型）：8 張 B300 比 8 張 H200 快 1.86 倍、GPU 時數省 46%。新 checkpoint 由評審打分，飛輪再轉。</p></div></div>
@@ -101,7 +101,7 @@
         <div class="g-lane"><b>模擬商家重跑</b><span class="seq"><span class="g-agent">帶提示</span><span class="g-sep">→</span><span class="g-agent">同一間店</span></span><small>模擬商家帶著提示，對同一間店重跑同一個請求。</small></div>
         <div class="g-lane"><b>評審把關</b><span class="seq"><span class="g-agent">通過</span><span class="g-sep">→</span><span class="g-agent">入訓練集</span><span class="g-sep">／</span><span class="g-agent">重試 ≤3 次</span></span><small>通過：移除提示、去識別化、加入訓練集；不通過：critic 再試，最多三次。</small></div>
       </div>
-      <div class="g-loop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4"/></svg>設計重點：critic 不給答案，逼子代理自己走完推理——訓練範例才不會學會抄捷徑；86 批修復 59,535 則（69%），人類修正其餘個案並回頭校準評審</div>
+      <div class="g-loop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4"/></svg>設計重點：critic 不給答案，逼子代理自己走完推理（編輯推論：訓練範例才不會學會抄捷徑）；86 批修復 59,535 則（69%），人類修正其餘個案並回頭校準評審</div>
     </figure>
   </section>
 
@@ -135,7 +135,7 @@
     <div class="g-take">
       <p><b>先讓「好」可測量。</b>Shopify 投入最多心力的不是訓練腳本，而是 rubric 與評審校準——評審一致度追平人類之後，每個變更、模型、訓練 run 才有同一把尺。</p>
       <p><b>換模型是最後一步。</b>先用 autoresearch 榨乾前沿代理，墊高基準線之後，開源模型的目標是打贏它；跳過這步直接換模型，只會得到「堪用」。</p>
-      <p><b>失敗是資產，權重是主權。</b>每晚自我修復把生產失敗轉成訓練料；自持權重＋自有 GPU，讓服務成本降 90% 以上，也拿回「何時更新模型」的決定權。</p>
+      <p><b>失敗是資產，權重是主權。</b>每晚自我修復把生產失敗轉成訓練料；自持權重＋自有 GPU，讓服務成本省約 90%（各後訓模型自託管全線 90–98%），也拿回「何時更新模型」的決定權。</p>
     </div>
   </section>
 
