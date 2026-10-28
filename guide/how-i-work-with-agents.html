@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — How I work with Agents · AI 每日動態檔案</title>
+<meta name="description" content="導讀 Thorsten Ball X Article〈How I work with Agents〉：15 條反直覺的 agent 實戰工作法——用最新模型、Prompt 說 What 不說 How、讓整條 SDLC 對 agent 可見、要不可反駁的證明、非同步與心跳排程、一條 thread 一個任務、只審爆炸半徑大的程式碼。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E4%BA%BA%E7%89%A9%E8%A7%80%E9%BB%9E" class="day-catalog">人物觀點</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E4%BA%BA%E7%89%A9%E8%A7%80%E9%BB%9E">人物觀點</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>不迭代、不管 context、只審爆炸半徑：Thorsten Ball 的 15 條 agent 工作法</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：X Article〈How I work with Agents〉——作者自述「把一直私訊朋友的內容整理成文」</p>
+    <p class="g-meta">
+      <span>X @thorstenball</span>·<span>2026-10-25 發布</span>·<span>2026-10-27 收錄</span>·
+      <a href="https://x.com/i/article/2114385531811319808" target="_blank" rel="noopener">閱讀原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>15 條</b><span>工作守則——從選模型到 code review 的完整工作流</span></div>
+    <div class="g-stat"><b>86 萬</b><span>推文瀏覽數（發文 2 天）；書籤近 1.5 萬、讚 6,400+</span></div>
+    <div class="g-stat"><b>3,714</b><span>他最長的 thread 訊息數——一條 thread 一個任務，context 交給 compaction</span></div>
+    <div class="g-stat"><b>&lt;5 個</b><span>核心檔案必逐一審——其餘只看爆炸半徑</span></div>
+  </div>
+
+  <section class="g-sec">
+    <div class="g-tldr">
+      <h2 class="g-tldr-h">30 秒版本</h2>
+      <p class="one">Thorsten Ball（據其 X 簡介，Amp 團隊工程師）把私訊朋友的 agent 心得整理成 15 條守則，幾乎每條都反直覺：模型用最新的別省、slop 別怕、Prompt 說 What 不說 How、不要跟 agent 來回迭代（叫它自己生出 20 個變體讓你挑）、context 別手動管、code review 只看爆炸半徑大的檔案。底層邏輯一致：<em>讓 agent 看見並觸及整條 SDLC，幻覺自然消失；信任靠不可反駁的證據，不靠感覺。</em></p>
+      <ul>
+        <li>工具呼叫治好了幻覺：agent 看不見的就會編造——讓它跑 build、看日誌、部署、盯 rollout、回信給客戶。</li>
+        <li>「要不可反駁的證明」是他口中最大的遊戲規則改變者：端到端走查、demo 影片、前後對照數字。</li>
+        <li>節奏反轉：lean into async——派更大的任務、批次交付、用心跳排程，讓 agent 等你，不是你等 agent。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">模型、slop、與 Prompt 的說法</h2>
+    <p class="g-p">第一條就燒錢：<strong>用最新最強的模型，其他都是浪費時間</strong>。他的算術是修辭式的（原文數字為例示，非量測）：模型錯 10% 的時候，你不知道錯的是哪 10%，只能反覆重試；省 50% 聘個「隨機笨 20%」的通才，代價算不過來。<em>「Who's still using Opus 4.5? Exactly.」</em>——這句同時暴露了文章的時效性：這是他「截至 2026 年 10 月」的配置。</p>
+    <p class="g-p">第二條拆掉最常見的反對理由：<strong>別怕累積 slop</strong>。AI 生成碼會把 codebase 變成不可維護的泥沼？「半年前也許是，現在我不再確定——就算會，我也不相信結果是不可維護的。」第三條是 prompting 心法：<strong>描述 What，不描述 How</strong>。「把 bytecode 編譯器和 VM 做到極限快，不達 2 倍不准停」＋「最終應該長這樣」——目標與驗收說清楚，實作路徑讓 agent 自己找。</p>
+    <div class="g-pain"><i>省模型錢＝反覆重試</i><i>slop 恐懼過時了</i><i>說 How 綁死解法空間</i><i>時效：2026-10 配置</i></div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">讓整條 SDLC 對 agent 可見</h2>
+    <p class="g-p">這篇的技術核心其實只有一句：<strong>是工具呼叫治好了幻覺</strong>。什麼讓幻覺消失？Tool calls——它們讓 agent 觸及我們的真實世界。<em>如果 agent 看不見某個東西，它就會編造</em>。所以解法是把整條 SDLC 打開給它看：跑起它建的東西（end to end）、讀 production 日誌、部署、盯 rollout、切 release、開關 feature flag、triage bug report、寄信給客戶——<em>凡是你可以看的，agent 就應該可以看</em>。</p>
+    <p class="g-p">配套動作有兩個：給它 SDLC 的工具（他們做了 bug 回報、寄信給用戶、「系統健康嗎？」、開關 feature flag 的客製插件）；以及<strong>評估 agent 知識</strong>——AGENTS.md、skills、腳本、文件在 codebase 裡堆積，但 agent 真的會用嗎？派五個「盲測」agent，控制組對實驗組，跑實驗就知道。<em>「Agents are really, really good at running experiments.」</em>剩下的一條是坦白：local dev 現在很彆扭——遠端機器上 agent 各自裝環境很容易，本機則容易踩資源衝突。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">換掉工作節奏：證據、非同步、心跳</h2>
+    <p class="g-p">第四組守則改變的是「人怎麼配合 agent」。<strong>不要跟 agent 來回迭代</strong>——別「試試看……啊不對，換那個」，而是「生成 20 個變體加一個小頁面，讓我組合測試」；這招連問題空間都適用：「給我 4 個『為什麼這麼慢』的理論，然後四個都查掉」。</p>
+    <p class="g-p"><strong>要不可反駁的證明</strong>——他稱之為最大的遊戲規則改變者。agent 非常擅長產出證據：端到端走查、demo 影片、前後對照數字。你必須練出對這種證據的信任手感，還要在 AGENTS.md 裡寫上 <em>「this is not evidence」</em>，劃清什麼不算數。</p>
+    <p class="g-p">節奏本身也要反轉：<strong>讓 agent 等你，不是你等 agent</strong>。擔心 TTFT（首 token 時間）大概是用法錯了；lean into async——派更大的任務、更野心，批次而不是來回。<strong>排程與心跳是殺手級功能</strong>：「兩小時後查 log」「上線了跟我說」「每天早上九點檢查一次」——他沒意識到多需要這個，直到不能再用。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">記憶與審查：threads 是公司記憶，只看爆炸半徑</h2>
+    <p class="g-p">context 管理的答案很灑脫：<strong>別手動管</strong>。每個花在「現在是 30 萬還是 38 萬 token」上的念頭都是浪費——compaction 好用到不可思議。紀律只有一條：<strong>一條 thread 一個任務</strong>；他的 thread 有些 46 則訊息，有些 3,714 則。更進一步（以 Amp 為例），<strong>threads 是公司的記憶</strong>：「當初為什麼這樣做？」的答案就躺在 thread 裡，而且 thread 連著 git commit——避免重複工。</p>
+    <p class="g-p">收尾兩條是減法。<strong>別讓 agent 寫給人看的東西</strong>——例外是除錯步驟、事件報告、部分文件這類「機械性」內容。<strong>code review 只看爆炸半徑大的</strong>：核心檔案不到 5 個，他逐一審；DB migration 要審；closure 寫法、型別優雅度、變數名、甚至重複碼——<em>「I don't care anymore.」</em>他的審查清單只剩四問：能用嗎？我懂到「圖上箭頭」的層級了嗎？agent 端到端測過了嗎？一個月後我還改得動嗎？</p>
+    <div class="g-know">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+      <p><b>閱讀前提。</b>這是個人經驗談（作者自述「私訊朋友的內容整理」），非官方文件或研究報告；文中未附量測數據，數字多為修辭用。作者是 Amp（2025 年 12 月已自 Sourcegraph 獨立的 AI 編程 agent 公司）團隊工程師（據其 X 簡介 Working on @ampcode），文中 thread／threads 功能以 Amp 為例。原文口語、多處筆誤（featuer、inicident、ambitous），本導讀均已按文意轉寫。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="g-take">
+      <p><b>能見度是幻覺的解藥。</b>「看不見的就會編造」不是比喻而是機制：幻覺下降的歷史拐點就是 tool calls。與其調 prompt 求 Agent 別幻覺，不如把 build、日誌、部署、rollout 一路打開給它。</p>
+      <p><b>信任要靠機制，不靠感覺。</b>「不可反駁的證明」建立門檻，爆炸半徑決定審查範圍——人的注意力是稀缺資源，只花在炸了會沉船的地方。</p>
+      <p><b>人的角色升級成出題者與驗收者。</b>說 What 不說 How、批次派大任務、用心跳排程、讓 agent 等你——把「等待」和「來回微調」從工作流裡刪掉，是這 15 條守則共同的底色。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">五個關鍵詞</h2>
+    <div class="g-glos">
+      <div class="g-card"><b>SDLC 可見性</b><span class="w">讓 agent 看得見軟體開發全流程：build、日誌、部署、rollout、客戶回饋。</span><span class="why">看得見的才不會被編造——幻覺的結構性解法。</span></div>
+      <div class="g-card"><b>不可反駁的證明</b><span class="w">端到端走查、demo 影片、前後數字——可驗證的完成證據。</span><span class="why">把「agent 說做完了」變成「可以自己驗證做完了」。</span></div>
+      <div class="g-card"><b>心跳排程</b><span class="w">排程任務＋喚醒：定時查 log、上線通知、每日檢查。</span><span class="why">從「人盯 agent」變成「agent 定時回報」。</span></div>
+      <div class="g-card"><b>爆炸半徑</b><span class="w">一段程式碼出錯時的波及範圍。</span><span class="why">review 只花在半徑大的：核心檔案與 DB migration。</span></div>
+      <div class="g-card"><b>一 thread 一任務</b><span class="w">context 紀律：任務與 thread 一一對應，長度交給 compaction。</span><span class="why">thread 順帶長成公司記憶——連著 git commit。</span></div>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Shopify Engineering</span><a href="open-model-task-experts.html">任務專家工廠：Shopify 把開源模型練成 Sidekick 的低成本分身</a><span class="d">2026-10-21</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文，非官方文件）；引述語句出自原文，小標與分節為編輯整理。人物觀點非官方第一手公告，為站內新設主題。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-27 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
