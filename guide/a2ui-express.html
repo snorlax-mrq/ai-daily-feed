@@ -67,15 +67,15 @@
       <figcaption>換一個參數就換掉推論格式：catalog 與渲染器不動，被替換的只有 prompt 與 parser。<span class="g-fig-src">圖／Google Developers Blog，<a href="https://developers.googleblog.com/fast-reliable-a2ui/" target="_blank" rel="noopener">原文</a></span></figcaption>
     </figure>
 
-<div class="g-steps">
+    <div class="g-steps">
       <div class="g-steprow"><div class="n">01<small>選格式</small></div><div><h3>建立 generator 時傳一個參數</h3><p>在 Python SDK 傳 <code>inference_format_factory=ExpressFormatFactory()</code>；TypeScript 則把 <code>new ExpressFormatFactory()</code> 當 generator 的第三個參數。SDK 會把對應的 prompt 片段接進 system prompt。</p></div></div>
       <div class="g-steprow"><div class="n">02<small>模型寫 Express</small></div><div><h3>一行一個元件，變數名就是元件 ID</h3><p>參數按 catalog schema 宣告的順序定位（<code>_</code> 代表跳過一格），<code>$/title</code> 綁資料模型，<code>Event("accept")</code> 宣告伺服器動作。例如通知卡片的 <code>yes_btn=Button(yes_btn_text, _, Event("accept", {}))</code>。</p></div></div>
       <div class="g-steprow"><div class="n">03<small>編譯與驗證</small></div><div><h3>確定性程式碼接手</h3><p><code>processor.parse_response()</code> 回傳文字片段加上「已驗證的 A2UI 訊息」。Python 與 TypeScript SDK 可對 Direct JSON 逐塊串流，Express 則是收完整回覆後一次編譯。</p></div></div>
       <div class="g-steprow"><div class="n">04<small>換一種模型</small></div><div><h3>形狀固定的畫面交給決策模型</h3><p>設定頁、結帳頁、確認頁這類「形狀已知」的畫面，模型不需要設計版面，只需在你預先定義的版式中挑一個——這正是 Jev（TypeSafe）這類 System One 模型的長處：不生成文字或 JSON，你送狀態與一組有型別的問句，它逐題作答。</p></div></div>
     </div>
         <figure class="g-fig">
-      <img src="../assets/guide/a2ui-express/01.webp" alt="兩條路徑：Express 由 SDK 編譯元件樹，決策模型只挑版面" width="1200" height="1041" loading="lazy" decoding="async">
-      <figcaption>兩條路徑：Express 讓 SDK 編譯模型寫的元件樹（token 約少 3 倍）；Jev 只挑你預先定義的版面（約 0.2 秒出畫面）。<span class="g-fig-src">圖／Google Developers Blog，<a href="https://developers.googleblog.com/fast-reliable-a2ui/" target="_blank" rel="noopener">原文</a></span></figcaption>
+      <img src="../assets/guide/a2ui-express/01.webp" alt="兩條路徑：Express 由 SDK 編譯模型寫的元件樹（token 約少 3 倍）；決策模型只挑預先定義的版面，兩者輸出同一組 A2UI 訊息、渲染器不變" width="1200" height="1041" loading="lazy" decoding="async">
+      <figcaption>兩條路徑：Express 讓 SDK 編譯模型寫的元件樹（token 約少 3 倍）；Jev 只挑預先定義的版面，元件樹約 0.2 秒上螢幕、文字隨後填入。<span class="g-fig-src">圖／Google Developers Blog，<a href="https://developers.googleblog.com/fast-reliable-a2ui/" target="_blank" rel="noopener">原文</a></span></figcaption>
     </figure>
 
 <div class="g-know">

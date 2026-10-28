@@ -107,6 +107,10 @@
 
   <section class="g-sec">
     <h2 class="g-h2">成效</h2>
+    <figure class="g-fig">
+      <img src="../assets/guide/open-model-task-experts/01.webp" alt="Blackwell 對 Hopper 的兩組量測。左：Analytics 模型同一份 FP8 後訓練，8 張 B300 每秒 93,797 tokens 對 8 張 H200 每秒 50,450 tokens（吞吐 1.86 倍、GPU-hours 少 46%，Shopify 量測）。右：SimGym 購物模擬在 B200 上比 H200 推論快 4.5 倍、成本低 1.48 倍（NVIDIA 量測）" width="1200" height="472" loading="lazy" decoding="async">
+      <figcaption>左：Analytics 後訓練，8 張 B300 對 8 張 H200（同一份 FP8 工作）吞吐 1.86 倍、GPU-hours 少 46%，<strong>Shopify 自家量測</strong>。右：SimGym 在 B200 上比 H200 快 4.5 倍、成本低 1.48 倍，<strong>NVIDIA 量測</strong>。<span class="g-fig-src">圖／Shopify Engineering，<a href="https://shopify.engineering/open-model-task-experts" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
     <div class="g-eco">
       <div class="g-eff"><b>品質：GraphQL 評審分數</b>
         <div class="flow"><i>開箱</i> 37.7 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg> <i>第一輪</i> 61.5 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg> <span class="hit">六輪 74.5</span> <i>（前沿模型 73）</i></div>
@@ -114,13 +118,9 @@
       </div>
       <div class="g-eff"><b>速度與成本：AIPerf 重播生產 GraphQL 流量</b>
         <div class="flow"><i>前沿 API</i> 中位數 6.50 秒 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg> <span class="hit">後訓模型 0.87 秒</span></div>
-        <p>最慢 1%（p99）快 8 倍，也勝過另一個同級後訓開源模型（中位數接近、p99 慢逾兩倍）；該流量下服務成本低約 90%，各後訓模型自託管全線省 90–98%。另：購物模擬器 SimGym 在 Blackwell B200 比 H200 快 4.5 倍、成本低 1.48 倍（NVIDIA 測量）。</p>
+        <p>最慢 1%（p99）快 8 倍，也勝過另一個同級後訓開源模型（中位數接近、p99 慢逾兩倍）；該流量下服務成本低約 90%，各後訓模型自託管全線省 90–98%。</p>
       </div>
     </div>
-    <figure class="g-fig">
-      <img src="../assets/guide/open-model-task-experts/01.webp" alt="Blackwell 在 Shopify 工作負載上相對 Hopper 的訓練與服務增益" width="1200" height="472" loading="lazy" decoding="async">
-      <figcaption>同一份 FP8 訓練工作在 8 張 GPU 上：B300 吞吐 1.86 倍、GPU-hours 少 46%；SimGym 服務快 4.5 倍、成本低 1.48 倍（NVIDIA 測量）。<span class="g-fig-src">圖／Shopify Engineering，<a href="https://shopify.engineering/open-model-task-experts" target="_blank" rel="noopener">原文</a></span></figcaption>
-    </figure>
   </section>
 
   <section class="g-sec">

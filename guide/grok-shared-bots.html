@@ -71,8 +71,8 @@
     <p class="g-p">值得注意的是這些機器人之間<strong>會互相交棒</strong>：Quote Bot 遇到特殊定價或非標準條款就把工作交給 Deal Bot；Deal Bot 對照已核准的政策與合約語言，備妥推進交易所需的變更。<em>「Each brings its own expertise to the process」</em>——原文的說法是讓團隊能把成交週期更大塊地交出去，人留在客戶與需要判斷的決策上。</p>
 
     <figure class="g-fig">
-      <img src="../assets/guide/grok-shared-bots/01.webp" alt="Quote Bot 在對話中並列三份 Salesforce 報價供業務比較" width="1200" height="781" loading="lazy" decoding="async">
-      <figcaption>Quote Bot 在對話裡並列三份 Salesforce 報價（第三份標示需核准），業務不必切進 CPQ 工具比較。<span class="g-fig-src">圖／xAI，<a href="https://x.ai/news/grok-bot-sales" target="_blank" rel="noopener">原文</a></span></figcaption>
+      <img src="../assets/guide/grok-shared-bots/01.webp" alt="Quote Bot 在對話中並列 Acme Corporate 的三份報價草稿，第三份（Dedicated Support）標示 Requires Approvals" width="1200" height="781" loading="lazy" decoding="async">
+      <figcaption>三份報價草稿並列於對話（Salesforce 預覽外框），第三份標 Requires Approvals；原文稱業務因此不必進 CPQ 工具。<span class="g-fig-src">圖／xAI，<a href="https://x.ai/news/grok-bot-sales" target="_blank" rel="noopener">原文</a></span></figcaption>
     </figure>
   </section>
 
@@ -82,15 +82,15 @@
     <div class="g-steps">
       <div class="g-steprow"><div class="n">01<small>知識</small></div><div><h3>用共用技能與內部真實來源餵養</h3><p>每個機器人要理解它操作的系統與遵守的商業規則。做法是共用 skills 加上連接內部 source of truth，讓所有人站在同一份最新規則上；流程一改，改一次就好。</p></div></div>
       <div class="g-steprow"><div class="n">02<small>權限</small></div><div><h3>以使用者本人權限執行，敏感動作再收窄</h3><p>機器人不自帶超級權限，而是繼承當下使用者的權限，另對敏感動作加限制。業務不能用 Quote Bot 核准自己的折扣——核准與例外仍屬 Deal Desk 職權；Deal Bot 才具備業務沒有的權限。</p></div></div>
-          <figure class="g-fig">
-      <img src="../assets/guide/grok-shared-bots/02.webp" alt="Deal Bot 在 Slack 請 Deal Desk 專員核准特殊條款" width="1200" height="675" loading="lazy" decoding="async">
-      <figcaption>Deal Bot 在 Slack 請 Deal Desk 專員核准：核准權留在人身上，機器人只備妥變更並等待。<span class="g-fig-src">圖／xAI，<a href="https://x.ai/news/grok-bot-sales" target="_blank" rel="noopener">原文</a></span></figcaption>
-    </figure>
 
-<div class="g-steprow"><div class="n">03<small>規模護欄</small></div><div><h3>速率限制，加上寫入前預覽</h3><p>為避免「一次改太多」，設了 rate limits；Quote Bot 在動 Salesforce 之前會先給業務看預覽並要求確認。</p></div></div>
+      <div class="g-steprow"><div class="n">03<small>規模護欄</small></div><div><h3>速率限制，加上寫入前預覽</h3><p>為避免「一次改太多」，設了 rate limits；Quote Bot 在動 Salesforce 之前會先給業務看預覽並要求確認。</p></div></div>
       <div class="g-steprow"><div class="n">04<small>人在圈內</small></div><div><h3>目前只有兩條硬性覆核線</h3><p>只要<strong>無法明確定義判斷準則</strong>，或機器人要產出<strong>對客戶的溝通內容</strong>，在目前階段就必須人工覆核。Deal Bot 的做法是準備建議案＋請 Deal Desk 專員核准後才動。</p></div></div>
       <div class="g-steprow"><div class="n">05<small>可追溯</small></div><div><h3>每筆核准都蓋章</h3><p>Deal Bot 經手的每一次 Salesforce 核准，都會在系統留下決策、理由與它所支援的 DRI（直接負責人），以符合問責、可追溯與公司政策。</p></div></div>
     </div>
+    <figure class="g-fig">
+      <img src="../assets/guide/grok-shared-bots/02.webp" alt="Deal Bot 在對話中標記 Iris Wang，請求核准把法務已同意的條文加進報價的 Section 11(b) 特殊條款，並顯示正在等待核准" width="1200" height="675" loading="lazy" decoding="async">
+      <figcaption>Deal Bot 在對話中請 Iris Wang 給出 Deal Desk 核准：機器人明說正在等她的批准，核准權留在人身上。<span class="g-fig-src">圖／xAI，<a href="https://x.ai/news/grok-bot-sales" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
     <div class="g-know">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
         <p><b>原文對「自主」的態度是分階段的</b>：目前只要判斷準則說不清、或涉及對客戶發話，就維持人工覆核；隨著工作品質可被衡量、對決策有信心，才逐步下放責任。換句話說，自動化的邊界是被「能不能驗證」推著走的，不是被「能不能做到」推著走。</p>
