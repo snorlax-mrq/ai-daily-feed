@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 代理品質爬山術：一行 system prompt 的退步，該在評分表上現形 · AI 每日動態檔案</title>
+<meta name="description" content="深入導讀 Google Developers 的 Agents CLI eval 實作導覽：generate／grade／compare／analyze／optimize 五個框架無關指令怎麼把「爬山」變成流程；LangChain 模板的四個案例以 gemini-3.8-flash 當評審，基準平均 4.00（標準差 1.41），原文刻意示範的一次誤換——把 system prompt 換成主廚人格——掉到 2.75，退步 1.25 分——而 lint、單元測試、型別檢查全都攔不到。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>代理品質爬山術：一行 system prompt 的退步，該在評分表上現形</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Google Developers 實作導覽「Hill-Climbing Agent Quality with Agents CLI Evaluation」— 從第一次跑分到回歸追蹤、模型後端實驗與自動告警的 eval 迴圈</p>
+    <p class="g-meta">
+      <span>Google Developers</span>·<span>2026-10-28 發布</span>·<span>2026-10-29 收錄</span>·
+      <a href="https://developers.googleblog.com/hill-climbing-agent-quality-with-agents-cli-evaluation/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>5 個指令</b><span>eval generate／grade／compare／analyze／optimize，全部框架無關（optimize 目前僅支援 ADK 專案）</span></div>
+    <div class="g-stat"><b>4.00</b><span>四個測試案例的基準平均分（1–5 分制），標準差 1.41</span></div>
+    <div class="g-stat"><b>2.75</b><span>原文刻意示範的誤換：把 system prompt 換成主廚人格後的平均，標準差收窄到 0.96</span></div>
+    <div class="g-stat"><b>−1.25</b><span>只改一個字串造成的退步幅度，lint 與單元測試全攔不到</span></div>
+    <div class="g-stat"><b>4 倍</b><span>原文對照研究：用 agents-cli 的 coding agent 跑出的 eval 次數，改動頻率卻與基準相當</span></div>
+  </div>
+
+  <section class="g-sec">
+    <div class="g-tldr">
+      <h2 class="g-tldr-h">30 秒版本</h2>
+      <p class="one">Agents CLI 的 eval 命名空間用五個框架無關指令把「爬山」變成流程：generate 跑案例、grade 打分、compare 逐案對比、analyze 聚類失敗、optimize 自動改 prompt。原文用 v1.8.0 內附的 LangChain 模板示範，四個案例由 gemini-3.8-flash 當評審，基準平均 4.00；誤把 system prompt 換成主廚人格後掉到 2.75，退步 1.25 分；它能編譯、能跑，lint 與單元測試全攔不到，只有 eval 迴圈能在上線前用分數揭露它。</p>
+      <ul>
+        <li>五個指令刻意做小、框架無關，要能塞進每一次改動。</li>
+        <li>基準 4.00＋標準差 1.41 比滿分 5.0 健康：有落差才有坡可爬。</li>
+        <li>平均分會誤導：同為 2.75，主廚人格與換小模型是兩回事。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">Demo 會動，和一直在動，是兩個問題</h2>
+    <p class="g-p">原文開場把兩種能力分得很清楚：做出一個<em>在 demo 上會動</em>的代理，是一個週末的事；做出一個<em>在模型升級、工具更換、對話形態改變後仍然會動</em>的代理，靠的是一個迴圈。團隊寫測試案例、跑一輪、打分、讀失敗的地方、改代理、再跑一次；分數上升就是好改動，下降就回退。這樣週復一週，代理會慢慢逼近「模型＋工具＋prompt 合起來所能做到的」上限——品質工程把這件事叫<strong>爬山（hill-climbing）</strong>。</p>
+    <p class="g-p">Agents CLI 的 <strong>eval 命名空間</strong>就繞著這個迴圈設計，指令刻意做得小而<strong>框架無關</strong>：<em>eval generate</em> 讓代理對一組案例跑出軌跡、<em>eval grade</em> 替軌跡打分、<em>eval compare</em> 把兩次結果並排 diff、<em>eval analyze</em> 把失敗聚類成主題、<em>eval optimize</em> 對代理的 prompt 跑一輪自動爬山。</p>
+    <p class="g-p">示範用的骨架是 Agents CLI <strong>v1.8.0</strong> 內附的 LangChain 模板，一行指令建好專案就帶著三個東西：<em>tests/eval/datasets/basic-dataset.json</em> 的資料集、<em>tests/eval/eval_config.yaml</em> 的設定，以及 <em>tests/eval/response_quality.py</em> 這個自訂的 LLM-as-judge 指標。指標的定義很樸素：以 <strong>gemini-3.8-flash</strong> 當評審，就 <strong>accuracy、relevance、clarity</strong> 三項給 <strong>1–5 分</strong>。內建資料集只有一個過於簡單的案例，不足以爬山，作者第一步就是把它擴成四個探測不同行為的案例：打招呼、mock 工具會固定回「起霧」的舊金山天氣、工具會走預設值的羅馬天氣，以及一題代理必須自己決定怎麼處理的離題問題（2024 世界大賽誰奪冠）。四個案例<strong>刻意小</strong>——原文的說法是，迴圈要在資料集小到每次改動都跑得動時才划算。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">一輪爬坡實際長什麼樣</h2>
+    <p class="g-p">原文附的迴圈圖把一輪實驗拆成四步：改動、跑分、對比、決定。<em>每一輪只做一個實驗</em>，而停手的條件是「迴圈不再把分數往上抬」。</p>
+
+    <figure class="g-fig">
+      <img src="../assets/guide/agents-cli-eval/01.webp" alt="四步迴圈圖：change（prompt、model、tool）→ eval run（對資料集跑）→ eval compare（對比基準）→ decide（上線、回退或再迭代）" width="1200" height="700" loading="lazy" decoding="async">
+      <figcaption>一輪一實驗的四步迴圈：改動 → 跑分 → 對比基準 → 決定上線或回退<span class="g-fig-src">圖／Google Developers，<a href="https://developers.googleblog.com/hill-climbing-agent-quality-with-agents-cli-evaluation/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <div class="g-steps">
+      <div class="g-steprow"><div class="n">01<small>改一個東西</small></div><div><h3>change：只動 prompt、model 或 tool 其中一項</h3><p>實驗單位要小。原文的兩次示範各自只動一處：一次只換 <em>system prompt</em> 字串，一次只把 <strong>gemini-3.8-flash</strong> 換成 <strong>gemini-2.5-flash</strong>，其餘條件不動。</p></div></div>
+      <div class="g-steprow"><div class="n">02<small>跑整個資料集</small></div><div><h3>eval generate ＋ eval grade：把案例跑成有分數的軌跡</h3><p>generate 逐案驅動代理並輸出軌跡，grade 依 eval_config 指定的指標打分。基準跑的結果是 <strong>4 個案例、4 個有效、0 個錯誤</strong>，<em>mean 4.0000、stdev 1.4142</em>，並存下完整 JSON 與 HTML 結果檔。</p></div></div>
+      <div class="g-steprow"><div class="n">03<small>對比基準</small></div><div><h3>eval compare：把兩份結果檔並排，問「哪一案動了」</h3><p>compare 讀進兩份結果檔，輸出結構化 diff，列出哪些 key 變了、哪些沒變（本次變動的是 <em>eval_case_results</em> 與 <em>metadata.creation_timestamp</em>），<em>differences</em> 再給出逐案的基準值與候選值。原文建議用 jq 或小支 Python 把訊號抽出來。</p></div></div>
+      <div class="g-steprow"><div class="n">04<small>上線、回退或再迭代</small></div><div><h3>decide：分數下去就回退，上去才 ship</h3><p>誤換主廚人格那一輪，平均從 4.00 掉到 <strong>2.75</strong>、標準差從 1.41 收窄到 <strong>0.96</strong>；退步 1.25 分於是成為回退的理由，而不是一段被 code review 放行的「一行字串」。<em>（編輯推論：這裡的「決定」仍由人做；原文的迴圈圖只界定決策點，沒有描述自動回退機制。）</em></p></div></div>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">−1.25 只是警報，逐案差異才是地圖</h2>
+    <p class="g-p">平均分只告訴你有事，逐案 diff 才告訴你哪裡有事。主廚人格那一輪，四個案例<strong>三降一持平</strong>：<em>greeting 5.0 → 4.0</em>（聽完「hello」就先推一份食譜）、<em>sf_weather 4.0 → 2.0</em>（不理已註冊的 <code>get_weather</code> 工具，自己編天氣）、<em>rome_weather 2.0 → 2.0</em>（基準就已在幻覺，主廚人格沒讓它更糟）、<em>off_topic 5.0 → 3.0</em>（答了世界大賽，但硬要附食譜）。原文的重點：單元測試抓不到 sf_weather 這種壞法——程式跑得動、工具也還註冊著，<strong>變的是模型對工具的行為</strong>，只有把回答放回上下文打分的端到端 eval 才會浮現。</p>
+
+    <figure class="g-fig">
+      <img src="../assets/guide/agents-cli-eval/02.webp" alt="逐案分數圖：greeting 5.0 降至 4.0、sf_weather 4.0 降至 2.0、rome_weather 2.0 持平、off_topic 5.0 降至 3.0，整體平均 4.00 降至 2.75" width="1200" height="460" loading="lazy" decoding="async">
+      <figcaption>主廚人格那一輪的逐案分數：三案下滑、一案持平，平均 4.00 掉到 2.75<span class="g-fig-src">圖／Google Developers，<a href="https://developers.googleblog.com/hill-climbing-agent-quality-with-agents-cli-evaluation/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <p class="g-p">接著是換模型後端。把 system prompt 還原成「helpful assistant」、只把 <strong>gemini-3.8-flash</strong> 換成 <strong>gemini-2.5-flash</strong>，平均一樣掉到 <strong>2.75</strong>、幅度和主廚人格那次相同——但逐案故事完全相反：<em>greeting 5.0 → 5.0</em>、<em>rome_weather 2.0 → 2.0</em> 原封不動，<em>sf_weather 4.0 → 3.0</em> 只掉一分（措辭略不漂亮），跌幅絕大多數集中在 <em>off_topic 5.0 → 1.0</em>（4 分跌幅中的 3 分）：便宜模型以「該事件尚未發生」為由拒答（原文歸因為訓練截止的產物），被評審重扣。</p>
+    <p class="g-p">原文因此下了一個很實用的判斷：<strong>只看平均，你會說 gemini-2.5-flash 和主廚 prompt 一樣糟</strong>；看逐案，你會說它對前三類工作負載是合理替換，代價是暴露了「處理近期事件類離題問題」這個真實限制。要不要換，取決於線上問題分佈比較像前三案還是第四案。</p>
+
+    
+
+    <div class="g-know">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg>
+      <p><b>換模型實驗的兩個但書</b>：其一，模型替換會和 prompt 互相作用——為強模型調過的 prompt 搬到弱模型上常會漏能力，正確的比較是「弱模型＋替它調過的 prompt」對「強模型＋自己的 prompt」。其二，評審由 Vertex AI Eval Service 呼叫，兩次比較中<em>評審固定不變</em>；換評審是另一個實驗，要分開做。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">把迴圈接上排程、告警與自動改 prompt</h2>
+    <p class="g-p">Agents CLI 本身<strong>不附排程器</strong>，但 eval 指令被設計成能直接塞進既有基礎設施。原文的模式是 cron 或 Cloud Scheduler 每晚跑一次 generate＋grade，結果寫進固定路徑：對一份穩定的回歸資料集（從數十到數百案，比內圈那四個大得多，因為一天只跑一次）跑分，可以抓出模型廠商<em>悄悄升級模型</em>、工具資料變動、依賴位移造成的漂移——這些都不是你這一側改了什麼。</p>
+    <p class="g-p">但每天產一個沒人看的檔案不算告警。原文再包一支腳本：把新一輪的平均和基準（前一次，或一個已 commit 的 known-good）相比，跌幅超過門檻就以<strong>非零 exit code</strong> 結束，讓外層排程器去觸發通知。拿示範資料實跑：基準 4.000、候選 2.750、門檻 0.1，輸出 <em>FAIL: mean dropped 4.000 → 2.750 (drop 1.250 &gt; threshold 0.1)</em>、exit 1；自己比自己則是 drop 0.000、exit 0。（腳本內建預設門檻是 0.05。）<em>（編輯推論：原文只說非零 exit code 會由 cron job、Cloud Scheduler 或 GitHub Actions 接走去發通知；把它當成合併前的閘門是同一機制的延伸，原文未示範這種用法。）</em></p>
+    <p class="g-p">最後一塊是 <strong>eval optimize</strong>：對 ADK 專案，它用 <strong>GEPA</strong> 框架對 prompt 跑自動爬山——吃資料集與目標指標，提出 prompt 變體、逐一打分、留下變好的、再迭代，最後輸出一組按分數排序的候選 prompt 交給人審。<strong>LangChain extension 目前不支援</strong>。原文強調兩個理解點：它只動 prompt，代理的工具、結構與模型固定不動；而 GEPA 有時找到真改進，有時只是找到更貼合該指標措辭的變體（對指標過擬合），<em>審查的人就是控制項</em>。</p>
+    <p class="g-p">原文最後丟出一個反直覺的觀察：他們近期做的一項對照研究發現，使用 agents-cli 的 coding agent 跑出的 eval 次數是<strong>沒用它的四倍</strong>，但「跑完 eval 之後真的去改代理」的頻率<em>和基準差不多</em>。品質增益來自 skills 在一開始就放進 build 的東西，而不是內圈的反覆迭代——<strong>eval 是品質的必要條件，但品質來自對 eval 結果採取行動</strong>。配套的紀律也很硬：先有小而具代表性的資料集（四案一分鐘內跑完，才會每次改動都跑），而不是三百案、跑一小時、最後變成 release gate、甚至成為沒人再跑的 shelfware（束之高閣）的資料集；要快照<em>結果檔</em>而不是分數（三週後回歸浮現時，只有完整 JSON 能讓 compare 指出是哪一案動了）；資料集是輸入、eval config 是期望，兩者<strong>分開存、都進版控</strong>。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="g-take">
+      <p><b>滿分是紅旗，會掉分的基準才是資產。</b>平坦的 5.0 只代表兩件事：代理完美（罕見）或資料集太簡單。4.00 配 1.41 的標準差才是有坡可爬的地形——沒有分數落差，eval 就沒有訊號，迴圈也就無從抬升。</p>
+      <p><b>回歸的單位是案例，不是平均。</b>兩次實驗平均都是 2.75，結論卻相反：主廚 prompt 是把多數案例壓進同一段平庸區間（標準差收窄到 0.96），換小模型則是兩案原封不動、兩案下滑（sf_weather −1、off_topic −4，跌幅集中在 off_topic）。願意看逐案分佈的團隊，才分得出「全面退步」與「一種工作負載的極限」。</p>
+      <p><b>eval 的價值在有人對它動作。</b>四倍 eval 次數沒有換來四倍修正，這是原文最該記住的自證。分數要接上非零 exit code、告警與回退權限，才從「報告」變成「閘門」——否則只是把不回歸的證據存得更整齊。</p>
+    </div>
+  </section>
+
+    <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">法律工作的代理式作業系統：NDA 初篩如何從吃掉約 20% 產能降到 1% 以下</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司會坐哪裡：地板下、桌邊、中間那一層——三種組織圖與四個未定的大問題</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">xAI (Grok)</span><a href="grok-shared-bots.html">共用機器人：把銷售流程切成三個有權限邊界的工作角色</a><span class="d">2026-10-27</span></div>
+    </div>
+  </section>
+
+<p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據、指令與案例分數均出自原文的示範專案（Agents CLI v1.8.0 內附 LangChain 模板、四案例、gemini-3.8-flash 評審），小標與分節為編輯整理。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-29 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
