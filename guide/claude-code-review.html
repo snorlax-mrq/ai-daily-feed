@@ -59,13 +59,23 @@
     <h2 class="g-h2">目標重寫：code review 不是「事後檢查」，是持續的拼字檢查</h2>
     <p class="g-p">背景數字先立起來：他們的 monorepo 從<strong>五月每天約 2,500 個變更，到九月超過 30,000 個</strong>；Claude Code 雖不在 monorepo，壓力同樣巨大。在這種速度下，逐行人工審查「越來越難，甚至不可能」。團隊把 code review 的目的拆成兩個：①出貨前抓到並修正 bug；②建立對 codebase 的共同理解——本文主要講前者，後者放在「團隊脈絡」一節。</p>
     <p class="g-p">核心觀念轉換有兩個。第一，<strong>「有沒有人讀過這段程式碼」是精確度很低的代理指標</strong>——真正的問題是「這個變更可能出什麼錯，哪種檢查（自動或人工）才是對的攔截點」。第二，時機變了：傳統審查是寫完、開 PR、等人看的「事後檢查」；他們把它織進工作流，<em>像寫作時持續跑的拼字檢查</em>——大多數變更在人類介入前，已經被 Claude 審過並修正至少一輪，常規 bug 早就被抓掉，人類注意力留給高層次的判斷。</p>
-    <p class="g-p">還有一個容易被忽略的算術：<strong>人類時間是雙側成本</strong>——不只算審查花掉的時間，也算修掉壞碼引入 bug 的時間。只壓前者不壓後者，人類時間根本沒省，只是搬家。所以他們用「每 PR 的中位數人工批准數（含 p95）」「人工留言數」「PR 等人多久」量測節省，以 <strong>revert 率與事故率當護欄</strong>（量測的是人類時間，護欄是品質指標——兩者不能混）：這兩個若上升，代表時間只是被搬家，不是被省下。</p>
+        <figure class="g-fig">
+      <img src="../assets/guide/claude-code-review/02.webp" alt="六層檢查疊起來吸收問題，最底下才是快速回滾" width="1200" height="815" loading="lazy" decoding="async">
+      <figcaption>六層檢查疊起來吸收問題，不是一道關卡——最底下才是快速回滾。<span class="g-fig-src">圖／Claude Code 團隊（X @addyosmani），<a href="https://x.com/addyosmani/status/2114604912520921136" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+<p class="g-p">還有一個容易被忽略的算術：<strong>人類時間是雙側成本</strong>——不只算審查花掉的時間，也算修掉壞碼引入 bug 的時間。只壓前者不壓後者，人類時間根本沒省，只是搬家。所以他們用「每 PR 的中位數人工批准數（含 p95）」「人工留言數」「PR 等人多久」量測節省，以 <strong>revert 率與事故率當護欄</strong>（量測的是人類時間，護欄是品質指標——兩者不能混）：這兩個若上升，代表時間只是被搬家，不是被省下。</p>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">六層檢查：從 PR 前驗證到 rollback</h2>
     <p class="g-p"><strong>第 1 層・PR 前驗證（大部分審查發生在這裡）</strong>：要求 Claude 做出「可執行的東西」——跑測試、跑 build、把截圖跟設計比對，不是說「做完了」而是<strong>展示結果</strong>；再用一個 fresh-context 的子代理審查 diff。內部技能如 bug hunting、diff 縮減、端到端驗證、UI 對設計規範檢查。Claude Code 創造者 Boris Cherny 的估計：<em>給 Claude 配上驗證流程，產出品質大約提升到原來的兩到三倍</em>。反覆出現的問題則修在源頭——技能本身、lint 規則、或更新 <strong>CLAUDE.md</strong>（專案說明檔，每次審查都會載入，所以保持簡短）與 <strong>REVIEW.md</strong>（code owner 告訴審查者「這個目錄什麼重要」：定義什麼叫專案失敗、限制 nitpick、劃定忽略路徑、要求 file+line 引用、要求含數量的總結與明確的「no issues」）。</p>
-    <p class="g-p"><strong>第 2 層・每個 PR 都有 AI 審查</strong>：diff 對照整個 codebase 與 PR 作者陳述的意圖——確認變更真的解決該問題、融入更大系統、不弄壞別的地方；審 bug fix 時還會找根因。這就是已對 Team/Enterprise 客戶開放的 <strong>Code Review for Claude Code</strong>（本地輕量版是 /code-review）。研究預覽以來，<strong>獲實質審查意見的內部 PR 占比從 16% 升到 54%</strong>；超過 1,000 行的 PR 多數能被抓到問題，較小的 PR 多數回報乾淨。發現會先經多代理過濾：並行找 bug、投票判定真偽、濾掉純風格/清理類（上線前先在他們自己的 PR 上做過 A/B 測試）。剩下的以行內留言呈現，按嚴重度排序，標記為 Important／Nit／<strong>Pre-existing</strong>（不讓作者背不屬於這個 PR 的鍋）；所有發現必須處理——修掉或帶理由結案，很多時候 agent 一夜之間就把問題修好、再跑一輪審查，作者回來時 PR 已經過完下一輪。</p>
+        <figure class="g-fig">
+      <img src="../assets/guide/claude-code-review/01.webp" alt="一個變更的完整生命週期：PR 前驗證到上線後觀察" width="1200" height="1083" loading="lazy" decoding="async">
+      <figcaption>一個變更的完整生命週期：PR 前驗證、CI、AI 審查、安全審查、風險分級批准、merge queue、旗標與 rollback。<span class="g-fig-src">圖／Claude Code 團隊（X @addyosmani），<a href="https://x.com/addyosmani/status/2114604912520921136" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+<p class="g-p"><strong>第 2 層・每個 PR 都有 AI 審查</strong>：diff 對照整個 codebase 與 PR 作者陳述的意圖——確認變更真的解決該問題、融入更大系統、不弄壞別的地方；審 bug fix 時還會找根因。這就是已對 Team/Enterprise 客戶開放的 <strong>Code Review for Claude Code</strong>（本地輕量版是 /code-review）。研究預覽以來，<strong>獲實質審查意見的內部 PR 占比從 16% 升到 54%</strong>；超過 1,000 行的 PR 多數能被抓到問題，較小的 PR 多數回報乾淨。發現會先經多代理過濾：並行找 bug、投票判定真偽、濾掉純風格/清理類（上線前先在他們自己的 PR 上做過 A/B 測試）。剩下的以行內留言呈現，按嚴重度排序，標記為 Important／Nit／<strong>Pre-existing</strong>（不讓作者背不屬於這個 PR 的鍋）；所有發現必須處理——修掉或帶理由結案，很多時候 agent 一夜之間就把問題修好、再跑一輪審查，作者回來時 PR 已經過完下一輪。</p>
     <p class="g-p"><strong>第 3、4 層・可擋合併的安全審查與 CI</strong>：code review 或安全審查<strong>任一</strong>有未結案發現時不得合併——修掉，或以簡短理由結案（誤報的處理方式）；後續 commit 解決問題時發現自動關閉。CI 是標準組合：lint、型別檢查、全平台測試、build——一個典型 CLI PR 在任何人看之前要過數十項檢查；PR 模板要求回答「怎麼測的、怎麼 revert」，Claude 可以代答，但<strong>責任在作者</strong>。</p>
     <p class="g-p"><strong>第 5 層・風險分級的人工批准</strong>：風險等級由<strong>變更本身</strong>決定（分類器判定），不是由作者身分決定；另一個分類器判斷特定變更是否需要額外批准。有些路徑永遠要多一雙眼：被 owner 標記為敏感的任何東西、任何 CI workflow 檔案。只有 repo 信任清單上的作者（通常是 repo 擁有團隊）享有寬鬆路徑，其他人一律需要第二人批准。<em>agent 的批准不算人類批准</em>；agent 發 PR 時，操作 agent 的人永遠算入必要審查者；一次批准只對一個 commit 有效——新 commit 無法被信任時（例如 agent 又推了 commit、或有人手工解 merge），PR 必須重新批准。</p>
     <p class="g-p"><strong>第 6 層・merge queue、功能旗標、分階段上線</strong>：merge queue 確保所有檢查在「main 加上這個變更」上跑過，防止兩個各自成功的 PR 合成一個壞掉的 main。新功能預設躲在 feature flag 後，Anthropic 員工先用——因為他們重度使用自家產品，常常比用戶先發現 regression。對外 rollout 先進 latest 頻道，stable 頻道殿後。</p>
