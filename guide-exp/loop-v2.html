@@ -44,32 +44,17 @@
   <section class="g-sec">
     <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">原文開場就定調：<strong>可靠不是模型問題，是 harness 問題</strong>——同一件事往上疊四層 loop，每層解一種問題。</p>
 
-    <figure class="x-fig">
-      <figcaption class="x-cap">圖解 A · <b>四層疊起來</b> — 誰包住誰</figcaption>
-      <div class="x-stack">
-        <div class="ring">
-          <div class="ring-lb"><b>4 · hill climbing loop</b><small>自動化「改進」</small><span class="pi">Engine</span></div>
-          <div class="ring">
-            <div class="ring-lb"><b>3 · event loop</b><small>自動化「什麼時候跑」</small><span class="pi">LangSmith Deployment</span><span class="pi">Fleet</span></div>
-            <div class="ring">
-              <div class="ring-lb"><b>2 · verification loop</b><small>自動化「對不對」</small><span class="pi">RubricMiddleware</span></div>
-              <div class="ring ring--core">
-                <div class="ring-lb"><b>1 · agent loop</b><small>自動化「動作」</small><span class="pi">create_agent</span></div>
-                <div class="ring-inner"><b>Model ⇄ Tools</b> — 反覆呼叫工具，直到任務完成</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="x-fb"><span class="ic">↺</span><span><b>回饋箭頭不是繞回最上面</b>：Engine 讀 trace，直接伸進內層改寫 harness（第 2 層的 rubric、第 1 層的 prompt／工具都算）。</span></div>
-      </div>
-      <p class="x-src">第 3 層的兩個原語分工不同：Deployment 提供觸發基礎設施（cron／webhook），Fleet 是驅動 docs agent 的 no-code builder。</p>
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/loop-engineering/04.webp" target="_blank" rel="noopener"><img src="../assets/guide/loop-engineering/04.webp" alt="原文四層迴圈疊圖：最外層 Event loop 由 Event trigger 啟動；內層 Verification loop 依序 Model＋Tools → Result → Grader（Rubric/eval），不及格則 Retry with feedback 退回 Model；右側 Engine analysis 讀 Traces，以紅色 Harness improvements 箭頭直接指回 Tools" width="1200" height="947" loading="lazy" decoding="async"></a>
+      <figcaption>四層疊起來的實線圖：Model／Tools 是 Observation↔Action 的內迴圈，Result 交給 Grader（rubric/eval）判，沒過就 <b>Retry with feedback</b>；右側 Engine 讀 <b>Traces</b>，紅色 <b>Harness improvements</b> 直接指回工具與設定，不是繞回起點。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／LangChain Blog，<a href="https://www.langchain.com/blog/the-art-of-loop-engineering" target="_blank" rel="noopener">原文</a></span></figcaption>
     </figure>
+    <p class="x-src" style="margin-top:8px">第 3 層的兩個原語分工不同：Deployment 提供觸發基礎設施（cron／webhook），Fleet 是驅動 docs agent 的 no-code builder。</p>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">先問症狀，再決定改哪一層</h2>
     <figure class="x-fig">
-      <figcaption class="x-cap">圖解 B · <b>決策圖</b> — 症狀 → 層級</figcaption>
+      <figcaption class="x-cap">圖解 A · <b>決策圖</b> — 症狀 → 層級</figcaption>
       <div class="x-dec">
         <p class="q">agent 表現不好，病在哪一層？</p>
         <div class="brs">
@@ -103,7 +88,7 @@
   <section class="g-sec">
     <h2 class="g-h2">人類的位置：四個可攔截的節點</h2>
     <figure class="x-fig">
-      <figcaption class="x-cap">圖解 C · <b>四個介入點</b> — 並列選項，不是流程</figcaption>
+      <figcaption class="x-cap">圖解 B · <b>四個介入點</b> — 並列選項，不是流程</figcaption>
       <p class="x-grid-h">並列位置，可各自取用；原文未規定順序</p>
       <div class="x-grid">
         <div class="c"><b><i>①</i>動作前</b><small>敏感工具呼叫先要人核；原文點名金融交易、資料庫操作</small></div>
@@ -125,7 +110,7 @@
     </div>
   </section>
 
-  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文，非官方文件）；圖解 A 為原文結構示意，B、C 為本站重繪；原文未提供任何量化數據。內容經對照原文審查。</p>
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文，非官方文件）；四層疊圖為原文圖，決策圖與介入點圖為本站重繪。原文未提供任何量化數據。內容經對照原文審查。</p>
 </main>
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>

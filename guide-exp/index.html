@@ -23,8 +23,8 @@
   <section class="g-sec">
     <h2 class="g-h2">受測配對</h2>
     <div class="x-grid">
-      <div class="c"><b>LangChain · 迴圈工程</b><small><a href="l-a.html">A 現行散文版</a>（2,699 字）<br><a href="l-b.html">B 圖解精簡版</a>（820 字）</small></div>
-      <div class="c"><b>OpenAI · Retell 語音代理</b><small><a href="r-a.html">A 圖解精簡版</a>（973 字）<br><a href="r-b.html">B 現行散文版</a>（1,699 字）</small></div>
+      <div class="c"><b>LangChain · 迴圈工程</b><small><a href="l-a.html">A 現行散文版</a>（2,699 字 / 1 圖）<br><a href="l-b.html">B 圖解精簡版</a>（820 字 / 原圖 1＋自繪 2＋表 1）</small></div>
+      <div class="c"><b>OpenAI · Retell 語音代理</b><small><a href="r-a.html">A 圖解精簡版</a>（973 字 / 自繪 2＋表 1）<br><a href="r-b.html">B 現行散文版</a>（1,699 字 / 0 圖）</small></div>
     </div>
     <p class="g-p" style="margin-top:14px">兩組刻意交換 A/B 位置（不是固定「新版＝A」），避免評審被順序影響。</p>
   </section>
@@ -43,6 +43,10 @@
       </table>
     </div>
     <p class="g-p">共識：圖解版掃讀成本低、3 分鐘能複述骨架；散文版事實較全但重複多。修正項已回填（自報標記、箭頭語意、表頭名實、手機卡片模式）。</p>
+    <div class="g-know">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+      <p><b>複核方法的一處更正。</b>四位評審都說「舊版的圖是空白方塊」——那是截圖 artifact：<code>loading="lazy"</code> 的圖在 fullPage 截圖中不會載入，不是頁面壞了。原圖其實正常（CDN 回 200）。因此圖解版第二輪已把原圖補回並自託管（<code>04.webp</code>，48KB vs 原 PNG 260KB），並改掉「拿自繪圖重畫原圖」的作法。</p>
+    </div>
   </section>
 
   <section class="g-sec">

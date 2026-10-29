@@ -565,3 +565,8 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
   .x-tbl td.n,.x-tbl td.grp{text-align:left;border:none;white-space:normal}
   .x-hint{display:none!important}
 }
+
+.fig-zoom{display:block;position:relative}
+.fig-zoom::after{content:"⤢";position:absolute;right:8px;bottom:8px;width:22px;height:22px;display:grid;place-items:center;border-radius:5px;background:color-mix(in srgb,var(--ink) 62%,transparent);color:var(--paper);font-size:12px;opacity:.72;pointer-events:none}
+.fig-zoom:hover::after{opacity:1}
+.fig-zoom-hint{font-family:'Archivo',sans-serif;font-size:10.5px;letter-spacing:.03em;color:var(--ink-3)}
