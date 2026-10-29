@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — agent 住進筆記庫 · AI 每日動態檔案</title>
+<meta name="description" content="X @Mr_Buzzoni 知識堆疊長文導讀：Obsidian 當記憶、Hermes 當操作員、MiniMax M3 當引擎的回寫迴圈；標籤命中約 90% 等數字全為作者自報，導讀逐項 triage。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E4%BA%BA%E7%89%A9%E8%A7%80%E9%BB%9E" class="day-catalog">人物觀點</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E4%BA%BA%E7%89%A9%E8%A7%80%E9%BB%9E">人物觀點</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>agent 住進筆記庫：整座圖譜一次讀，長迴圈才不斷線</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：X Article〈Karpathy-Style Knowledge Stack: Why I Put Hermes, MiniMax M3 and Obsidian at the Core〉——個人工作流長文，含安裝步驟；文末自介週更「AI 架構、量化交易與代理經濟」並導流 TG 頻道</p>
+    <p class="g-meta">
+      <span>X @Mr_Buzzoni</span>·<span>2026-06-16 發布</span>·<span>2026-10-29 收錄</span>·
+      <a href="https://x.com/Mr_Buzzoni/status/2066904909849440434" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>約 41 個</b><span>固定 schema 的標籤；M3 首選命中自稱約 90%（自報）</span></div>
+    <div class="g-stat"><b>30+ 次</b><span>全庫 lint 的工具呼叫；自稱多數模型第 8–9 次開始飄（自報）</span></div>
+    <div class="g-stat"><b>約 500 檔</b><span>作者 vault 規模；n=1 樣本，非通則</span></div>
+    <div class="g-stat"><b>3 層</b><span>Obsidian 存放、Hermes 操作、M3 推理，回寫成迴圈</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">Obsidian 當記憶、Hermes 當操作員、MiniMax M3 當推理引擎——讓 agent 住進筆記庫形成回寫迴圈；成效全是作者自報的單人樣本。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>三層知識堆疊</b> — 由內向外＝被包住：真相、操作、推理</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>3 · MiniMax M3</b><small>推理引擎：整座圖譜一次進 context</small><span class="pi">外層</span></div>
+          <div class="ring">
+            <div class="ring-lb"><b>2 · Hermes Agent</b><small>操作員：讀檔、跑工具、排程、記憶對話</small><span class="pi">中層</span></div>
+            <div class="ring-inner"><b>1 · Obsidian vault</b> — 唯一真相：plain markdown＋backlinks，人與 agent 共用的地盤</div>
+          </div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑</b>：Hermes 把 M3 的重構結果以 markdown 寫回 vault，迴圈閉合。</span></div>
+      <p class="x-src">本站重繪；原文僅以文字分層描述，未附圖，也未給此包覆關係。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">他為什麼挑 M3：一個失敗模式，四個症狀</h2>
+    <p class="g-p">開場先講筆記軟體為何不夠：經典 PKM 有三種死法——筆記寫一次就不再更新、AI 對話聰明但每次從零開始、認真工作的 context 不斷掉出視窗。他要的三件事：本地可連結的圖譜、住在圖譜裡的 agent、能在巨大真實 context 上推理的模型。</p>
+    <p class="g-p">他不是按 benchmark 選模型。2025 年試過的模型都卡在同一個失敗模式：摘要單篇沒問題，一旦要讀十篇筆記、對照 MOC、再寫回新筆記，就斷線。</p>
+    <p class="g-p">他要的是一個能讀整座 vault、日誌與一批新文章的模型，不想自己黏 RAG 管線；試用幾個月後 M3 留了下來——長 context、多模態、agentic（作者描述）。</p>
+    <p class="g-p">症狀固定四種：摘要局部對但全域錯、引用檔案裡不存在的專案、用了別套 taxonomy 的標籤、編造不存在的 wikilink。他的結論：<em>「模型很聰明，工作流比模型大」</em>。</p>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>項目</th><th>原文聲稱</th><th>限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="項目"><b>標籤首選命中</b></td><td data-l="原文聲稱">M3 約 90%；200K-context 模型約 60%</td><td data-l="限定語">自報；未說明計法與樣本數；schema 約 41 個標籤</td></tr>
+          <tr><td data-l="項目"><b>長迴圈不斷線</b></td><td data-l="原文聲稱">全庫 lint 30+ 次工具呼叫走完；多數模型第 8–9 次開始飄</td><td data-l="限定語">自報；單人工作流</td></tr>
+          <tr><td data-l="項目"><b>forward reference</b></td><td data-l="原文聲稱">寫出不存在的 [[wikilink]]，Obsidian 顯示灰連結，每週 lint 時 triage</td><td data-l="限定語">自報；以每週 lint 為前提</td></tr>
+          <tr><td data-l="項目"><b>首次呼叫延遲</b></td><td data-l="原文聲稱">Hermes 預載 context，別用前 3 秒評判，給它 10 秒</td><td data-l="限定語">自報</td></tr>
+          <tr><td data-l="項目"><b>圖重 PDF</b></td><td data-l="原文聲稱">先用專用視覺工具；M3 讀短截圖文字沒問題</td><td data-l="限定語">自報；僅測短截圖文字</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">三個對症點指向同一件事：整座圖譜要能一次進 context，而且留得住。他說 M3 是試到第一個做得到的（自報）；表內百分比全無量測方法。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">迴圈與邊界：資料夾就是權限表</h2>
+    <p class="g-p">每圈五步：人往 Inbox 捕捉 → Hermes 讀 vault → 把相關筆記集送進 M3 → M3 重構、標籤、連結 → Hermes 以乾淨 markdown 寫回。寫回的筆記成為下一圈的 context。</p>
+    <p class="g-p">兩條原則撐起地基：<em>「值得留的東西先進 Obsidian；agent 做出有用的事，就要變成一則筆記」</em>。Hermes 的位置在 vault 與模型之間：把圖譜變成可操作的東西，而不是取代 Obsidian。</p>
+    <p class="g-p">他的話：<em>「那個迴圈——不是一次性對話——才是真正的產品」</em>。模型分工照同一邏輯：小模型管改檔名、找字串，M3 只接需要整座圖譜的活。</p>
+    <p class="g-p">邊界用資料夾講清楚：人寫 Inbox／Daily／Reading，Hermes 只准彙整進 Projects／Reviews／主題資料夾——不寫 YAML 也有權限界線。</p>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>資料夾</th><th>職責</th><th>誰寫</th></tr></thead>
+        <tbody>
+          <tr><td data-l="資料夾"><b>Inbox/</b></td><td data-l="職責">原始捕捉、粗丟</td><td data-l="誰寫">人</td></tr>
+          <tr><td data-l="資料夾"><b>Daily/</b></td><td data-l="職責">低摩擦每日日誌</td><td data-l="誰寫">人</td></tr>
+          <tr><td data-l="資料夾"><b>Reading/</b></td><td data-l="職責">來源筆記、摘錄、引文</td><td data-l="誰寫">人</td></tr>
+          <tr><td data-l="資料夾"><b>Projects/</b></td><td data-l="職責">持久產出與進行中工作</td><td data-l="誰寫">Hermes 彙整</td></tr>
+          <tr><td data-l="資料夾"><b>Reviews/</b></td><td data-l="職責">週報與月度綜述</td><td data-l="誰寫">Hermes 彙整</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">他最常跑的 job：文章丟 raw/，M3 產 5 段式筆記，從約 41 個標籤選主標籤、寫 8–12 條指向既有筆記的 wikilinks、點名要更新的 MOC；200K 模型或許四項中三，M3 全中（自報；原文僅明列三項成果卻稱四）。</p>
+    <p class="g-p">排程補上非同步：每天 08:00 摘要昨日、週五出週報、每天掃孤兒筆記、每晚把 highlight 原子化。他的對比：<em>「聊天回答會消失，排程的筆記維護會複利」</em>。</p>
+    <p class="g-p">落地路徑本身可驗證：CLI 裝在 Linux／macOS／WSL2，另有 macOS／Windows／Linux 的 Desktop 殼；<code>hermes doctor</code> 體檢、<code>hermes model</code> 選模型、<code>hermes setup</code> 開機。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">觀點 triage：哪句能抄，哪句打折</h2>
+    <p class="g-p">先把主張分級：可驗證的配置（三層架構、資料夾規則、排程清單）、個人經驗（所有百分比與飄移點）、可受挑戰的通則（自我改進、複利效應）。</p>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>主張</th><th>類型</th><th>依據強度</th><th>編輯觀點</th></tr></thead>
+        <tbody>
+          <tr><td data-l="主張"><b>30+ 次工具呼叫不斷線</b></td><td data-l="類型">② 個人經驗</td><td data-l="依據">低：無量測、n=1</td><td data-l="編輯觀點">（編輯觀點：方向合理，數字別外推）</td></tr>
+          <tr><td data-l="主張"><b>標籤命中約 90% vs 200K 約 60%</b></td><td data-l="類型">② 個人經驗</td><td data-l="依據">低：未定義「首選命中」計法與樣本</td><td data-l="編輯觀點">（編輯觀點：打對折看）</td></tr>
+          <tr><td data-l="主張"><b>6 個月後模型「知道」我的語氣與標籤系統</b></td><td data-l="類型">③ 可受挑戰</td><td data-l="依據">模型權重不因使用而變；持續性只能來自 Hermes 對話記憶與 vault 累積</td><td data-l="編輯觀點">（編輯觀點：是「系統記得」，不是「模型學會」）</td></tr>
+          <tr><td data-l="主張"><b>Hermes 自我改進、從經驗長技能</b></td><td data-l="類型">③ 可受挑戰</td><td data-l="依據">官方敘述轉述，無第三方驗證</td><td data-l="編輯觀點">（編輯觀點：機制（技能庫＋記憶檢索）具體，「自我改進」是包裝）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">最該打折的是複利那句：原文說每篇 compile 過的筆記「成為 M3 下一題 context 的一部分」——機制是真的，但持久性來自 Hermes 的對話記憶與 vault，模型權重不會因使用而變。</p>
+    <p class="g-p">有趣的是他也拆自家台：<em>「『MSA 架構』宣稱是行銷」</em>——他信的是體感：跑 20 分鐘的任務，模型還記得第 1 分鐘的指令（自報）。</p>
+    <p class="g-p">兩處警訊：標題掛「Karpathy-style」，內文卻沒再解釋；文末導流 @polydao 與 TG 頻道、自稱分享「alpha」。推廣動機要計入閱讀折扣。</p>
+    <p class="g-p">（編輯觀點：迴圈架構與權限設計值得抄；所有百分比當體感看。把它當工程師日誌讀，不當評測。）</p>
+    <div class="g-know">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+      <p><b>閱讀前提。</b>這是個人 X Article（2026-06-16），非官方文件或研究。全文成效數字（90%／60%、第 8–9 次飄移、四項全中、6 個月複利）皆為作者自報，無量測方法與第三方驗證；Hermes（作者稱為 Nous Research 出品）與 MiniMax M3 的能力描述亦屬作者轉述，非本站推薦。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>迴圈是產品。</b>agent 的產出要回寫成筆記，下一圈才吃得到。</p>
+      <p><b>模型跟著工作形狀選。</b>圖譜型任務，要整座圖譜進 context。</p>
+      <p><b>百分比全是 n=1 自報。</b>先拿一個資料夾跑一週再說。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel"></div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述語句出自原文，圖解與小標為編輯整理。原文未附架構圖，架構僅以文字流程呈現；圖解與表格為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-29 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

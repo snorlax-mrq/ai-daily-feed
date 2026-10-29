@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 把設計品味教給 agent · AI 每日動態檔案</title>
+<meta name="description" content="LangChain 設計 agent Content Studio 導讀：四個月教會公司品味、48 skills＋wiki＋閘門＋記憶四層、一切皆碼、非同步子代理夜跑 52 頁簡報；Opus 5.5 後刪多數硬碼規則——Bitter Lesson 的 agent 版。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>把設計品味教給 agent：規則會過期，環境留下來</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain 官方部落格〈How We Built Our Design Agent〉——自家案例工程文；開頭宣傳片由 Content Studio 自製，全片以碼生成，harness 已開源</p>
+    <p class="g-meta">
+      <span>LangChain</span>·<span>2026-10-28 發布</span>·<span>2026-10-29 收錄</span>·
+      <a href="https://www.langchain.com/blog/design-agent" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>3,000+</b><span>交付資產（含 80+ 份簡報）；3/4 請求來自行銷以外（自報）</span></div>
+    <div class="g-stat"><b>約 US$0.5</b><span>單一請求中位數模型成本，9 月中旬約 US$8（自報）</span></div>
+    <div class="g-stat"><b>48 skills</b><span>近 1,000 檔；以「工作」為範圍，描述寫成分派規則</span></div>
+    <div class="g-stat"><b>115 個</b><span>第一版 UI 元件庫規模；Opus 5.5 後刪的是多數硬碼規則</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">Content Studio 用四個月學會 LangChain 的設計品味：skills 管方法、wiki 管語境、閘門管可測項、記憶管教訓；模型升級時，補弱規則跟著過期（成效自報）。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/www-langchain-com-blog-design-agent/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/www-langchain-com-blog-design-agent/01.webp" alt="Content Studio 架構圖：Slack thread 進出，主 agent 配 skills＋wiki、團隊與個人記憶、託管工具與 MCP，每 thread 一台沙盒內跑非同步子代理" width="1200" height="630" loading="lazy" decoding="async"></a>
+      <figcaption>圖解 A · Content Studio 住在 Managed Deep Agents 上：Slack thread 進出，主 agent 調度 skills＋wiki、團隊與個人記憶、託管工具，每 thread 一台沙盒跑非同步子代理；自家程式碼因此少了約 80%。<span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/design-agent" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">品味從 context 來：同一個 prompt，兩種結果</h2>
+    <p class="g-p">模型早會寫好碼，缺的是你家的脈絡——沒有就抓最常見的樣式（Anthropic 稱 distributional convergence），成品可以精緻卻像別人家做的。</p>
+    <p class="g-p">他們引 Stripe 設計長 Katie Dill 的警告：二戰後建築複製現代主義外觀、丟了背後思考——她叫它「zombie UI」，<em>「如果你不給觀點，AI 會替你給。」</em></p>
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/www-langchain-com-blog-design-agent/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/www-langchain-com-blog-design-agent/02.webp" alt="同一個 prompt 的前後對照：左圖 logo 組合壞、字體通用、無座標軸、非品牌色；右圖全部符合品牌規範" width="1200" height="493" loading="lazy" decoding="async"></a>
+      <figcaption>圖解 B · 同一個 prompt：左為帶品牌 skill 的本地 agent——logo 組合壞、通用字體、無座標軸、非品牌萊姆綠；右為 Content Studio。<span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/design-agent" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <p class="g-p">差距不在模型，在填空：brief 沒講的每個決定，本地 agent 用「見過最多的」補，Content Studio 用他們的選擇補——logo 組合、文字對齊、主／次品牌色都算。</p>
+    <p class="g-p">配方是三層加料：設計原則（一幀一焦點）、擋常見 AI 樣式的欄杆、與每則回饋背後的理由——疊在顏色、字重、間距等基礎 token 之上。</p>
+    <p class="g-p">品味可練：早期一條光尾要「不要銳利邊緣」，第一版回了粗鈍圓角；後來 agent 自己畫草圖定位、建逐幀檢查確保尾巴不脫落。</p>
+    <p class="g-p">效果面（自報）：帶它作品的貼文在 X 約 450 萬次觀看；用其視覺的貼文按讚約 2 倍、書籤 3.7 倍（LangChain 帳號內對比）；75% 的使用者每週回訪。</p>
+    <p class="g-p">角色也變了：PM、工程師、創辦人都能在 Slack 下 brief 拿到可上架的成品；設計師移向創意總監——定方向、審作品，不再每件自己做。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">給設計師的電腦：一切皆碼，兩顆引擎</h2>
+    <p class="g-p">每個 Slack thread 配一台 LangSmith Sandbox（隔離 Linux、帶檔案系統與 shell），專案活在 thread 存續期；brief、計畫、場景碼、音訊與 renders 同住一個資料夾，各子代理共用。</p>
+    <p class="g-p">一切用碼寫：投影片是 HTML、圖表是資料 spec、動畫是 timeline——「讓鸚鵡早點進場」只需改一個時間值重渲染，不必整包重做。</p>
+    <p class="g-p">動作層兩顆引擎：HyperFrames（HeyGen 開源框架）把影片變網頁、GSAP timeline 排程；自家 motion-studio 畫原創動畫——agent 寫碼畫每一幀，多達 16 個瞬間疊進一幀模擬快門殘影。</p>
+    <p class="g-p">動畫貴在 render：單幀分鏡約 50 毫秒，成片一秒要 8–40 秒——所以先在分鏡層便宜探索，定向後才量產。</p>
+    <p class="g-p">管線三關：分鏡、animatic（對音訊的粗剪）、製作。順序曾只寫在指示裡、agent 偶爾偷跳審查；現在由程式強制——必守的順序住碼裡，判斷留在 prompt。</p>
+    <p class="g-p">回饋介面也補了：Slack thread 是線性文字、分鏡是空間的，改一個字都得重發 prompt。團隊改用 Paper 設計畫布——人在特定幀留言、並排比方向，agent 讀留言接著迭代。</p>
+    <p class="g-p">工程細節：Paper 的 agent 工具只在桌面版跑，他們以無頭模式跑在常駐 Linux worker、虛擬顯示加認證橋接雲端沙盒——一次設定全隊共用。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">四層知識，與會過期的規則</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>層</th><th>管什麼</th><th>例子與數字</th></tr></thead>
+        <tbody>
+          <tr><td data-l="層"><b>Skills</b></td><td data-l="管什麼">怎麼做這份工作</td><td data-l="例子與數字">以「工作」而非主題為範圍；router skill 一張表把需求分派到專門 skill，並決定要不要開共畫布</td></tr>
+          <tr><td data-l="層"><b>Wiki</b></td><td data-l="管什麼">背景與何謂好</td><td data-l="例子與數字">品牌 token、語彙、產品資訊；動態 wiki 收錄 70 部參考影片拆解</td></tr>
+          <tr><td data-l="層"><b>Gates</b></td><td data-l="管什麼">可測項</td><td data-l="例子與數字">程式碼寫成的確定性檢查；預設大小寫這類問題已全自動抓</td></tr>
+          <tr><td data-l="層"><b>Memory</b></td><td data-l="管什麼">人教的教訓</td><td data-l="例子與數字">快慢兩迴圈，分團隊層與個人層（見下）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">第一版替模型做設計：115 個可重用 UI 元件守得住品牌，但每幀重複同款版式；Opus 5.5 上線後刪掉多數硬碼規則、只留原則與高層指引——更有變化、重複更少。</p>
+    <p class="g-p">這是他們自己的 Bitter Lesson：<em>「為補模型弱點而設的規則，會隨模型進步愈來愈不管用；留下的是環境」</em>——工具、context、與人引導工作的方式。</p>
+    <p class="g-p">長工單靠非同步子代理：主 agent 從實作者變幕僚長——start_task 派工、check_tasks 查進度、schedule_wakeup 定時喚醒續跑。launch-film skill 內附真實案例——88 秒發布片逐鏡頭重建，agent 從中學會切鏡時機與並行前凍結共用碼。</p>
+    <p class="g-p">一夜重製 52 頁簡報：主 agent 跑約 1 小時、子代理合計 6 小時以上，全程不擋對話，任何人都能中途插話改方向。</p>
+    <p class="g-p">記憶快慢兩迴圈：快迴圈當場存回饋——AGENTS.md 限 200 行索引，早年曾膨到 50 萬 token；慢迴圈每案抓最多 5 條有證據的教訓，每週彙整進 skills 與 wiki。</p>
+    <p class="g-p">（編輯觀點：把「必守順序寫進程式碼、判斷留 prompt」講得最白；48 個 skills 對小團隊是重資產，複製前先問自己有沒有那麼多「工作」要分。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>品味是 context。</b>brief 沒講的，agent 拿你教過的補。</p>
+      <p><b>可測的進閘門。</b>必守的交給程式碼，判斷留在 prompt。</p>
+      <p><b>為模型弱點寫的規則會過期。</b>環境才是資產。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel"></div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述語句出自原文，圖解與小標為編輯整理。成效數字（資產數、views、倍率、成本、程式碼量）皆為 LangChain 自家案例自報，無第三方驗證。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-29 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

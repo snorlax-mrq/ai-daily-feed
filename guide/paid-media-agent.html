@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 行銷 agent 半年佔 pipeline 兩成 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain 付費媒體 agent 導讀：六個月 0→20% pipeline 佔比（自報）、五層 context、兩套 graph 併一、每平台一個子代理、計算搬進程式——早期報告工作流 40x 便宜、13x 快。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>行銷 agent 半年佔 pipeline 兩成：模型管判斷，程式管數字</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain 官方部落格〈How We Built LangChain's Paid Media Agent〉——自家案例工程文，agent 已開源（open-paid-media-agent）</p>
+    <p class="g-meta">
+      <span>LangChain</span>·<span>2026-09-14 發布</span>·<span>2026-10-28 更新</span>·<span>2026-10-29 收錄</span>·
+      <a href="https://www.langchain.com/blog/paid-media-agent" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>0 → 20%</b><span>六個月內付費媒體佔行銷 pipeline 比重（自報）</span></div>
+    <div class="g-stat"><b>−30% CPL</b><span>6→8 月；同期月支出約 +60%；最大渠道 LinkedIn 較 1 月 −40%（自報）</span></div>
+    <div class="g-stat"><b>40x／13x</b><span>早期報告工作流改碼＋刪多餘模型呼叫：18 分 → 85 秒（凍結測試集）</span></div>
+    <div class="g-stat"><b>5 層</b><span>context 分層：prompt／skills／wiki／live tools／程式碼</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">LangChain 把付費媒體 agent 當新人養：給電腦、資料與文件；context 分五層、計算交程式、一平台一子代理。六個月從 0 到佔行銷 pipeline 20%（自報）。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/www-langchain-com-blog-paid-media-agent/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/www-langchain-com-blog-paid-media-agent/01.webp" alt="五層 context 巢狀圖：System Prompt 最內層，向外依次為 Skills、Wiki、Live Tools、Deterministic Code，中心是模型" width="1200" height="760" loading="lazy" decoding="async"></a>
+      <figcaption>圖解 A · 五層 context 由內向外包住模型：System Prompt、Skills、Wiki、Live Tools，最外層是不可漂移的程式碼。<span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/paid-media-agent" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">像對待新人：先給電腦，再給五層 context</h2>
+    <p class="g-p">出發點是一句話：<em>「coding agent 是知識工作者」</em>——讀檔、轉換資訊、跑分析、寫下來，跟人類分析師的日常同一套。</p>
+    <p class="g-p">所以他們像對待新人一樣配備：LangSmith Sandbox 是隔離 microVM，32 GB 磁碟加 shell；pandas、DuckDB 做分析，openpyxl 試算表，WeasyPrint 加 Jinja2 產報告。</p>
+    <p class="g-p">軟體之外還有文件：六個 skills、19 頁 wiki 與軟體一起烘進 sandbox snapshot，平均啟動時間省約 10 秒。</p>
+    <p class="g-p">harness 用的是自家 Deep Agents，定位像作業系統：管檔案存取、程式執行與工作記憶，給模型規劃、派子代理與管 context 的工具；付費媒體的工具、skills 與業務知識都疊在這層之上。</p>
+    <p class="g-p">naive 做法是把公司知識全塞進 system prompt——又長、每輪都貴、還會過期。他們的診斷：context window 才是瓶頸，很多推理失敗其實是 context 失敗。</p>
+    <p class="g-p">所以 prompt 只當地圖：一句話角色加三個短節，其餘是指針；知識住在固定位置的檔案，agent 按任務取用。</p>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>層</th><th>放什麼</th><th>例子與數字</th></tr></thead>
+        <tbody>
+          <tr><td data-l="層"><b>System prompt</b></td><td data-l="放什麼">角色與導航</td><td data-l="例子與數字">一句話角色＋3 個短節，其餘是位置指針</td></tr>
+          <tr><td data-l="層"><b>Skills</b></td><td data-l="放什麼">怎麼做這份工作</td><td data-l="例子與數字">6 個資料夾，執行時只先給標題與描述（漸進揭露）</td></tr>
+          <tr><td data-l="層"><b>Wiki</b></td><td data-l="放什麼">這家公司的世界</td><td data-l="例子與數字">19 頁：漏斗怎麼運作、每個 campaign 的目的、哪個來源擁有哪個數字、做過哪些決策與原因</td></tr>
+          <tr><td data-l="層"><b>Live tools</b></td><td data-l="放什麼">當下的事實</td><td data-l="例子與數字">218 個呼叫：支出、設定、pipeline 每天變，請求時才抓</td></tr>
+          <tr><td data-l="層"><b>程式碼</b></td><td data-l="放什麼">不可漂移的規則</td><td data-l="例子與數字">計算、日期窗、帳號對齊、硬規則；「不因單週表現不佳砍掉 top pipeline driver」的禁令寫在碼裡，模型無法覆寫</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">畫界線的心法：<em>「skill 要能在別家公司用，wiki 不能」</em>——skill 裝可複製的方法，wiki 裝公司專屬脈絡（承 Karpathy 的 LLM wiki 模式與自家的 Wiki Memory）。</p>
+    <p class="g-p">還有個意外收穫：agent 曾用現成的 playbook、campaign 資料與分析庫，答出團隊沒建過工作流的問題——workspace 的設計本身，就是 agent 設計的一部分。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">一個 runtime，兩個入口</h2>
+    <p class="g-p">先看它做什麼：每週一對齊廣告平台數據與倉儲的 lead、pipeline，每平台出一份品牌 PDF——什麼變了、為什麼、下一步。</p>
+    <p class="g-p">團隊在 thread 標記它追問；它也會照 playbook 與編碼判斷，提議新關鍵詞、調向、文案或新搜尋活動。</p>
+    <p class="g-p">原本兩套 graph：週報是排程的 Deep Agent＋沙盒＋大模型＋PDF；Slack 求秒回，用輕量迴圈、便宜模型、唯讀、無沙盒。</p>
+    <p class="g-p">這分工只活了五週：每個能力要做兩次、功能到兩端時間不一，Slack 吃不了附件、也答不了週報 PDF 的追問。</p>
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/www-langchain-com-blog-paid-media-agent/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/www-langchain-com-blog-paid-media-agent/02.webp" alt="前後對照圖：左邊 Slack graph 與 Report graph 各自重複 wiki、skills、工具與來源規則；右邊一個 graph 定義同時餵 Slack run 與 Scheduled run" width="1200" height="482" loading="lazy" decoding="async"></a>
+      <figcaption>圖解 B · 兩套 graph 併成一個：同一份 wiki／skills／工具／來源規則，Slack run 拿四個工具、排程 run 只見 task()。<span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/paid-media-agent" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <p class="g-p">修正的認知：不是兩個產品，是同一份分析的兩個入口。一個 graph、每請求全新實例；排程只見 <code>task()</code>、每平台一個子代理，Slack 給較廣的讀取與倉儲工具。</p>
+    <p class="g-p">每個 thread 有自己的沙盒與 checkpoint，每輪只看見需要的工具——狀態按請求隔離，而不是按產品隔離。</p>
+    <p class="g-p">同一 runtime、不同能力檔——<em>「同一個工廠可以給不同使用者不同的技能與權限」</em>，託管在 LangSmith Deployment。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">五課教訓，每課都有數字對帳</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>教訓</th><th>做法</th><th>數字與限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="教訓"><b>模型管判斷，程式管計算</b></td><td data-l="做法">Python 抓數、對齊日期窗、套硬規則、刪多餘模型呼叫；模型只詮釋與建議</td><td data-l="數字與限定語">凍結測試集：舊版單份報告約 3.9M 輸入 token、1,112 秒、3 美元出頭 → 40x 便宜、13x 快（自報）</td></tr>
+          <tr><td data-l="教訓"><b>每個指標定真值來源</b></td><td data-l="做法">平台管花費／曝光／點擊，倉儲管商機／pipeline；對不攏就保留限制，註明來源、日期窗與歸因模型</td><td data-l="數字與限定語">Google 影音活動約 10% 花費在倉儲對不上（無關鍵詞可 join）</td></tr>
+          <tr><td data-l="教訓"><b>工具按需發現</b></td><td data-l="做法">Pipeboard MCP 的 200+ 廣告工具收進 search／read／run；倉儲給 describe＋分析查詢；固定工具與查詢介面並存（60 次 live 實測）</td><td data-l="數字與限定語">唯讀目錄 38,000 token（6 月）→ 首輪約 12,000；同評審品質便宜 4x；目錄近 3 倍大、成本持平</td></tr>
+          <tr><td data-l="教訓"><b>隔離要自己設計</b></td><td data-l="做法">live 資料比過三架構：獨立跑最差（難綜合）；選母＋每平台一子代理，各自報告位置與完成旗標；子代理僅 3 工具——讀 context、計算、渲染</td><td data-l="數字與限定語">兩個真實 bug：共享 done 旗標互卡、子代理自證 PDF 燒掉大量 token</td></tr>
+          <tr><td data-l="教訓"><b>從分析到行動</b></td><td data-l="做法">agent 提案，人類在審批卡核准，程式套用（細節見下段）</td><td data-l="數字與限定語">人類控制是否執行；非付費媒體團隊只能問、不能改</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">收尾兩課關於人與介面：只能分析的 agent 只是比較好的儀表板。所以提案走 Slack 審批卡——比對現值與擬議值、可編輯再核准，伺服器驗過 Slack user ID 才由程式套用，並回查平台確認生效。</p>
+    <p class="g-p">介面也在演化：Slack 適合聚焦決策與追問；大量廣告組、批次編輯、多輪修訂這類複雜工作流，正移往圍繞 agent 打造的專用介面。</p>
+    <p class="g-p">下一步是讓它更主動：持續盯表現、浮出值得注意的變化、提案實驗；更大的圖是把 GTM 各環的學習串成共享知識——campaign 參與度餵銷售跟進，pipeline 進度回饋下一輪投放。</p>
+    <p class="g-p">（編輯觀點：五課裡最可複製的是第 1、2 課——把確定性從模型搬走、把真值來源講明白，任何產業的 agent 都用得上。）</p>
+    <p class="g-p">（編輯觀點：成效由自家衡量、評審機制未揭露，且 LangChain 同時在賣 Deep Agents 與 LangSmith——數字當自家案例參考，不是第三方 benchmark。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>prompt 當地圖，不當倉庫。</b>知識住檔案，按任務取用。</p>
+      <p><b>確定性交給程式。</b>算得準、可重現，模型只管判斷。</p>
+      <p><b>隔離不是免費的。</b>子代理分了窗，邊界仍要自己畫。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel"></div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述語句出自原文，圖解與小標為編輯整理。成效數字（0→20%、CPL、40x／13x）皆為 LangChain 自家案例自報，無第三方驗證。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-29 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
