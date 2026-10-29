@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>導讀 — Uber 全員上 ChatGPT Work：從 1,000 人試點到 30,000+ 名員工的規模化部署 · AI 每日動態檔案</title>
-<meta name="description" content="深入淺出導讀 OpenAI 公告〈Uber brings ChatGPT Work to all employees with OpenAI〉：Uber 從 1,000 人試點擴大到 30,000+ 名員工全公司 rollout，連接 Google Drive、Gmail、Google Calendar、Slack，預設模型 GPT-6.1 Sol，配套內部 AI skills library、核准整合與員工訓練。">
+<title>導讀 — Uber 全員上 ChatGPT Work：配套先到位，成效還在未來式 · AI 每日動態檔案</title>
+<meta name="description" content="OpenAI 公告〈Uber brings ChatGPT Work to all employees with OpenAI〉導讀：1,000 人試點擴到 30,000+ 名員工，用時序圖、配套並列圖與基準表，拆解「可取得不等於已啟用」的企業 rollout 公告。">
 <script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
 <link rel="stylesheet" href="../assets/archive.css">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -24,10 +24,10 @@
   <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
   <header class="g-head">
     <div class="day-title-row">
-      <h1>Uber 全員上 ChatGPT Work：從 1,000 人試點到 30,000+ 名員工的規模化部署</h1>
+      <h1>Uber 全員上 ChatGPT Work：配套先到位，成效還在未來式</h1>
       <span class="stamp">導讀</span>
     </div>
-    <p class="g-orig">原文：OpenAI 公告——Uber brings ChatGPT Work to all employees with OpenAI（全公司 rollout 宣布）</p>
+    <p class="g-orig">原文：OpenAI 公告〈Uber brings ChatGPT Work to all employees with OpenAI〉——企業 rollout 宣布，只給部署範圍、無成效數據</p>
     <p class="g-meta">
       <span>OpenAI</span>·<span>2026-10-22 發布</span>·<span>2026-10-23 收錄</span>·
       <a href="https://openai.com/index/uber-chatgpt-work-rollout" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
@@ -35,65 +35,104 @@
   </header>
 
   <div class="g-stats">
-    <div class="g-stat"><b>30,000+</b><span>Uber 全球員工涵蓋人數——ChatGPT Work 自今日起全公司 rollout</span></div>
-    <div class="g-stat"><b>1,000 人</b><span>初始試點規模；此次由試點擴大到全員</span></div>
-    <div class="g-stat"><b>GPT-6.1 Sol</b><span>ChatGPT Work 內的預設能力，官方稱在前沿效能與成本效率之間取平衡</span></div>
-    <div class="g-stat"><b>整合例舉</b><span>原文點名 Google Drive、Gmail、Google Calendar、Slack 等 Uber 日常工具</span></div>
-    <div class="g-stat"><b>職能例舉</b><span>營運、財務、行銷、產品等；開發與軟體工程團隊持續使用 Codex</span></div>
+    <div class="g-stat"><b>30,000+</b><span>全球員工可取得；2026-10-22 起 rollout</span></div>
+    <div class="g-stat"><b>1,000 人</b><span>擴大前的試點；起訖與職能未給</span></div>
+    <div class="g-stat"><b>GPT-6.1 Sol</b><span>ChatGPT Work 預設模型，非唯一</span></div>
+    <div class="g-stat"><b>4 個整合</b><span>Drive／Gmail／Calendar／Slack，原文點名</span></div>
   </div>
 
   <section class="g-sec">
-    <div class="g-tldr">
-      <h2 class="g-tldr-h">30 秒版本</h2>
-      <p class="one">Uber 宣布自今日起全公司 rollout ChatGPT Work——在 ChatGPT Enterprise 內運作、幫員工承接複雜多步驟任務並交付成品的 agent 平台——從 1,000 人試點擴大到 30,000+ 名員工，也是 Uber 首次全公司部署專為知識工作設計的 agentic 平台。它連接 Google Drive、Gmail、Google Calendar、Slack，預設模型為 GPT-6.1 Sol；rollout 由 Uber 內部 AI skills library、核准整合與員工訓練支持。公告未附成效數據，雙方計畫隨進度分享採用狀況與用例。</p>
-      <ul>
-        <li>規模：ChatGPT Work 自今日起全公司 rollout，涵蓋 30,000+ 名員工，由 1,000 人試點擴大而來。</li>
-        <li>能力：連接 Google Drive、Gmail、Google Calendar、Slack；研究資訊、準備會議摘要（brief）、製作簡報、資料分析與跨應用工作流程。</li>
-        <li>配套：預設模型 GPT-6.1 Sol，加上 Uber 內部 AI skills library、核准整合與員工訓練。</li>
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">Uber 把 ChatGPT Work——ChatGPT Enterprise 內、承接多步驟任務並交付成品的 agent 平台——從 1,000 人試點推到 30,000+ 名員工；公告寫的是範圍，不是成效。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>規模化路徑</b> — 試點 → 全公司 → 覆蓋人數</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">起點：Uber 內部試點</span><span class="tr"><i>1,000 名員工先行；起訖、地區、職能原文皆未給</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">試點 → 全公司</span><span class="tr"><i>2026-10-22 起 rollout；原文未說擴大判準</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">ChatGPT Enterprise → 員工</span><span class="tr"><i>30,000+ 名全球員工可取得；公告稱 Uber 首個全公司知識工作 agent 平台</i></span></span></li>
+        <li class="side"><span class="st">03b</span><span class="body"><span class="hop">旁支：開發與軟體工程團隊</span><span class="tr"><i>續用 Codex，也將繼續使用 Codex</i></span></span></li>
       </ul>
-    </div>
+      <p class="x-src">本站重繪。原文只給兩個節點（1,000 人試點、30,000+ 人 rollout），中間過程未描述，本圖不補。30,000+ 是可取得的名額，不是已啟用或活躍人數。</p>
+    </figure>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">部署本身：從 1,000 人試點跨到 30,000+ 全員</h2>
-    <p class="g-p">公告主體很單純：Uber 宣布<em>自今日起</em>全公司 rollout <strong>ChatGPT Work</strong>——一個在 <strong>ChatGPT Enterprise</strong> 內運作、幫員工承接廣泛任務的 agent；官方對它的描述是<em>「設計來承接複雜、多步驟任務並交付成品的 agentic 平台」</em>。覆蓋範圍是 Uber 全球員工中的 <strong>30,000+ 人</strong>。</p>
-    <p class="g-p">兩個定位句值得留意。一是擴大路徑：從 <strong>1,000 人</strong>的初始試點出發，這次推到全員；二是公告給它的定位——<em>Uber 首次全公司部署、專為知識工作（knowledge work）設計的 agent 平台</em>。</p>
+    <h2 class="g-h2">30,000+ 人拿到什麼：四個整合、一個預設模型</h2>
+    <p class="g-p">先分清兩個詞：原文寫的是 available（可取得），不是每個人都已啟用。30,000+ 是全球員工中可取得的人數。</p>
+    <div class="x-scroll" style="margin-top:14px">
+      <table class="x-tbl">
+        <thead><tr><th>面向</th><th>原文寫法</th><th>限定語（原文沒說的）</th></tr></thead>
+        <tbody>
+          <tr><td data-l="面向"><b>整合</b></td><td data-l="原文寫法">Google Drive、Gmail、Google Calendar、Slack</td><td data-l="限定語">原文只點名這四個「Uber 每天在用的工具」，未給完整清單</td></tr>
+          <tr><td data-l="面向"><b>用途</b></td><td data-l="原文寫法">查資料、準備會議 brief、做簡報、分析資料、跨應用完成 workflow</td><td data-l="限定語">列舉式帶過，未給任何使用量或產出品質</td></tr>
+          <tr><td data-l="面向"><b>模型</b></td><td data-l="原文寫法">GPT-6.1 Sol 作為 ChatGPT Work 內預設能力</td><td data-l="限定語">官方定位「前沿效能與成本效率之間取平衡」；另有語音、圖像生成等多模態</td></tr>
+          <tr><td data-l="面向"><b>職能</b></td><td data-l="原文寫法">營運、財務、行銷、產品</td><td data-l="限定語">原文只列職能名，未給人數與上線順序</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">原文沒給 Uber 全球員工總數，覆蓋率因此算不出來。能確認的只有一件事：開放範圍是全公司。</p>
+    <p class="g-p">能力面是「接得上日常工具，再預設一個顧成本效率的模型」。兩者都是採購與設定，不是成效。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">能做什麼、靠什麼：整合、模型與配套</h2>
-    <p class="g-p">能力面，ChatGPT Work 連接 Uber 日常使用的工具——<strong>Google Drive、Gmail、Google Calendar、Slack</strong>——讓員工跨應用研究資訊、準備會議摘要、製作簡報、分析資料並完成工作流程。</p>
-    <p class="g-p">模型面，Uber 將取得 OpenAI 的前沿模型組合：<strong>GPT-6.1 Sol</strong> 將作為 ChatGPT Work 內的<em>預設能力</em>部署，官方定位是在<em>前沿效能與成本效率之間取平衡</em>；另有包括語音與圖像生成的多模態能力，讓團隊按不同需求選擇模型與工具。</p>
-    <p class="g-p">配套面，rollout 由 Uber 的<strong>內部 AI skills library</strong>、核准的整合與<em>專屬員工訓練</em>支持，目標是讓營運、財務、行銷、產品等職能把技術用起來；開發者與軟體工程團隊則<em>持續使用 Codex</em> 加速軟體開發、簡化編碼工作流程。</p>
-    <div class="g-know">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg>
-      <p><b>公告沒給的：成效數據。</b>目前可驗證的都是部署範圍（人數、整合、模型、配套）；關於採用狀況、用例與可量化成果，雙方表示<em>「計畫隨 rollout 進展分享進一步洞見」</em>——成效承諾還在未來式。</p>
+    <h2 class="g-h2">配套：技術一件，組織兩件</h2>
+    <p class="g-p">三項配套裡只有一項是技術（核准整合），其餘是組織動作：內部技能庫與專屬員工訓練（本頁分類）。</p>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>三項配套</b> — 並列支撐，不是流程</figcaption>
+      <p class="x-grid-h">並列關係；原文未給權重或順序</p>
+      <div class="x-grid">
+        <div class="c"><b><i>①</i>AI skills library</b><small>Uber 自家技能庫；原文未說收了哪些 skill、給誰用</small></div>
+        <div class="c"><b><i>②</i>核准整合</b><small>approved integrations：先放行才開放；清單未公布</small></div>
+        <div class="c"><b><i>③</i>專屬員工訓練</b><small>dedicated training；時數與覆蓋人數未給</small></div>
+      </div>
+      <p class="x-src">本站整理；原文以一句話列出這些配套，未給權重、順序或規模數字。</p>
+    </figure>
+    <p class="g-p">原文用一句話把三項列完，沒有規模數字：技能庫收了什麼、訓練幾小時、核准哪幾家，全部空白。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">讀數字的姿勢：誰說的、哪個團隊、什麼期間</h2>
+    <p class="g-p">所有數字都出自同一份文件：OpenAI 發布，內容是 Uber 的宣布。沒有第三方覆核，也沒有內部實驗數據。</p>
+    <div class="x-scroll" style="margin-top:14px">
+      <table class="x-tbl">
+        <thead><tr><th>公告主張</th><th>誰說的</th><th>基準缺口（團隊・期間）</th></tr></thead>
+        <tbody>
+          <tr><td data-l="公告主張"><b>30,000+ 名員工可取得</b></td><td data-l="誰說的">OpenAI 公告，轉述 Uber 的宣布</td><td data-l="基準缺口">未給員工總數與各職能人數，覆蓋率算不出；available ≠ 已啟用</td></tr>
+          <tr><td data-l="公告主張"><b>由 1,000 人試點擴大</b></td><td data-l="誰說的">同上</td><td data-l="基準缺口">試點起訖、地區、職能、擴大判準全未給</td></tr>
+          <tr><td data-l="公告主張"><b>Uber 首個全公司知識工作 agent 平台</b></td><td data-l="誰說的">同上，引述 Uber 的定位</td><td data-l="基準缺口">沒有前例清單可對照，屬自我定位</td></tr>
+          <tr><td data-l="公告主張"><b>採用率／節省工時／產出品質</b></td><td data-l="誰說的">尚無</td><td data-l="基準缺口">雙方稱隨 rollout 進展分享 adoption、use cases 與 measurable outcomes</td></tr>
+        </tbody>
+      </table>
     </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="x-src">本頁人數與定位均出自 OpenAI 公告（內容為 Uber 的宣布）：廠商自報，無第三方驗證。</p>
+    <p class="g-p">三個問題問完，只有第一題（誰說的）有答案；團隊與期間兩欄，原文留白。</p>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">帶走三件事</h2>
-    <div class="g-take">
-      <p><b>「全公司部署」是企業 agent 的新階段。</b>從 1,000 人試點到 30,000+ 名員工，導入主角從試點團隊換成整個公司——公告稱這是 Uber 首個全公司規模、面向知識工作的 agent 平台。</p>
-      <p><b>規模化的支柱是配套，不只是模型。</b>內部 AI skills library、核准整合清單、專屬訓練，加上職能分工（開發線續用 Codex）——公告把治理與賦能放在 rollout 敘事的核心。</p>
-      <p><b>把這篇當起點而非結論。</b>人數、整合與預設模型都是部署範圍，採用與成效雙方「計畫隨進度分享」——後續值得追的是揭露的 measurable outcomes。</p>
+    <div class="x-take">
+      <p><b>配套才是規模化的門票。</b>三項裡兩項是組織動作，且都無規模數字。</p>
+      <p><b>available 不是 activated。</b>30,000+ 是覆蓋名額，採用率仍空白。</p>
+      <p><b>把它當起點讀。</b>採用、用例、measurable outcomes 都還是未來式。</p>
     </div>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">同一主題的其他館藏</h2>
     <div class="g-rel">
-      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：一行 system prompt 的退步，該在評分表上現形</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">法律工作的代理式作業系統：NDA 初篩如何從吃掉約 20% 產能降到 1% 以下</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司會坐哪裡：地板下、桌邊、中間那一層——三種組織圖與四個未定的大問題</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：平均 2.75 的兩種病，只有逐案分得出來</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">Legora 法律代理：NDA 初篩從吃掉約 20% 產能到 1% 以下</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司坐哪裡：三種組織圖，四個未定的大問題</a><span class="d">2026-10-28</span></div>
     </div>
   </section>
 
-  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據與做法均出自原文，小標與分節為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據與做法均出自原文，小標與分節為編輯整理。原文無圖，兩張圖解皆為本站自繪。內容經對照原文的獨立事實審查後發布。</p>
 </main>
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
-  <p class="foot-gen">館藏導讀 · 建置於 2026-10-27 (UTC+8)</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-29 (UTC+8)</p>
 </div></footer>
 <script src="../assets/site.js" defer></script>
 </body>

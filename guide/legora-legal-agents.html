@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>導讀 — 法律工作的代理式作業系統 · AI 每日動態檔案</title>
-<meta name="description" content="深入淺出導讀 OpenAI 客戶案例〈Legora is building the agentic operating system for legal work〉：法律 AI 新創 Legora 用 OpenAI 模型、ChatGPT Work 與 Codex 打造代理式法律工作流；自家法務團隊 NDA 初篩從約 20% 產能降到 1% 以下（法務長估計），一家《財星》百大客戶合約周轉快 90%、省逾 2,000 萬美元外部支出、每位律師每週多 9.5 小時。">
+<title>導讀 — Legora 法律代理：NDA 初篩從約 20% 產能到 1% 以下 · AI 每日動態檔案</title>
+<meta name="description" content="OpenAI 客戶案例〈Legora is building the agentic operating system for legal work〉導讀：用 NDA 初篩交接圖與產能占比圖解，拆開自家法務、一家《財星》百大客戶與工程團隊三組自述數字，保留「誰負責」與限定語。">
 <script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
 <link rel="stylesheet" href="../assets/archive.css">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -24,10 +24,10 @@
   <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
   <header class="g-head">
     <div class="day-title-row">
-      <h1>法律工作的代理式作業系統：NDA 初篩如何從吃掉約 20% 產能降到 1% 以下</h1>
+      <h1>Legora 法律代理：NDA 初篩從吃掉約 20% 產能到 1% 以下</h1>
       <span class="stamp">導讀</span>
     </div>
-    <p class="g-orig">原文：OpenAI 客戶案例 Legora is building the agentic operating system for legal work（客戶故事，含 Legora 自家法務與一家《財星》百大客戶的自述成效）</p>
+    <p class="g-orig">原文：OpenAI 客戶案例〈Legora is building the agentic operating system for legal work〉——客戶故事，成效由 Legora 自述，原文無圖</p>
     <p class="g-meta">
       <span>OpenAI</span>·<span>2026-10-28 發布</span>·<span>2026-10-29 收錄</span>·
       <a href="https://openai.com/index/legora" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
@@ -35,88 +35,122 @@
   </header>
 
   <div class="g-stats">
-    <div class="g-stat"><b>20% → &lt;1%</b><span>NDA 初篩占「Legora 自家法務團隊」產能的比重（法務長 Emma Kadri Bergström 估計）</span></div>
-    <div class="g-stat"><b>90%</b><span>合約周轉縮短幅度——一家《財星》百大客戶（CEO Max Junestrand 引述）</span></div>
-    <div class="g-stat"><b>2,000 萬美元+</b><span>同一客戶省下的外部訴訟與盡調支出（同一位 CEO 引述）</span></div>
-    <div class="g-stat"><b>9.5 小時</b><span>同一客戶每位律師每週回收、可投到更高價值工作的工時</span></div>
-    <div class="g-stat"><b>約 5 分鐘</b><span>從錯誤回報到可用修復——CTO Jacob Lauritzen 說「有時」能做到</span></div>
+    <div class="g-stat"><b>20% → &lt;1%</b><span>NDA 初篩佔自家法務產能（法務長估計，Legora 自報）</span></div>
+    <div class="g-stat"><b>90%</b><span>《財星》百大客戶合約周轉縮短（Legora 自報）</span></div>
+    <div class="g-stat"><b>2,000 萬美元+</b><span>同客戶省下的外部訴訟與盡調支出（CEO 引述）</span></div>
+    <div class="g-stat"><b>約 5 分鐘</b><span>從錯誤回報到可用修復——CTO 說「有時」</span></div>
   </div>
 
   <section class="g-sec">
-    <div class="g-tldr">
-      <h2 class="g-tldr-h">30 秒版本</h2>
-      <p class="one">Legora 用 OpenAI 模型打造「法律工作的代理式作業系統」：合約初篩、文件審閱先由 agent 跑第一輪，律師只判讀例外。自家法務的 NDA 初篩因此從約 20% 產能降到 1% 以下，一家《財星》百大客戶合約周轉快 90%——兩者都是單方自述，無對照組。</p>
-      <ul>
-        <li>起點是 GPT-3.5：原文稱那時許多法律用例才開始變得可行。</li>
-        <li>NDA 做法＝把歷史合約寫成 playbook，agent 先標越界條款。</li>
-        <li>工程端並行探索 20 種解法；有時約 5 分鐘就能從錯誤回報走到可用修復。</li>
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">Legora 把 NDA 初篩與文件審閱接進律師每天的流程，賣的是<strong>「法律工作的代理式作業系統」</strong>——成效全由 Legora 一方自述。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>NDA 初篩交接鏈</b> — 誰負責哪一段</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">對方 → Legora</span><span class="tr"><i>NDA 送進來</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">agent：first pass</span><span class="tr"><i>逐條對 playbook 掃</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">agent → 律師</span><span class="tr"><i>標出越界的條款</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">律師：審閱與解讀</span><span class="tr"><i>能不能接受、要不要改</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">律師 → 對方</span><span class="tr"><i>回覆條件或進修約</i></span></span></li>
       </ul>
+      <p class="x-src">playbook＝歷來協議歸納出的「哪裡算越界」。原文只寫 02–04，01 與 05 為本站補的步驟。本站重繪。</p>
+    </figure>
+
+    <p class="g-p">起點是 GPT-3.5：原文說那是許多法律用例「開始變得可能」的時刻；今天 OpenAI 是它的關鍵模型供應商。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">成效：約 20% 的產能，剩 1% 以下</h2>
+    <p class="g-p">法務長 Emma Kadri Bergström 的作法不是叫 AI 讀合約：先分析歷來簽過的協議，把「哪種條款不可接受」寫成 playbook。</p>
+    <p class="g-p">規則落地後，agent 才替進來的 NDA 做第一輪（first pass），只把越界的幾條挑出來；律師的時間只花在例外上。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>初篩吃掉的產能</b> — 佔自家法務比重，條愈短愈好</figcaption>
+      <div class="x-bars">
+        <div class="x-bar hot"><b>上線前</b><span class="t"><span style="--p:100"></span></span><i>約 20%</i></div>
+        <div class="x-bar"><b>今天</b><span class="t"><span style="--p:5"></span></span><i>&lt;1%</i></div>
+      </div>
+      <p class="x-src">基準＝自家法務產能占比（非工時、非客戶端）；上線前＝法務長回溯估計，時點為原文 2026-10-28。−95% 為同一估計的換算。<b>Legora 自報，無對照組。</b>本站重繪。</p>
+    </figure>
+
+    <p class="g-p">動詞是關鍵：原文寫的是 <em>estimates</em>（估計），量的是產能占比，不是工時。</p>
+    <p class="g-p">原文另給了規模數字：一年內辦公室 3 間變 18 間，同期三輪募資、五起併購（Legora 自述，與 NDA 初篩的因果為編輯觀察）。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三組數字，三種歸屬</h2>
+    <p class="g-p">除自家法務，原文還有客戶端與工程端；歸屬不同，不能加總成一個「Legora 效果」。</p>
+
+    <div class="x-scroll" style="margin-top:14px">
+      <table class="x-tbl">
+        <thead><tr><th>誰說的</th><th>原文寫法（限定語）</th><th>讀的時候注意</th></tr></thead>
+        <tbody>
+          <tr>
+            <td data-l="誰說的"><b>法務長 Kadri Bergström</b><br><small>自家法務 NDA</small></td>
+            <td data-l="原文"><em>estimates</em>：約 20% 產能 → 1% 以下</td>
+            <td data-l="讀法">與「−95%」是同一個估計</td>
+          </tr>
+          <tr>
+            <td data-l="誰說的"><b>CEO Max Junestrand</b><br><small>《財星》百大客戶</small></td>
+            <td data-l="原文">周轉 −90%；省 2,000 萬美元以上；9.5 小時／律師／週</td>
+            <td data-l="讀法">產業、規模、量測窗口未揭露</td>
+          </tr>
+          <tr>
+            <td data-l="誰說的"><b>法務工程主管 Fortescue-Webb</b><br><small>客戶盡調</small></td>
+            <td data-l="原文">幾分鐘分析數千份合約、多個問題</td>
+            <td data-l="讀法">對比傳統審閱的時間成本</td>
+          </tr>
+          <tr>
+            <td data-l="誰說的"><b>CTO Jacob Lauritzen</b><br><small>工程與事故</small></td>
+            <td data-l="原文">同時探索 20 種解法；<em>sometimes</em> 約 5 分鐘修復</td>
+            <td data-l="讀法">非平均，原文未給樣本</td>
+          </tr>
+          <tr>
+            <td data-l="誰說的"><b>原文 lessons</b><br><small>客戶導入</small></td>
+            <td data-l="原文">主管使用率 &gt;75% → 中位使用量 3 倍</td>
+            <td data-l="讀法">未附量測方式與變因</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+
+    <p class="g-p">客戶端三個數字只掛在一家《財星》百大客戶上，產業、規模、量測窗口都沒給。</p>
+    <p class="g-p">工程端改掉的不是速度，是決策順序：先同時做多個雛形，再押工程時間。</p>
+    <p class="g-p">主管那條是相關非因果，誰造成誰沒說（編輯推論）。</p>
+    <p class="g-p">這家公司自己也在用 ChatGPT Work、Codex 與 dots（原文僅列名，未說明分工）。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">切入點：法律團隊缺的是時間，還有信任</h2>
-    <p class="g-p">Legora 2023 年創立於斯德哥爾摩，CEO 兼共同創辦人 Max Junestrand 給它的定位是<strong>「法律工作的代理式作業系統」</strong>（agentic operating system for legal work）——不是查法條的聊天視窗，而是把律師每天真正在做的工作流接進去。原文的起點講得很直白：法律團隊長期處於時間不夠的狀態，因此<em>有一部分有價值的工作根本不會被做</em>；例子是被交代「一晚看完不可能看完的合約量」的初階律師，最後只能挑其中一小部分看。</p>
-    <p class="g-p">Legora 讓這類服務變成「隨取隨用（on tap）」，Junestrand 的企圖是讓世界上每一件法律工作都跑在他的平台上——這是願景陳述，不是已達成的狀態。與 OpenAI 的關係倒是從一開始就有：<strong>GPT-3.5 的發布是分水嶺</strong>，原文說那是創辦團隊實驗過的許多法律用例「開始變得可能」的時刻；今天 OpenAI 是 Legora 的關鍵模型供應商，支撐<strong>代理式法律工作到大規模文件審閱</strong>的核心工作流。</p>
-    <p class="g-p">還有一層常被略過：Legora 自己也是 AI 原生使用者。除了賣產品，內部團隊擴大了 <strong>ChatGPT Work、Codex 與 dots</strong> 的使用（原文僅列名，未說明三者在內部怎麼分工）。所以這篇案例其實有兩條並行的線：一條是賣給客戶的 agent 工作流，一條是這家公司自己怎麼用 agent 做事。</p>
-  </section>
-
-  <section class="g-sec">
-    <h2 class="g-h2">一個 NDA 怎麼從瓶頸變產能（本站整理的四步，非原文清單）</h2>
-    <p class="g-p">法務長 Emma Kadri Bergström 的做法不是「叫 AI 看合約」，而是先把判斷標準變成文件。原文描述的路徑拆成四步：</p>
-    <div class="g-steps">
-      <div class="g-steprow"><div class="n">01<small>蒐集</small></div><div><h3>先分析自家歷來簽過的協議</h3><p>歷史合約不只是範本，而是「什麼叫可接受」的參數來源。（編輯推論：這一步以人工判斷為主，原文未交代是否用模型協助分析。）</p></div></div>
-      <div class="g-steprow"><div class="n">02<small>立規</small></div><div><h3>寫成 playbook：哪些條款落在可接受範圍外</h3><p>原文的說法是讓團隊能對進來的 NDA 做「第一輪（first pass）」，標出超出可接受參數的條款。（編輯推論：規則先寫明確，模型才有可依循的判斷邊界。）</p></div></div>
-      <div class="g-steprow"><div class="n">03<small>初篩</small></div><div><h3>agent 先跑，人力從「逐份讀」變「看被標記處」</h3><p>價值不在 agent 讀得多快，而在於它把「哪幾句要人看」挑出來，律師的時間只花在例外上。</p></div></div>
-      <div class="g-steprow"><div class="n">04<small>判讀</small></div><div><h3>律師審閱與解讀；同一模式延伸到 M&amp;A 盡調</h3><p>併購盡職調查（diligence）時，agent 先在整批交易文件（deal set）上掃合約、把資訊浮出來，律師再做審閱與解讀——agent 負責覆蓋面，人負責結論。</p></div></div>
-    </div>
-    <p class="g-p">成效的講法要精確：上線前，Kadri Bergström <strong>估計</strong>這類「無聊文件」的審閱占掉法務團隊<strong>約 20% 的產能</strong>，今天是 <strong>1% 以下</strong>；原文「成果一覽」把同一件事寫成 NDA 審閱時間減少 <strong>95% 以上</strong>。兩個數字是同一個來源的兩種說法，且都是<strong>Legora 自家法務團隊</strong>的內部數字，不是客戶端量測。她的評語是：<em>「AI doesn't just make you faster. It also increases quality.」</em>——不只是變快，也提高品質。</p>
-    <p class="g-p">省下的時間去了哪裡，原文給的是情境：過去一年這家公司的辦公室從 <strong>3 個擴到 18 個</strong>、完成<strong>三輪募資</strong>、做了<strong>五起併購</strong>。（編輯推論：這種擴張速度下，法務產能沒被 NDA 吃掉，本身就是這個工作流的存在理由。）</p>
-  </section>
-
-  <section class="g-sec">
-    <h2 class="g-h2">工程端與客戶端：兩張不同歸屬的成績單</h2>
-    <p class="g-p">CTO Jacob Lauritzen 講 coding agent 時，重點不是寫得快，而是<strong>決策順序被改掉</strong>：以前得先研究一種可能解法、押上工程時間，才知道對不對；現在可以同時做多個雛形——<em>「We can explore 20 solutions at the same time and, within days, pick the one we know will be the best.」</em> 也就是<strong>同時探索 20 種解法，幾天內挑出確定最好的那個</strong>。</p>
-    <p class="g-p">同一套方法用在救火：以前一個產品問題可能要幾位工程師分頭查好幾個小時；現在 coding agent 可以同時掃<strong>數百萬行 log</strong>、並行追多種假設，原文說<strong>有時（sometimes）</strong>能把「從錯誤回報到可用的修復」壓到<strong>約 5 分鐘</strong>。注意那個「有時」——原文沒說這是平均，只說有時能做到。</p>
-    <p class="g-p">客戶端則是另一組歸屬：Junestrand 引述<strong>一家《財星》百大客戶</strong>——合約周轉時間縮短 <strong>90%</strong>、外部訴訟與盡調支出省下<strong>逾 2,000 萬美元</strong>、每位律師每週多出 <strong>9.5 小時</strong>做更高價值的工作。Global Head of Legal Engineering Alex Fortescue-Webb 補的是「廣度」這一面：傳統盡調受時間與成本限制，只能深看最有價值的合約；Legora 的 <strong>Tabular Review</strong> 工作流能在幾分鐘內就多個問題分析<strong>數千份合約</strong>，讓細看鋪得更廣。另外，透過 ChatGPT 的 Legora plugin，法律團隊也能在自己的對話裡用到這些能力。</p>
-    <p class="g-p">原文另列五條「Leadership lessons」，其中只有一條附了數字——當<strong>超過 75% 的主管實際在用</strong> Legora，組織的<strong>中位使用量高出 3 倍</strong>（原文未說明這個關係怎麼量、是否控制了公司規模等變因）。其餘四條是原則：從問題出發、建立擁護者網絡、準備打掉重練（模型變強會讓昨天的產品假設很快過期）、為信任而設計。</p>
-    <div class="g-glos">
-      <div class="g-card"><b>Lead by using</b><span class="w">主管自己先用；原文稱主管使用率超過 75% 時，組織中位使用量高 3 倍。</span><span class="why">相關不等於因果，但方向明確：示範比公告有用。</span></div>
-      <div class="g-card"><b>Start with the problem</b><span class="w">從工作痛點出發，而不是從模型能力出發。</span><span class="why">先確認問題真的存在，再談工具。</span></div>
-      <div class="g-card"><b>Network of champions</b><span class="w">在組織裡養一群願意推的人。</span><span class="why">導入是社會工程，不是採購案。</span></div>
-      <div class="g-card"><b>Be ready to rebuild</b><span class="w">模型進步會讓昨天的產品假設過期，要敢重做。</span><span class="why">Lauritzen 說模型進展逼他每兩週重看一次路線圖。</span></div>
-      <div class="g-card"><b>Design for trust</b><span class="w">把信任設計進產品，而非事後補說明。</span><span class="why">法律工作的交易成本就是信任。</span></div>
-    </div>
-    <p class="g-p">至於下一步，Lauritzen 看到兩條平行發展：一是 agent 能吃<strong>更長時、需要更大 context 與自主性</strong>的任務——他想像盡調橫跨數百萬頁、跑一整夜，律師隔天早上進辦公室就有分析可審；二是模型同時變快，於是出現另一種體驗：律師與 AI 就一份合約、一份分析<strong>即時來回</strong>。他的說法是<em>「When you blend human and AI, that's when the output comes out best.」</em></p>
-  </section>
-
-  <section class="g-sec">
-    <h2 class="g-h2">限制與前提：這是單一客戶的自我陳述，不是研究結果</h2>
-    <p class="g-p">先講定位：這是 OpenAI 寫的客戶故事，不是研究報告或標竿測試。本文引用的成效數字——20%→1%、90%、2,000 萬美元、9.5 小時、有時約 5 分鐘——都是這篇客戶案例中 Legora 一方的陳述（其中「75% 主管／中位 3 倍」原文未標示來源與量測方式）；<strong>原文未提供對照組，未說明量測方法、基準期間、樣本數，也沒有交代導入前後的時間範圍</strong>。把這些數字當成「這家公司在這一年的自述」，而不是「法律 AI 的一般成效」，才是安全的讀法。</p>
-    <p class="g-p">幾處限定語特別容易在轉述時掉：NDA 那組是<strong>「estimates（估計）」</strong>，而且是<strong>產能占比</strong>（20% 的團隊產能 → 1% 以下），不是「時間減少 95%」的獨立量測，兩者是同一個假設下的換算；客戶那組只說是「一家《財星》百大客戶」，原文未揭露產業、規模、導入範圍與量測窗口。至於「5 分鐘修好」，原文寫的是 <em>sometimes</em>。（編輯推論：單一客戶、單一情境的結果，不能外推成產品保證；這也正是客戶案例文體的天花板。）</p>
-    <p class="g-p">還有一個敘事陷阱值得指出：<strong>初篩變便宜之後，審閱量通常會膨脹。</strong>原文自己就說 AI 擴大了可以接手的工作範圍——盡調看得更廣、更多合約被細看。所以「省下的時間」不一定等於「減少的人力」，也可能表現為同一批人做更多事、風險覆蓋更完整。（編輯推論：若真如此，9.5 小時／每週的意義是產出變多，而不是編制縮小。）</p>
-    <p class="g-p">最後是語氣。原文結尾把鏡頭從個別工作流拉到整個產業，用執行長 Junestrand 的一句樂觀斷言收束：<em>「It's the best time in history to be a lawyer.」</em>（屬立場宣示）。這類句子讀起來順，但它是<strong>價值判斷而非可查核的事實</strong>；能查核的只有前面那些具體工作流與數字，而它們的效力範圍就是這一篇自述。原文真正有訊息量的一句反而低調得多——Kadri Bergström 說：<em>「Every legal department is worried about becoming a bottleneck.」</em>每個法務部門都擔心自己變成瓶頸；那才是這類工具被買單的深層動機。</p>
+    <h2 class="g-h2">限制與讀法：這是自述，不是研究結果</h2>
+    <p class="g-p">這是 OpenAI 寫的客戶故事，不是研究報告。</p>
+    <p class="g-p">對照組、量測方法、樣本數、基準期間，四項原文都缺；數字只能當案例上限，不能當契約預期。</p>
+    <p class="g-p">責任要留著：原文讓律師審閱與解讀輸出，agent 只標記與浮現，結論沒有交給模型。</p>
+    <p class="g-p">還有一個陷阱（編輯推論）：初篩變便宜之後，審閱量通常會膨脹。原文只說 AI 擴大了能接手的工作範圍，沒給膨脹幅度。</p>
+    <p class="g-p">所以省下的時間可能是同一批人做更多事，而不是編制縮小（編輯推論）。</p>
+    <p class="g-p">下一步是兩條線：agent 吃更長時的任務（盡調跑整夜），模型同時變快，於是出現即時來回。</p>
+    <p class="g-p">原文最安靜的那句才是買單動機：<em>Every legal department is worried about becoming a bottleneck.</em></p>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">帶走三件事</h2>
-    <div class="g-take">
-      <p><b>先有 playbook，agent 才有事可做。</b>NDA 從約 20% 產能降到 1% 以下，靠的不是模型很會讀合約，而是先把歷史協議轉成「哪裡算越界」的規則，讓 agent 只做初篩、律師只判例外——可自動化的部分，永遠是判斷已經被寫下來的那部分。</p>
-      <p><b>兩張成績單要分開看，也別當採購保證。</b>自家法務（20%→1%，法務長 Kadri Bergström 估計）與一家《財星》百大客戶（90%／2,000 萬美元／9.5 小時，CEO 引述）都是單方自述，無對照組、無量測方法；能拿來當「案例上限」的想像，不能當成契約裡的預期。</p>
-      <p><b>導入的槓桿在主管自己用。</b>原文稱主管使用率超過 75% 時、組織中位使用量高 3 倍（未附量測方式，不能當因果）；配套是從問題出發、養擁護者、準備打掉重練、為信任而設計。工具發下去而主管不用，是最貴的部署方式。</p>
+    <div class="x-take">
+      <p><b>先有 playbook，才有初篩。</b>規則是人的，掃條款才是機器的。</p>
+      <p><b>責任沒有外包。</b>標記可以自動，審閱與結論仍在律師手上。</p>
+      <p><b>讀自述數字先看歸屬。</b>無對照組的 90%，只是案例上限。</p>
     </div>
   </section>
 
     <section class="g-sec">
     <h2 class="g-h2">同一主題的其他館藏</h2>
     <div class="g-rel">
-      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：一行 system prompt 的退步，該在評分表上現形</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司會坐哪裡：地板下、桌邊、中間那一層——三種組織圖與四個未定的大問題</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="openwiki-memory.html">讓代理的記憶有出處：wiki 編譯器把 citation 變成可以走的證據圖</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：平均 2.75 的兩種病，只有逐案分得出來</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司坐哪裡：三種組織圖，四個未定的大問題</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="openwiki-memory.html">graph 當記憶：claim 帶 hash，citation 變成可走的邊</a><span class="d">2026-10-28</span></div>
     </div>
   </section>
 
-<p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據均出自原文並保留其歸屬與限定語，數字皆為 Legora 單方自述、原文未提供對照組或量測方法；標示「編輯推論」處為編輯判斷，非原文內容。小標與分節為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+<p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；數據出自原文並保留歸屬與限定語，皆為 Legora 自述、無對照組；圖解為本站自繪。內容經對照原文的獨立事實審查後發布。</p>
 </main>
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>

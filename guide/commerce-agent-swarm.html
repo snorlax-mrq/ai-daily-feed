@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>導讀 — 多代理蜂群賣雜貨：三層解耦、兩個護欄，一筆訂單 0.6 美分 · AI 每日動態檔案</title>
-<meta name="description" content="深入導讀 Google Developers 的 HappyDelivery 原型：Ingress（Cloud Run + Pub/Sub）、Redis session（實測平均 0.318ms）、LangGraph＋Gemini 多代理蜂群（Supervisor 用 Flash、Inventory／Transaction 專業代理用 Pro），三輪購物只花約 4,240 token、$0.0061，佔 $20.32 訂單 0.030% GMV。">
+<title>導讀 — 多代理蜂群賣雜貨：原型跑通，一筆訂單 0.6 美分 · AI 每日動態檔案</title>
+<meta name="description" content="Google Developers〈Building Conversational Commerce with Multi-Agent Swarms on GCP: A Working Prototype〉導讀：用訊息旅程時序圖與 orchestrator 巢狀圖，拆解 HappyDelivery 原型的 Ingress、Redis session、Supervisor＋三個 specialist，以及約 $0.0061 的成本帳。">
 <script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
 <link rel="stylesheet" href="../assets/archive.css">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -24,10 +24,10 @@
   <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
   <header class="g-head">
     <div class="day-title-row">
-      <h1>多代理蜂群賣雜貨：三層解耦、兩個護欄，一筆訂單 0.6 美分</h1>
+      <h1>多代理蜂群賣雜貨：原型跑通，一筆訂單 0.6 美分</h1>
       <span class="stamp">導讀</span>
     </div>
-    <p class="g-orig">原文：Building Conversational Commerce with Multi-Agent Swarms on GCP: A Working Prototype（含部署、實測延遲與成本數據的實作文）</p>
+    <p class="g-orig">原文：Building Conversational Commerce with Multi-Agent Swarms on GCP: A Working Prototype（把架構藍圖做成可運行原型的實作文）</p>
     <p class="g-meta">
       <span>Google Developers</span>·<span>2026-10-27 發布</span>·<span>2026-10-28 收錄</span>·
       <a href="https://developers.googleblog.com/building-conversational-commerce-with-multi-agent-swarms-on-gcp-a-working-prototype/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
@@ -35,89 +35,138 @@
   </header>
 
   <div class="g-stats">
-    <div class="g-stat"><b>0.318ms</b><span>Redis session 平均讀取（5 次實測）</span></div>
     <div class="g-stat"><b>~4,240 tokens</b><span>三輪購物全程，約 $0.0061</span></div>
-    <div class="g-stat"><b>0.030%</b><span>佔 $20.32 訂單 GMV 的比例</span></div>
-    <div class="g-stat"><b>5／5</b><span>自動化測試通過（0.158 秒）</span></div>
+    <div class="g-stat"><b>0.030%</b><span>佔 $20.32 訂單 GMV</span></div>
+    <div class="g-stat"><b>0.318ms</b><span>Redis session 平均讀取（5 次實測）</span></div>
+    <div class="g-stat"><b>267–302ms</b><span>live webhook 實測；目標 &lt;150ms</span></div>
   </div>
 
   <section class="g-sec">
-    <div class="g-tldr">
-      <h2 class="g-tldr-h">30 秒版本</h2>
-      <p class="one">Google 把上一篇文章的對話式商務架構圖，做成真的能跑的 <strong>HappyDelivery</strong> 原型：三層解耦——Ingress（Cloud Run／GKE ＋ Cloud Pub/Sub 收訊息、驗簽章，設計目標 150ms 內回 200、實測約 267–302ms）、Session（Cloud Memorystore Redis 存購物車與偏好）、Agent Swarm（LangGraph ＋ Gemini，Supervisor 用 Flash 路由，Inventory／Transaction 兩個專業代理用 Pro（原文未對 Profile 代理標示模型）。三輪對話完成一筆雜貨訂單，全程約 4,240 token、$0.0061，佔 20.32 美元訂單的 0.030%。</p>
-      <ul>
-        <li>webhook 絕不等 LLM：先驗簽章、正規化、丟 Pub/Sub，立刻回 200，避免平台重送造成重複下單。</li>
-        <li>算術交給確定性工具，模型只負責語言與推理；稅、運費、扣款都在 Python 裡算。</li>
-        <li>成本靠三件事壓下來：Redis 外置狀態、程式碼吃掉重活、Flash／Pro 分層。</li>
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">這是<strong>工作原型</strong>，不是產品：Google 把上一篇的三層架構藍圖做成跑得起來的 HappyDelivery（LangGraph＋Gemini＋FastAPI＋GCP），標題自己就寫 working prototype。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一則訊息的旅程</b> — 三層之間誰先誰後</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">平台 → Webhook</span><span class="tr"><i>非同步 POST，須在時限內回 200</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">Webhook → 簽章</span><span class="tr"><i>HMAC／JWT／JWS 四種 validator</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">Webhook → Pub/Sub</span><span class="tr"><i>正規化成 CommonMessageEvent</i></span></span></li>
+        <li class="side"><span class="st">03b</span><span class="body"><span class="hop">旁支 → 平台</span><span class="tr"><i>同一次請求回 200，目標 &lt;150ms</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">Pub/Sub → Worker</span><span class="tr"><i>非同步取件，推理離開關鍵路徑</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">Worker ↔ Redis</span><span class="tr"><i>session:{phone}，TTL 24 小時</i></span></span></li>
+        <li><span class="st">06</span><span class="body"><span class="hop">Worker → Supervisor</span><span class="tr"><i>swarm.invoke()，本輪交給誰</i></span></span></li>
+        <li><span class="st">07</span><span class="body"><span class="hop">Worker → 使用者</span><span class="tr"><i>購物車寫回 Redis，發訊息</i></span></span></li>
       </ul>
-    </div>
+      <p class="x-src">本站重繪；原文分三層各自敘述，未給單則訊息的完整先後（編輯重排）。實測 live webhook 267–302ms、Redis 讀取平均 0.318ms，各 5 次。</p>
+    </figure>
+    <p class="g-p">三層各解一個老問題：Ingress 解訊息逾時，Session 解狀態追蹤，Agent Swarm 解回覆可靠性。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">第一層：為什麼要「先回 200，再想事情」</h2>
-    <p class="g-p">原文點出一個常被忽略的順序問題：消費者訊息不是直接打到你的伺服器，而是先穿過電信與平台生態（WhatsApp Cloud API、Google RCS Business Messaging、Apple Messages for Business、SMS 供應商），最後才落到你的 webhook。而這些平台<strong>全部共用同一個契約</strong>：非同步 HTTPS POST ＋嚴格的確認時限。</p>
-    <p class="g-p">後果很具體：WhatsApp 若沒即時收到 <code>HTTP 200 OK</code>（並通過 <code>X-Hub-Signature-256</code> 的 HMAC-SHA256 驗證），會把投遞標記為失敗並啟動指數退避重試（最長 7 天）——<em>「which can trigger duplicate order deliveries」</em>，也就是同一筆訂單被下兩次。</p>
-    <p class="g-p">所以 Layer 1 只做三件事：平台各自的簽章驗證（MetaHmacValidator、RcsJwtValidator、AppleJwsValidator、TwilioHmacValidator）、把 payload 正規化成統一的 <code>CommonMessageEvent</code>（channel／sender_id／text／timestamp）、丟進 Pub/Sub 後立刻回 200。原文的架構目標是 <strong>&lt; 150ms</strong> 完成握手——後面的 session 查詢與推理完全不在這條關鍵路徑上。</p>
-    <div class="g-know">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
-        <p><b>實測與目標要分開讀</b>：原文在 Cloud Run 上連打 5 次 live webhook，回應時間為 266.84ms、301.73ms、300.47ms、295.14ms、298.40ms，其中「Cloud Run 內部直接發 Pub/Sub 的額外開銷約 95ms」——也就是說 &lt; 150ms 是三層設計的架構主張，實測端到端握手落在約 267–302ms。同篇也示範了安全防護：正確簽章回 200 並取得 message ID，被竄改的簽章則立刻以 403 擋下。</p>
-    </div>
+    <h2 class="g-h2">先回 200，再想事情</h2>
+    <p class="g-p">原文先回答兩個常見提問：訊息怎麼真的落到第一層？架構能不能支援 WhatsApp 以外的通道？</p>
+    <p class="g-p">訊息不會直達你的伺服器：它先穿過電信與平台生態，最後才落到 webhook。</p>
+    <p class="g-p">WhatsApp、RCS、Apple Messages、SMS 共用同一個契約——非同步 HTTPS POST 加嚴格的確認時限；payload 與簽章標頭各異，就由 Layer 1 吃掉差異。</p>
+    <p class="g-p">沒即時回 <code>200 OK</code>，WhatsApp 會把投遞標成失敗並指數退避重試（最長 7 天）。原文點名後果：可能造成重複下單。</p>
+    <p class="g-p">所以 Ingress 只做三件事：驗簽章（四個 validator，涵蓋 HMAC、JWT、JWS）、正規化成 <code>CommonMessageEvent</code>、丟進 Pub/Sub 後回 200。</p>
+    <p class="g-p">順序是：先驗簽章、再正規化，任何一關不過就別進佇列。</p>
+    <p class="g-p">四個 validator 分別對應 Meta、RCS、Apple 與 Twilio 的簽章格式，可插拔替換。</p>
+    <p class="g-p">同篇也示範了護欄：正確簽章回 200 並取得 message ID，被竄改的簽章立刻以 403 擋下。</p>
+    <p class="g-p">架構目標是 &lt;150ms。Cloud Run 實測差了將近一倍，其中約 95ms 花在直接發 Pub/Sub——目標與實測要分開讀。</p>
+    <p class="g-p">第二層把狀態搬出伺服器：以驗證過的電話號碼為鍵（<code>session:{phone_number}</code>），存顧客 ID、地址、飲食限制與購物車，TTL 24 小時。</p>
+    <p class="g-p">原文的容量帳：單一 1–5GB 的 Basic Tier 實例可達 10,000–50,000+ QPS，每輪對話約 2–3 次 Redis 操作。</p>
+    <p class="g-p">換算下來約每秒 3,000–15,000 個活躍對話輪；一個 session 序列化後 2–5KB，5GB 可放超過 100 萬台購物車。</p>
+    <p class="g-p">原文的結論是這層永遠不會是瓶頸——它同時快過上游 webhook 與下游 LLM 推理。</p>
+    <p class="g-p">平台本身無狀態，每則簡訊都是孤立事件。原文的旅程是早上 9 點傳「加一加侖牛奶」，然後關掉去搭車。</p>
+    <p class="g-p">下午 2 點再傳「再加麵包和蛋，多少錢」，系統得瞬間接回同一台購物車並重算總額。</p>
+    <p class="g-p">付款只放 token 化的 <code>payment_ref</code>，模型只看得到「Visa ending in 4242」，卡號不進 prompt。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">第二層：把「逛到一半去搭車」變成可接續的狀態</h2>
-    <p class="g-p">訊息平台是無狀態的：每則簡訊都是一個孤立事件。要讓對話像人，系統必須在每一輪瞬間重建客戶的完整脈絡，而不是每次重讀好幾天的聊天紀錄。做法是用 Cloud Memorystore（Redis），以驗證過的電話號碼為鍵（<code>session:{phone_number}</code>），存顧客 ID、地址、飲食限制與當前購物車，TTL 設 24 小時。</p>
-    <p class="g-p">原文給了三個具體顧客旅程：早上 9 點傳「加一加侖牛奶」就關掉去搭車、下午 2 點再傳「再加麵包和蛋，多少錢？」——系統立刻還原購物車並重算總額；profile 標記 <code>Nut-Free</code> 時，Inventory Agent 推薦零食會自動避開，不必每次重講；付款只放 token 化的 <code>payment_ref</code>，LLM 只看得到「Visa ending in 4242」這種遮罩標籤，卡號不進 prompt、也不進 log。</p>
-    <div class="g-dg">
-      <div class="g-glos">
-        <div class="g-card"><b>吞吐</b><span class="w">單一 Basic Tier、1–5GB 的 Memorystore for Redis 實例即可達 10,000–50,000+ QPS，讀寫延遲低於 1ms。</span><span class="why">換算成對話：每輪約 2–3 次 Redis 操作，等於每秒 3,000–15,000 個活躍對話輪，才需要 Cluster 分片或讀取副本。</span></div>
-        <div class="g-card"><b>容量</b><span class="w">一個活躍 session（profile ＋ 購物車 ＋ 偏好）序列化後約 2–5KB。</span><span class="why">5GB 實例可同時容納超過 100 萬個活躍購物車。</span></div>
-        <div class="g-card"><b>實測延遲</b><span class="w">在 VPC 內對 live 實例連做 5 次 session 讀取：0.299／0.276／0.305／0.210／0.503ms。</span><span class="why">平均 0.318ms——原文的結論是這一層「在實務上永遠不會是瓶頸」。</span></div>
+    <h2 class="g-h2">orchestrator 包住 specialist，誰接手由狀態決定</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>蜂群內部</b> — orchestrator 包住 specialist（本站重繪）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>Supervisor</b><small>Gemini Flash；每輪 START 一律先進這裡，只做路由</small><span class="pi">orchestrator</span></div>
+          <div class="ring">
+            <div class="ring-lb"><b>Specialists ×3</b><small>各綁自己的工具，不共用一個巨型 prompt</small></div>
+            <div class="ring-inner"><b>Profile</b> 偏好與新客授權　·　<b>Inventory</b> Gemini Pro＋倉儲工具　·　<b>Transaction</b> Gemini Pro＋付款工具</div>
+            <div class="ring ring--core">
+              <div class="ring-lb"><b>AgentState</b><small>全員共用同一份狀態</small></div>
+              <div class="ring-inner">phone · customer_id · 偏好 · cart · cart_total · <b>next_step</b></div>
+            </div>
+          </div>
+        </div>
       </div>
+      <p class="x-fb"><span class="ic">↺</span><span><b>回饋</b>：profile 處理完回 Supervisor（可能還要接別的事）；inventory 與 transaction 直接走到 END</span></p>
+      <p class="x-src">原文未畫蜂群內部圖；包圍關係依「Supervisor 路由、specialist 各綁工具、共用 AgentState」整理（編輯重繪）。原文未對 Profile 代理標示模型。</p>
+    </figure>
+    <p class="g-p">整個蜂群用 LangGraph 組裝：AgentState 是型別化的 state schema，節點是各代理，邊是路由。</p>
+    <p class="g-p">推理層刻意不用一顆大腦：Supervisor（Gemini Flash）只判斷意圖，三個 specialist 各綁自己的工具。</p>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>這一輪要什麼</th><th>next_step</th><th>誰接手</th><th>之後去哪</th></tr></thead>
+        <tbody>
+          <tr><td data-l="這一輪要什麼">偏好、飲食限制、新客授權</td><td data-l="next_step"><code>profile</code></td><td data-l="誰接手">Profile Specialist</td><td data-l="之後去哪">回 Supervisor，可能再轉</td></tr>
+          <tr><td data-l="這一輪要什麼">查庫存、推薦、改購物車</td><td data-l="next_step"><code>inventory</code></td><td data-l="誰接手">Inventory Specialist</td><td data-l="之後去哪">直接走到 END</td></tr>
+          <tr><td data-l="這一輪要什麼">確認金額、扣款</td><td data-l="next_step"><code>transaction</code></td><td data-l="誰接手">Transaction Specialist</td><td data-l="之後去哪">直接走到 END</td></tr>
+          <tr><td data-l="這一輪要什麼">本輪任務完成</td><td data-l="next_step"><code>END</code></td><td data-l="誰接手">—</td><td data-l="之後去哪">購物車寫回 Redis</td></tr>
+        </tbody>
+      </table>
     </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="x-src">本站整理；原文未給此對照表，觸發條件與交棒去向出自 <code>next_step</code> 與 conditional edges 的敘述。</p>
+    <p class="g-p">Profile 另外負責對新客發一次性安全授權連結；profile 標了 Nut-Free，Inventory 推薦零食就自動避開。</p>
+    <p class="g-p">一次 trace 顯示：Supervisor 判為補貨意圖，交給 inventory，兩次 <code>search_catalog</code> 加一次算總額後結束。</p>
+    <p class="g-p">START 一律進 Supervisor，再靠 <code>add_conditional_edges</code> 依 next_step 交棒；只有 profile 會回上一層。</p>
+    <p class="g-p">算術一律外掛：8.25% 稅、滿 15 美元免運（否則 3.99 美元）與總額都由 <code>calculate_cart_totals</code> 在 Python 算完。</p>
+    <p class="g-p">三輪實例：牛奶 4.29 加放牧蛋 3.99，追問 Doritos 與 Sprite；換成 Coke Zero 後總額 20.32 美元；確認後 <code>execute_stripe_charge</code> 扣 2,032 美分並清空購物車。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">第三層：四個角色，一條狀態機</h2>
-    <p class="g-p">推理層刻意不用「一個超大 prompt 什麼都做」，而是拆成蜂群：<strong>Supervisor（Gemini Flash）</strong>當低延遲路由器，判斷意圖後分派；<strong>Profile Specialist</strong> 取偏好、對新客發一次性安全授權連結；<strong>Inventory Specialist（Gemini Pro）</strong>綁倉儲工具，查庫存、推薦搭配、改購物車；<strong>Transaction Specialist（Gemini Pro）</strong>綁付款工具，確定性地算總額並發起扣款。</p>
-    <div class="g-steps">
-      <div class="g-steprow"><div class="n">01<small>共享狀態</small></div><div><h3>AgentState 帶著購物車與路由決策</h3><p>每輪都經過同一個 typed 結構：電話、customer_id、飲食偏好、cart、cart_total、messages，以及 <code>next_step</code>（profile／inventory／transaction／END）。</p></div></div>
-      <div class="g-steprow"><div class="n">02<small>圖與條件邊</small></div><div><h3>START 一律進 Supervisor</h3><p>Supervisor 以 <code>add_conditional_edges</code> 依 next_step 動態交棒；profile 處理完會回到 supervisor（可能還要接其他事），inventory 與 transaction 則直接走到 END。</p></div></div>
-      <div class="g-steprow"><div class="n">03<small>算術外掛</small></div><div><h3>價格不讓模型心算</h3><p>原文的核心信條是「把算術交給確定性工具」：<code>calculate_cart_totals</code> 在 Python 算小計、8.25% 稅、小計超過 15 美元免運（否則 3.99 美元運費）與總額；模型一旦用自由文字算稅或折扣，就可能出錯。</p></div></div>
-      <div class="g-steprow"><div class="n">04<small>端到端</small></div><div><h3>Worker 迴圈串起三層</h3><p>Pub/Sub worker 拉訊息 → 從 Redis 補齊 session → 跑 <code>swarm.invoke()</code> → 把更新後的購物車寫回 Redis（24 小時 TTL）→ 回傳對外訊息。Trace 顯示 Supervisor 判斷為補貨意圖、交給 inventory，兩次 <code>search_catalog</code> 加一次算總額後結束。</p></div></div>
+    <h2 class="g-h2">成本三招，代價是 2–4 秒</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>手法</th><th>省下什麼</th><th>原文數字</th></tr></thead>
+        <tbody>
+          <tr><td data-l="手法"><b>狀態外置 Redis</b></td><td data-l="省下什麼">只送當前意圖與購物車摘要，輸入 token 不隨購物車線性成長</td><td data-l="原文數字">原文未給單項佔比</td></tr>
+          <tr><td data-l="手法"><b>重活交給程式碼</b></td><td data-l="省下什麼">稅、運費、目錄比對、Stripe 扣款都是 Python，0 LLM token</td><td data-l="原文數字">8.25% 稅；滿 15 美元免運，否則 3.99 美元</td></tr>
+          <tr><td data-l="手法"><b>模型分層</b></td><td data-l="省下什麼">高頻路由走 Flash，深度推理的推薦與付款收尾才用 Pro</td><td data-l="原文數字">Flash $0.15／$0.60、Pro $1.25／$10.00（每 1M token，輸入／輸出）</td></tr>
+          <tr><td data-l="手法"><b>Context Caching</b></td><td data-l="省下什麼">大型目錄 schema 與不變的 agent 指令可快取</td><td data-l="原文數字">重複輸入成本再降 75%，每筆約 $0.0033</td></tr>
+        </tbody>
+      </table>
     </div>
-    <p class="g-p">三輪對話的實例很能說明這種分工：第一輪說「牛奶和蛋沒了，週五電影夜加點零食」，代理回已加入全脂牛奶 $4.29 與放牧蛋 $3.99，並依過去電影夜紀錄詢問要不要加 Doritos $4.50 與 Sprite 六罐 $5.99；第二輪「Sprite 換成 Coke Zero」後重算小計 $18.77、稅 $1.55、總額 $20.32；第三輪確認後由 Transaction Agent 發起扣款（<code>execute_stripe_charge</code>，amount_cents=2032），成功後清空 Redis 購物車。</p>
-  </section>
-
-  <section class="g-sec">
-    <h2 class="g-h2">成本帳：為什麼蜂群沒有吃掉毛利</h2>
-    <p class="g-p">多代理架構最常見的質疑是 token 帳單：把龐大 prompt 與整段對話歷史在每一步重送，很容易吃掉零售毛利。原文用三招把成本壓平：<strong>狀態外置到 Redis</strong>（只傳當前意圖與購物車摘要，輸入 token 不隨購物車線性成長）、<strong>重活交給程式碼</strong>（稅、運費、折扣、目錄關鍵字比對、Stripe 扣款都是 Python，0 LLM token）、<strong>模型分層</strong>（高頻路由走 Gemini Flash，深度推理的庫存推薦與付款收尾才用 Gemini Pro）。</p>
-    <p class="g-p">實測結果：整個三輪購物 session 約 <strong>4,240 token</strong>，以 Gemini Flash $0.15／1M 輸入、$0.60／1M 輸出，Gemini Pro $1.25／1M 輸入、$10.00／1M 輸出的標準價計，成本約 <strong>$0.0061</strong>（遠低於 1 美分）；放在 $20.32 的雜貨訂單上，只佔 GMV 的 <strong>0.030%</strong>，相比 2.9% ＋ $0.30 的標準刷卡手續費幾乎可忽略。若再開 Gemini Context Caching（適合大型靜態目錄 schema 與不變的 agent 指令），重複輸入成本可再降 <strong>75%</strong>，每筆訂單成本可壓到約 <strong>$0.0033</strong>。</p>
-    <div class="g-know">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
-        <p><b>原文自承的代價：「蜂群稅」</b>——跨多次 LLM 呼叫的多代理推理可能要 2–4 秒，為避免使用者覺得對話死掉，worker 會先透過訊息 API 送一句進度提示（例如「Checking our fresh aisles for you… 🛒」）再串流最終結果。這也是全篇最誠實的一段：架構解決了可靠性與成本，延遲得靠 UX 手法補。</p>
-    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="x-src">自報：本頁延遲、token、單價與成效數字均出自 Google 官方部落格（Google 自報），樣本是 5 次以內的實測，無第三方驗證。</p>
+    <p class="g-p">（編輯觀點：這筆帳只算 token，Redis、Pub/Sub 與 Cloud Run 的基礎設施費不在其中。）</p>
+    <p class="g-p">把 0.6 美分放回訂單看：對比 2.9%＋$0.30 的標準刷卡手續費，幾乎可以忽略。</p>
+    <p class="g-p">多代理最常見的質疑是 token 帳單：每一步都重送整段歷史，很容易吃掉零售毛利。</p>
+    <p class="g-p">原文的判準很一致：能寫成程式碼的步驟，就不該留給模型推理。</p>
+    <p class="g-p">原文三招都不靠模型折扣——狀態推出模型外、重活交給程式碼、路由與推理分層。</p>
+    <p class="g-p">代價原文自己講了，叫「蜂群稅」：跨多次 LLM 呼叫的推理要 2–4 秒，所以 worker 先送一句進度提示，再串流結果。</p>
+    <p class="g-p">進度提示補的是體感，不是延遲——那 2–4 秒並沒有被架構消掉。</p>
+    <p class="g-p">限定語別漏掉：這是原型。5／5 自動化測試通過（0.158 秒）只證明流程跑得通，樣本是個位數次數的單筆實測。</p>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">帶走三件事</h2>
-    <div class="g-take">
-      <p><b>把「不能等」與「可以慢」切乾淨。</b>webhook 只負責驗簽章與排隊，推理全部移到非同步 worker；這一個切法同時解掉三個問題——平台重試導致重複下單、尖峰延遲、以及尖峰延遲；至於多代理推理 2–4 秒的體感，原文另以「進度提示」的 UX 手法補償，不是解耦本身能解。實測 267–302ms 的握手時間要跟 &lt;150ms 的架構目標分開看，別把主張當成果。</p>
-      <p><b>模型只做語言，錢與庫存交給程式。</b>8.25% 稅、滿 15 美元免運、Stripe 扣款金額全在 Python 工具裡算，換來的是「0 算術錯誤」與可稽核性；這比要求模型「小心計算」可靠得多，也把最貴的 token 花在真正需要推理的地方。</p>
-      <p><b>成本優勢來自狀態設計，不是模型折扣。</b>外置 Redis、程式碼吃重活、Flash／Pro 分層三件事加起來，才讓一筆訂單 0.6 美分的帳成立；反過來說，若把整段對話歷史每次重送，同一個蜂群架構馬上就變成毛利的敵人。</p>
+    <div class="x-take">
+      <p><b>切乾淨比調快重要。</b>目標 &lt;150ms，實測 267–302ms。</p>
+      <p><b>模型不做算術。</b>稅、運費、扣款金額在 Python，可稽核。</p>
+      <p><b>蜂群不是免費的。</b>省下的 token 帳，用進度提示補回體感。</p>
     </div>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">同一主題的其他館藏</h2>
     <div class="g-rel">
-      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：一行 system prompt 的退步，該在評分表上現形</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">法律工作的代理式作業系統：NDA 初篩如何從吃掉約 20% 產能降到 1% 以下</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司會坐哪裡：地板下、桌邊、中間那一層——三種組織圖與四個未定的大問題</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：平均 2.75 的兩種病，只有逐案分得出來</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">Legora 法律代理：NDA 初篩從吃掉約 20% 產能到 1% 以下</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司坐哪裡：三種組織圖，四個未定的大問題</a><span class="d">2026-10-28</span></div>
     </div>
   </section>
 
-  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據出自原文，示意圖與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
 </main>
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>

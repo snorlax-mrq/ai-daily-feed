@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>導讀 — 子代理不是組織圖：把 router、planner 摺回主 agent 迴圈的減法設計 · AI 每日動態檔案</title>
-<meta name="description" content="深入淺出導讀 Claude 官方文章〈Building agents: When to fold subagents into your main agent loop〉：為何配備 skills 的單一 agent 在企業部署比較中常勝過多子代理架構、Conway 定律陷阱、按 context 切分原則，與 10 筆黃金範例起步的分階段遷移做法。">
+<title>導讀 — 子代理不是組織圖：router、planner 摺回主迴圈的時機 · AI 每日動態檔案</title>
+<meta name="description" content="Claude〈Building agents: When to fold subagents into your main agent loop〉導讀：用 fold 前後對照圖與決策圖，說明何時把 router、planner、領域子代理摺回單一主迴圈、改用 skills 漸進揭露，與 10 筆黃金範例起步的分階段量測。">
 <script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
 <link rel="stylesheet" href="../assets/archive.css">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -24,10 +24,10 @@
   <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
   <header class="g-head">
     <div class="day-title-row">
-      <h1>子代理不是組織圖：把 router、planner 摺回主 agent 迴圈的減法設計</h1>
+      <h1>子代理不是組織圖：router、planner 摺回主迴圈的時機</h1>
       <span class="stamp">導讀</span>
     </div>
-    <p class="g-orig">原文：Claude「Building agents」系列文章：何時把子代理摺疊回主 agent 迴圈（附 migration kit）</p>
+    <p class="g-orig">原文：Claude「Building agents」系列——方法論文章，講何時把子代理摺回主 agent 迴圈，附 migration kit 與分階段量測</p>
     <p class="g-meta">
       <span>Claude (Resources)</span>·<span>2026-10-22 發布</span>·<span>2026-10-23 收錄</span>·
       <a href="https://claude.com/resources/articles/building-agents-when-to-fold-subagents-into-your-main-agent-loop" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
@@ -35,76 +35,111 @@
   </header>
 
   <div class="g-stats">
-    <div class="g-stat"><b>一打子代理</b><span>某企業客服 agent 養了十幾個專家子代理：品牌一致性難維持、延遲傷體驗</span></div>
-    <div class="g-stat"><b>4-5 個薄工具</b><span>常見回饋：一個清楚的 system prompt＋4-5 個資料工具＋嚴格輸出護欄已涵蓋多數情境</span></div>
-    <div class="g-stat"><b>10 筆黃金範例</b><span>起步 eval set 的最小規模：中央一套端到端集合＋各 skill 隨附小集合</span></div>
-    <div class="g-stat"><b>Conway 定律</b><span>每個團隊一個子代理，架構淪為組織圖的複製品——原文點名的反模式</span></div>
-    <div class="g-stat"><b>傳聲遊戲</b><span>按問題類型切分子代理，每次交接都在折損資訊保真度</span></div>
+    <div class="g-stat"><b>一打子代理</b><span>某企業面向客戶（customer-facing）agent 的規模：品牌一致性難維持、延遲傷體驗</span></div>
+    <div class="g-stat"><b>4–5 個薄工具</b><span>原文認為足以涵蓋多數情境的替代配置：清楚的 system prompt＋嚴格輸出護欄</span></div>
+    <div class="g-stat"><b>10 筆黃金範例</b><span>eval set 起步的最小規模：中央一套端到端＋各 skill 隨附小集合</span></div>
+    <div class="g-stat"><b>Conway 定律</b><span>每個團隊一個子代理，架構淪為組織圖的複製品</span></div>
   </div>
 
   <section class="g-sec">
-    <div class="g-tldr">
-      <h2 class="g-tldr-h">30 秒版本</h2>
-      <p class="one">Claude 應用 AI（Applied AI）團隊觀察到一個企業部署模式：把 router、planner、領域子代理摺疊回單一主 agent 迴圈，改用 skills 的漸進式揭露與 tool search 按需載入脈絡與工具——在多家企業部署的比較中，配備 skills 的單一 agent 在品質上常勝過「一個提示詞包辦一切」與子代理設計，每任務成本與延遲往往還更低。官方同步釋出 migration kit：先在 mock 系統的 demo 上試跑，再以引導式流程辨識模式、評估替代方案、驗證最佳做法。</p>
-      <ul>
-        <li>子代理沒有過時：驗證、平行工作、模組化權限仍該用它——但要按 context 切分、交回精簡結果。</li>
-        <li>摺疊是分階段工程：建 eval set → 邊走邊量 routing 準確率 → 摺疊後改量 skill／工具載入對不對。</li>
-        <li>單一迴圈需要紀律：精心管理的 system prompt、時機剛好的 skill 描述、對 context 與記憶的刻意處理。</li>
-      </ul>
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">Claude 應用 AI 團隊的觀察：企業把 router、planner、領域子代理摺回<strong>單一主迴圈</strong>，改用 skills 漸進揭露——在多家部署的比較裡，品質常更好，成本與延遲常更低。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">為什麼會有 orchestrator：失敗模式長什麼樣</h2>
+    <p class="g-p">企業想要的通常是一個統合多項產品與能力的客戶介面 agent，而每個能力歸不同團隊所有。</p>
+    <p class="g-p">起點於是變成：各團隊自建 agent、中央平台團隊在上面蓋一層 orchestrator；或把子代理以 MCP 工具暴露給單一 agent。原文說這看起來最簡單，卻立刻引入複雜度。</p>
+    <p class="g-p">另一條常見路徑更像管線：意圖分類器、固定多步推理管線、使用者分群桶、獨立推薦分支，最上面再放多代理 orchestrator。</p>
+    <p class="g-p">原文把這層複雜度列成五個失敗模式：context 管理、子代理氾濫、Frankenprompt、過度本地化的 eval，還有延遲。</p>
+    <p class="g-p">延遲那項原文給了數字：某客戶比較自家的多代理 harness 與單一迴圈，後者 runtime <strong>約快 2 倍</strong>。</p>
+    <p class="g-p">這個數字只有單一客戶，原文也未給量測方式與任務組成，不能當通則看。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>Fold 前／fold 後</b> — 同一批能力，換一種放法</figcaption>
+      <div class="x-cmp">
+        <div><b>fold 前 · orchestrator＋子代理</b><p>中央團隊蓋一層 orchestrator，各團隊的子代理各自擁有 <b>context window、工具與指令</b>；或把子代理以 <b>MCP 工具</b>暴露給單一 agent。問題：每多一層轉發，資訊與延遲都變差。</p></div>
+        <div class="after"><b>fold 後 · 單一迴圈</b><p>一個清楚的 system prompt、<b>4–5 個薄資料工具</b>、嚴格的輸出護欄。skills 漸進揭露 context、tool search 漸進揭露工具：平時只看短描述，需要才完整載入。</p></div>
+      </div>
+      <p class="x-src">本站重繪（依原文敘述整理）。原文唯一的量化對照在「延遲」失敗模式段，且只是一個客戶的比較：單一迴圈比多代理 harness 的 runtime 約快 2 倍（roughly 2x faster）。品質比較出自 Anthropic 應用 AI 團隊自述（跨多家企業部署），未給部署數與指標定義。子代理＝擁有自己 context window、工具與指令，由 coordinator 編排的 agent。</p>
+    </figure>
+
+    <p class="g-p">回饋往往是：這些結構大部分在做<em>「模型已經不需要別人代勞的工作」</em>，一個 prompt 加幾個薄工具就能取代。</p>
+    <p class="g-p">原文的比較結論帶限定語：在多家企業部署中，配備 skills 的單一 agent 在品質上<strong>頻繁</strong>勝過一提示通吃與子代理設計，且<strong>常</strong>以更低的每任務成本與延遲達成。</p>
+    <p class="g-p">反模式也有名字：每個團隊或問題類型各給一個子代理，架構就成了組織圖的複製品——原文稱之為 Conway 定律在 agent 架構上的作用。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">決策：什麼時候該 fold，什麼時候該留</h2>
+    <p class="g-p">原文沒給決策樹，只列了「該用子代理」的條件；反過來讀，就是 fold 的時機。</p>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>症狀 → 摺疊或保留</b> — 四類症狀（本頁分類）</figcaption>
+      <div class="x-dec">
+        <p class="q">主 agent 的毛病出在哪裡？</p>
+        <div class="brs">
+          <div class="br"><span class="tag">結構在替模型做事</span><b>fold</b><small>分類器、固定多步管線、分群桶都在做模型已能代勞的工作</small></div>
+          <div class="br"><span class="tag">交接掉資訊</span><b>fold</b><small>按問題類型切分＝傳聲遊戲，每交接一次保真度再折損</small></div>
+          <div class="br"><span class="tag">單迴圈撞牆</span><b>保留</b><small>context 腫脹造成可量測的效能衰退；工具選不對，或 system prompt 指令互相衝突</small></div>
+          <div class="br"><span class="tag">要拆但要切對</span><b>保留·按 context 切</b><small>需要多條可丟棄的乾淨 context 平行做事；獨立研究路徑、介面乾淨的元件、黑箱驗證、模組化權限，交回精簡結果</small></div>
+        </div>
+      </div>
+      <p class="x-src">本站整理（編輯推論：原文把「何時 fold」與「子代理何時該用」分散在不同段落，未給此決策樹）。四類非互斥：原文「Use them when」的三條（context 腫脹、平行且可丟棄的 context、工具選不對或指令衝突）與後面「按 context 切」段落重疊——驗證、黑箱驗證兩處都出現，本頁因此併為一類。原文的判準不是要不要用子代理，而是為什麼用。</p>
+    </figure>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/fold-subagents/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/fold-subagents/01.webp" alt="原文的分割方式對照圖。上欄標題 SPLIT BY PROBLEM TYPE：Agent 1 寫功能，handoff 箭頭指向 Agent 2 寫測試，再 handoff 指向 Agent 3 審程式碼，圖下註解說每次交接都掉 context，寫測試的 agent 不知道實作決策為什麼這樣下。下欄標題 SPLIT BY CONTEXT：一個 agent 同時寫功能與測試，因為它已有 context，箭頭指向 Verifier 負責跑測試，圖下註解說只跑測試並回報結果的驗證者不需要實作的 context" width="1200" height="581" loading="lazy" decoding="async"></a>
+      <figcaption>原文的分割對照：按問題類型切，每次交接都掉 context；按 context 切，驗證者只需跑測試、回報。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／Claude（claude.com），<a href="https://claude.com/resources/articles/building-agents-when-to-fold-subagents-into-your-main-agent-loop" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <p class="g-p">圖中三棒接力的那條，就是原文說的傳聲遊戲：寫測試的 agent 不知道實作為何這樣決定。</p>
+    <p class="g-p">若確定走多代理，原文的順序是反過來的：先從最簡單、可能就夠用的模式起步。</p>
+    <p class="g-p">原文點名的起點包括 generator-verifier、orchestrator-subagent，或「其他能用的最簡模式」。</p>
+    <p class="g-p">摺疊後的代價是紀律：精心管理的 system prompt、時機剛好的 skill 與工具描述、對 context window、記憶與筆記的刻意處理。</p>
+    <p class="g-p">單一迴圈還有個終局好處：agent 學到的東西都留在同一個 context，這正是許多團隊想要的「懂使用者高層目標、能代其行動」。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">怎麼搬：先建量尺，再分階段量對的東西</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>階段</th><th>量什麼</th><th>原文限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="階段"><b>起步</b></td><td data-l="量什麼">用 rubric 評 agent 的最終回覆，追蹤回答品質</td><td data-l="限定語">原文稱之為「好的起點」，不是終點</td></tr>
+          <tr><td data-l="階段"><b>還有 orchestrator</b></td><td data-l="量什麼">routing accuracy：有沒有選對子代理</td><td data-l="限定語">只在 orchestrator 還在時量得到</td></tr>
+          <tr><td data-l="階段"><b>子代理摺入後</b></td><td data-l="量什麼">有沒有載入正確的 skill、呼叫正確的工具</td><td data-l="限定語">取代 routing accuracy 的檢查點</td></tr>
+          <tr><td data-l="階段"><b>長期</b></td><td data-l="量什麼">task-completion eval：任務有沒有真的完成</td><td data-l="限定語">原文：比較不同架構時，這最有分量</td></tr>
+          <tr><td data-l="階段"><b>eval set 結構</b></td><td data-l="量什麼">中央團隊一套共享端到端集合＋各 skill 隨附小集合</td><td data-l="限定語">即使只有 10 個黃金範例，也足以開始</td></tr>
+        </tbody>
+      </table>
     </div>
-  </section>
-
-  <section class="g-sec">
-    <h2 class="g-h2">為什麼要摺疊：企業 agent 的典型失敗模式</h2>
-    <p class="g-p">企業想做一個統合多項產品與能力的單一客戶介面 agent，而每個能力通常歸個別團隊所有。最順手的起點，是讓每個團隊自建 agent、再由中央平台團隊在上面蓋一層 orchestrator——結構可能是 <strong>orchestrator-subagent</strong>，或是把各團隊的 agent 以 <strong>MCP 工具</strong>暴露給單一 agent。這看起來最直觀，卻立刻引入新的複雜度。原文點名一個一再出現的架構路徑：<em>意圖分類器 → 固定多步推理管線 → 使用者分群 → 獨立推薦分支 → 頂層多代理 orchestrator</em>。</p>
-    <p class="g-p">而回饋往往是：這些結構大部分在做<em>「模型已經不需要別人代勞的工作」</em>——一個清楚的 system prompt、4-5 個薄資料工具、加上嚴格的輸出護欄，就能涵蓋大部分使用情境。實例：某企業的客戶端 agent 養了<em>一打</em>專家子代理，結果一致的品牌體驗難以維持，多層轉發的延遲直接拖垮使用者體驗。這種現象有個名字：把架構做成組織圖的複製品——<strong>Conway 定律</strong>在 agent 架構上的作用。作為對照，原文的核心比較結論是：在多家企業部署的評比裡，<em>配備 skills 的單一 agent 在品質上頻繁勝過「一提示通吃」與子代理設計，且常以更低的每任務成本與延遲達成</em>。</p>
-  </section>
-
-  <section class="g-sec">
-    <h2 class="g-h2">替代設計：一個迴圈＋漸進式揭露</h2>
-    <p class="g-p">要協調跨團隊的專家，orchestrator-subagent 仍是合理做法；但原文主張一條往往更有效的路：<strong>漸進式揭露（progressive disclosure）</strong>——用 skills 漸進揭露脈絡、用 tool search 漸進揭露工具。agent 平時只看見 skills 與工具的<em>短描述</em>，需要時才完整載入。單一迴圈的好處之一，是讓 agent 學到的一切留在同一個 context，正好呼應許多團隊的終局目標：<em>一個理解使用者高層目標、能代其行動的 agent</em>。</p>
-    <p class="g-p">代價是紀律：<strong>精心管理的 system prompt</strong>、時機剛好的 skill 與工具描述觸發，以及對 context window、記憶與筆記的刻意處理。組織層面，原文建議由<em>一個中央團隊</em>掌握端到端品質與 system prompt，每個新工具與 eval 上線前都要審核；中央團隊保持小規模，迭代才快、跨部門協調成本才低。</p>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="x-src">表為本站整理；四列指標依原文敘述順序排列，原文未給此表。</p>
+    <p class="g-p">量測本身是工程題：內部系統難以重放、使用者互動難以模擬。原文分享的內部做法之一，是記錄時間戳。</p>
+    <p class="g-p">組織也要一起搬：一個中央團隊掌握端到端品質與 system prompt，每個新工具與 eval 上線前都要審核。</p>
+    <p class="g-p">團隊保持小規模，迭代才快、跨部門協調成本才低——這是原文對大型組織的具體建議。</p>
     <div class="g-know">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg>
-      <p><b>子代理仍有一席之地</b>，包括研究前沿。原文定義：子代理是擁有自己 context window、工具與指令、由 coordinator 編排的 agent，強項是<strong>驗證、平行工作、模組化權限</strong>——Anthropic 自家的多代理研究系統也在用。問題不在「要不要用」，而在「為什麼用」。</p>
-    </div>
-  </section>
-
-  <section class="g-sec">
-    <h2 class="g-h2">真要多代理時：按 context 切，不按部門切</h2>
-    <p class="g-p">若確定走多代理路線，原文的原則是從<em>最簡單、可能就夠用的模式</em>起步（generator-verifier、orchestrator-subagent 等）。劃邊界時要<strong>按 context 切分</strong>：給每個子代理一段幾乎不需要系統其他部分支援的工作，做完交回<em>精簡的結果</em>。原文點名的適合候選：獨立的研究路徑、介面乾淨的獨立元件、黑箱驗證。</p>
-    <p class="g-p">反例是按問題類型切分：子代理之間來回傳話，淪為<em>「傳聲遊戲」（telephone game）</em>——每多一次交接，資訊保真度就再折損一次。這正是「為每個團隊或問題類型各設一個子代理」的組織慣性，最終反噬品質的原因。</p>
-  </section>
-
-  <section class="g-sec">
-    <h2 class="g-h2">怎麼搬：分階段的遷移與量測</h2>
-    <div class="g-steps">
-      <div class="g-steprow"><div class="n">01<small>先建量尺</small></div><div><h3>一套共享的端到端 eval set，10 筆黃金範例就能起步</h3><p>判斷該不該摺疊，先要有能比較的量尺。原文見效的結構：中央團隊擁有一套共享的端到端 eval set，各 skill 由擁有團隊隨附自己的小型 eval set。<em>即使只有 10 個黃金範例，也足以開始。</em></p></div></div>
-      <div class="g-steprow"><div class="n">02<small>量對的東西</small></div><div><h3>orchestrator 還在時量路由，摺疊後改量 skill 與工具</h3><p>起步做法：用評分準則（rubric）給 agent 的最終回覆評分，追蹤回答品質。仍有 orchestrator 時，加測<strong>路由準確率</strong>（有沒有選對子代理）；子代理摺入後，改查 agent 是否<em>載入正確的 skill、呼叫正確的工具</em>。</p></div></div>
-      <div class="g-steprow"><div class="n">03<small>走向任務完成</small></div><div><h3>長期目標是 task-completion eval</h3><p>逐步把評測推向任務完成率——在比較不同架構時，這才是最有分量的指標。內部系統難以重放、使用者互動難以模擬的環境，量測本身就是工程題；原文分享的內部做法之一，是<em>記錄時間戳</em>。</p></div></div>
-      <div class="g-steprow"><div class="n">04<small>工具相助</small></div><div><h3>migration kit：先在 mock 系統上試跑</h3><p>配套的 migration kit 走引導式工作流程：辨識你的架構模式、評估替代方案、驗證最佳做法；內附 demo，可先在 <strong>mock 系統</strong>上演練，確認無虞後再套到真實 agent。</p></div></div>
+      <p><b>配套工具：migration kit。</b>引導式工作流，走三步——辨識你的架構模式、評估替代方案、驗證最佳做法；內附 demo，可先在 <strong>mock 系統</strong>上演練，確認無虞再套到真實 agent。</p>
     </div>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">帶走三件事</h2>
-    <div class="g-take">
-      <p><b>模型變強，架構要跟著變薄。</b>原文最鋒利的一句回饋是「大部分結構在做模型已不需要被代勞的事」——昨天必要的分類器與多步管線，今天可能只剩延遲與維護成本。</p>
-      <p><b>別讓組織圖變成架構圖。</b>每個團隊一個子代理是最順手的起點，卻養出傳聲遊戲與難以一致的品牌體驗；按 context 劃邊界、交回精簡結果，才是多代理的切分原則。</p>
-      <p><b>架構之爭，先變成 eval 之爭。</b>10 筆黃金範例＋rubric 就能起步：先量路由、摺疊後量 skill 載入、終點是任務完成率——沒有共同量尺，「摺不摺疊」只是品味問題。</p>
+    <div class="x-take">
+      <p><b>先問這段結構還在做模型的工作嗎。</b>是，就 fold，換 prompt＋薄工具＋護欄。</p>
+      <p><b>子代理留給驗證、平行、權限。</b>要拆就按 context 切，不按團隊切。</p>
+      <p><b>沒有 eval 就別搬。</b>10 筆黃金範例＋rubric 就能起步（編輯觀點）。</p>
     </div>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">同一主題的其他館藏</h2>
     <div class="g-rel">
-      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：一行 system prompt 的退步，該在評分表上現形</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">法律工作的代理式作業系統：NDA 初篩如何從吃掉約 20% 產能降到 1% 以下</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司會坐哪裡：地板下、桌邊、中間那一層——三種組織圖與四個未定的大問題</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：平均 2.75 的兩種病，只有逐案分得出來</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">Legora 法律代理：NDA 初篩從吃掉約 20% 產能到 1% 以下</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司坐哪裡：三種組織圖，四個未定的大問題</a><span class="d">2026-10-28</span></div>
     </div>
   </section>
 
-  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據與做法均出自原文，小標與分節為編輯整理。</p>
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述說法均出自原文，圖解 A／B 與小標為本站重繪與編輯整理。原文另有三張示意圖：靜態一張（按問題類型切 vs 按 context 切）已收錄於本頁，兩張動態 gif 未收錄。內容經對照原文的獨立事實審查後發布。</p>
 </main>
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>

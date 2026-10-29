@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>導讀 — 煞車裝在模型之外：Claude Duet 的安全、隱私與資安設計 · AI 每日動態檔案</title>
-<meta name="description" content="導讀 Claude 官方〈Claude Duet Safety, Privacy, and Security〉：研究預覽中的 Duet 如何在寄可能敏感的訊息、付款、刪除前先請示（含每位收件者）、沿用 Claude Code auto mode classifier 的模型外自動檢查、兩級敏感資訊分類器、Stripe Link 一次性卡號，以及憑證與雲端瀏覽器隔離——密碼以單次金鑰加密直送瀏覽器，模型看不到也存不了。">
+<meta name="description" content="導讀 Claude 官方〈Claude Duet Safety, Privacy, and Security〉：用巢狀圖解與「動作→關卡」決策圖，看研究預覽中的 Duet 把批准、意圖檢查與憑證放在模型碰不到的地方——哪些動作批准也不做、哪些沒有「不再詢問」、密碼如何用單次金鑰直送瀏覽器。">
 <script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
 <link rel="stylesheet" href="../assets/archive.css">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -27,7 +27,7 @@
       <h1>煞車裝在模型之外：Claude Duet 的安全、隱私與資安設計</h1>
       <span class="stamp">導讀</span>
     </div>
-    <p class="g-orig">原文：Claude Duet 安全、隱私與資安說明——研究預覽階段的防護設計與持續迭代之處</p>
+    <p class="g-orig">原文：Claude Duet 安全、隱私與資安說明——研究預覽期的防護設計，含官方自承還在迭代的部分</p>
     <p class="g-meta">
       <span>Claude (Resources)</span>·<span>2026-10-23 發布</span>·<span>2026-10-24 收錄</span>·
       <a href="https://claude.com/resources/articles/claude-duet-safety-privacy-and-security" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
@@ -35,77 +35,124 @@
   </header>
 
   <div class="g-stats">
-    <div class="g-stat"><b>先請示再行動</b><span>寄可能敏感的訊息、付款、刪除之前，展示動作、目的地、內容與每位收件者，等你批准</span></div>
-    <div class="g-stat"><b>模型之外</b><span>伴隨每個動作的自動檢查沿用 Claude Code 的 auto mode classifier，跑在執行模型之外——頁面藏的指令影響不了結果</span></div>
-    <div class="g-stat"><b>單次卡</b><span>購物用 Stripe Link 等錢包的一次性卡號，限該商家限金額；真卡號不給 Duet 也不給商家</span></div>
-    <div class="g-stat"><b>兩級敏感資訊</b><span>新的安全分類器獨立於主模型，寄出前檢查每則訊息是否含潛在敏感資訊，擋下後可改寫再送批</span></div>
-    <div class="g-stat"><b>密碼零接觸</b><span>密碼以單次金鑰加密、原封不動直送雲端瀏覽器；模型看不到、存不了、也無法複述</span></div>
+    <div class="g-stat"><b>模型之外</b><span>每個動作的意圖檢查沿用 Claude Code 的 auto mode classifier，跑在執行模型外</span></div>
+    <div class="g-stat"><b>兩級</b><span>敏感資訊分類器獨立於主模型；擋下可改寫再送批</span></div>
+    <div class="g-stat"><b>單次金鑰</b><span>密碼加密一次、直送雲端瀏覽器，模型存不了</span></div>
+    <div class="g-stat"><b>批准也無效</b><span>證券交易、帳戶之間搬錢、存取他人帳戶</span></div>
   </div>
 
   <section class="g-sec">
-    <div class="g-tldr">
-      <h2 class="g-tldr-h">30 秒版本</h2>
-      <p class="one">Claude Duet 是研究預覽中的 agent：用一台雲端電腦替你做事，關掉 app 仍持續運行——讀收件匣、草擬回信、訂東西、跑例行公事。官方這篇說明它如何不失控：寄可能敏感的訊息、付款、刪除之前，一律先展示動作、目的地與完整內容（含每位收件者），等你批准；每個動作另有跑在模型之外的自動檢查（沿用 Claude Code 的 auto mode classifier），網頁裡藏的指令無法影響判斷。憑證與瀏覽器整組與模型隔離，密碼以單次金鑰加密直送雲端瀏覽器；購物用一次性卡號。官方也承認這些防護仍會漏判或誤判，會持續迭代。</p>
-      <ul>
-        <li>會在你不在場時行動的 agent，第一道設計題是「何時停、何時問」：敏感動作先展示、後批准，部分動作連「不再詢問」都不適用。</li>
-        <li>安全檢查與憑證都放在模型碰不到的機器上：分類器獨立運作、密碼單次金鑰加密——抗 prompt injection 做在結構裡。</li>
-        <li>證券交易、帳戶間轉帳、動他人帳戶即使你批准也不做；分類器會漏判也會誤判，官方只讓它與批准機制並用。</li>
-      </ul>
-    </div>
-    <p class="g-p">本文聚焦安全、隱私與資安；Duet 產品本身（何時主動開口、何時請示的設計）另見<a href="claude-duet.html">產品發布篇導讀</a>。</p>
-  </section>
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">Duet 是研究預覽中的 agent：用雲端電腦替你做事，關掉 app 仍持續運行。這篇講的不是它能做什麼，而是<strong>它被設計成做不到什麼</strong>。</p>
+    <p class="g-p">交辦方式見<a href="claude-duet.html">產品篇</a>；本篇只看防護。</p>
 
-  <section class="g-sec">
-    <h2 class="g-h2">先請示，而且要問得剛好：批准機制與審批疲勞</h2>
-    <p class="g-p">Duet 能使用你選擇連接到 Claude 的所有 app 與服務，並在你關掉 app 後持續運行——風險正來自這裡：<strong>會在你不在場時行動的 agent，必須知道何時停下來問</strong>，而且要問在對的節奏上。原文的設計：在寄出可能敏感的訊息、付款、或刪除任何東西之前，Duet 會展示<em>動作、目的地與內容，包括每一位收件者</em>，然後等你批准。每個動作旁邊另有一道自動檢查，建構在 Claude Code 的 <strong>auto mode classifier</strong> 上、為 Duet 延伸——它評估動作是否符合你的意圖，且刻意跑在執行工作的模型之外，<em>藏在頁面裡的指令無法影響其結果</em>。</p>
-    <p class="g-p">原文的邊界可整理成三層（編輯歸納）。有些動作<em>即使你批准也不做</em>：證券交易、銀行動作（如在帳戶間移動資金）、存取他人帳戶。有些步驟<em>不適用「不再詢問」</em>——無論你批准過多少次：付款或匯款、刪除訂單、建立帳戶。在你離開時跑的例行公事（routines）適用同樣的防護。官方也花大量時間校準<em>請求批准的頻率</em>：審批疲勞是嚴重問題，太多請求會教人有時未經充分考慮就連點跳過。購物另有專屬通道：以 Stripe Link 等錢包的<strong>一次性卡號</strong>支付，限該商家與金額，你在 Link app 裡看到品項與總額後批准——真卡號不會交給 Duet，也不會交給商家。</p>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>誰擋在模型與真實世界之間</b> — 三件事都在模型碰不到的地方</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>模型之外</b><small>模型存取不到的機器</small><span class="pi">outside the model</span></div>
+          <div class="x-grid">
+            <div class="c"><b><i>①</i>你的批准</b><small>展示動作、目的地、內容與每一位收件者</small></div>
+            <div class="c"><b><i>②</i>意圖檢查</b><small>auto mode classifier 的 Duet 延伸版，隨每個動作</small></div>
+            <div class="c"><b><i>③</i>憑證與瀏覽器</b><small>密碼、cookie、登入 token 只經過這裡</small></div>
+          </div>
+          <div class="ring ring--core">
+            <div class="ring-lb"><b>模型</b><span class="pi">研究預覽</span></div>
+            <div class="ring-inner"><b>Duet 執行層</b>：讀信、草擬、訂東西、跑 routines</div>
+          </div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span>唯一的折返：分類器判定敏感 → <strong>改寫</strong> → 再回你的批准</span></div>
+      <p class="x-src">本站重繪；原文 Figure 1（Approval flow）為官方版本。畫的是存取權界線，非部署位置或先後。檢查放在模型外，是為了讓頁面藏的指令影響不了結果。</p>
+    </figure>
+
     <div class="g-know">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg>
-      <p><b>這些設計有前傳。</b>2025 年官方發布 safe and trustworthy agents 框架——把人放在控制位、把隱私與安全互動當基本要求；之後又寫過「為什麼沒有任何單一防線就夠」「為什麼模型內的防護無法獨立存在」。加上營運 Claude Managed Agents 基礎設施的經驗，Duet 以同樣方式把憑證與 agent 分開——這篇等於把框架落到一個替你行動的 agent 上。</p>
+      <p><b>前傳：</b>2025 年 safe and trustworthy agents 框架先立下「人放在控制位」，之後兩篇接著說「沒有單一防線就夠」「模型內的防護無法獨立存在」。</p>
     </div>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">寄出去的每則訊息，先過一道獨立分類器</h2>
-    <p class="g-p">一個會讀你信箱、替你寄信的 agent，時時都在決定「哪類資訊該去哪」。原文舉例：請 Duet 寄每週 recap 給團隊，它應該只放<em>每個成員都已有權限看到的內容</em>，絕不夾帶私人細節——例如你的績效考核對話。做法是一個新的<strong>安全分類器</strong>，獨立於主模型運行，在每則訊息送出前檢查是否含潛在敏感資訊；官方把這類資訊分為<strong>兩級</strong>處理。被任一級擋下時，Duet 可以決定<em>改寫訊息、去掉敏感內容</em>，再交給你批准。</p>
-    <p class="g-p">官方對成熟度說得直白：Duet 還在 research preview，這些防護<em>偶爾會漏掉該擋的、也會誤傷無害的訊息</em>。正因如此，分類器只與前一節的批准機制並行運作——由批准機制守住「你控制 Duet 用你的名義寄了什麼」這一層；分類器則隨使用樣貌的累積持續迭代。</p>
+    <h2 class="g-h2">哪些動作擋在哪一關</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>動作 → 關卡</b> — 本頁分類，不是流程</figcaption>
+      <div class="x-dec">
+        <p class="q">這個動作，被哪一關擋下？</p>
+        <div class="brs">
+          <div class="br"><span class="tag">直接拒絕</span><b>硬性禁區</b><small>證券交易、帳戶之間搬錢、存取他人帳戶——批准也不做</small></div>
+          <div class="br"><span class="tag">每次都問</span><b>沒有「不再詢問」</b><small>付款或匯款、刪除訂單、建立帳戶——批准幾次都一樣</small></div>
+          <div class="br"><span class="tag">逐則掃描</span><b>兩級安全分類器</b><small>每則外寄訊息送出前檢查</small></div>
+          <div class="br"><span class="tag">全程不經手</span><b>憑證隔離</b><small>密碼、cookie、token：看不到也存不了</small></div>
+        </div>
+      </div>
+      <p class="x-src">本站整理；原文分散在三段敘述，未給此分流（歸類為編輯歸納）。</p>
+    </figure>
+    <p class="g-p">你不在時跑的 routines 套用同一套防護。</p>
+    <p class="g-p">請示頻率是刻意校準的：審批疲勞嚴重，請求太多會教人有時未經充分考慮就跳過。購物另走一次性卡號——限該商家與金額，你在 Link app 看到品項與總額才批准，真卡號不給 Duet，也不給商家。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">憑證與瀏覽器隔離：模型永遠看不到密碼</h2>
-    <p class="g-p">這是全文最結構性的一節：Duet <strong>從頭到尾看不到你的密碼、瀏覽器 cookie、已連接 app 的登入 token</strong>，也不能把它們存進記憶。這些憑證只經過模型無法存取的獨立機器，掌管動作的批准與安全檢查也跑在那裡。具體流程：網站要密碼時，你在 Claude app 內的表單輸入；表單以一把<strong>單次金鑰</strong>加密——金鑰只存在安全的雲端瀏覽器機器上、僅供這一次使用——加密後的密碼<em>原封不動</em>交給瀏覽器、由瀏覽器鍵入網站。模型看不到密碼，無法儲存、也無法複述。下一步（即將推出）是 <strong>1Password</strong>：Duet 發出憑證請求、你在 1Password 裡批准，憑證直接交給瀏覽器，同樣不經過模型。</p>
-    <p class="g-p">官方還點出釣魚攻防的兩個改變：其一，Duet 不替你保管憑證，<em>所以無法被釣出密碼</em>；其二，登入表單本身也是釣魚標的——Duet 的登入表單只會在 app 內、你主動要求的登入時出現，絕不會以連結、簡訊、郵件或 claude.ai 以外的網站送達，在其他地方索取密碼的「Claude Duet」都不是正版。</p>
+    <h2 class="g-h2">往外掃一遍，往內鎖住憑證</h2>
+    <p class="g-p">外寄訊息先過獨立於主模型的分類器，敏感資訊原文稱「兩級」（需同意與絕不分享）；被擋下時 Duet 可改寫成不含敏感內容的版本，再交你批准。</p>
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/duet-safety-privacy/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/duet-safety-privacy/01.webp" alt="官方流程圖：Claude Duet 要送出一則訊息（Gmail、Slack 及其他已連接的 app）後進到第 2 關「是否敏感」，分成三格——Not sensitive（多數日常訊息）直接送出；Sensitive: only with consent（健康、財務等）進第 3 關「你是否已同意分享」，否則改寫去掉敏感資訊或等你批准；Never share（信用卡號、政府身分證號等）直接 Block" width="1200" height="550" loading="lazy" decoding="async"></a>
+      <figcaption>這張圖證明「先檢查、再送出」：訊息在離開前先分三格，出口有四種——直接送、改寫、等你批准、擋下。「需同意」那格附一句「要求它分享就算同意」；「絕不分享」那格連你要求也不送。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／Anthropic，<a href="https://claude.com/resources/articles/claude-duet-safety-privacy-and-security" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <div class="x-scroll" style="margin-top:14px">
+      <table class="x-tbl">
+        <thead><tr><th>步驟</th><th>原文做法</th><th>邊界</th></tr></thead>
+        <tbody>
+          <tr><td data-l="步驟"><b>1 輸入</b></td><td data-l="做法">在 Claude app 內的表單打密碼</td><td data-l="邊界">只在 app 內、你主動登入時出現</td></tr>
+          <tr><td data-l="步驟"><b>2 加密</b></td><td data-l="做法">以單次金鑰加密</td><td data-l="邊界">金鑰只存在安全雲端瀏覽器機器，只用一次</td></tr>
+          <tr><td data-l="步驟"><b>3 鍵入</b></td><td data-l="做法">加密後原封不動交給瀏覽器打進網站</td><td data-l="邊界">模型看不到、無法儲存、無法複述</td></tr>
+          <tr><td data-l="步驟"><b>下一步</b></td><td data-l="做法">1Password：Duet 提出請求、你批准</td><td data-l="邊界">即將推出；憑證直送瀏覽器，不經模型</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">官方對成熟度說得直白：仍在 research preview，這些防護偶爾會漏掉該擋的、也會誤標無害的訊息，所以只與批准機制並行，不作唯一防線。</p>
+    <p class="g-p">釣魚因此少一條路：Duet 不保管憑證，騙不出密碼；登入表單也只在 app 內出現，別處索取密碼的「Claude Duet」都不是正版。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">看得見也管得住：任務頁、開關與記憶</h2>
-    <p class="g-p">透明度落在任務層級：Duet 做過什麼、正在做什麼都在<strong>任務清單</strong>上，每個任務有獨立頁面，且可以<em>在任務中途轉向（steer）</em>。對話紀錄與記憶會保留、用來在任務之間延續脈絡，直到你刪除或重置；<strong>刪除帳號會清掉 Duet 儲存的一切</strong>。</p>
-    <p class="g-p">已連接的 app 直接沿用，且開關同步：在一處關閉、兩處同時關閉。中斷連接後，<em>新的存取即刻停止</em>，但 Duet 已經學到的內容會留到你自己重置記憶為止（app 設定裡隨時可做）；它也會使用你 Claude 帳戶的記憶，先前對話裡記住的細節同樣可見。</p>
+    <h2 class="g-h2">你看得到，也關得掉</h2>
+    <div class="x-scroll" style="margin-top:14px">
+      <table class="x-tbl">
+        <thead><tr><th>項目</th><th>原文行為</th><th>邊界</th></tr></thead>
+        <tbody>
+          <tr><td data-l="項目"><b>任務</b></td><td data-l="行為">清單＋每任務獨立頁，可中途 steer</td><td data-l="邊界">不必等它跑完</td></tr>
+          <tr><td data-l="項目"><b>記憶</b></td><td data-l="行為">對話歷史與記憶跨任務延續</td><td data-l="邊界">直到你刪除或重置</td></tr>
+          <tr><td data-l="項目"><b>連接的 app</b></td><td data-l="行為">一處關閉、兩處同時關</td><td data-l="邊界">新存取即刻停；學到的留到重置記憶</td></tr>
+          <tr><td data-l="項目"><b>帳號</b></td><td data-l="行為">刪除會清掉 Duet 儲存的一切</td><td data-l="邊界">原文未給清除時程</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">它同時讀你 Claude 帳戶原有的記憶，更早對話裡記住的細節一樣看得見。</p>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">帶走三件事</h2>
-    <div class="g-take">
-      <p><b>煞車要裝在模型之外。</b>抗 prompt injection 的關鍵不是叫模型「別聽頁面裡的壞話」，而是讓判斷意圖的分類器、批准與憑證全部跑在執行模型接觸不到的機器上——用結構讓攻擊面失效，而不是靠模型自律。</p>
-      <p><b>「問幾次」本身就是設計題。</b>官方花大量時間校準請示頻率，因為審批疲勞會把安全機制訓練成無腦連點——agent 的權限 UX 直接決定防護有沒有效。</p>
-      <p><b>預覽期的誠實也是設計。</b>官方明說分類器會漏判、也會誤傷，所以只讓它與批准機制並用、不作唯一防線——從 2025 框架的「沒有單一防線就夠」一路貫穿到產品。</p>
+    <div class="x-take">
+      <p><b>煞車裝在模型之外。</b>檢查、批准、憑證都不在模型手上。</p>
+      <p><b>「問幾次」就是設計題。</b>審批疲勞會把防護磨成連點。</p>
+      <p><b>預覽期的誠實也是設計。</b>自承漏判誤判，所以並用批准。</p>
     </div>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">同一主題的其他館藏</h2>
     <div class="g-rel">
-      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：一行 system prompt 的退步，該在評分表上現形</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">法律工作的代理式作業系統：NDA 初篩如何從吃掉約 20% 產能降到 1% 以下</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司會坐哪裡：地板下、桌邊、中間那一層——三種組織圖與四個未定的大問題</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：平均 2.75 的兩種病，只有逐案分得出來</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">Legora 法律代理：NDA 初篩從吃掉約 20% 產能到 1% 以下</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司坐哪裡：三種組織圖，四個未定的大問題</a><span class="d">2026-10-28</span></div>
     </div>
   </section>
 
-  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據與做法均出自原文，小標與分節為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述做法與數據均出自原文，屬 Anthropic 自述；圖解為本站重繪，另收錄 1 張原文官方圖，小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
 </main>
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
-  <p class="foot-gen">館藏導讀 · 建置於 2026-10-27 (UTC+8)</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-29 (UTC+8)</p>
 </div></footer>
 <script src="../assets/site.js" defer></script>
 </body>

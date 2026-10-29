@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>導讀 — 薄層編排器 · AI 每日動態檔案</title>
-<meta name="description" content="深入淺出導讀 Meta Engineering〈The Thin Orchestrator〉：為什麼把中央路由變薄，AI 代理反而更可靠。">
+<meta name="description" content="Meta Engineering〈The Thin Orchestrator〉導讀：以四層巢狀圖與 7 步協定流程圖，說明 1,300 行編排器如何把 20+ 工作流分派給 14 個專家代理，以及多代理 65.3% 對單代理 16.6% 的預印本數據。">
 <script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
 <link rel="stylesheet" href="../assets/archive.css">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -25,10 +25,10 @@
   <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
   <header class="g-head">
     <div class="day-title-row">
-      <h1>薄層編排器：讓中央「少做事」，AI 代理反而更可靠</h1>
+      <h1>薄層編排器：中央只排順序，可靠性交給程式碼</h1>
       <span class="stamp">導讀</span>
     </div>
-    <p class="g-orig">原文：The Thin Orchestrator — How We Made Our AI Agents More Reliable by Giving the Router Less to Do</p>
+    <p class="g-orig">原文：The Thin Orchestrator — How We Made Our AI Agents More Reliable by Giving the Router Less to Do（Meta 工程部落格，架構方法文章，用自家資料欄位 onboarding 貫穿舉例）</p>
     <p class="g-meta">
       <span>Meta Engineering</span>·<span>2026-10-19 發布</span>·<span>2026-10-22 收錄</span>·
       <a href="https://engineering.fb.com/2026/10/19/ml-applications/thin-orchestrator-ai-agent-architecture/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
@@ -36,138 +36,130 @@
   </header>
 
   <div class="g-stats">
-    <div class="g-stat"><b>1,300</b><span>行編排器程式碼</span></div>
-    <div class="g-stat"><b>20+</b><span>條工作流</span></div>
-    <div class="g-stat"><b>14</b><span>個專家代理</span></div>
-    <div class="g-stat"><b>25+</b><span>份知識檔</span></div>
-    <div class="g-stat"><b>&lt;1 小時</b><span>設定準備（原 3–4 天）</span></div>
+    <div class="g-stat"><b>1,300 行</b><span>編排器程式碼，零領域工作</span></div>
+    <div class="g-stat"><b>7 步</b><span>固定協定，僅第 6 步動用 LLM</span></div>
+    <div class="g-stat"><b>14 個</b><span>專家代理，撐 20+ 條工作流</span></div>
+    <div class="g-stat"><b>&lt;1 小時</b><span>新欄位設定準備（人工 3–4 天）</span></div>
   </div>
 
   <section class="g-sec">
-    <div class="g-tldr">
-      <h2 class="g-tldr-h">30 秒版本</h2>
-      <p class="one">Meta 用一個只有 1,300 行、自己「零領域工作」的小路由器，把 20 多種工作流分派給 14 個專家代理——結果比當年那個「什麼都懂」的大代理穩定得多。核心啟示：<em>代理系統的可靠性是架構問題，不是 prompt 問題。</em></p>
-      <ul>
-        <li>單一全能代理在生產環境出現幻覺與「概念交叉污染」；團隊也評估過另一種單代理做法——靠人工為每個任務客製 prompt 可達 70–80%，拿掉就掉到 10–20%。</li>
-        <li>路由器走固定 7 步協定，其中只有第 6 步由「隔離子代理」做 LLM 推理，其餘全是確定性程式碼。</li>
-        <li>新用例不必寫新代理：寫一份新的工作流模板、重排既有 14 個代理即可；知識檔更新後下一個 session 自動生效。</li>
-      </ul>
-    </div>
-  </section>
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">薄編排器＝把狀態與控制流程放在模型之外：中央只排順序、只做可靠性檢查，其餘判斷全交給專家代理。</p>
 
-  <section class="g-sec">
-    <h2 class="g-h2">問題：一顆聰明大腦，撐不起生產環境</h2>
-    <p class="g-p">場景是 Meta 推薦系統的<strong>資料欄位 onboarding</strong>：一個欄位從設定到生效，要跨 <strong>3 個程式碼庫、3 種語言、最多 6 個管線階段</strong>（Python 設定 → C++ 程式碼生成 → 資料處理服務 → 分析系統），而且各階段必須同步。團隊的第一版做法和大多數人一樣：<em>養一個裝了所有知識的大代理</em>——設定 schema、生成規則、管線路由、驗證要求、10 多個資料源的慣例，全塞給它。</p>
-    <p class="g-p">Demo 很漂亮，上線就開始幻覺。知識超過某個門檻後，<strong>懂得越多反而表現越差</strong>：把 A 子系統的命名慣例套到 B、把張三的程式生成模式用在李四的資料源——文章描述為「概念交叉污染」。團隊也試過折衷版：單代理＋為每個任務手工打造 prompt 可以到 70–80%，但拿掉這層呵護就掉到 10–20%。這說明<strong>問題出在架構，不是 prompt 寫得好不好</strong>。文章引用 Mount Sinai 的預印本研究（尚未經同儕審查）佐證：80 個任務批次下，多代理編排準確率 65.3%，單代理只剩 16.6%，token 最多省 65 倍；研究者將此歸因於任務隔離、避免 context 互相干擾。</p>
-    <div class="g-pain"><i>幻覺</i><i>概念交叉污染</i><i>另測：無客製 prompt 10–20%</i><i>context 越滾越大</i><i>錯誤沿下游擴散</i></div>
-
-    <figure class="g-dg">
-      <figcaption class="g-dg-h">圖解 A · 改之前 — <b>厚編排器</b>（一顆大腦做所有事）· 示意</figcaption>
-      <div class="g-hub">
-        <div class="nd nd--fat"><b>單一全能代理（LLM）</b><span>規劃、選工具、寫碼、驗證……每一步都靠同一個 context 重新推理</span></div>
-        <div class="g-spokes">
-          <div class="g-spoke">設定 schema</div>
-          <div class="g-spoke">程式碼生成</div>
-          <div class="g-spoke">管線路由</div>
-          <div class="g-spoke">驗證規則</div>
-          <div class="g-spoke">資料源慣例</div>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>四層巢狀</b> — 誰包住誰，誰看不到誰</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>Orchestrator 編排器</b><small>1,300 行；擁有順序與可靠性檢查</small><span class="pi">零領域工作</span></div>
+          <div class="ring">
+            <div class="ring-lb"><b>Workflow template 工作流模板</b><small>確定性狀態機：階段與順序寫死，壓縮 LLM 決策空間</small></div>
+            <div class="ring">
+              <div class="ring-lb"><b>Isolated subagent 專家代理</b><small>14 個，結構標準化；第 6 步唯一的 LLM 推理發生在此</small></div>
+              <div class="ring ring--core">
+                <div class="ring-lb"><b>Knowledge file 知識檔</b><small>只有該領域那一份，看不到全局</small></div>
+                <div class="ring-inner"><b>25+ 份知識檔</b>按工作流領域組織，subagent 執行時才載入，不埋在編排器裡</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="g-loop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4"/></svg>示意：所有領域判斷共用同一個龐大 context 反覆推理——錯誤沿下游擴散，錯一處、處處錯</div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>知識檔更新</b>→ 下一個 session 自動生效，編排器零改動</span></div>
+      <p class="x-src">本站重繪；原文另附架構圖與結果表；本站改繪成巢狀圖，此巢狀依原文「編排器／工作流模板／subagent／知識檔」四段敘述整理，包圍關係為編輯推論。</p>
     </figure>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">解法：把中央變薄，把聰明留給專家</h2>
-    <p class="g-p">Thin orchestrator 的分工原則只有一句話：<strong>中央只擁有「順序」與「可靠性檢查」，所有領域判斷交給專家。</strong>每個請求都走同一套<strong>固定 7 步協定</strong>——其中 6 步是寫死的確定性程式碼，唯一動用 LLM 的是第 6 步，而且被關在<strong>隔離子代理</strong>裡：它只載入自己那個領域的知識檔，看不到全局，所以幻覺既不容易發生，發生了也只燒在自己艙位裡。</p>
+    <h2 class="g-h2">問題：一顆大腦知道太多</h2>
+    <p class="g-p">場景是 Meta 推薦系統的資料欄位 onboarding，管線是 config-as-code：Python 設定驅動 C++ 程式碼生成，再餵給資料處理服務與分析系統。</p>
+    <p class="g-p">一個欄位要跨 <strong>3 個程式碼庫、3 種語言、最多 6 個管線階段</strong>，而且各階段必須同步。</p>
+    <p class="g-p">原文觀察：厚編排器不會一開始就壞，它是在規模、多步驟、異質子系統同時上場時才失效——正好是你最需要它的時候。</p>
+    <p class="g-p">第一版和大多數團隊一樣：養一個全能代理，塞進設定 schema、程式碼生成規則、管線路由、驗證要求，外加 <strong>10+ 個資料源</strong>的 population 慣例。</p>
+    <p class="g-p">Demo 很漂亮，上線開始幻覺。知識過了某個 context 門檻後，<em>多給反而變差</em>：它把 A 子系統的欄位命名慣例套到 B，或用甲資料源的生成模式去灌乙——原文稱「概念交叉污染」。</p>
+    <p class="g-p">折衷版也量過：每個任務由工程師手工打造 system prompt 可到 70–80%，拿掉這層呵護掉到 10–20%。原文的結論：<em>這不是 prompt 問題，是架構問題</em>。</p>
 
-    <figure class="g-dg">
-      <figcaption class="g-dg-h">圖解 B · 改之後 — <b>薄編排器</b>（固定協定＋專家代理池）</figcaption>
-      <div class="nd"><b>請求進場</b><span>路由器只做兩件事：排順序、做可靠性檢查（零領域工作）</span></div>
-      <div class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></div>
-      <div class="g-proto">
-        <div class="g-step">1</div><div class="g-step">2</div><div class="g-step">3</div><div class="g-step">4</div><div class="g-step">5</div><div class="g-step g-step--llm">6<small>LLM 推理</small></div><div class="g-step">7</div>
+    <div class="x-scroll" style="margin-top:16px">
+      <table class="x-tbl">
+        <thead><tr><th>來源</th><th>設定</th><th class="n">成功率／準確率</th></tr></thead>
+        <tbody>
+          <tr><td data-l="來源">Meta 自家</td><td data-l="設定">單代理，每個任務手工打造 system prompt</td><td class="n" data-l="數字">70–80%</td></tr>
+          <tr><td data-l="來源">Meta 自家</td><td data-l="設定">單代理，拿掉手工 prompt</td><td class="n" data-l="數字">10–20%</td></tr>
+          <tr><td data-l="來源">Mount Sinai<br><small>預印本</small></td><td data-l="設定">多代理編排，80 任務批次</td><td class="n win" data-l="數字">65.3%</td></tr>
+          <tr><td data-l="來源">Mount Sinai<br><small>預印本</small></td><td data-l="設定">單代理，同一批次</td><td class="n" data-l="數字">16.6%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="x-src">全頁成效數字（1,300 行、20+ 工作流、&lt;1 小時、約 2/3 變更免人工）皆為 Meta 自報，無第三方驗證。Mount Sinai 數據出自 Windreich 人工智慧與人類健康學系預印本，未經同儕審查。</p>
+    <p class="g-p">同一份預印本另報：多代理的 token 用量最多省 65 倍，作者歸因於任務隔離、避免 context 干擾。</p>
+    <p class="g-p">預印本把機制講白了：多代理贏在任務隔離，贏在沒有共用的 context。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">協定：7 步裡只有 1 步是 LLM</h2>
+    <p class="g-p">編排器的職責只有兩項：順序、可靠性檢查。它自己也「零領域工作」。</p>
+    <p class="g-p">工作流模板是確定性狀態機，把「哪些階段、什麼順序」寫死，只留階段內的專業判斷給 LLM。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>固定 7 步</b> — 同一套協定，每個請求都走完</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>步驟 1–5 · 確定性</b><small>讀指示檔 → 查重 → 蒐集欄位 → 自動推斷 → 可靠性閘門</small></div><span class="ar">→</span>
+        <div class="fn hot"><b>步驟 6 · 唯一的 LLM</b><small>委派隔離 subagent；只載入自己那個領域的知識檔</small></div><span class="ar">→</span>
+        <div class="fn"><b>步驟 7 · 確定性</b><small>結果處理</small></div>
       </div>
-      <p class="g-stepnames">原文七步：讀指示檔 → 查重 → 蒐集欄位 → 自動推斷 → 可靠性閘門 → <b>帶完整 context 委派</b> → 結果處理</p>
-      <div class="g-legend">
-        <p class="det"><b>步驟 1–5、7＝確定性程式碼</b>：讀指示檔、查重、蒐集欄位、自動推斷、可靠性閘門、結果處理——不靠 LLM，所以幾乎沒有幻覺空間。</p>
-        <p class="llm"><b>第 6 步＝唯一的 LLM 推理</b>：發生在隔離子代理內，只載入該領域的知識檔；創造力在這裡，風險也被隔離在這裡。</p>
-      </div>
-      <div class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></div>
-      <div class="g-lanes">
-        <div class="g-lane"><b>工作流模板 A（確定性狀態機）</b><span class="seq"><span class="g-agent">3</span><span class="g-sep">→</span><span class="g-agent">7</span><span class="g-sep">→</span><span class="g-agent">12</span></span><small>步驟順序寫死在模板裡，約束 LLM 的決策空間；示意。</small></div>
-        <div class="g-lane"><b>工作流模板 B（另一個用例）</b><span class="seq"><span class="g-agent">5</span><span class="g-sep">→</span><span class="g-agent">2</span><span class="g-sep">→</span><span class="g-agent">9</span></span><small>新用例＝新模板重排同一池代理，零新代理程式碼；示意。</small></div>
-      </div>
-      <div class="g-pool">
-        <b>專家代理池 ×14 — 每個只做窄任務、結構標準化（第 15 個長得跟第 1 個一樣）</b>
-        <div class="chips"><span class="g-agent">1</span><span class="g-agent">2</span><span class="g-agent">3</span><span class="g-agent">4</span><span class="g-agent">5</span><span class="g-agent">6</span><span class="g-agent">7</span><span class="g-agent">8</span><span class="g-agent">9</span><span class="g-agent">10</span><span class="g-agent">11</span><span class="g-agent">12</span><span class="g-agent">13</span><span class="g-agent">14</span></div>
-      </div>
-      <div class="g-know">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
-        <p><b>知識檔 25+ 份，執行時按需載入</b>：不埋在編排器裡；更新後下一個 session 自動用新版，不用改編排器，同一份知識檔還能跨平台重用。</p>
-      </div>
+      <p class="x-src">本站重繪；原文寫明步驟 1–5 與 7 為確定性、第 6 步在隔離 subagent 內做 LLM 推理，步驟名依原文協定整理，未逐歩附數據。</p>
     </figure>
+    <p class="g-p">委派時 context 已由模板備妥，subagent 不必自己翻找，只在自己那份知識裡判斷。</p>
+    <p class="g-p">幻覺因此不容易發生；真的發生了，也只壞在自己艙位，不會沿管線擴散成「派錯代理、抓錯欄位、跳過檢查」。</p>
+    <p class="g-p">14 個 subagent 共用同一套標準結構——<em>第 15 個長得跟第 1 個一樣</em>，新增代理是套模板，不是綠地工程。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">逐步拆解（本站整理，非原文 7 步協定）</h2>
-    <div class="g-steps">
-      <div class="g-steprow"><div class="n">01<small>分派</small></div><div><h3>路由器的主要工作之一：把請求放進正確的工作流</h3><p>判斷「這件事屬於哪條流程」用確定性規則完成；之後每一步怎麼走，都由工作流模板（狀態機）說了算，LLM 不參與路線規劃。</p></div></div>
-      <div class="g-steprow"><div class="n">02<small>約束</small></div><div><h3>工作流模板＝確定性狀態機，先圈住決策空間</h3><p>「要做哪些階段、按什麼順序」與「每階段怎麼做」被刻意分開：順序寫死在模板，把 LLM 的自由度壓到只剩階段內的專業判斷。</p></div></div>
-      <div class="g-steprow"><div class="n">03<small>專注</small></div><div><h3>14 個專家代理各管一類窄任務</h3><p>結構標準化，新增第 15 個代理是「套模板」而非重新發明。代理之間看不見彼此的 context，交叉污染失去傳播路徑。</p></div></div>
-      <div class="g-steprow"><div class="n">04<small>餵養</small></div><div><h3>知識以檔案外掛，執行時才載入</h3><p>25+ 份知識檔按領域組織；改檔案後下一個 session 全體生效、無需動程式，同一份檔案服務多個平台實作——知識運維從「改 prompt」變成「改文件」。</p></div></div>
-      <div class="g-steprow"><div class="n">05<small>擴展</small></div><div><h3>規模化的成本＝新增模板與知識檔</h3><p>支援管線遷移這種全新用例時，團隊沒寫任何新代理，只寫了一份新模板重排既有代理。擴展是組合，不是重建。</p></div></div>
-    </div>
-  </section>
+    <h2 class="g-h2">擴展：新用例寫模板，不寫代理</h2>
+    <p class="g-p">要支援 pipeline migration 這個全新用例時，團隊沒寫任何新代理，只寫了一份新模板，把既有代理換個順序排。</p>
+    <p class="g-p">知識檔按工作流領域組織，執行時才載入；改檔案後下一個 session 自動用新版，同一份還能服務多個平台實作。</p>
+    <p class="g-p">新欄位的設定準備：人工 3–4 天、早期設定驅動系統約 1 天、薄編排器壓到一小時內。</p>
 
-  <section class="g-sec">
-    <h2 class="g-h2">五個關鍵詞</h2>
-    <div class="g-glos">
-      <div class="g-card"><b>Orchestrator 編排器</b><span class="w">指揮流程的中央層：決定先做什麼、後做什麼、結果怎麼交接。</span><span class="why">關鍵在讓它「薄」——越聰明越危險。</span></div>
-      <div class="g-card"><b>Router 路由</b><span class="w">編排器的分派動作：把請求放進正確的工作流。</span><span class="why">用確定性規則做，不交給 LLM 猜。</span></div>
-      <div class="g-card"><b>工作流模板</b><span class="w">寫死步驟順序的狀態機，是流程的「樂譜」。</span><span class="why">新用例寫新譜，不必買新樂器（代理）。</span></div>
-      <div class="g-card"><b>專家代理 Specialist</b><span class="w">只做一類任務的小代理，context 互相隔離。</span><span class="why">錯誤被關在單一艙位，不會連環爆。</span></div>
-      <div class="g-card"><b>知識檔</b><span class="w">按領域外掛的知識文件，執行時載入。</span><span class="why">下一個 session 自動生效，知識運維像改 wiki。</span></div>
+    <div class="x-scroll" style="margin-top:16px">
+      <table class="x-tbl">
+        <thead><tr><th>項目</th><th class="n">結果</th><th>原文限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="項目">系統變更</td><td class="n win" data-l="結果">約 2/3</td><td data-l="限定語">不需重大人工修改即直接生效；代價是拿 generality 換深度領域知識，刻意取捨</td></tr>
+          <tr><td data-l="項目">新用例</td><td class="n win" data-l="結果">0 行新代理</td><td data-l="限定語">支援 pipeline migration 這種全新用例時，只寫一支新模板重排既有 14 個代理，即達 full production capability</td></tr>
+          <tr><td data-l="項目">新 subagent</td><td class="n" data-l="結果">套模板</td><td data-l="限定語">結構標準化，第 15 個與第 1 個結構相同</td></tr>
+        </tbody>
+      </table>
     </div>
-  </section>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="x-src">同前，成效為 Meta 自報。</p>
 
-  <section class="g-sec">
-    <h2 class="g-h2">成效</h2>
-    <div class="g-eco">
-      <div class="g-eff"><b>新欄位設定準備時間</b>
-        <div class="flow"><i>人工</i> 3–4 天 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg> <i>設定驅動</i> 約 1 天 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg> <span class="hit">&lt;1 小時</span></div>
-        <p>跨 3 個程式碼庫、3 種語言、最多 6 個管線階段的新欄位設定準備，壓縮到一小時內完成。</p>
-      </div>
-      <div class="g-eff"><b>變更免人工比例</b>
-        <div class="flow"><span class="hit">約 2/3</span> <i>的系統變更</i></div>
-        <p>不需重大人工修改即直接生效；代價是放棄「通用大腦」，換取深度領域知識——刻意為之的架構取捨。</p>
-      </div>
-    </div>
+    <p class="g-p">可靠性檢查留在中央：路由、欄位蒐集、閘門都在確定性程式碼裡，模型沒有機會亂指路。</p>
+    <p class="g-p">取捨寫得很直白：<em>編排器是通用的，subagent 是專家</em>。通用性換深度知識，是刻意的架構選擇。</p>
+    <p class="g-p">下一步是把架構擴到新管線領域的更多資料欄位；compositional thesis 的預測是：規模化＝加模板與知識檔，不是重建代理。</p>
+    <p class="g-p">也想要系統從生產使用中持續改進：自動回饋迴圈找失敗模式、提出對 subagent 知識的針對性修改，但任何變更仍由人審核把關。</p>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">帶走三件事</h2>
-    <div class="g-take">
-      <p><b>可靠性是架構問題。</b>無客製 prompt 的單代理成功率僅 10–20%；改架構後，原文的量化成果是約 2/3 變更免重大人工修改——先看結構，再調 prompt。</p>
-      <p><b>讓 LLM 只做「只有 LLM 會做的事」。</b>排序、檢查、交接交給確定性程式碼；創造力關在隔離艙裡發揮。</p>
-      <p><b>擴展靠組合，不靠重建。</b>薄中央＋專家池＋外掛知識檔：新增用例＝新模板，知識更新＝改文件。</p>
+    <div class="x-take">
+      <p><b>可靠性是架構問題。</b>單代理拿掉手工 prompt 只剩 10–20%。</p>
+      <p><b>讓 LLM 只做只有 LLM 會做的事。</b>順序與檢查寫成程式碼。</p>
+      <p><b>擴展靠組合。</b>新用例＝新模板，知識更新＝改檔案。</p>
     </div>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">同一主題的其他館藏</h2>
     <div class="g-rel">
-      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：一行 system prompt 的退步，該在評分表上現形</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">法律工作的代理式作業系統：NDA 初篩如何從吃掉約 20% 產能降到 1% 以下</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司會坐哪裡：地板下、桌邊、中間那一層——三種組織圖與四個未定的大問題</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：平均 2.75 的兩種病，只有逐案分得出來</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">Legora 法律代理：NDA 初篩從吃掉約 20% 產能到 1% 以下</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司坐哪裡：三種組織圖，四個未定的大問題</a><span class="d">2026-10-28</span></div>
     </div>
   </section>
 
-  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據出自原文，示意圖與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
 </main>
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
-  <p class="foot-gen">館藏導讀 · 建置於 2026-10-22 (UTC+8)</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-29 (UTC+8)</p>
 </div></footer>
 <script src="../assets/site.js" defer></script>
 </body>

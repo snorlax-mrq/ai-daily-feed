@@ -35,67 +35,91 @@
   </header>
 
   <div class="g-stats">
-    <div class="g-stat"><b>9 月 → GA</b><span>Chat 與 Cowork 9 月先合給 Pro/Max，同一體驗現已 GA 到 Claude Enterprise</span></div>
-    <div class="g-stat"><b>一個對話</b><span>從快問快答無縫升級成整個專案：要跑程式、碰檔案時，Claude 接手到 Anthropic 管理的雲端環境</span></div>
-    <div class="g-stat"><b>獨立 VM</b><span>每個 agentic 工作階段跑在自己的隔離 VM，網路 egress 對 Enterprise 預設關閉，連接器憑證留在沙盒外</span></div>
-    <div class="g-stat"><b>-40%／-30%</b><span>以用量計費：Opus 5.5 在典型工作負載下比 Opus 5 省 40%；Sonnet 5.5 對多數工作最多省 30%</span></div>
-    <div class="g-stat"><b>4 種用量控制</b><span>Efficient mode（鎖定 Sonnet＋Haiku）、model entitlements、spend limits 等，交給 admin 分角色管理</span></div>
+    <div class="g-stat"><b>9 月 → 現在</b><span>Pro／Max 先合，同一體驗現 GA 到 Enterprise</span></div>
+    <div class="g-stat"><b>一個對話</b><span>快問快答可直接升級成雲端專案</span></div>
+    <div class="g-stat"><b>4 種</b><span>admin 的用量控制（含新的 Efficient mode）</span></div>
+    <div class="g-stat"><b>−40%／−30%</b><span>Opus 5.5 對 5、Sonnet 5.5 對 5 的執行成本</span></div>
   </div>
 
   <section class="g-sec">
-    <div class="g-tldr">
-      <h2 class="g-tldr-h">30 秒版本</h2>
-      <p class="one">同一份 Claude 在 web、桌面與手機合而為一：對話從 chat 起步，簡單問題照樣快答；當任務需要跑程式碼或處理檔案，Claude 接手到 Anthropic 管理的雲端環境執行 agentic 工作，闔上筆電也繼續跑，完成的文件、分析或簡報回到對話裡。這體驗 9 月先給 Pro/Max，現已 GA 到 Claude Enterprise（採零資料保留、HIPAA-ready 配置或客戶自管加密金鑰的組織維持現有配置）：chats、projects、connectors、skills、plugins 直接沿用；已核准 Claude chat 的組織，SSO 與 Compliance API 照舊；雲端工作階段各自隔離 VM、egress 預設關閉；定價維持用量計價，新增 Efficient mode 等四種用量控制交給 admin。</p>
-      <ul>
-        <li>使用者不必再選工具：chat 與 agentic 工作在同一條對話軸上切換，跨 web／桌面／手機接手。</li>
-        <li>企業買單的是可控性：角色存取、SSO、Compliance API、隔離 VM、egress 預設關、憑證在沙盒外、預設不訓練。</li>
-        <li>Agentic 工作比聊天吃 token，官方以「更便宜的模型＋四種 admin 開關」回應成本治理。</li>
-      </ul>
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">產品改動很小，組織改動很大：<strong>開工前不再選工具，選項變成誰能用哪個模型、花多少。</strong></p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一條對話，兩種引擎</b> — 何時換手（本站重繪）</figcaption>
+      <div class="x-dec">
+        <p class="q">使用者在同一條對話裡丟進一件事</p>
+        <div class="brs">
+          <div class="br"><span class="tag">問一句就好</span><b>chat 直接答</b><small>簡單問題照樣快答，不進雲端</small></div>
+          <div class="br"><span class="tag">要跑 code／碰檔案</span><b>轉入雲端 session</b><small>Anthropic 管理的環境；闔上筆電也繼續跑</small></div>
+          <div class="br"><span class="tag">跑完了</span><b>結果回到對話</b><small>文件、分析、簡報交回；可跨 web／桌面／手機接手</small></div>
+          <div class="br"><span class="tag">要你決定</span><b>推播通知</b><small>有結果或需輸入時通知（Carvana 的用法）</small></div>
+        </div>
+      </div>
+      <p class="x-src">本站重繪，原文敘述分散於兩段、未給流程圖。原文未寫「何時轉雲端」的判斷由誰決定。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">搬家的成本：幾乎沒有</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>既有資產</th><th>合一後</th><th>原文依據</th></tr></thead>
+        <tbody>
+          <tr><td data-l="資產">chats、projects、connectors、skills、plugins</td><td data-l="狀態"><b>直接沿用</b></td><td data-l="依據">原文列為 carry over</td></tr>
+          <tr><td data-l="資產">SSO、Compliance API</td><td data-l="狀態">照舊</td><td data-l="依據">已核准 chat 的組織沿用既有控制</td></tr>
+          <tr><td data-l="資產">連接器／skills／MCP</td><td data-l="狀態">客戶引述「沒有壞任何東西」</td><td data-l="依據">單一客戶的轉換經驗，非全體保證</td></tr>
+          <tr><td data-l="資產">資料處理</td><td data-l="狀態">傳輸與靜態加密；預設不用於訓練</td><td data-l="依據">Anthropic 自述</td></tr>
+        </tbody>
+      </table>
     </div>
+    <p class="x-src">表為本站整理。原文另提：採零資料保留、HIPAA-ready 配置或自管金鑰的組織維持現有配置。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">從「該用哪個 Claude」到開口就好：統一體驗怎麼運作</h2>
-    <p class="g-p">這個問題原本是真的存在：Quantium 說，客戶不斷問他們 <em>「which Claude should I use」</em>、<em>「which one does what」</em>。統一之後，團隊成員開工前不再先做選擇題：對話以 chat 開始，簡單問題照樣快答；需要跑程式碼或處理檔案時，Claude <strong>在同一條對話裡轉入雲端</strong>，完成後把文件、分析或簡報交回。因為工作跑在雲端，<em>闔上筆電也不中斷</em>，可以在 web、桌面或手機接手——Carvana 的用法正是如此：桌機起頭、手機接續，Claude 有結果或需要輸入時推播通知。</p>
-    <p class="g-p">遷移成本被刻意壓低：chats、projects、connectors、skills、plugins <strong>全部沿用</strong>；有客戶引述整個過程 seamless，<em>connectors、skills、MCP 沒有壞任何東西</em>。成效引述裡最具體的一則：有組織用<em>不到十分鐘的提示</em>，讓 Claude 讀完整疊郡、州與聯邦預算及公開會議文件、畫出資金流之間的連接，產出一份<em>原本要花團隊數週</em>的綜合報告——整趟過程使用者不必決定哪一步該用哪個工具，報告將影響其策略規劃與預算流程。</p>
-  </section>
-
-  <section class="g-sec">
-    <h2 class="g-h2">企業級安全：隔離 VM、egress 預設關、憑證在沙盒外</h2>
-    <p class="g-p">對已核准 Claude chat 的組織，這次合一建立在既有企業控制上：<strong>SSO</strong> 與 <strong>Compliance API</strong> 照用；Anthropic 持續在傳輸與靜態時加密資料，且<em>預設不用於模型訓練</em>。</p>
-    <p class="g-p">Agentic 工作跑在雲端工作階段（cloud sessions），<strong>每個階段一台隔離 VM</strong>，網路 egress 對 Claude Enterprise <em>預設關閉</em>，連接器憑證留在沙盒之外。因為工作集中在 Anthropic 管理的同一環境，安全團隊能取得<em>中央可視性與控制</em>；完整架構見 Anthropic Trust Center 的安全最佳實務指南。</p>
-    <div class="g-know">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg>
-      <p><b>為什麼「集中在一家管理的環境」反而是賣點。</b>原文的邏輯：正因為 agentic 工作全部發生在同一個由 Anthropic 管理的環境裡，企業安全團隊才有一個單點可以建立可視性與控制——散落在各端點裡跑的 agent，治理成本反而更高（編輯推論）。</p>
+    <h2 class="g-h2">真正的新東西：把 agentic 的帳單關起來</h2>
+    <p class="g-p">同一段原文承認：<strong>agentic 工作比快問快答吃更多 token</strong>，所以成本治理才是這次的實質改動。</p>
+    <div class="x-grid">
+      <div class="c"><b><i>1</i>Efficient mode</b><small>新設定：把統一體驗鎖在 Sonnet 與 Haiku</small></div>
+      <div class="c"><b><i>2</i>Model entitlements</b><small>逐角色指定能用哪些模型</small></div>
+      <div class="c"><b><i>3</i>Spend limits</b><small>組織／群組／成員三層皆可設上限</small></div>
+      <div class="c"><b><i>4</i>Pooled group budgets</b><small>群組共用一筆月額度</small></div>
     </div>
+    <p class="x-src">四項並列、無先後，原文同段連續列出（本站整理）。另有一項與用量分開敘述的「依角色控制雲端工作階段存取」，屬存取控制而非用量控制。</p>
+    <p class="g-p">定價維持用量計價。模型本身也更便宜：Opus 5.5 在<strong>典型工作負載</strong>下比 Opus 5 省 40%，Sonnet 5.5 對<strong>多數工作</strong>最多省 30%（皆為 Anthropic 自述）。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">用量與成本：Efficient mode 與四種管理控制</h2>
-    <p class="g-p">定價維持<strong>用量計價</strong>。官方同時給了降本數字：以用量計費，<strong>Claude Opus 5.5 在典型工作負載下比 Opus 5 便宜 40%</strong>；<strong>Claude Sonnet 5.5 對多數工作最多便宜 30%</strong>。但硬幣的另一面也被直白說出：<em>依任務不同，agentic 工作的 token 消耗可能高於一次快問快答</em>——所以官方給 admins <strong>四種控制</strong>來管理這類用量。</p>
-    <p class="g-p">原文列出四種：<strong>Efficient mode</strong>（新設定，讓統一體驗維持在 Sonnet 與 Haiku 模型上）、<strong>model entitlements</strong>（按角色設定各角色可用哪些模型）、<strong>spend limits</strong>（套用在組織、群組與成員三個層級的花費上限）、<strong>pooled group budgets</strong>（群組共用一筆每月額度）。</p>
+    <h2 class="g-h2">隔離怎麼做</h2>
+    <ul class="g-p" style="margin-left:0;padding-left:20px">
+      <li>每個雲端工作階段跑在<strong>自己的隔離 VM</strong>，不是共用環境。</li>
+      <li>Enterprise 的<strong>網路 egress 預設關閉</strong>。</li>
+      <li>連接器憑證<strong>留在沙盒之外</strong>，不隨工作階段進去。</li>
+    </ul>
+    <p class="g-p">因為環境只有一個、由 Anthropic 管理，安全團隊拿到的是<strong>集中可視性與控制</strong>——原文指向 Trust Center 的 security best practices 指南說明完整架構。</p>
+    <p class="g-p">客戶引述最值得看的一則是規模：某組織用<strong>不到十分鐘的提示</strong>，讓 Claude 讀完郡、州、聯邦預算與公開會議文件，畫出資金流的連接，產出一份<strong>原本要數週</strong>的報告（單一客戶自述）。</p>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">帶走三件事</h2>
-    <div class="g-take">
-      <p><b>介面的終點是取消選擇題。</b>統一把「何時用 chat、何時用 agent」的判斷從使用者手上拿走——你描述意圖，切換工具變成模型與平台的事；Quantium 聽膩的那兩個問題，正是這類產品要消滅的摩擦。</p>
-      <p><b>企業採用的門票是治理面。</b>公告用同等篇幅講功能與控制：角色存取、SSO、Compliance API、隔離 VM、egress 預設關閉——雲端 agent 得先「可管」，才敢「可用」。</p>
-      <p><b>成本已是 agent 產品的一級問題。</b>Agentic 工作天然比聊天吃 token；官方的回應是兩端同時做：模型更便宜（-40%／-30%）＋admin 端四種開關——用量治理是內建功能，不是事後補丁。</p>
+    <div class="x-take">
+      <p><b>選工具的問題消失了，選模型與預算的問題出現。</b>產品收斂，治理反而更細。</p>
+      <p><b>「闔上筆電也繼續跑」是這次最實在的差異。</b>它把 agent 從桌面程式變成佇列服務。</p>
+      <p><b>−40%／−30% 是執行成本、不是售價。</b>用量計價下，省下的取決於你的工作型態。</p>
     </div>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">同一主題的其他館藏</h2>
     <div class="g-rel">
-      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：一行 system prompt 的退步，該在評分表上現形</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">法律工作的代理式作業系統：NDA 初篩如何從吃掉約 20% 產能降到 1% 以下</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司會坐哪裡：地板下、桌邊、中間那一層——三種組織圖與四個未定的大問題</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：平均 2.75 的兩種病，只有逐案分得出來</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">Legora 法律代理：NDA 初篩從吃掉約 20% 產能到 1% 以下</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司坐哪裡：三種組織圖，四個未定的大問題</a><span class="d">2026-10-28</span></div>
     </div>
   </section>
 
-  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據與做法均出自原文，小標與分節為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
 </main>
+
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
   <p class="foot-gen">館藏導讀 · 建置於 2026-10-27 (UTC+8)</p>

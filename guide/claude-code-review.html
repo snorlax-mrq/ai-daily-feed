@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>導讀 — Claude Code 團隊的 code review · AI 每日動態檔案</title>
-<meta name="description" content="導讀〈How the Claude Code team does code review〉：Claude 寫了 Claude Code 九成程式碼，團隊卻把 PR 合併量翻倍、revert 率降逾四成——六層檢查、人類時間是雙側成本、審查必須收斂、留給人類的四件事。">
+<meta name="description" content="導讀〈How the Claude Code team does code review〉：六層檢查＋一道 rollback，只有風險分級批准由人決定；6–9 月合併 PR 數 2 倍以上、需 revert 的占比降逾 40%，量測人工時間、以 revert 與事故率當護欄。">
 <script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
 <link rel="stylesheet" href="../assets/archive.css">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -16,7 +16,7 @@
   <nav class="bar-nav"><a href="../topics.html?t=%E4%BA%BA%E7%89%A9%E8%A7%80%E9%BB%9E" class="day-catalog">人物觀點</a><a href="../index.html" class="day-catalog">目錄</a></nav>
   <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
   <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
-    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
     <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
   </button>
 </div></header>
@@ -25,10 +25,10 @@
   <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E4%BA%BA%E7%89%A9%E8%A7%80%E9%BB%9E">人物觀點</a> › 導讀</p>
   <header class="g-head">
     <div class="day-title-row">
-      <h1>Claude 寫九成程式碼之後：Claude Code 團隊把 code review 改造成六層過濾器</h1>
+      <h1>六層過濾＋一道回滾：Claude Code 團隊怎麼審自己寫的碼</h1>
       <span class="stamp">導讀</span>
     </div>
-    <p class="g-orig">原文：X Article〈How the Claude Code team does code review〉——Claude Code 團隊自述其審查流程</p>
+    <p class="g-orig">原文：X Article〈How the Claude Code team does code review〉——Claude Code 團隊第一人稱的流程自述，由 @addyosmani 帳號發布</p>
     <p class="g-meta">
       <span>X @addyosmani</span>·<span>2026-10-26 發布</span>·<span>2026-10-28 收錄</span>·
       <a href="https://x.com/i/article/2114435487905808384" target="_blank" rel="noopener">閱讀原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
@@ -36,98 +36,103 @@
   </header>
 
   <div class="g-stats">
-    <div class="g-stat"><b>90%</b><span>Claude Code 的程式碼由 Claude 撰寫的比例（團隊先前說法）</span></div>
-    <div class="g-stat"><b>2 倍／−40%</b><span>6–9 月 PR 合併量翻倍，需 revert 的 PR 占比下降逾四成</span></div>
-    <div class="g-stat"><b>6 層</b><span>檢查管線＋最後一道 rollback 防線</span></div>
+    <div class="g-stat"><b>2 倍以上</b><span>6–9 月合併 PR 數；需 revert 的 PR 占比降逾 40%（團隊自報）</span></div>
+    <div class="g-stat"><b>6 層＋1</b><span>檢查層；只有風險分級批准由人決定，最後一層是 rollback</span></div>
     <div class="g-stat"><b>16%→54%</b><span>研究預覽以來，獲實質審查意見的內部 PR 占比</span></div>
-    <div class="g-stat"><b>232 萬</b><span>推文瀏覽（發文 2 天、X 平台數據）、3.3 萬書籤</span></div>
+    <div class="g-stat"><b>約 90%</b><span>Claude Code 的程式碼由 Claude 撰寫（團隊先前說法）</span></div>
   </div>
 
   <section class="g-sec">
-    <div class="g-tldr">
-      <h2 class="g-tldr-h">30 秒版本</h2>
-      <p class="one">Claude Code 團隊自述：當 Claude 寫掉九成程式碼，逐行人工審查已不可能，他們的答案是<strong>不停掉 code review，而是自動化絕大多數閱讀</strong>，把人的注意力留給高風險判斷。成效：6–9 月 PR 合併量翻倍、revert 占比降逾四成；目標是大多數 PR 在「最多一個人參與（可以是作者本人）」下合併，且 revert 與事故率不升。整套系統的兩個支點：<em>人類時間是雙側成本（審查時間＋壞碼修復時間），以及審查流程必須收斂（否則 agent 作者與 agent 審查者會無限循環）。</em></p>
-      <ul>
-        <li>六層檢查：PR 前驗證 → AI 審查 → 可擋合併的安全審查 → 可擋的 CI → 風險分級的人工批准 → merge queue／功能旗標分階段上線，最後還有 rollback。</li>
-        <li>量測哲學：「有人讀過這段程式碼嗎」是壞指標；正確的問題是「這個變更可能出什麼錯，哪種檢查（自動或人工）是對的攔截點」。</li>
-        <li>留給人類的四件事（原文列五項，末兩項合併）：要不要做這個功能、審計危險代碼、架構審查、驗證證明與承擔責任——每個變更都有人回答。</li>
-      </ul>
-    </div>
-  </section>
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">Claude 寫掉約九成程式碼之後，<strong>Claude Code 團隊沒有停掉 code review</strong>，而是把大部分「閱讀」自動化，只留一個風險分級的人類批准點。</p>
 
-  <section class="g-sec">
-    <h2 class="g-h2">目標重寫：code review 不是「事後檢查」，是持續的拼字檢查</h2>
-    <p class="g-p">背景數字先立起來：他們的 monorepo 從<strong>五月每天約 2,500 個變更，到九月超過 30,000 個</strong>；Claude Code 雖不在 monorepo，壓力同樣巨大。在這種速度下，逐行人工審查「越來越難，甚至不可能」。團隊把 code review 的目的拆成兩個：①出貨前抓到並修正 bug；②建立對 codebase 的共同理解——本文主要講前者，後者放在「團隊脈絡」一節。</p>
-    <p class="g-p">核心觀念轉換有兩個。第一，<strong>「有沒有人讀過這段程式碼」是精確度很低的代理指標</strong>——真正的問題是「這個變更可能出什麼錯，哪種檢查（自動或人工）才是對的攔截點」。第二，時機變了：傳統審查是寫完、開 PR、等人看的「事後檢查」；他們把它織進工作流，<em>像寫作時持續跑的拼字檢查</em>——大多數變更在人類介入前，已經被 Claude 審過並修正至少一輪，常規 bug 早就被抓掉，人類注意力留給高層次的判斷。</p>
-
-    <p class="g-p">還有一個容易被忽略的算術：<strong>人類時間是雙側成本</strong>——不只算審查花掉的時間，也算修掉壞碼引入 bug 的時間。只壓前者不壓後者，人類時間根本沒省，只是搬家。所以他們用「每 PR 的中位數人工批准數（含 p95）」「人工留言數」「PR 等人多久」量測節省，以 <strong>revert 率與事故率當護欄</strong>（量測的是人類時間，護欄是品質指標——兩者不能混）：這兩個若上升，代表時間只是被搬家，不是被省下。</p>
-  </section>
-
-  <section class="g-sec">
-    <h2 class="g-h2">六層檢查：從 PR 前驗證到 merge queue 與旗標，再加上 rollback</h2>
     <figure class="g-fig">
-      <img src="../assets/guide/claude-code-review/01.webp" alt="流程圖：PR 前驗證、Required CI、Claude code review、安全審查皆為自動（✓）；風險分級批准由人決定（◇）；之後是 merge queue、旗標後內部先用、分階段上線，最後是觀察、fix-forward 或 rollback（recovery）" width="1200" height="1083" loading="lazy" decoding="async">
-      <figcaption>一個變更的完整生命週期：PR 前驗證、CI、Claude code review、安全審查、<strong>風險分級批准（唯一由人決定，其餘自動）</strong>、merge queue、旗標後先用、分階段上線，最後是 rollback。<span class="g-fig-src">圖／Claude Code 團隊（X @addyosmani），<a href="https://x.com/addyosmani/status/2114604912520921136" target="_blank" rel="noopener">原文</a></span></figcaption>
+      <a class="fig-zoom" href="../assets/guide/claude-code-review/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/claude-code-review/01.webp" alt="流程圖：依序為 PR 前驗證、Required CI、Claude code review、安全審查（皆標勾號，自動）、風險分級批准（標菱形，由人依風險決定）、merge queue、旗標後內部先用、分階段上線，最後是觀察／fix-forward／rollback（標 recovery）；下方圖例說明三種符號" width="1200" height="1083" loading="lazy" decoding="async"></a>
+      <figcaption>關卡的形狀：九個節點只有一個由人決定（◆ 風險分級批准），其餘全自動（✓），最底下才是 recovery。原文的「六層」把 merge queue、旗標後先用、分階段上線併成一層。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／Claude Code 團隊（X @addyosmani），<a href="https://x.com/addyosmani/status/2114604912520921136" target="_blank" rel="noopener">原文</a></span></figcaption>
     </figure>
-    <p class="g-p"><strong>第 1 層・PR 前驗證（大部分審查發生在這裡）</strong>：要求 Claude 做出「可執行的東西」——跑測試、跑 build、把截圖跟設計比對，不是說「做完了」而是<strong>展示結果</strong>；再用一個 fresh-context 的子代理審查 diff。內部技能如 bug hunting、diff 縮減、端到端驗證、UI 對設計規範檢查。Claude Code 創造者 Boris Cherny 的估計：<em>給 Claude 配上驗證流程，產出品質大約提升到原來的兩到三倍</em>。反覆出現的問題則修在源頭——技能本身、lint 規則、或更新 <strong>CLAUDE.md</strong>（專案說明檔，每次審查都會載入，所以保持簡短）與 <strong>REVIEW.md</strong>（code owner 告訴審查者「這個目錄什麼重要」：定義什麼叫專案失敗、限制 nitpick、劃定忽略路徑、要求 file+line 引用、要求含數量的總結與明確的「no issues」）。</p>
 
-<p class="g-p"><strong>第 2 層・每個 PR 都有 AI 審查</strong>：diff 對照整個 codebase 與 PR 作者陳述的意圖——確認變更真的解決該問題、融入更大系統、不弄壞別的地方；審 bug fix 時還會找根因。這就是已對 Team/Enterprise 客戶開放的 <strong>Code Review for Claude Code</strong>（本地輕量版是 /code-review）。研究預覽以來，<strong>獲實質審查意見的內部 PR 占比從 16% 升到 54%</strong>；超過 1,000 行的 PR 多數能被抓到問題，較小的 PR 多數回報乾淨。發現會先經多代理過濾：並行找 bug、投票判定真偽、濾掉純風格/清理類（上線前先在他們自己的 PR 上做過 A/B 測試）。剩下的以行內留言呈現，按嚴重度排序，標記為 Important／Nit／<strong>Pre-existing</strong>（不讓作者背不屬於這個 PR 的鍋）；所有發現必須處理——修掉或帶理由結案，很多時候 agent 一夜之間就把問題修好、再跑一輪審查，作者回來時 PR 已經過完下一輪。</p>
-    <p class="g-p"><strong>第 3、4 層・可擋合併的安全審查與 CI</strong>：code review 或安全審查<strong>任一</strong>有未結案發現時不得合併——修掉，或以簡短理由結案（誤報的處理方式）；後續 commit 解決問題時發現自動關閉。CI 是標準組合：lint、型別檢查、全平台測試、build——一個典型 CLI PR 在任何人看之前要過數十項檢查；PR 模板要求回答「怎麼測的、怎麼 revert」，Claude 可以代答，但<strong>責任在作者</strong>。</p>
-    <p class="g-p"><strong>第 5 層・風險分級的人工批准</strong>：風險等級由<strong>變更本身</strong>決定（分類器判定），不是由作者身分決定；另一個分類器判斷特定變更是否需要額外批准。有些路徑永遠要多一雙眼：被 owner 標記為敏感的任何東西、任何 CI workflow 檔案。只有 repo 信任清單上的作者（通常是 repo 擁有團隊）享有寬鬆路徑，其他人一律需要第二人批准。<em>agent 的批准不算人類批准</em>；agent 發 PR 時，操作 agent 的人永遠算入必要審查者；一次批准只對一個 commit 有效——新 commit 無法被信任時（例如 agent 又推了 commit、或有人手工解 merge），PR 必須重新批准。</p>
-    <p class="g-p"><strong>第 6 層・merge queue、功能旗標、分階段上線</strong>：merge queue 確保所有檢查在「main 加上這個變更」上跑過，防止兩個各自成功的 PR 合成一個壞掉的 main。新功能預設躲在 feature flag 後，Anthropic 員工先用——因為他們重度使用自家產品，常常比用戶先發現 regression。對外 rollout 先進 latest 頻道，stable 頻道殿後。</p>
-    <p class="g-p"><strong>最後一道・快速回饋與 rollback</strong>：壞合併終究會穿過來，這是最後防線——flag 後的變更可以直接關掉不必部署；每週 on-call 輪值、事故回顧必問「哪一層該攔沒攔」。他們還沒有依事故自動收緊批准要求的 circuit breaker，但正在研究。文中有個誠實的註腳：有隊友說「放慢、減少產出能提升準確率」，但那主要是因為工作總量變少了——他們真正的優先序是<strong>更快抓到並修正問題</strong>。</p>
-    <figure class="g-fig">
-      <img src="../assets/guide/claude-code-review/02.webp" alt="示意圖：六層平面自上而下為 verification、required CI、AI review、security review、human approval、merge queue + flags；問題自上方落入，被各層攔截，最下方是 fast rollback" width="1200" height="815" loading="lazy" decoding="async">
-      <figcaption>六層檢查疊起來吸收問題，不是一道關卡——第五層是人為批准，最底下才是快速回滾（rollback 不計入六層）。<span class="g-fig-src">圖／Claude Code 團隊（X @addyosmani），<a href="https://x.com/addyosmani/status/2114604912520921136" target="_blank" rel="noopener">原文</a></span></figcaption>
-    </figure>
-  </section>
+    <p class="g-p">母體規模：monorepo 五月每天約 2,500 個變更，九月超過 30,000 個（Claude Code 不在其中）。逐行審查越來越難，甚至不可能。</p>
 
-  <section class="g-sec">
-    <h2 class="g-h2">讓審查者越來越好：事故當評測集，收斂是硬要求</h2>
-    <p class="g-p">審查系統本身也是被審查的。<strong>事故就是評測資料</strong>：團隊收集引發事故的 PR、它們的 fix-forward 與 revert，請了解 codebase 的工程師確認每個 bug 的位置與正確性，審查系統<strong>每天</strong>對這個集合跑評測；每起新事故都加進集合，審查系統的每次改動都對整個集合重新評分。</p>
-    <p class="g-p">噪音要靠觀察人類反應來量：把每則審查留言分類為「修了/駁回/澄清為有意/無所謂」，並在已知乾淨的 PR 上跑審查系統，看它多常回報本來不會造成傷害的「問題」。明示的優先序：<strong>第一是抓到真 bug，第二才是減少審查輪次</strong>。文中還點出一個不對稱：人類一秒鐘就能駁回一個 nit，但 <em>agent 作者面對審查意見的代價高得多</em>——又一個 commit、又一輪審查。</p>
-    <p class="g-p"><strong>收斂是硬要求</strong>，因為 agent 作者與 agent 審查者可能永動：他們觀察到 CLI 專案的一個 PR <strong>一夜之間循環了五十多次</strong>（靠人工停掉，否則可能無限循環）。git blame 追查發現，審查系統反覆標記的東西約 <strong>59% 是第一次就存在的舊碼</strong>——它很少找到新 bug，只是每輪多找幾個舊的。團隊自己把事情弄糟的原因是「預設跑好幾輪審查」（每輪確實可能撈到不同 bug）；修正後開始追蹤 <strong>cycles-to-pass</strong>，並更新 re-review 規則：三輪後要求作者重新思考方法、後續只審新 diff、指定 bug 類別讓作者一次修完一類、不重報已觀察到的問題；審查 agent 也在夜間跑在現有 codebase 上，讓歷史 bug 在擴散前被找到。</p>
-  </section>
-
-  <section class="g-sec">
-    <h2 class="g-h2">人類留下來做什麼：四件事（原文五項，末兩項合併）＋「你合併的，你負責」</h2>
-    <p class="g-p">資深工程師停下來看一個常見錯誤，比自動化昂貴太多——但四件事仍然非人不可（原文列五項，④驗證證明與⑤承擔責任在此合併）：<strong>①要不要做</strong>（願景、品味、目標——某個自稱已解決 code review 瓶頸的團隊，對外團隊來的變更仍做人工審查，只為確認「這是對的東西」）；<strong>②審計危險代碼</strong>（計費、自動更新器、CI workflow）；<strong>③架構審查</strong>（架構決定別人跟隨的慣例）；<strong>④驗證證明與承擔責任</strong>——「如果你說不出這些檢查會漏掉什麼，別求 👍，你需要的是真正的 review」；<em>每個出貨的變更都有人回答，無論是誰打的字</em>。</p>
-    <p class="g-p">文化面是「<strong>You land it, you own it</strong>」：合併了中小型變更、後來出錯，一般預期你自己修。這不會失控的條件：小變更好審好修好 revert；一切皆可 revert（flag、revert、分階段上線能在幾分鐘內逆轉多數錯誤）；<strong>爆炸半徑定門檻</strong>——越貴的程式碼越多雙眼；telemetry 與內部使用快速浮現 regression；而且不是追罪遊戲——修的人擁有它，因為他脈絡最全；事故回顧針對系統。加上團隊公開在開放頻道工作、互相看得到彼此在建什麼、非 code owner 也會給回饋——<em>這種開放性是不需要每行設閘仍保持高品質的一大原因</em>。</p>
-    <p class="g-p">還有兩節值得留意。<strong>換向要趁早</strong>：agent 讓開新工作變便宜，但有些路不該走——有人 call out 是死路時，作者直接關 PR 或換實作；正因為寫起來便宜，關掉也不心疼；關鍵是在 thread 早期轉向，而不是等 PR 定稿才擋。<strong>團隊脈絡的新答案</strong>：閱讀同事的 diff 一向是理解 codebase 的方式，機器把閱讀做掉之後怎麼辦？他們沒有正式機制——沒有人腦中裝著 Claude Code 的完整模型，也不覺得需要；想了解某塊，就叫 Claude <strong>當場生成那個切片的 explainer</strong>（幾分鐘、永遠最新），有些人還讓它做出可視化的小 artifact、用自己偏好的風格教學。</p>
     <div class="g-know">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
-      <p><b>閱讀前提。</b>這是 X Article，內文為 Claude Code 團隊第一人稱自述；由 Addy Osmani 的帳號發布（文末自註「A rewrite of our original article and checked with Pangram」，發文帳號與寫作團隊的確切關係原文未說明，轉述時以「Claude Code 團隊」為主語）。文章內數字皆為該團隊自述之內部量測（未附方法論細節）；統計卡的 232 萬瀏覽／3.3 萬書籤是 X 平台互動數據（2026-10-28 查核），非文章內文數據。「90% 程式碼由 Claude 撰寫」是引用團隊先前說法。文末附「如何落地」清單（PR 前/PR/批准/合併後各階段的具體步驟）與路線圖：產品原則是人類做最終批准，但在自家 repo，owner 已在決定哪些低風險變更可在自動檢查通過時自動合併——且這條界線會繼續演化。</p>
+      <p><b>觀點 triage。</b>主語是「Claude Code 團隊」：內文第一人稱自述，文末自註是改寫自團隊原文。發布端 @addyosmani 與團隊的關係原文未說明，不併為作者。這是自我報告：數字為內部量測、未附方法論，文章同時在推銷已開放的 Code Review 產品。</p>
     </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">誰能放行：四種「未結案」狀態</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>合併前的四種卡點</b> — 本頁分類，講的是「為什麼現在不能合」</figcaption>
+      <div class="x-dec">
+        <p class="q">這個 PR 現在卡在哪一關？</p>
+        <div class="brs">
+          <div class="br"><span class="tag">發現未結案</span><b>任一審查留著開放發現</b><small>任一出問題都不得合併；修掉，或寫一句理由結案，後續 commit 修好會自動關閉</small></div>
+          <div class="br"><span class="tag">批准不算數</span><b>只有 agent 點過頭</b><small>agent 批准不算人類批准；agent 發的 PR，操作它的人一定是必要審查者</small></div>
+          <div class="br"><span class="tag">批准過期</span><b>批准後又推了不可信的 commit</b><small>一次批准只管一個 commit；agent 又推東西、或有人手工解 merge，都得重批</small></div>
+          <div class="br"><span class="tag">路徑例外</span><b>敏感路徑與 CI workflow 檔</b><small>永遠多一雙眼；寬鬆路徑只給 repo 信任清單（通常是擁有團隊）</small></div>
+        </div>
+      </div>
+      <p class="x-src">本站整理；原文未給此決策圖，四類並非互斥，條件出自原文。</p>
+    </figure>
+    <p class="g-p">風險層級由<strong>變更本身</strong>決定，不是作者身分；第二個分類器還能把個別變更加嚴。原文的風險分級最低可到<strong>不需任何人批准</strong>（0 人、1 人或 2 人），這是整套設計裡最該被追問的一格。</p>
+    <p class="g-p">留給人的五項：要不要做、審危險碼、架構、驗證證明、承擔責任。<em>「說不出檢查會漏掉什麼，就別求 👍」</em></p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">哪些是量測、哪些是護欄</h2>
+    <p class="g-p"><strong>人類時間是雙側成本</strong>——審查花掉的時間，加上修壞碼引入 bug 的時間。只壓前者，等於把成本搬家。</p>
+    <div class="x-scroll" style="margin-top:14px">
+      <table class="x-tbl">
+        <thead><tr><th>主張</th><th>數字與限定</th><th>這是哪種證據</th></tr></thead>
+        <tbody>
+          <tr><td data-l="主張"><b>審查沒讓品質變差</b></td><td data-l="數字與限定">6–9 月合併 PR 數「2 倍以上」；需 revert 的 PR 占比降「逾 40%」</td><td data-l="證據">內部量測（未附方法）；revert 率同時是護欄</td></tr>
+          <tr><td data-l="主張"><b>AI 審查真的在給意見</b></td><td data-l="數字與限定">獲實質審查意見的內部 PR 從 16% 到 54%（研究預覽以來）；&gt;1,000 行的 PR 多數被抓到問題，較小的多數乾淨</td><td data-l="證據">內部量測；看的是「實質」而非有無留言</td></tr>
+          <tr><td data-l="主張"><b>驗證流程值 2–3 倍</b></td><td data-l="數字與限定">Claude 產出品質「提升到 2–3 倍」——Boris Cherny 的估計</td><td data-l="證據"><b>估計，不是量測</b>：無基準、無樣本</td></tr>
+          <tr><td data-l="主張"><b>人類時間真的省了</b></td><td data-l="數字與限定">中位數人工批准數（含 p95）、人工留言數、PR 等人多久</td><td data-l="證據">量測；護欄是 revert 與事故率</td></tr>
+          <tr><td data-l="主張"><b>審查會收斂</b></td><td data-l="數字與限定">單一 PR 一夜循環五十多次；反覆被標記者約 59% 是首輪就在的舊碼</td><td data-l="證據">觀察，未給樣本數</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="x-src">全表為團隊自述之內部量測；目標是多數 PR 最多一人參與（可以是作者）即合併，revert 與事故率不升。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">會失敗的地方是不收斂，不是不準</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>一輪 AI 審查的內部</b> — 傳球順序，與第六步的煞車</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">多代理 → 並行找 bug</span><span class="tr"><i>同時掃 diff，各自回報</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">另一組代理 → 投票</span><span class="tr"><i>得票足夠的發現才留下</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">過濾 → 只剩非風格類</span><span class="tr"><i>清理類濾掉（上線前先自家 A/B）</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">行內留言 → 作者</span><span class="tr"><i>依嚴重度排：Important／Nit／Pre-existing</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">作者 → 修掉或結案</span><span class="tr"><i>必須處理；agent 常隔夜修好</i></span></span></li>
+        <li class="side"><span class="st">06</span><span class="body"><span class="hop">煞車：第四輪起</span><span class="tr"><i>要求換方法、只審新 diff、指定 bug 類別、不重報</i></span></span></li>
+      </ul>
+      <p class="x-src">本站繪製；01–05 依原文排序（原文無單輪流程圖），06 是 re-review 規則，非每個 PR 都會走到。</p>
+    </figure>
+    <p class="g-p">人類一秒駁回一個 nit；agent 作者要多一個 commit、多一輪審查——輪次對它是加倍成本。</p>
+    <p class="g-p">優先序是<strong>先抓到真 bug，再減少輪次</strong>。他們曾預設跑好幾輪，結果一個 CLI PR 一夜循環五十多次，靠人工停掉。</p>
+    <p class="g-p">git blame 追下去，反覆被標記的東西約 <strong>59% 是第一輪就在的舊碼</strong>；修法是開始追 cycles-to-pass。</p>
+    <p class="g-p">審查系統自己也被評：事故 PR 與其 fix-forward、revert 收成集合每天重跑；留言按「修了／駁回／澄清／無所謂」分類量噪音。</p>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">帶走三件事</h2>
-    <div class="g-take">
-      <p><b>審查的單位是「風險」不是「程式碼」。</b>六層檢查的本質是把「有人讀過嗎」換成「哪層檢查攔哪類錯」——風險由變更決定而非作者、敏感路徑永遠多一雙眼、人類注意力只花在機器還不能回答的地方。</p>
-      <p><b>自動化審查會失敗於「不收斂」，不是「不準」。</b>agent 作者×agent 審查者可以一夜循環五十多次、59% 是在翻舊帳——限制輪次、聚焦新 diff、指定 bug 類別、事故進評測集每天重評，才是讓審查者越來越好的機器。</p>
-      <p><b>人類時間是雙側成本，護欄是 revert 率。</b>省下審查時間卻賠上修 bug 時間，等於沒省——目標（最多一人參與、revert 不升）與量測（中位數批准數、留言數、等待時間；護欄是 revert 與事故率）互相鎖住，這才是「減法設計」能不翻車的原因。</p>
-    </div>
-  </section>
-
-  <section class="g-sec">
-    <h2 class="g-h2">五個關鍵詞</h2>
-    <div class="g-glos">
-      <div class="g-card"><b>拼字檢查式審查</b><span class="w">審查織進寫作流程、持續執行，而非 PR 之後的事後檢查。</span><span class="why">常規 bug 在人類介入前已被抓掉一輪以上。</span></div>
-      <div class="g-card"><b>雙側成本</b><span class="w">人類時間＝審查時間＋修壞碼的時間。</span><span class="why">只壓一邊等於沒省，只是搬家。</span></div>
-      <div class="g-card"><b>可擋合併的檢查</b><span class="w">安全審查與 CI 的發現未結案前不得合併。</span><span class="why">「建議」與「閘門」的差別就是流程的牙齒。</span></div>
-      <div class="g-card"><b>收斂</b><span class="w">限制審查輪次、聚焦新 diff、不重報舊發現。</span><span class="why">agent 作者×agent 審查者會無限循環，必須主動斷。</span></div>
-      <div class="g-card"><b>You land it, you own it</b><span class="w">合併的人通常自己修；修的人擁有它，因為脈絡最全。</span><span class="why">搭配可 revert 與爆炸半徑分級，才不變成追罪。</span></div>
+    <div class="x-take">
+      <p><b>閘門的語意是「未結案」。</b>任一審查留著開放發現就不得合併。</p>
+      <p><b>能當護欄的只有 revert 與事故率。</b>人工批准數是量測，不是成果。</p>
+      <p><b>自動化審查先敗在收斂。</b>一夜五十輪、59% 翻舊帳，輪次要設上限。</p>
     </div>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">同一主題的其他館藏</h2>
     <div class="g-rel">
-      <div class="g-relrow"><span class="s">X @thorstenball</span><a href="how-i-work-with-agents.html">不迭代、不管 context、只審爆炸半徑：Thorsten Ball 的 15 條 agent 工作法</a><span class="d">2026-10-25</span></div>
+      <div class="g-relrow"><span class="s">X @thorstenball</span><a href="how-i-work-with-agents.html">與 agent 協作：說 What、要證據、只審爆炸半徑</a><span class="d">2026-10-25</span></div>
     </div>
   </section>
 
-  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文，非官方文件）；引述數據均出自原文（團隊自述之內部量測），小標與分節為編輯整理。人物觀點非官方第一手公告，為站內新設主題。內容經對照原文的獨立事實審查後發布。</p>
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文（團隊自述之內部量測），圖解與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
 </main>
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>

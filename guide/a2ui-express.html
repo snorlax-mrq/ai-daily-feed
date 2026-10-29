@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>導讀 — 生成式 UI 不再逐字吐 JSON：A2UI Express 讓模型改寫「一行一個元件」 · AI 每日動態檔案</title>
-<meta name="description" content="深入導讀 A2UI 新推出的可替換推論格式：Express 用類 Python 一行一語句、最多省 3 倍 token、延遲最多降 3 倍；搭配 Jev 這類 System One 決策模型做版面選擇，延遲最多可降 80 倍。含 51 題評測、SDK 版本與 inference_format 用法。">
+<title>導讀 — 模型少寫括號：A2UI 把推論格式變成一個可替換參數 · AI 每日動態檔案</title>
+<meta name="description" content="Google A2UI 導讀：新的 Express 推論格式讓模型一行一元件地寫，SDK 編譯成標準 A2UI 訊息，token 最多省 3 倍、延遲最多降 3 倍；形狀固定的畫面改叫 Jev 這類決策模型挑版面，延遲最多降 80 倍（Google 自報）。">
 <script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
 <link rel="stylesheet" href="../assets/archive.css">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -24,7 +24,7 @@
   <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
   <header class="g-head">
     <div class="day-title-row">
-      <h1>生成式 UI 不再逐字吐 JSON：把「設計介面」與「編譯介面」拆開</h1>
+      <h1>模型少寫括號：A2UI 把推論格式變成一個可替換參數</h1>
       <span class="stamp">導讀</span>
     </div>
     <p class="g-orig">原文：Fast, reliable A2UI, with swappable inference formats（A2UI Express 與決策模型整合的發布說明）</p>
@@ -35,84 +35,112 @@
   </header>
 
   <div class="g-stats">
-    <div class="g-stat"><b>最多 3 倍</b><span>Express 降低延遲（相對 Direct JSON）</span></div>
-    <div class="g-stat"><b>最多 80 倍</b><span>改用 Jev 等決策模型做版面決策時的延遲降幅</span></div>
-    <div class="g-stat"><b>最多省 3 倍</b><span>Express 產生同類 UI 的 token 用量（相對 Direct JSON）</span></div>
-    <div class="g-stat"><b>51 題</b><span>四種格式共用的評測題數（gemini-3.5-flash）</span></div>
+    <div class="g-stat"><b>最多 3 倍</b><span>Express 降低延遲，基準是 Direct JSON（Google 自報）</span></div>
+    <div class="g-stat"><b>最多 80 倍</b><span>改用 Jev 這類決策模型決定版面時的延遲降幅</span></div>
+    <div class="g-stat"><b>最多 1/3</b><span>token 用量（原文 up to 3× fewer），基準為 Direct JSON</span></div>
+    <div class="g-stat"><b>51 題</b><span>四種格式共用的評測數（gemini-3.5-flash，思考開／關）</span></div>
   </div>
 
   <section class="g-sec">
-    <div class="g-tldr">
-      <h2 class="g-tldr-h">30 秒版本</h2>
-      <p class="one">A2UI 是給 agent 用的生成式 UI 協定：客戶端用一份 catalog 宣告可用元件當契約，agent 送出描述介面的訊息，渲染器負責畫出來。問題是——一開始 agent 直接吐 A2UI 的 JSON 傳輸訊息，「每個大括號、每層巢狀」都要模型自己生，又慢又容易錯。這次發佈把「模型產生什麼格式」變成可替換的 <strong>inference_format</strong>：新的 <strong>A2UI Express</strong> 用一行一語句的類 Python 語法，由 Agent SDK 的確定性編譯器轉成標準 A2UI JSON，同類畫面最多省 3 倍 token、延遲最多降 3 倍；若畫面形狀固定，改叫 Jev 這類 System One 決策模型挑版面，延遲最多可降 80 倍。</p>
-      <ul>
-        <li>慢的根源不是模型笨，是逼 LLM 逐字生成受複雜 schema 約束的 JSON 樹。</li>
-        <li>Express 只寫「元件與參數」，編譯、驗證交給 SDK——錯的語法進不了畫面。</li>
-        <li>兩種螢幕兩種工具：需要設計的用 Express，形狀固定的用決策模型選預先定義的版面。</li>
-      </ul>
-    </div>
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">原文的主張很直接：慢的不是生成式 UI，是逼 LLM 逐字吐出受 schema 約束的 JSON 樹。這一版把「模型輸出什麼格式」變成可替換的參數。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/a2ui-express/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/a2ui-express/01.webp" alt="原文雙路徑圖：左側 A2UI Express，模型以 Express 寫元件樹（root = Card(col)、col = Column([icon, title, text, actions])、title = Text($/title) 等），箭頭指向一張 Enable notification 卡片，標註 ~3× fewer tokens than JSON；右側 Controlled generation · Jev，決策模型在預先定義的版面中挑選（問句 What kind of row is Auto-download?，答案 switch、p ≈ 1.00），標註 components on screen in ~0.2 s；兩條路都匯入 A2UI messages（createSurface、updateComponents、updateDataModel），底部標示 Renderers don't change：React、Angular、Lit、Flutter、SwiftUI、Compose" width="1200" height="1041" loading="lazy" decoding="async"></a>
+      <figcaption>同一批畫面、兩條路，出口是同一個：左邊模型寫 Express 元件樹、由 SDK 編譯成訊息（token 約為 JSON 的三分之一）；右邊決策模型只挑你定義好的版面，程式組訊息、小模型補文字。A2UI 訊息與六個 renderer 兩邊共用。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／Google Developers Blog，<a href="https://developers.googleblog.com/fast-reliable-a2ui/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">原本的設計很乾淨：client 用 catalog 宣告受信任元件當契約，agent 送出描述介面的訊息，renderer 負責畫。</p>
+    <p class="g-p">壞就壞在初版要 agent 自己寫 JSON 傳輸訊息：每個大括號、每層巢狀都得自己生。</p>
+    <p class="g-p">副作用比速度更麻煩：A2UI 被綁在「會輸出文字」的 LLM 上，接不進更快的 System One 決策模型。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">問題：把「UI 設計」壓進 JSON 語法裡</h2>
-    <p class="g-p">A2UI 的設計本來很乾淨：<strong>catalog 是契約</strong>（客戶端廣告一組受信任的元件），agent 只送出「用這些元件組成的介面」訊息，渲染器負責畫。但初版讓 agent 直接生成 A2UI 的 JSON 傳輸訊息，等於要模型一邊想版面、一邊處理 schema 的每個細節。</p>
-    <p class="g-p">原文的觀察很直白：<em>「generating JSON trees constrained by a complex JSON schema is slow and error-prone for LLMs」</em>。更麻煩的是副作用——這樣做把 A2UI 綁死在「輸出文字的 LLM」上，難以接上更快的 System One 決策模型（那些模型不吐文字，只做結構化決策）。</p>
-  </section>
-
-  <section class="g-sec">
-    <h2 class="g-h2">解法：把推論格式變成一個可替換的參數</h2>
-    <p class="g-p">新機制的關鍵在於承認「模型輸出什麼」和「協定長什麼樣」是兩件事。SDK 從你 catalog 的 JSON schema 自動生成兩樣東西：一段教模型該格式語法的 prompt，以及一個把模型回覆編譯成驗證後 A2UI 訊息的編譯器。<strong>因為兩者都源自同一份 schema，格式不可能描述 catalog 裡沒有的元件或屬性</strong>。</p>
-        <figure class="g-fig">
-      <img src="../assets/guide/a2ui-express/02.webp" alt="換一個參數就能換掉推論格式，catalog 與渲染器不變" width="1200" height="1018" loading="lazy" decoding="async">
-      <figcaption>換一個參數就換掉推論格式：catalog 與渲染器不動，被替換的只有 prompt 與 parser。<span class="g-fig-src">圖／Google Developers Blog，<a href="https://developers.googleblog.com/fast-reliable-a2ui/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    <h2 class="g-h2">一個參數，換掉 prompt 與 parser，不換協定</h2>
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/a2ui-express/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/a2ui-express/02.webp" alt="原文機制圖：右側由上而下為 Your catalog and examples（UNCHANGED，元件以 JSON Schema、few-shot 以 A2UI JSON）→ Prompt（SWAPPED，教模型用 Express 並示範）→ Parser（SWAPPED，依同一份 schema 編譯並把參數對位）→ A2UI v1.0 messages（UNCHANGED：createSurface、updateComponents、updateDataModel）→ Your renderers（UNCHANGED：React、Angular、Lit、Flutter、SwiftUI、Compose）；左側是 Python a2ui-agent-sdk 0.9.0 的程式碼，高亮 inference_format_factory=ExpressFormatFactory()；下方列出四種推論格式：Direct JSON（wire format 本身，逐塊串流）、Express（SHIPPING，Python／TypeScript／Dart）、Elemental（EXPERIMENT，HTML 風格、僅 Python）、Atom（EXPERIMENT，Lisp 風格、僅 Python）" width="1200" height="1018" loading="lazy" decoding="async"></a>
+      <figcaption>換掉的只有兩格：prompt 與 parser。catalog、A2UI v1.0 訊息與 renderer 三格都標 UNCHANGED；圖下四種候選格式只有 Express 出貨到三個 SDK。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／Google Developers Blog，<a href="https://developers.googleblog.com/fast-reliable-a2ui/" target="_blank" rel="noopener">原文</a></span></figcaption>
     </figure>
 
-    <div class="g-steps">
-      <div class="g-steprow"><div class="n">01<small>選格式</small></div><div><h3>建立 generator 時傳一個參數</h3><p>在 Python SDK 傳 <code>inference_format_factory=ExpressFormatFactory()</code>；TypeScript 則把 <code>new ExpressFormatFactory()</code> 當 generator 的第三個參數。SDK 會把對應的 prompt 片段接進 system prompt。</p></div></div>
-      <div class="g-steprow"><div class="n">02<small>模型寫 Express</small></div><div><h3>一行一個元件，變數名就是元件 ID</h3><p>參數按 catalog schema 宣告的順序定位（<code>_</code> 代表跳過一格），<code>$/title</code> 綁資料模型，<code>Event("accept")</code> 宣告伺服器動作。例如通知卡片的 <code>yes_btn=Button(yes_btn_text, _, Event("accept", {}))</code>。</p></div></div>
-      <div class="g-steprow"><div class="n">03<small>編譯與驗證</small></div><div><h3>確定性程式碼接手</h3><p><code>processor.parse_response()</code> 回傳文字片段加上「已驗證的 A2UI 訊息」。Python 與 TypeScript SDK 可對 Direct JSON 逐塊串流，Express 則是收完整回覆後一次編譯。</p></div></div>
-      <div class="g-steprow"><div class="n">04<small>換一種模型</small></div><div><h3>形狀固定的畫面交給決策模型</h3><p>設定頁、結帳頁、確認頁這類「形狀已知」的畫面，模型不需要設計版面，只需在你預先定義的版式中挑一個——這正是 Jev（TypeSafe）這類 System One 模型的長處：不生成文字或 JSON，你送狀態與一組有型別的問句，它逐題作答。</p></div></div>
-    </div>
-        <figure class="g-fig">
-      <img src="../assets/guide/a2ui-express/01.webp" alt="兩條路徑：Express 由 SDK 編譯模型寫的元件樹（token 約少 3 倍）；決策模型只挑預先定義的版面，兩者輸出同一組 A2UI 訊息、渲染器不變" width="1200" height="1041" loading="lazy" decoding="async">
-      <figcaption>兩條路徑：Express 讓 SDK 編譯模型寫的元件樹（token 約少 3 倍）；Jev 只挑預先定義的版面，元件樹約 0.2 秒上螢幕、文字隨後填入。<span class="g-fig-src">圖／Google Developers Blog，<a href="https://developers.googleblog.com/fast-reliable-a2ui/" target="_blank" rel="noopener">原文</a></span></figcaption>
-    </figure>
+    <p class="g-p">推論格式有兩半，都從 catalog 的 JSON schema 生成：一段教模型語法的 prompt，一個把回覆編譯成已驗證訊息的編譯器。</p>
+    <p class="g-p">兩半同源，所以格式描述不出 catalog 沒有的元件或屬性。</p>
+    <p class="g-p">換格式只動 prompt 與 parser；catalog、few-shot 範例、訊息格式、renderer 全不動。</p>
+    <p class="g-p">API 只是一個參數：建立 generator 時傳 <code>ExpressFormatFactory()</code>，TypeScript 則放在第三個位置。</p>
+    <p class="g-p">特殊用途也能自帶 DSL：原文說 agent builder 可換上任何一種 DSL 與對應的編譯器，SDK 負責讓它接得上既有的傳輸與 renderer。</p>
+    <p class="g-p">取捨：Direct JSON 在 Python 與 TypeScript SDK 能逐塊串流，Express 收完整回覆後才編譯。</p>
 
-<div class="g-know">
+    <div class="g-know">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
-        <p><b>可用版本</b>：Python agent SDK <code>a2ui-agent-sdk 0.9.0</code>（PyPI）、TypeScript <code>@a2ui/agent</code>（npm）、Dart <code>a2ui_agent 0.0.1-wip004</code>（pub.dev）。Python SDK 另支援 macros：畫面要顯示系統既有的資料時，模型只寫 <code>OrderStatus("ord_42")</code>，由 macro 去撈訂單並填值，畫面上每個值都直接來自你的資料源。</p>
+      <p><b>可用版本</b>：Python <code>a2ui-agent-sdk 0.9.0</code>（PyPI）、TypeScript <code>@a2ui/agent</code>（npm）、Dart <code>a2ui_agent 0.0.1-wip004</code>（pub.dev）。Python SDK 另有 macros：模型只寫 <code>OrderStatus("ord_42")</code>，由 macro 去撈訂單並填值，畫面上每個值都直接來自你的資料系統。</p>
     </div>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">評測怎麼做的：同一份題目、四種格式、開關思考</h2>
-    <p class="g-p">原文說得一絲不苟：因為客戶回饋集中在 Direct JSON 生成的延遲與正確性，團隊設計了四種候選推論格式，<strong>全部跑同一份 51 題評測</strong>（模型是 gemini-3.5-flash），並且分別比較「思考模式開啟」與「關閉」。結論之一是——Express 就算關掉思考也能有一樣好的表現，這在實務上等於直接換到最快的推論時間。</p>
-    <p class="g-p">數字部分要留意限定語：<strong>「最多」3 倍</strong>的延遲改善與<strong>「最多」3 倍</strong>的 token 節省都是相對 Direct JSON 的上限值；<strong>「最多 80 倍」</strong>則不是 Express 單獨達成的，而是<strong>改用 Jev 這類決策模型做版面決策</strong>時的降幅。把這兩件事混為一談，就會誤以為換個格式就能快 80 倍。</p>
+    <h2 class="g-h2">模型要寫的東西：從 JSON 樹變成一行一元件</h2>
+    <p class="g-p">原文的對照很具體：Direct JSON 要模型連括號都自己寫；Express 只寫元件與參數，結構交給編譯器補回。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>同一批畫面，改前改後</b> — 模型寫什麼、誰補結構</figcaption>
+      <div class="x-cmp">
+        <div><b>改前 · Direct JSON</b><p>模型直接寫 JSON 傳輸訊息，<b>每個大括號、每層巢狀</b>都自己生</p><p>受複雜 JSON schema 約束的 JSON 樹，原文形容為又慢又易錯</p><p>Python／TypeScript SDK 可<b>逐塊串流</b></p></div>
+        <div class="after"><b>改後 · Express</b><p><b>一行一個元件</b>，風格貼近 Python；變數名就是元件 ID</p><p>結構與驗證由 SDK 的確定性程式碼補回，錯的語法進不了畫面</p><p>收<b>完整回覆</b>後一次編譯</p></div>
+      </div>
+      <p class="x-src">本站整理；原文未給這張對照表，兩欄內容出自原文與 SDK 說明。倍數與限定語見文末段落。</p>
+    </figure>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>寫法</th><th>在 Express 裡的意思</th><th>由誰接手</th></tr></thead>
+        <tbody>
+          <tr><td data-l="寫法"><b>一行一語句</b></td><td data-l="意思">每行把一個元件指定給一個變數</td><td data-l="接手">模型</td></tr>
+          <tr><td data-l="寫法">變數名</td><td data-l="意思">直接成為該元件的 ID</td><td data-l="接手">編譯器沿用</td></tr>
+          <tr><td data-l="寫法">位置參數</td><td data-l="意思">依 catalog schema 宣告的順序對應屬性名，<code>_</code> 跳過一格</td><td data-l="接手">catalog schema</td></tr>
+          <tr><td data-l="寫法"><code>$/title</code></td><td data-l="意思">把這個值綁到資料模型</td><td data-l="接手">資料模型</td></tr>
+          <tr><td data-l="寫法"><code>Event("accept")</code></td><td data-l="意思">宣告一個伺服器動作</td><td data-l="接手">伺服器</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">原文的示範是通知卡片：surface 先綁三個資料欄位（description、icon、title），其餘每行一個元件。</p>
+    <p class="g-p">兩顆按鈕各自宣告 <code>Event("accept")</code> 與 <code>Event("decline")</code> 的伺服器動作。</p>
+    <p class="x-hint">→ 可橫向滑動</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">形狀固定的畫面，換模型比換格式有效</h2>
+    <p class="g-p">有些畫面形狀是已知的：設定頁、結帳頁、確認頁。這類畫面不需要模型設計版面，只要在你預先定義的版型裡挑一個。</p>
+    <p class="g-p">Jev（TypeSafe）是 System One 模型：它不生成文字，也不生成 JSON。</p>
+    <p class="g-p">你送一個狀態與一組有型別的問句，它逐題作答；程式拿答案組出 A2UI 訊息，文字另由小模型寫。</p>
+    <p class="g-p">原文的判準：這種畫面用不到 Express 提供的完整表達力。</p>
+    <p class="g-p">評測基準：四種候選格式跑同一份 51 題，模型是 gemini-3.5-flash，思考開與關各比一次。</p>
+    <p class="g-p">四種是 Direct JSON、Express、Elemental、Atom；後兩者原文標 EXPERIMENT、僅支援 Python。</p>
+    <p class="g-p">結論是 Express 關掉思考也一樣好，實務上等於直接換到最快的推論時間。</p>
+    <p class="g-p"><strong>80 倍不是 Express 單獨達成</strong>，而是改用 Jev 這類決策模型做版面決策時的降幅。</p>
+    <p class="g-p">延遲降 3 倍與 token 少到 1/3，基準都是 Direct JSON，且原文都寫「最多」。</p>
+    <p class="g-p">整篇數字出自 Google 自家評測，無第三方驗證。</p>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">帶走三件事</h2>
-    <div class="g-take">
-      <p><b>瓶頸是「讓 LLM 寫 schema 的語法」，不是生成式 UI 本身。</b>把模型輸出換成貼近 Python 風格的中介格式（一行一語句、位置參數），再用確定性編譯器補回嚴格結構，這個拆法同時買到速度與正確性——錯誤的語法根本進不了渲染層。</p>
-      <p><b>「可替換的推論格式」是一種架構承諾。</b>inference_format 一旦是參數，就能按畫面選引擎：需要設計的走 Express，形狀固定的走決策模型；同一個 A2UI 協定、同一個 catalog、同一個渲染器。這種分層比任何單一模型的最佳化都長壽。</p>
-      <p><b>看到倍數先找基準與主詞。</b>「3 倍」是相對 Direct JSON、「80 倍」是改用 Jev 這類決策模型做版面決策時的降幅（也不是 Express 單獨達成）、「51 題／gemini-3.5-flash」是評測規模。要在自己的產品引用這些數字，就得連限定語一起搬。</p>
+    <div class="x-take">
+      <p><b>瓶頸在格式，不在協定。</b>把模型輸出換成一行一元件，結構交給編譯器（編輯觀點）。</p>
+      <p><b>一個參數就能換引擎。</b>要設計的走 Express，形狀固定的走決策模型。</p>
+      <p><b>倍數要連基準一起搬。</b>3 倍對 Direct JSON，80 倍要先換 Jev，都是上限不是平均。</p>
     </div>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">同一主題的其他館藏</h2>
     <div class="g-rel">
-      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：一行 system prompt 的退步，該在評分表上現形</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">法律工作的代理式作業系統：NDA 初篩如何從吃掉約 20% 產能降到 1% 以下</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司會坐哪裡：地板下、桌邊、中間那一層——三種組織圖與四個未定的大問題</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：平均 2.75 的兩種病，只有逐案分得出來</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">Legora 法律代理：NDA 初篩從吃掉約 20% 產能到 1% 以下</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司坐哪裡：三種組織圖，四個未定的大問題</a><span class="d">2026-10-28</span></div>
     </div>
   </section>
 
-  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據出自原文，示意圖與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
 </main>
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
-  <p class="foot-gen">館藏導讀 · 建置於 2026-10-28 (UTC+8)</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-29 (UTC+8)</p>
 </div></footer>
 <script src="../assets/site.js" defer></script>
 </body>

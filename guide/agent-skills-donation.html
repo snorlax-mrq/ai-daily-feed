@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>導讀 — Agent Skills 進基金會：從 Claude Code 的解方到廠商中立的開放標準 · AI 每日動態檔案</title>
-<meta name="description" content="深入淺出導讀 Anthropic 公告〈Donating Agent Skills to the Agentic AI Foundation〉：Agent Skills 開放標準捐入 Linux 基金會旗下 AAIF——70+ agent 平台整合、100 萬個 skills、近 2.8 億次安裝；捐出名稱、GitHub 組織與 agentskills.io 網域，並提出版本化發布、提案流程與安全指引路線圖。">
+<title>導讀 — Agent Skills 捐進 AAIF：換人治理，不換使用權 · AI 每日動態檔案</title>
+<meta name="description" content="Anthropic 把 Agent Skills 開放標準捐給 Linux 基金會旗下 AAIF：70+ agent 平台已整合、100 萬 skills、近 2.8 億次安裝；移交名稱、logo、GitHub 組織與 agentskills.io 網域，路線圖為版本化發布、正式提案流程與安全指引。">
 <script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
 <link rel="stylesheet" href="../assets/archive.css">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -24,10 +24,10 @@
   <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
   <header class="g-head">
     <div class="day-title-row">
-      <h1>Agent Skills 進基金會：從 Claude Code 的解方到廠商中立的開放標準</h1>
+      <h1>Agent Skills 捐進 AAIF：換人治理，不換使用權</h1>
       <span class="stamp">導讀</span>
     </div>
-    <p class="g-orig">原文：Anthropic 新聞室公告——將 Agent Skills 開放標準捐贈給 Agentic AI Foundation（AAIF）</p>
+    <p class="g-orig">原文：Anthropic 新聞室公告——把 Agent Skills 開放標準捐給 Agentic AI Foundation（AAIF），附移交清單與起步路線圖</p>
     <p class="g-meta">
       <span>Anthropic (News)</span>·<span>2026-10-22 發布</span>·<span>2026-10-23 收錄</span>·
       <a href="https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
@@ -35,69 +35,103 @@
   </header>
 
   <div class="g-stats">
-    <div class="g-stat"><b>70+ agent 平台</b><span>自 2025 年 12 月發布標準以來已整合，包括 ChatGPT、Cursor、GitHub Copilot、VS Code</span></div>
-    <div class="g-stat"><b>100 萬</b><span>已發布的 skill 總數；安裝次數近 2.8 億</span></div>
-    <div class="g-stat"><b>1 個資料夾</b><span>一個 skill 就是內含 SKILL.md 的資料夾，附上所需腳本與參考資料</span></div>
-    <div class="g-stat"><b>2025-10</b><span>Agent Skills 推出；數週內開發者即發布數千個 skills，並為 Codex、Cursor、OpenCode 寫出 loader</span></div>
-    <div class="g-stat"><b>2 位 Lead Maintainer</b><span>David Soria Parra 與 Mahesh Murag；維護者來自 Anthropic、Google、OpenAI 等，將以個人身份參與</span></div>
+    <div class="g-stat"><b>70+ 平台</b><span>自 2025-12 標準發布後整合；原文只點名四個</span></div>
+    <div class="g-stat"><b>100 萬／近 2.8 億</b><span>已發布 skills／安裝次數（Anthropic 自報）</span></div>
+    <div class="g-stat"><b>3 項移交</b><span>名稱與 logo、GitHub 組織、agentskills.io 網域</span></div>
+    <div class="g-stat"><b>2 位 Lead</b><span>David Soria Parra、Mahesh Murag；其餘以個人身份</span></div>
   </div>
 
   <section class="g-sec">
-    <div class="g-tldr">
-      <h2 class="g-tldr-h">30 秒版本</h2>
-      <p class="one">Anthropic 宣布把 Agent Skills——讓 agent 取得專業知識與工作流程的開放標準——捐給 Linux 基金會旗下的 Agentic AI Foundation（AAIF）。標準自 2025 年 12 月發布以來，已有 ChatGPT、Cursor、VS Code 等 70 多個 agent 平台整合，累計 100 萬個 skills、近 2.8 億次安裝；這次連名稱、logo、GitHub 組織與 agentskills.io 網域一併移交，維護者將由 Anthropic、Google、OpenAI 等公司工程師以個人身份擔任，並已提出版本化發布、正式提案流程與安全指引的起步路線圖。</p>
-      <ul>
-        <li>Skill＝一個含 SKILL.md 的資料夾：教 agent 特定任務或領域，附上所需腳本與參考資料。</li>
-        <li>捐的是資產＋治理：名稱、logo、GitHub 組織、agentskills.io 網域；不加入 AAIF 也能照常使用與貢獻。</li>
-        <li>起步路線圖：版本化發布、正式提案流程、給 skill 撰寫者與安裝者的安全指引。</li>
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">Anthropic 把 Agent Skills——給 agent 專門知識與工作流程的開放標準——捐給 Linux 基金會旗下的 AAIF：<strong>交出去的是治理權，不是使用權</strong>。</p>
+
+    <figure class="x-fig" style="margin-top:18px">
+      <figcaption class="x-cap">圖解 A · <b>四段接力</b> — 從 Claude Code 的內部解方到基金會治理</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">Claude Code → 一個資料夾</span><span class="tr"><i>缺程序性知識；解法是含 SKILL.md 的資料夾（2025-10 推出）</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">開發者 → 自發生態</span><span class="tr"><i>數週內數千個 skills，並自寫 Codex／Cursor／OpenCode 的 loader</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">Anthropic → 規格化</span><span class="tr"><i>2025-12 發布開放標準，自有 GitHub 組織與網域</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">Anthropic → AAIF</span><span class="tr"><i>2026-10-22 捐出：名稱、logo、GitHub 組織、網域一併移交</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">AAIF → 社群</span><span class="tr"><i>中立的家；社群對標準下一步有話語權</i></span></span></li>
       </ul>
-    </div>
+      <p class="x-src">本站整理；原文以散文敘述、未給時間軸，編號非原文。原文未給規格版本號，版本線索只有兩個日期——2025-10 推出 skills、2025-12 發布標準（原句：<em>since we published the standard in December 2025</em>）。第 02→03 步的先後依原文「We then published」推定（編輯推論）。</p>
+    </figure>
+
+    <p class="g-p">skill 的定義刻意壓到最小：<strong>一個資料夾</strong>，內含教 agent 某個任務或領域的 <strong>SKILL.md</strong>，再附上它需要的腳本與參考資料。規格全文在 agentskills.io。</p>
+    <p class="g-p">痛點講得很直白：<em>Claude Code 處理一般知識工作沒問題，卻常缺真實業務任務需要的程序性知識（procedural knowledge）</em>。標準化要補的就是這一層。</p>
+    <p class="g-p">原文結尾是一段致謝：謝謝一開始就用 Agent Skills 的開發者，以及把 skills 帶進自家產品的團隊。其餘入口不變——規格在 agentskills.io，討論在 GitHub。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">從 Claude Code 長出來的標準：一個資料夾，一份 SKILL.md</h2>
-    <p class="g-p">Agent Skills 的起源很具體：Anthropic 在開發 <strong>Claude Code</strong> 時發展出 skills。原文描述的痛點是——Claude Code 處理一般知識工作沒問題，但<em>常缺真實業務任務需要的程序性知識（procedural knowledge）</em>。解法維持極簡：<strong>一個 skill 就是一個資料夾</strong>，內含教 agent 特定任務或領域的 <strong>SKILL.md</strong>，加上它需要的腳本與參考資料。</p>
-    <p class="g-p">生長速度說明了為什麼要開放。2025 年 10 月推出後<em>數週內</em>，開發者就在 GitHub 上發布了數千個 skills，並為 <strong>Codex、Cursor、OpenCode</strong> 寫出 loader；Anthropic 順勢把 Agent Skills 發布為開放標準，放進獨立的 GitHub 組織與專屬網域，讓任何 agent 都能採用。到今天：超過 <strong>70 個 agent 平台</strong>已整合——包括 ChatGPT、Cursor、GitHub Copilot、VS Code；累計 <strong>100 萬個 skills</strong>，安裝<em>近 2.8 億次</em>。</p>
+    <h2 class="g-h2">誰已經在這條標準上</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>四個位置</b> — 並列，無先後</figcaption>
+      <p class="x-grid-h">各自獨立的位置，不代表流程或層級；原文未給排序</p>
+      <div class="x-grid">
+        <div class="c"><b><i>①</i>已整合平台 70+</b><small>原文只點名 ChatGPT、Cursor、GitHub Copilot、VS Code 四個</small></div>
+        <div class="c"><b><i>②</i>自寫 loader 的社群</b><small>Codex、Cursor、OpenCode——發生在標準發布之前，由開發者自己動手</small></div>
+        <div class="c"><b><i>③</i>維護者</b><small>Anthropic、Google、OpenAI 等工程師，以個人身份；Lead Maintainer 兩人</small></div>
+        <div class="c"><b><i>④</i>受贈方 AAIF</b><small>隸屬 Linux 基金會，2025 年由 Anthropic、Block、OpenAI 共同創立</small></div>
+      </div>
+      <p class="x-src">本站整理；原文分散在三個段落，未給此四類排序。規模數字見上方資料卡（Anthropic 自報）。</p>
+    </figure>
+    <p class="g-p">時間尺度才是重點：標準 2025-12 發布、2026-10 捐出，相隔約 10 個月（編輯計算）。</p>
+    <p class="g-p">採用不是靠宣告，是靠別人願意替它寫 loader。標準在還沒進基金會之前，就已經被別家產品依賴（編輯觀點）。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">交棒 AAIF：繼 MCP 之後，再捐進基金會的標準</h2>
-    <p class="g-p">這次的受贈方 <strong>Agentic AI Foundation（AAIF）</strong>隸屬 <strong>Linux Foundation</strong>，由 Anthropic 與 Block、OpenAI 於去年（2025）共同創立；先前 Anthropic 也把 <strong>MCP（Model Context Protocol）</strong>捐給了同一個基金會。移交清單包含 Agent Skills 的<strong>名稱與 logo</strong>、<strong>GitHub 組織</strong>與 <strong>agentskills.io 網域</strong>——品牌與入口一併交出。維護模式也寫明：來自 Anthropic、Google、OpenAI 等公司的工程師<em>將以個人身份</em>維護標準，由 <strong>David Soria Parra</strong> 與 <strong>Mahesh Murag</strong> 擔任 Lead Maintainers。</p>
+    <h2 class="g-h2">捐的是治理，不是使用權</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>捐贈前後對照</b> — 資產一樣，決策權換手</figcaption>
+      <div class="x-cmp">
+        <div><b>留在 Anthropic</b><p>標準由 Anthropic 發布；名稱、logo、GitHub 組織、<b>agentskills.io</b> 網域都在自家手上。</p></div>
+        <div class="after"><b>交給 AAIF 之後</b><p>同一批資產移交，基金會成為中立的家；社群對標準走向有話語權，決策以透明為原則。</p></div>
+      </div>
+      <p class="x-src">本站整理；「留在 Anthropic」一欄由原文的移交清單反推（編輯推論），原文未描述捐贈前的治理狀態。</p>
+    </figure>
+    <p class="g-p">原文一句最該記住：<em>你可以繼續使用這個標準、也可以貢獻，不必加入 AAIF</em>。使用門檻沒動，動的是誰決定下一步。</p>
+    <p class="g-p">治理細節目前只寫到這裡：<strong>以個人身份參與</strong>與兩位 Lead Maintainer。投票規則、任期、任命方式，原文都沒有交代。</p>
     <div class="g-know">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4.5 8-11V5l-8-3-8 3v6c0 6.5 8 11 8 11z"/></svg>
-      <p><b>不用加入 AAIF 也能用。</b>原文明說：你可以繼續使用這個標準、也可以貢獻，而不必加入 AAIF——捐贈改變的是「誰決定標準走向」，不是使用門檻；標準的開放使用與基金會治理是兩件事。</p>
+      <p><b>同一條路已經走過一次。</b>Anthropic 先前把 Model Context Protocol（MCP）捐給同一個基金會；這次是把相同動作套在 skills 上。</p>
     </div>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">路線圖第一版：先把治理的骨架立起來</h2>
-    <p class="g-p">捐贈同時附上一份<em>已提案</em>的起步路線圖，方向都指向治理規範化。與 MCP 相同，專案將持續以<strong>社群意見優先、決策透明</strong>為原則：規格變更的回饋可在專案 Discord 提出，規格全文在 agentskills.io，討論則在 GitHub。</p>
-    <div class="g-steps">
-      <div class="g-steprow"><div class="n">01<small>演進節奏</small></div><div><h3>版本化發布（versioned releases）</h3><p>路線圖涵蓋的第一項，為這個已被 70+ agent 平台依賴的標準定出後續演進的版本依據。</p></div></div>
-      <div class="g-steprow"><div class="n">02<small>提案管道</small></div><div><h3>正式提案流程（formal proposal process）</h3><p>對規格變更建立正式的提案程序；現階段的回饋入口是專案 <strong>Discord</strong>——針對提案中的規格變更給意見。</p></div></div>
-      <div class="g-steprow"><div class="n">03<small>安全文件</small></div><div><h3>給撰寫者與安裝者的安全指引（security guidance）</h3><p>對象同時涵蓋 skill 的<em>撰寫者</em>與<em>安裝者</em>——在 100 萬 skills、近 2.8 億次安裝的生態裡，安全指引被列為起步項目。</p></div></div>
+    <h2 class="g-h2">路線圖：三件起步工作，全部還是提案</h2>
+    <div class="x-scroll" style="margin-top:14px">
+      <table class="x-tbl">
+        <thead><tr><th>起步項目</th><th>涵蓋什麼</th><th>原文的限定</th></tr></thead>
+        <tbody>
+          <tr><td data-l="起步項目"><b>版本化發布</b><br><small>versioned releases</small></td><td data-l="涵蓋什麼">為已發表的標準訂出後續演進的版本依據</td><td data-l="原文的限定">列為路線圖第一項；<b>未給版本號，也未給時程</b></td></tr>
+          <tr><td data-l="起步項目"><b>正式提案流程</b><br><small>formal proposal process</small></td><td data-l="涵蓋什麼">規格變更走正式提案；目前回饋入口是專案 Discord</td><td data-l="原文的限定">只說將「以社群意見與透明決策為優先」，比照 MCP</td></tr>
+          <tr><td data-l="起步項目"><b>安全指引</b><br><small>security guidance</small></td><td data-l="涵蓋什麼">同時寫給 <b>skill 的撰寫者</b>與<b>安裝者</b></td><td data-l="原文的限定">與安裝規模同段提出；未給內容範圍</td></tr>
+        </tbody>
+      </table>
     </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">原文用 <em>we've proposed</em>——三項都還在提案狀態，不是已運作的機制。</p>
+    <p class="g-p">三個入口分工：規格全文在 agentskills.io、討論在 GitHub、對提案中規格變更的意見在專案 Discord。公告則沒給規格版本號、時程或第三方稽核（編輯觀察）。</p>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">帶走三件事</h2>
-    <div class="g-take">
-      <p><b>採用規模是捐贈的底氣。</b>70+ agent 平台、100 萬 skills、近 2.8 億次安裝——標準早已是事實基礎設施；把治理交給中立基金會是收尾動作，而非冷啟動實驗。</p>
-      <p><b>極簡設計養出跨廠生態。</b>一個資料夾＋一份 SKILL.md，簡單到數週內就有人為 Codex、Cursor、OpenCode 等競品 agent 寫出 loader；正因 ChatGPT、Cursor、Copilot、VS Code 都已整合，「廠商中立」才成為必要的下一步。</p>
-      <p><b>下一步看提案流程與安全指引落地。</b>路線圖目前的狀態是「proposed」——版本化發布、正式提案、安全指引能否真正運作，才是檢驗社群治理是否成真的觀察點。</p>
+    <div class="x-take">
+      <p><b>交出品牌與網域才算中立。</b>名稱、logo、GitHub 組織、網域一起移交。</p>
+      <p><b>極簡是擴散的原因。</b>一個資料夾＋SKILL.md，競品 agent 也有人自寫 loader。</p>
+      <p><b>觀察點是提案流程。</b>三項路線圖仍為提案，未給時程（編輯觀點）。</p>
     </div>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">同一主題的其他館藏</h2>
     <div class="g-rel">
-      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：一行 system prompt 的退步，該在評分表上現形</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">法律工作的代理式作業系統：NDA 初篩如何從吃掉約 20% 產能降到 1% 以下</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司會坐哪裡：地板下、桌邊、中間那一層——三種組織圖與四個未定的大問題</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：平均 2.75 的兩種病，只有逐案分得出來</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">Legora 法律代理：NDA 初篩從吃掉約 20% 產能到 1% 以下</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司坐哪裡：三種組織圖，四個未定的大問題</a><span class="d">2026-10-28</span></div>
     </div>
   </section>
 
-  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據與做法均出自原文，小標與分節為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理，原文無配圖、圖解皆為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
 </main>
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>

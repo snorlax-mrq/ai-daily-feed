@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>導讀 — 讓語音 agent 不冷場：ADK 非阻塞工具 · AI 每日動態檔案</title>
-<meta name="description" content="深入淺出導讀 Google Developers 的 ADK 教學：串流工具、非阻塞 FunctionTool 與 response_scheduling 如何讓語音代理保持對話——benchmark 銷售報告案例中，首字回應從 14.4 秒（阻塞工具）縮到 1.2 秒（改用串流工具）。">
+<title>導讀 — 語音 agent 不冷場：把 13 秒死寂換成先開口 · AI 每日動態檔案</title>
+<meta name="description" content="Google ADK 教學導讀：用通話時序圖與「等待有沒有故事」決策圖，拆 streaming tool（return→yield）、單次 yield 與 response_scheduling 三種排程，以及 stop_streaming、barge-in 的邊界；benchmark 首字回應 14.4 秒→1.2 秒（Google 自報）。">
 <script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
 <link rel="stylesheet" href="../assets/archive.css">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -24,10 +24,10 @@
   <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
   <header class="g-head">
     <div class="day-title-row">
-      <h1>讓語音 agent 不冷場：把「卡住 13 秒」變成「先說一聲」</h1>
+      <h1>語音 agent 不冷場：把 13 秒死寂換成先開口</h1>
       <span class="stamp">導讀</span>
     </div>
-    <p class="g-orig">原文：Build a Voice Agent That Never Goes Silent using ADK（step-by-step guide）</p>
+    <p class="g-orig">原文：Build a Voice Agent That Never Goes Silent using ADK——step-by-step 教學，含可複製程式碼、benchmark 與上線注意事項</p>
     <p class="g-meta">
       <span>Google Developers</span>·<span>2026-10-19 發布</span>·<span>2026-10-22 收錄</span>·
       <a href="https://developers.googleblog.com/step-by-step-guide-build-a-voice-agent-that-never-goes-silent-using-adk/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
@@ -35,104 +35,124 @@
   </header>
 
   <div class="g-stats">
-    <div class="g-stat"><b>14.4s → 1.2s</b><span>首字回應（benchmark·阻塞改串流）</span></div>
-    <div class="g-stat"><b>13 秒</b><span>阻塞＝13 秒死寂＝掛斷風險</span></div>
-    <div class="g-stat"><b>2 種</b><span>非阻塞模式（串流／背景）</span></div>
-    <div class="g-stat"><b>Python 原生</b><span>免自寫 WebSocket 事件迴圈</span></div>
+    <div class="g-stat"><b>14.4s → 1.2s</b><span>首字回應：阻塞改串流（Google 自報）</span></div>
+    <div class="g-stat"><b>13 秒</b><span>阻塞工具＝13 秒死寂＝掛斷風險</span></div>
+    <div class="g-stat"><b>3 種</b><span>排程：WHEN_IDLE／INTERRUPT／SILENT</span></div>
+    <div class="g-stat"><b>google-adk ≥ 2.10.0</b><span>串流與排程需 run_live 雙向 session</span></div>
   </div>
 
   <section class="g-sec">
-    <div class="g-tldr">
-      <h2 class="g-tldr-h">30 秒版本</h2>
-      <p class="one">文字聊天裡，13 秒的資料庫查詢只是個轉圈圈；語音對話裡，它是 13 秒死寂——使用者以為斷線、直接掛斷。Google 這篇教學用開源 ADK 與 gemini-3.8-live 把慢工具「非阻塞化」：benchmark 銷售報告案例中，把阻塞工具改為串流工具，代理的首字回應從 14.4 秒縮短到 1.2 秒。</p>
-      <ul>
-        <li>問題出在架構不在 prompt：阻塞工具會卡住模型的回合，連「正在處理中」都說不出口。</li>
-        <li>兩種非阻塞模式：進度有故事就用串流工具（<code>return</code> 改 <code>yield</code>）；等待只是等待就放背景執行。</li>
-        <li>全程 Python 原生——不用自己寫 WebSocket 事件迴圈去管理非同步工具狀態。</li>
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">13 秒的資料庫查詢，在文字聊天是轉圈圈，在語音通話是 13 秒死寂——使用者以為斷線就掛了。原文的解法是架構，不是 prompt。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一次工具呼叫的通話時序</b> — 慢工具在跑，對話沒停</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">使用者 → agent</span><span class="tr"><i>「幫我拉 EMEA 的季度報告」</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">agent → ADK</span><span class="tr"><i>呼叫 query_sales_database（約 13 秒）</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">ADK → agent</span><span class="tr"><i>立刻派送非同步狀態事件</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">agent → 使用者</span><span class="tr"><i>先開口：「正在查 EMEA 的數字」</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">工具 → agent</span><span class="tr"><i>每次 yield 推一則部分結果，旁白可能落後數秒</i></span></span></li>
+        <li class="side"><span class="st">05b</span><span class="body"><span class="hop">分支：使用者插話</span><span class="tr"><i>barge-in 只停播放；工具不取消、結果照送</i></span></span></li>
+        <li><span class="st">06</span><span class="body"><span class="hop">agent → 使用者</span><span class="tr"><i>最終數字按排程落地（WHEN_IDLE 等自然停頓）</i></span></span></li>
       </ul>
-    </div>
-  </section>
-
-  <section class="g-sec">
-    <h2 class="g-h2">問題：語音的敵人是沉默</h2>
-    <p class="g-p">標準工具的寫法是 <code>async def</code> 做完工作、<strong>回傳單一值</strong>。在 Gemini Live API 的雙向語音 session（<code>run_live</code>）裡，執行迴圈會<strong>等工具回傳才輪到模型講話</strong>——所以 13 秒的銷售資料庫查詢，就是 13 秒的完全靜默。原文點破一個常見誤區：<strong>靠 prompt 解不了</strong>。你可以在指令裡寫「執行時告訴用戶你在處理」，但模型的回合被卡住等 function response，payload 沒回來它一個字都吐不出。</p>
-    <p class="g-p">後端查詢也不可能永遠壓到一秒內——所以解方必須是<strong>架構性</strong>的：讓代理在慢工具背景執行時，照樣保持對話。</p>
-
-    <figure class="g-dg">
-      <figcaption class="g-dg-h">圖解 A · 阻塞工具的時間軸 · <b>死寂 13 秒</b> · 示意</figcaption>
-      <div class="nd"><b>用戶提問</b><span>「幫我拉 EMEA 的季度銷售報告」</span></div>
-      <div class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></div>
-      <div class="nd nd--fat"><b>工具執行 13 秒＝13 秒死寂</b><span>模型回合被卡住，等 function response——連「正在處理」都說不出</span></div>
-      <div class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></div>
-      <div class="nd"><b>報告終於出口</b><span>——但使用者很可能早已以為斷線掛斷</span></div>
+      <p class="x-src">本站重排：原文把這些機制分散在「How It Works in Practice」與「Production Considerations」兩節，未給單通電話的先後。範例的四個進度階段分別等 1.5／3.5／3.5／1.5 秒。</p>
     </figure>
+
+    <p class="g-p">阻塞的機制很單純：標準工具寫成 <code>async def</code>，做完才回傳一個值。</p>
+    <p class="g-p">在 <code>run_live</code> 的雙向語音 session 裡，執行迴圈要等工具回傳，才輪到模型生成下一回合。</p>
+    <p class="g-p">所以原文直接否掉 prompt 解法：指令裡寫「執行時告訴用戶你在處理」沒用。</p>
+    <p class="g-p">回合卡在等 function response payload，模型連一句安撫都吐不出來。</p>
+    <p class="g-p">原文列四項效益：零死寂、可聽的進度、多工並行、交付粒度可控。零死寂靠的是立刻回一句「正在看那些數字」。</p>
+    <p class="g-p">可聽的進度來自多階段工作：連線、查詢、對帳，每段推一則更新。多工最容易被低估——長查詢在背景跑，使用者插問別的事，代理照答。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">解法：兩種非阻塞模式</h2>
-    <p class="g-p">ADK 把「讓慢工具不卡對話」變成<strong>語言層級的小改動</strong>。選哪種模式，判準只有一個：<strong>等待的過程有沒有故事可講</strong>。</p>
+    <h2 class="g-h2">先問：這段等待有沒有故事</h2>
 
-    <figure class="g-dg">
-      <figcaption class="g-dg-h">圖解 B · 串流工具的時間軸 · <b>先說一聲，邊跑邊報</b> · 示意</figcaption>
-      <div class="g-proto">
-        <div class="g-step">1<small>立即應答</small></div><div class="g-step">2<small>進度旁白</small></div><div class="g-step">3<small>持續對話</small></div><div class="g-step g-step--llm">4<small>結果出口</small></div>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>三條路的判準</b> — 等待有沒有階段可講</figcaption>
+      <div class="x-dec">
+        <p class="q">工具要跑 13 秒，這段等待怎麼處理？</p>
+        <div class="brs">
+          <div class="br"><span class="tag">有階段可講</span><b>Pattern 1 · 串流工具</b><small><code>return</code> 改 <code>yield</code>；ADK 自動標 NON_BLOCKING，先回一個立即確認</small></div>
+          <div class="br"><span class="tag">純等待</span><b>Pattern 2A · 單次 yield</b><small>先應答、計算中安靜、好了再報；改動最小</small></div>
+          <div class="br"><span class="tag">要留 coroutine</span><b>Pattern 2B · FunctionTool</b><small>配 WHEN_IDLE；代價是多半不會先出聲</small></div>
+        </div>
       </div>
-      <div class="g-legend">
-        <p class="det"><b>改動只有一個關鍵字</b>：把函式定義成 AsyncGenerator、<code>return</code> 改 <code>yield</code>——ADK 自動把工具標記為 NON_BLOCKING，並先回給模型一個立即確認。</p>
-        <p class="llm"><b>進度變成旁白</b>：連線倉儲 → 掃描訂單 → 彙整營收 → 格式化報告，每個階段 yield 一句，代理轉述給用戶（旁白可能落後工具數秒；進行中用戶插話也能接住，步驟 2–3 交錯發生）；benchmark 案例首字回應 <b>14.4s → 1.2s</b>。</p>
-      </div>
-      <div class="g-lanes">
-        <div class="g-lane"><b>Pattern 1 · 串流工具（進度有故事）</b><span class="seq"><span class="g-agent">yield</span><span class="g-sep">→</span><span class="g-agent">yield</span><span class="g-sep">→</span><span class="g-agent">yield</span></span><small>操作有明確階段（連線、彙整、格式化）時，讓代理把進度唸出來；改動＝return 換成 yield。</small></div>
-        <div class="g-lane"><b>Pattern 2 · 背景執行（等待只是等待）</b><span class="seq"><span class="g-agent">ack</span><span class="g-sep">→</span><span class="g-agent">靜默</span><span class="g-sep">→</span><span class="g-agent">完成</span></span><small>持續播報反而打擾時，安靜做完再說——做法 A 開場會先應答，做法 B 通常靜默到下一個自然停頓。兩種做法：單次 yield 產生器，或 FunctionTool ＋ response_scheduling = WHEN_IDLE（ADK 2.10+ 另可設 behavior = NON_BLOCKING，不必動排程模式）。</small></div>
-      </div>
-      <div class="g-know">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
-        <p><b>instruction 也要配合</b>：原文範例在代理指令中明確要求——先立即應答、簡短轉述每則進度、完成才報數字。架構鬆綁之後，行為規範才有效。生產細節：串流工具宜標明只呼叫一次（single-flight），並留意 stop_streaming 取消、barge-in 不會取消工具等實務項（詳見原文）。</p>
-      </div>
+      <p class="x-src">本站整理（原文的 Pattern 1／2 分節即此判準，但未畫成決策圖）。排程與執行形狀是兩個獨立維度，可疊用：串流工具設了 response_scheduling，每則部分更新都蓋上同一行為。</p>
     </figure>
+
+    <p class="g-p">硬要播報也有反效果：使用者一轉題，持續的狀態更新就變成打擾。這是 2A 與 2B 存在的理由。</p>
+    <p class="g-p">串流工具的改動小到近乎作弊：函式改成 AsyncGenerator、<code>return</code> 換成 <code>yield</code>，ADK 就把工具宣告標成 NON_BLOCKING。</p>
+    <p class="g-p">四個階段本身就是旁白素材：連線倉儲、掃描訂單、彙整營收、格式化報告。每次 yield 送一則部分 function response，模型邊到邊轉述。</p>
+    <p class="g-p">旁白可能落後工具數秒——原文的提醒是：更新是陸續到的，不是同步字幕，別期待逐字對齊。</p>
+    <p class="g-p">2A 寫法幾乎一樣，只 yield 一次：ADK 先給一個 pending 回應，代理說「我先把報告整理出來」。</p>
+    <p class="g-p">接著它在計算中保持安靜，等結果好了、或使用者講完，才把數字端出來。改動最小，也最容易先上線。</p>
+    <p class="g-p">2B 是三者中唯一明講代價的：return-once 的 coroutine 在函式跑完前沒有 payload，模型通常不會先出聲。</p>
+    <p class="g-p">它適合使用者問完馬上轉去問別的：報告在下一個自然停頓被織進對話，不打斷任何一方。</p>
+    <p class="g-p">零死寂不等於全程有話：原文允許代理在計算中安靜，只要它先出過聲。</p>
+    <p class="g-p">原文的 rule of thumb 一句話：<em>等待有故事就串流；只是等待就丟背景，讓結果在 idle 時落地</em>。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">逐步拆解（本站整理）</h2>
-    <div class="g-steps">
-      <div class="g-steprow"><div class="n">01<small>盤點</small></div><div><h3>找出語音流程裡所有「做完才回」的工具</h3><p>它們就是潛在的掛斷點：查詢、RAG、任何外部呼叫。先量死寂有多長，再決定怎麼改。</p></div></div>
-      <div class="g-steprow"><div class="n">02<small>選模式</small></div><div><h3>進度有故事 → 串流；等待無聊 → 背景</h3><p>原文的判準很務實：用戶在乎過程就播報（如報表產生），不在乎就安靜（如純等待），避免為了「有反應」而嘮叨。</p></div></div>
-      <div class="g-steprow"><div class="n">03<small>最小改動</small></div><div><h3>三種寫法對應三種需求</h3><p>串流：AsyncGenerator 逐段 yield；背景 A：單次 yield（完成才回，立即應答）；背景 B：保留標準 coroutine，包 FunctionTool 設 response_scheduling = WHEN_IDLE。</p></div></div>
-      <div class="g-steprow"><div class="n">04<small>調行為</small></div><div><h3>instruction 明確規範應答節奏</h3><p>「先應答、轉述進度、完成才報數字」寫進代理指令——非阻塞架構給了模型說話的空間，規範決定它說什麼。</p></div></div>
-      <div class="g-steprow"><div class="n">05<small>量首字</small></div><div><h3>以「首字回應時間」為體驗指標</h3><p>benchmark 銷售報告工作流（gemini-3.8-live）：阻塞 14.4 秒 → 串流 1.2 秒。語音產品的體感，就差在這裡。</p></div></div>
-    </div>
-  </section>
+    <h2 class="g-h2">交付與中止：何時說、怎麼停</h2>
 
-  <section class="g-sec">
-    <h2 class="g-h2">五個關鍵詞</h2>
-    <div class="g-glos">
-      <div class="g-card"><b>阻塞工具 Blocking tool</b><span class="w">做完才回傳單一值的標準 async 工具。</span><span class="why">語音場景中等於整段對話凍結。</span></div>
-      <div class="g-card"><b>串流工具 Streaming tool</b><span class="w">AsyncGenerator 持續 yield 進度訊息。</span><span class="why">ADK 自動標 NON_BLOCKING——改動只有一個關鍵字。</span></div>
-      <div class="g-card"><b>response_scheduling</b><span class="w">FunctionTool 的回應排程選項：WHEN_IDLE（等自然停頓）、INTERRUPT（打斷現句）、SILENT（只入歷史不播報）。</span><span class="why">想保留標準函式寫法時的非阻塞出口。</span></div>
-      <div class="g-card"><b>run_live</b><span class="w">Gemini Live API 的雙向語音 session。</span><span class="why">執行迴圈會等工具回傳——阻塞問題的根源。</span></div>
-      <div class="g-card"><b>首字回應時間</b><span class="w">代理對同一輪請求開口說第一個字前的等待時間。</span><span class="why">語音體驗的關鍵指標：14.4s → 1.2s。</span></div>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>排程</th><th>行為（原文措辭）</th><th>benchmark 裡看到的樣子</th></tr></thead>
+        <tbody>
+          <tr><td data-l="排程"><b>WHEN_IDLE</b></td><td data-l="行為">絕不切斷進行中的回合；模型還在講、使用者還在講，就等那個回合結束，到下一個自然停頓才回應</td><td data-l="benchmark">結果先等著，等模型答完另一個 20 秒的問題才順順接上</td></tr>
+          <tr><td data-l="排程"><b>INTERRUPT</b></td><td data-l="行為">直接打斷當前說話</td><td data-l="benchmark">切掉當時那句話，模型講完自己的答案再把數字補上</td></tr>
+          <tr><td data-l="排程"><b>SILENT</b></td><td data-l="行為">只寫進對話歷史，不觸發主動播報</td><td data-l="benchmark">後續回合查得到，但不會自己冒出來講</td></tr>
+        </tbody>
+      </table>
     </div>
+
+    <p class="x-src">出處：原文〈Controlling Result Delivery with response_scheduling〉的 benchmark 敘述（gemini-3.8-live）。三種情境原文只描述行為，未給秒數。</p>
+
+    <p class="g-p">排程管「何時說」，執行形狀管「怎麼產出」。原文說兩者獨立、可組合：串流工具設了 response_scheduling，每則部分更新都蓋上同一行為。</p>
+    <p class="g-p">三種排程的代價不同：INTERRUPT 最急，卻會切斷模型當下的句子；SILENT 最安靜，代價是要等下一個回合才用得上。</p>
+    <p class="g-p">ADK 2.8 之後還能逐則指定：中間進度 yield 成 SILENT，最終結果 yield 成 WHEN_IDLE。</p>
+    <p class="g-p">這等於把「閉嘴幹活、講完再接」寫進同一支產生器。</p>
+
+    <div class="x-scroll" style="margin-top:14px">
+      <table class="x-tbl">
+        <thead><tr><th>開關</th><th>原文做法</th><th>邊界（原文限定）</th></tr></thead>
+        <tbody>
+          <tr><td data-l="開關"><b>single-flight</b></td><td data-l="做法">docstring 寫死「Call this ONCE」；生產再加記憶體 latch 或 idempotency key</td><td data-l="邊界">串流工具跨多回合推更新，被反覆提示時模型可能重複呼叫</td></tr>
+          <tr><td data-l="開關"><b>stop_streaming</b></td><td data-l="做法">tools 清單放一個 <code>stop_streaming(function_name)</code>，ADK 攔截後取消產生器的 asyncio.Task</td><td data-l="邊界">以 asyncio.CancelledError 進到你的函式，收尾關連線、關檔案；這也是唯一停得掉工具的方式</td></tr>
+          <tr><td data-l="開關"><b>barge-in</b></td><td data-l="做法">Live API 停掉模型輸出，ADK 發 <code>interrupted=True</code> 讓 client 停播放</td><td data-l="邊界">跑著的串流或背景工具不取消，結果仍會送達</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+
+    <p class="g-p">barge-in 是最常被誤解的一格：插話只停「播放」，不停「工作」。要真的收掉工具，得像上一列那樣由模型呼叫 stop_streaming。</p>
+    <p class="g-p">版本門檻別漏：串流與排程都得跑在 <code>run_live</code> 的雙向 session 上。</p>
+    <p class="g-p">模型是 Gemini Enterprise 的 gemini-3.8-live，套件要 google-adk ≥ 2.10.0。</p>
+    <p class="g-p">原文還附一分鐘的 ADK Live AI Concierge 示範與可互動 demo：同一支 13 秒查詢，跑過每一種工具形狀與排程模式。</p>
+    <p class="g-p">結尾的類比值得抄：網頁載入 10 秒叫慢，語音代理沉默 10 秒叫壞掉。非阻塞沒讓後端變快，改變的是在場感。</p>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">帶走三件事</h2>
-    <div class="g-take">
-      <p><b>語音 UX 的敵人是沉默。</b>轉圈圈救不了語音——任何「做完才回」的工具都是掛斷點（原文示例中，13 秒就足以讓使用者放棄）。且非阻塞不會讓後端變快：13 秒查詢還是 13 秒，改變的是代理的「在場感」。</p>
-      <p><b>非阻塞是架構選擇，不是 prompt 技巧。</b>一個 yield 關鍵字、一個 response_scheduling 設定，比催促模型「記得說話」或硬壓後端延遲都實際。</p>
-      <p><b>會說話的等待才播報。</b>串流與背景先二選一，判準是「進度有沒有故事」（兩者還可疊加：串流工具同樣能設 response_scheduling）——別讓代理為了看起來勤勞而嘮叨。</p>
+    <div class="x-take">
+      <p><b>沉默是語音唯一真正的 bug。</b>13 秒查詢還是 13 秒，改的是在不在場。</p>
+      <p><b>非阻塞是架構決定，不是話術。</b>一個 yield 勝過指令裡十句催促。</p>
+      <p><b>先分有沒有故事，再談排程。</b>排程管何時說，停工具得靠 stop_streaming。</p>
     </div>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">同一主題的其他館藏</h2>
     <div class="g-rel">
-      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：一行 system prompt 的退步，該在評分表上現形</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">法律工作的代理式作業系統：NDA 初篩如何從吃掉約 20% 產能降到 1% 以下</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司會坐哪裡：地板下、桌邊、中間那一層——三種組織圖與四個未定的大問題</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：平均 2.75 的兩種病，只有逐案分得出來</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">Legora 法律代理：NDA 初篩從吃掉約 20% 產能到 1% 以下</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司坐哪裡：三種組織圖，四個未定的大問題</a><span class="d">2026-10-28</span></div>
     </div>
   </section>
 
-  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據出自原文，示意圖與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理（原文無可用配圖，兩張時序／決策圖為本站重繪）。內容經對照原文的獨立事實審查後發布。</p>
 </main>
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>

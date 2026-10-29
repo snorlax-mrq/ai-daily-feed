@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>導讀 — 數千個 AI 代理讀完數百萬腦細胞數據 · AI 每日動態檔案</title>
-<meta name="description" content="深入淺出導讀 OpenAI〈Scaling AI research for complex biological data〉：分散式生物推理如何用數千個 AI 代理，32 分鐘完成人類需數月到一年的分析。">
+<title>導讀 — 分散式生物推理：數千代理讀完數百萬腦細胞 · AI 每日動態檔案</title>
+<meta name="description" content="OpenAI〈Using thousands of AI agents to uncover new leads in biological data〉導讀：用研究流程時序圖與單一代理對照，看數千個 GPT‑Rosalind 代理如何在 32 分鐘內解讀數百萬小鼠腦細胞、引用 700+ 篇文獻。">
 <script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
 <link rel="stylesheet" href="../assets/archive.css">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -24,10 +24,10 @@
   <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
   <header class="g-head">
     <div class="day-title-row">
-      <h1>數千個 AI 代理，32 分鐘讀完數百萬腦細胞的數據</h1>
+      <h1>分散式生物推理：數千個代理，32 分鐘讀完數百萬腦細胞</h1>
       <span class="stamp">導讀</span>
     </div>
-    <p class="g-orig">原文：Using thousands of AI agents to uncover new leads in biological data</p>
+    <p class="g-orig">原文：OpenAI〈Using thousands of AI agents to uncover new leads in biological data〉——研究紀實，自述方法與發現，附兩位外部學者的評論</p>
     <p class="g-meta">
       <span>OpenAI</span>·<span>2026-10-21 發布</span>·<span>2026-10-22 收錄</span>·
       <a href="https://openai.com/index/scaling-ai-research-for-complex-biological-data" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
@@ -35,128 +35,113 @@
   </header>
 
   <div class="g-stats">
-    <div class="g-stat"><b>數千</b><span>個並行 AI 代理</span></div>
-    <div class="g-stat"><b>數百萬</b><span>個小鼠腦細胞數據</span></div>
-    <div class="g-stat"><b>32 分鐘</b><span>完成分析（人類估數月至一年）</span></div>
-    <div class="g-stat"><b>700+ vs 11</b><span>文獻引用：分散式 vs 單代理</span></div>
-    <div class="g-stat"><b>75%</b><span>盲測中專家偏好分散式（vs 單代理）</span></div>
+    <div class="g-stat"><b>32 分鐘</b><span>分析與解讀既有資料（人類估數月至一年）</span></div>
+    <div class="g-stat"><b>數千</b><span>個 GPT‑Rosalind 代理，一代理一擾動</span></div>
+    <div class="g-stat"><b>700+ vs 11</b><span>文獻引用，最大工作量時（OpenAI 自報）</span></div>
+    <div class="g-stat"><b>75%</b><span>盲測中專家偏好分散式報告（vs 單一代理）</span></div>
   </div>
 
   <section class="g-sec">
-    <div class="g-tldr">
-      <h2 class="g-tldr-h">30 秒版本</h2>
-      <p class="one">OpenAI 與 PerturbAI、Scripps Research 把「數千個基因擾動 × 數百萬細胞」的小鼠全腦 CRISPR 圖譜，拆給數千個由 GPT‑Rosalind 驅動的 AI 代理並行分析——32 分鐘完成人類估計需要數月到一年的文獻對照工作，盲測中人類專家 75% 偏好它們的報告（相對單一代理）。</p>
-      <ul>
-        <li>每個代理認領一個基因擾動：分析細胞反應、搜尋文獻、提出解釋，報告彙整成可探索的「推理圖譜」。</li>
-        <li>固定模型與資源的對照實驗：工作量最大時，單一代理只引用 11 篇文獻，分散式代理引用超過 700 篇。</li>
-        <li>找出的線索直指可測試的實驗：Tsc1/Tsc2 在小腦的差異、DCTN1 與膽固醇代謝的潛在關聯。</li>
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600"><strong>數千個代理各認領一個基因擾動，把「數月至一年」的文獻對照壓到 32 分鐘。</strong>原文是 OpenAI 自述的研究紀實，不是產品公告。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>研究怎麼跑</b> — 誰把球傳給誰</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">既有資料 → 分析</span><span class="tr"><i>全腦 CRISPR 圖譜：數千擾動 × 數百萬腦細胞</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">切分 → 數千代理</span><span class="tr"><i>一擾動一代理，並行開工</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">代理 → 反應＋文獻</span><span class="tr"><i>分析細胞反應、搜尋文獻、提出解釋</i></span></span></li>
+        <li class="side"><span class="st">03b</span><span class="body"><span class="hop">旁支：對照組</span><span class="tr"><i>單一代理吃整份資料集，模型與資源固定</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">報告 → 推理圖譜</span><span class="tr"><i>基因 × 細胞效應 × 文獻 × 可能機制</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">圖譜 → 人類專家</span><span class="tr"><i>盲測比較、挑線索、設計下一個實驗</i></span></span></li>
       </ul>
-    </div>
-  </section>
-
-  <section class="g-sec">
-    <h2 class="g-h2">問題：實驗產生的數據，遠超過科學家讀得完的量</h2>
-    <p class="g-p">現代生物實驗的產出早已超過人力所能細讀：研究者可以一次改動<strong>數千個基因</strong>、量測<strong>數百萬個細胞</strong>的反應——本文用的「全腦 CRISPR 圖譜」就是這種資料集，記錄每個基因擾動在小鼠腦中各類細胞上的效果。難點不在產生數據，而在<strong>把實驗結果連回數十年散落的科學文獻</strong>、推論它對人類疾病的意義：研究團隊估計，同規模的人類分析與文獻回顧（一次處理一個擾動）需要<strong>數月到一年</strong>。</p>
-    <p class="g-p">更麻煩的是，實驗中最有趣的線索往往藏在<strong>你本來沒要找的故事之外</strong>——在數千個擾動的資料集裡，這些訊號最容易漏掉。科學家時間有限，通常只盯最強的訊號；微弱但意外的反應，正是新藥方向可能藏身之處。</p>
-
-    <figure class="g-dg">
-      <figcaption class="g-dg-h">圖解 A · 單一代理扛整個資料集 · <b>對照實驗</b>（模型與資源固定）· 示意</figcaption>
-      <div class="g-hub">
-        <div class="nd nd--fat"><b>單一代理 vs 整份資料集</b><span>工作量越大 → 文獻搜尋越少 → 解釋越薄</span></div>
-        <div class="g-spokes">
-          <div class="g-spoke">擾動 #1</div>
-          <div class="g-spoke">擾動 #2</div>
-          <div class="g-spoke">擾動 #3</div>
-          <div class="g-spoke">……</div>
-          <div class="g-spoke">擾動 #數千</div>
-        </div>
-      </div>
-      <div class="g-loop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4"/></svg>工作量最大時僅引用 11 篇文獻——覆蓋率在規模下被犧牲</div>
+      <p class="x-src">原文列舉每個代理的三項工作，未給先後；本圖只主張「既有資料 → 切分 → 彙整 → 接手」的順序。32 分鐘指分析與解讀這批既有資料，不含做實驗的時間。圖譜已開源在 GitHub（jinlabneurogenomics/distributed_agent）。研究本身見同研究團隊的 bioRxiv 預印本〈Distributed AI agents enable comprehensive discovery of biological insights at scale〉（DOI 10.64898/2026.10.15.759436，未經同儕審查）。</p>
     </figure>
+
+    <p class="g-p">合作方是 OpenAI、PerturbAI 與 Scripps Research。代理跑在 GPT‑Rosalind 上——OpenAI 為生物研究發表的模型。</p>
+    <p class="g-p">研究細節見同研究團隊的 bioRxiv 預印本〈Distributed AI agents enable comprehensive discovery of biological insights at scale〉（未經同儕審查），不是 GPT‑Rosalind 的模型論文。</p>
+    <p class="g-p">原文開場的問法是：阿茲海默與巴金森的新線索，能不能從幾個月縮到幾分鐘。</p>
+    <p class="g-p">資料集不是這次做的：全腦 CRISPR 圖譜記錄數千個基因擾動在小鼠腦中各類細胞上的效果，早已存在。</p>
+    <p class="g-p">卡住的是下一步——把每個效應接回散落數十年的文獻。這一步沒有自動化，就等於沒有人做。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">解法：分散式生物推理</h2>
-    <p class="g-p">團隊的做法叫<strong>分散式生物推理（distributed biological reasoning）</strong>：把分析拆成最小單位——<strong>一個基因擾動＝一個代理</strong>——由數千個並行的代理同時開工。每個代理做三件事：<strong>分析</strong>該擾動的細胞反應、<strong>搜尋</strong>科學文獻、<strong>提出</strong>可能的機制解釋；所有報告再彙整成<strong>推理圖譜（reasoning atlas）</strong>——把基因、細胞效應、相關文獻、可能機制連成一張可探索的網絡。拆小、專注、並行，所以每個代理都有餘裕讀夠文獻：同一批模型，工作量最大時引用<strong>超過 700 篇</strong>，單一代理只有 11 篇。</p>
+    <h2 class="g-h2">對照組：單一代理扛整份資料集</h2>
+    <p class="g-p">團隊做了一個對照實驗，把模型與資源固定，只改「任務怎麼分」：全部交給一個代理，或拆給數千個。</p>
+    <p class="g-p">結果是工作量越大，單一代理搜的文獻越少。原文的解釋很直白：科學家時間有限，通常只追最強的訊號。</p>
+    <p class="g-p">微弱但意外的反應，往往就是你本來沒要找的那個故事——新藥方向常藏在那裡。</p>
 
-    <figure class="g-dg">
-      <figcaption class="g-dg-h">圖解 B · 分散式生物推理 · <b>一個擾動＝一個代理</b> · 示意</figcaption>
-      <div class="nd"><b>全腦 CRISPR 圖譜進場</b><span>數千個基因擾動 × 數百萬細胞的反應紀錄</span></div>
-      <div class="arr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M6 13l6 6 6-6"/></svg></div>
-      <div class="g-proto">
-        <div class="g-step">1<small>切分</small></div><div class="g-step">2<small>分析</small></div><div class="g-step">3<small>查文獻</small></div><div class="g-step g-step--llm">4<small>提出解釋</small></div><div class="g-step">5<small>彙整</small></div>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>拆與不拆</b> — 同一模型、同樣資源</figcaption>
+      <div class="x-cmp">
+        <div><b>單一代理 · 整份資料集</b><p>工作量越大，搜尋文獻越少；最大工作量時只引用 <b>11 篇</b>。</p></div>
+        <div class="after"><b>分散式 · 數千代理</b><p>最大工作量時引用 <b>700+ 篇</b>；盲測中人類專家 <b>75%</b> 偏好這一份（相對單一代理）。</p></div>
       </div>
-      <div class="g-legend">
-        <p class="det"><b>每個代理（×數千）並行</b>：認領一個擾動，分析細胞反應、搜尋文獻；模型固定，差別在任務被拆小。</p>
-        <p class="llm"><b>報告彙整成推理圖譜</b>：基因 × 細胞效應 × 文獻 × 機制彼此連結——已於 GitHub 開放，供科學家比較相關基因、追蹤意外反應。</p>
-      </div>
-      <div class="g-know">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
-        <p><b>品質有兩層對照</b>：代理再現了人類分析的既有發現並多找出新線索；盲測中人類專家 75% 偏好分散式報告（相對單一代理報告），對新穎性與科學價值的判斷也與專家一致。</p>
-      </div>
+      <p class="x-src">對照出自原文〈Divide the work, deepen the reasoning〉一節；原文未給樣本數、重複次數或專家數。引用篇數的「工作量最大時」是原文限定語；圖中三個數字皆 OpenAI 自報。</p>
     </figure>
+
+    <p class="g-p">原文沒有解釋為什麼會這樣（編輯推論：一個 context 裝不下整份資料集與相關文獻）。</p>
+    <p class="g-p">所以重點不是「AI 比較快」，而是同一模型、同樣資源下，拆與不拆，讀到的文獻差了數十倍。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">逐步拆解（本站整理）</h2>
-    <div class="g-steps">
-      <div class="g-steprow"><div class="n">01<small>切分</small></div><div><h3>一個基因擾動＝一個代理</h3><p>把「數千個擾動 × 文獻對照」的巨量任務，拆成數千個可並行的最小單位——這是覆蓋率不崩塌的前提。</p></div></div>
-      <div class="g-steprow"><div class="n">02<small>深掘</small></div><div><h3>每個代理：分析反應 → 搜尋文獻 → 提出解釋</h3><p>工作量最大時，單一代理僅引 11 篇文獻；拆小之後整體引用 700+ 篇——知識面反而隨規模變寬。</p></div></div>
-      <div class="g-steprow"><div class="n">03<small>彙整</small></div><div><h3>報告合併為推理圖譜</h3><p>基因、細胞效應、文獻、可能機制連成網絡；科學家可以比較相關基因、調查意外反應——圖譜已於 GitHub 開放。</p></div></div>
-      <div class="g-steprow"><div class="n">04<small>對照</small></div><div><h3>再現既有發現＋盲測偏好</h3><p>代理重現了人類分析找過的結果；盲測中人類專家 75% 偏好分散式解釋——不是「AI 說了算」，而是有專家判斷背書。</p></div></div>
-      <div class="g-steprow"><div class="n">05<small>轉譯</small></div><div><h3>線索變成可測試的實驗問題</h3><p>見下方成效：Tsc2 在小腦的獨特效應、DCTN1 與膽固醇分佈的假說，都各自指向明確的下一步。</p></div></div>
+    <h2 class="g-h2">哪些是研究發現，哪些是 OpenAI 的方法主張</h2>
+    <p class="g-p">這篇的數字全部出自 OpenAI 對自家研究的敘述，本站未能獨立驗證。把兩類句子分開放，界線才看得出來。</p>
+    <div class="x-scroll" style="margin-top:14px">
+      <table class="x-tbl">
+        <thead><tr><th>主張</th><th>性質</th><th>原文限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="主張">數千代理、一代理一擾動，報告併成推理圖譜</td><td data-l="性質">方法自述</td><td data-l="限定語">方法名 distributed biological reasoning 由 OpenAI 提出；未與其他多代理架構相比</td></tr>
+          <tr><td data-l="主張"><b>32 分鐘</b>完成分析與解讀</td><td data-l="性質">自報數字</td><td data-l="限定語">對象是既有的數百萬腦細胞資料；人類端是團隊「估計」：一次一個擾動，需數月至一年</td></tr>
+          <tr><td data-l="主張">引用 <b>700+</b> 篇 vs 單一代理 <b>11</b> 篇</td><td data-l="性質">自報數字</td><td data-l="限定語">出自對照實驗；模型與資源固定；指「工作量最大時」</td></tr>
+          <tr><td data-l="主張">盲測偏好 <b>75%</b></td><td data-l="性質">自報數字</td><td data-l="限定語">比較對象是單一代理報告；原文未給專家數與題數</td></tr>
+          <tr><td data-l="主張">再現人類既有分析，另找出新線索</td><td data-l="性質">OpenAI 陳述</td><td data-l="限定語">新穎性與科學價值判斷與盲測專家一致</td></tr>
+          <tr><td data-l="主張">Tsc2 在小腦的效應、DCTN1 × 膽固醇</td><td data-l="性質">研究發現</td><td data-l="限定語">待實驗驗證；Tsc2 改變「數十個」神經傳導基因、Tsc1 幾乎沒變；膽固醇連結是「可測試的假說」</td></tr>
+        </tbody>
+      </table>
     </div>
-  </section>
+    <p class="x-hint">→ 可橫向滑動</p>
 
-  <section class="g-sec">
-    <h2 class="g-h2">五個關鍵詞</h2>
-    <div class="g-glos">
-      <div class="g-card"><b>CRISPR 圖譜 Atlas</b><span class="w">一次實驗記錄數千個基因擾動在數百萬細胞上的效果（本文為小鼠全腦）。</span><span class="why">數據早已存在，瓶頸是解讀。</span></div>
-      <div class="g-card"><b>基因擾動 Perturbation</b><span class="w">刻意破壞某個基因，觀察細胞如何反應——功能研究的基本手段。</span><span class="why">本篇並行分析的最小單位。</span></div>
-      <div class="g-card"><b>推理圖譜 Reasoning atlas</b><span class="w">代理報告的彙整層：基因、效應、文獻、機制的連結網絡。</span><span class="why">讓「報告」變成可探索的結構。</span></div>
-      <div class="g-card"><b>分散式生物推理</b><span class="w">數千個代理各管一個擾動並行分析。</span><span class="why">與薄層編排器同一直覺：拆小、專注、隔離。</span></div>
-      <div class="g-card"><b>盲測對照</b><span class="w">人類專家不知道報告來源時比較兩種做法。</span><span class="why">75% 偏好分散式——品質宣稱的硬證據。</span></div>
-    </div>
-  </section>
+    <p class="g-p">推理圖譜是查詢式的工具：比較相關基因、追查意外反應、挑出值得追的線索。原文說研究者今天就能開始用。</p>
+    <p class="g-p">Tsc1 與 Tsc2 一起控制 mTOR，那是細胞生長、代謝、老化的主要調節者。擾動任一個，在多組神經元上效果相似。</p>
+    <p class="g-p">但在負責協調運動的小腦，Tsc2 擾動改變了數十個神經傳導相關基因的活動，Tsc1 幾乎沒變。</p>
+    <p class="g-p">原文把這條差異接到結節性硬化症：患者的小腦異常與 TSC2 突變強相關。降 mTOR 的藥物能治某些腦瘤與癲癇，學習與行為困難仍難解。</p>
+    <p class="g-p">於是問題變具體了：哪些變化是現有藥物能修正的？代理還點名了一群值得先查的神經元。</p>
+    <p class="g-p">另一半是 DCTN1，它的突變造成 Perry 症候群（類巴金森症狀的神經退化疾病）。DCTN1 負責在神經元內搬運貨物。</p>
+    <p class="g-p">擾動 Dctn1，讓製造膽固醇的基因表現上升。代理接上既有研究——膽固醇運輸出問題，細胞可能多造膽固醇。</p>
+    <p class="g-p">假說因此成形：DCTN1 擾動是否改變神經元內的膽固醇分佈、進而促成神經退化？若成立，恢復正常分佈能否保護神經元？</p>
+    <p class="g-p">人類專家也認為這個假說新穎、重要、值得追——這是原文對「值得」唯一的依據。</p>
 
-  <section class="g-sec">
-    <h2 class="g-h2">成效與找到的線索</h2>
-    <div class="g-eco">
-      <div class="g-eff"><b>分析與文獻回顧時間</b>
-        <div class="flow"><i>人類（一次一個擾動）</i> 數月至一年 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg> <span class="hit">32 分鐘</span></div>
-        <p>團隊估計的同規模人類分析所需時間；代理並行完成，且再現了人類分析的既有發現。</p>
-      </div>
-      <div class="g-eff"><b>文獻引用（工作量最大時）</b>
-        <div class="flow"><i>單一代理</i> 11 篇 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg> <span class="hit">700+ 篇</span></div>
-        <p>模型與資源固定下的對照；盲測中人類專家 75% 偏好分散式報告（相對單一代理報告）。</p>
-      </div>
+    <div class="g-know">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+      <p><b>外部學者被引用的兩句</b>：Cambridge 的 Sarah Teichmann（Human Cell Atlas 創始共同主席）說圖譜是做給別人發現她沒想到的東西；UCSF 的 Tomasz Nowakowski 說線索本來就散落在不同領域，只是沒被接起來。兩人都在談機會，不是在驗證結果。</p>
     </div>
-    <p class="g-p">兩條直接指向實驗的線索：<strong>Tsc1/Tsc2</strong>——兩個共同控制 mTOR（細胞生長、代謝、老化的關鍵調節者）的基因，在多組神經元中效果相似，但在協調運動的<strong>小腦</strong>裡，Tsc2 擾動改變了數十個神經通訊相關基因的活動，Tsc1 幾乎沒變；這與結節性硬化症（TSC2 突變與小腦異常強相關）的未解症狀直接相關，代理還點出值得調查的特定神經元群。<strong>DCTN1</strong>——突變導致 Perry 症候群（類巴金森症狀）的基因；擾動後細胞製造膽固醇的基因表現上升，代理把它與「膽固醇運輸出問題會讓細胞製造更多膽固醇」的既有研究連起來，形成可測試的假說：DCTN1 擾動是否改變神經元內的膽固醇分佈、進而導致神經退化？恢復正常分佈能否保護神經元？人類專家認為這個假說新穎、重要、值得追。</p>
+
+    <p class="g-p">原文最後把位置擺明：科學家仍在發現的中心，AI 做的是把更多資料變成可測的想法。</p>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">帶走三件事</h2>
-    <div class="g-take">
-      <p><b>規模的瓶頸在「連結」，不在「計算」。</b>數據早就存在，缺的是把效應與散落數十年的文獻連起來的人力——這正是並行代理填補的缺口。</p>
-      <p><b>分散與隔離再次勝出。</b>與薄層編排器呼應：把任務拆小、各自專注單一擾動，覆蓋率（11 → 700+ 引用）與品質（盲測 75% 偏好分散式 vs 單代理）一起上升。</p>
-      <p><b>AI 的產出是「下一個實驗」，不是結論。</b>原文反覆強調科學家仍在發現的中心——AI 把更多數據變成可測試的想法，設計與驗證仍由人做主。</p>
+    <div class="x-take">
+      <p><b>瓶頸在連結，不在算力。</b>資料早就跑完，缺的是讀文獻的人力。</p>
+      <p><b>拆小才讀得深。</b>同模型同資源，11 篇變 700+ 篇（OpenAI 自報）。</p>
+      <p><b>產出是下一個實驗，不是結論。</b>原文：科學家仍在中心。</p>
     </div>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">同一主題的其他館藏</h2>
     <div class="g-rel">
-      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：一行 system prompt 的退步，該在評分表上現形</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">法律工作的代理式作業系統：NDA 初篩如何從吃掉約 20% 產能降到 1% 以下</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司會坐哪裡：地板下、桌邊、中間那一層——三種組織圖與四個未定的大問題</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：平均 2.75 的兩種病，只有逐案分得出來</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">Legora 法律代理：NDA 初篩從吃掉約 20% 產能到 1% 以下</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司坐哪裡：三種組織圖，四個未定的大問題</a><span class="d">2026-10-28</span></div>
     </div>
   </section>
 
-  <p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數據出自原文，示意圖與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文（OpenAI 自報），圖解與小標為編輯整理、本站重繪。內容經對照原文的獨立事實審查後發布。</p>
 </main>
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
-  <p class="foot-gen">館藏導讀 · 建置於 2026-10-22 (UTC+8)</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-29 (UTC+8)</p>
 </div></footer>
 <script src="../assets/site.js" defer></script>
 </body>

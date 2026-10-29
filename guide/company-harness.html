@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>導讀 — 公司級 harness 的五個元件 · AI 每日動態檔案</title>
-<meta name="description" content="導讀〈The five components of building a company harness〉：LangChain 用行銷、業務、工程三個內部 agent 反推公司級 harness 的五個元件——Slack 入口、雙軌身分（OBO 與固定憑證）、全域與個人兩層記憶、沙箱執碼搭 secret proxy，以及很大比例靠排程與事件觸發的 ambient 執行。">
+<title>導讀 — 公司級 harness 的五個元件：入口、身分、記憶、沙箱、排程 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain〈The five components of building a company harness〉導讀：用原圖架構圖與身分對照表，拆解 channels、identity、memory、sandboxes、crons 五個元件——含 GTM Agent 的 email 只在 DM 開放、OpenSWE 前景代你背景代自己、以及很大比例 run 由排程事件觸發。">
 <script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
 <link rel="stylesheet" href="../assets/archive.css">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -24,10 +24,10 @@
   <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
   <header class="g-head">
     <div class="day-title-row">
-      <h1>公司級 harness 的五個元件：多團隊共用一批 agent，底座得先解決入口、身分、記憶、沙箱與排程</h1>
+      <h1>公司級 harness 五元件：三個 agent 共用一層底座，最難的是身分</h1>
       <span class="stamp">導讀</span>
     </div>
-    <p class="g-orig">原文：LangChain Blog〈The five components of building a “company harness”〉——LangChain 自述其行銷、業務、工程三個內部 agent 的共同建法</p>
+    <p class="g-orig">原文：LangChain Blog〈The five components of building a "company harness"〉——經驗整理，用自家行銷、業務、工程三個內部 agent 舉例</p>
     <p class="g-meta">
       <span>LangChain Blog</span>·<span>2026-10-24 發布</span>·<span>2026-10-29 收錄</span>·
       <a href="https://www.langchain.com/blog/components-building-company-harness" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
@@ -35,91 +35,104 @@
   </header>
 
   <div class="g-stats">
-    <div class="g-stat"><b>5 個</b><span>原文歸納的 harness 核心元件：Slack 入口、身分、記憶、沙箱執碼、排程觸發</span></div>
-    <div class="g-stat"><b>3 個</b><span>內部 agent：GTM Agent（面向市場）、OpenSWE（工程）、Content Studio（行銷）</span></div>
-    <div class="g-stat"><b>2 種</b><span>身分模式：on-behalf-of（代使用者行動）與固定憑證，同一 agent 可混用</span></div>
-    <div class="g-stat"><b>2 層</b><span>記憶分全域（所有使用者）與個人（單一使用者），由 agent 自己決定記到哪層</span></div>
-    <div class="g-stat"><b>很大比例</b><span>原文原句：很大比例的執行由排程或事件觸發（原文未給數字）</span></div>
+    <div class="g-stat"><b>5 個</b><span>元件：channels、crons、sandboxes、memory、identity，同一層提供</span></div>
+    <div class="g-stat"><b>3 個</b><span>內部 agent：GTM Agent、OpenSWE、Content Studio，建法相同</span></div>
+    <div class="g-stat"><b>2 種</b><span>身分：on-behalf-of 與固定憑證，同一 agent 可混用</span></div>
+    <div class="g-stat"><b>很大比例</b><span>run 由排程或事件觸發（原文未給比例）</span></div>
   </div>
 
   <section class="g-sec">
-    <div class="g-tldr">
-      <h2 class="g-tldr-h">30 秒版本</h2>
-      <p class="one">LangChain 在行銷、業務、工程各養一個內部 agent（GTM Agent、OpenSWE、Content Studio），建法相同。原文歸納成<strong>五個元件</strong>：住在人們工作的地方（Slack）、認得是誰在問並決定用誰的身分、全域與個人兩層記憶、沙箱執碼經代理取憑證、很大比例靠排程或事件觸發。</p>
-      <ul>
-        <li>五個元件其實是五道題：入口、身分、記憶、執碼、觸發。</li>
-        <li>身分最難：同一 agent 依場景混用 OBO 與固定憑證。</li>
-        <li>記憶分兩層，原文自認這是探索最少的一塊。</li>
-      </ul>
-    </div>
-  </section>
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">原文沒給定義句，給的是<strong>配方</strong>：三個 agent 建法相同，拆開就是五個元件。company harness 指公司共用的一層底座（編輯推論）。</p>
+    <p class="g-p">樣本先講清楚。GTM Agent 常駐、主動：監看並回覆 email、處理新進的合格潛在客戶、送每日簡報、回答帳戶問題，也能跑對外開發。</p>
+    <p class="g-p">OpenSWE 是工程 agent，會寫並草擬 PR，也對所有 PR 跑 code review。Content Studio 是行銷 agent，依公司風格與定位草擬部落格、圖片、PowerPoint、影片。</p>
+    <p class="g-p">原文的關鍵句：「所有這些 agent 都用同樣的方式建；我們認為這是建 company harness 的通用配方。」</p>
+    <p class="g-p">五條原語全寫成需求句：住在人們工作的地方、知道是誰在問、有記憶、程式跑在沙箱、很大比例是排程執行。先講要滿足什麼，才講用什麼滿足。</p>
+    <p class="g-p">平台歸屬在文末才補：五個能力都由 Managed Deep Agents 提供，建在開源 Deep Agents harness 之上，同時保留改 agent 行為的彈性。</p>
 
-  <section class="g-sec">
-    <h2 class="g-h2">三個 agent、三種工作，卻用同一套建法</h2>
-    <p class="g-p">先把樣本講清楚。原文說 LangChain 在行銷、業務、工程三個團隊建了內部 agent，然後逐一介紹三個主角：<strong>GTM Agent</strong>是主動、常駐的業務 agent，會監看並回覆 email、處理新進的合格潛在客戶、送每日簡報、回答帳戶相關問題，也能執行對外開發（outbound）動作；<strong>OpenSWE</strong>是工程 agent，能動手寫並草擬 PR，也對所有 PR 跑 code review；<strong>Content Studio</strong>是行銷 agent，能依公司風格與定位知識草擬素材——部落格、圖片、PowerPoint、影片。</p>
-    <p class="g-p">關鍵句在這裡：「<em>所有這些 agent 都用同樣的方式建；我們認為這是建 company harness 的通用配方</em>」。原文標題講 company harness，但正文沒有給出定義句——它給的是配方本身，也就是後面五節各處理一個問題的結構（編輯推論：所謂 company harness，指的是公司內部共用、讓多個團隊各自長出 agent 的那層底座）。文章開頭則稱這些 agent「完全改變了這些團隊的工作方式」，範圍限定在行銷、業務、工程這三個團隊。</p>
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/company-harness/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/company-harness/01.webp" alt="架構圖：上層三個方塊 GTM Agent、OpenSWE、Content Studio，各自向下連到 Managed Deep Agents 這一層；層內有五個方塊 UX、Identity、Memory、Sandboxes、Schedules；最底層是一個標示 Open source harness 的 Deep Agents 方塊" width="1200" height="675" loading="lazy" decoding="async"></a>
+      <figcaption>五個元件是同一層的五項能力，不是五個產品：三個 agent 只是掛在上面的三個實例。圖上 UX／Schedules 對應原文的 channels／crons（編輯推論）。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/components-building-company-harness" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
     <div class="g-know">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
-      <p><b>閱讀前提。</b>這是 LangChain 自家內部 agent 的經驗整理，全文沒有提供導入團隊數、節省工時、使用人數或執行量等量化數據，敘述以定性描述為主；「完全改變了這些團隊的工作方式」是原文對行銷、業務、工程三個團隊的說法，文中未附量測方法或成效數字。文中出現的 Managed Deep Agents、LangSmith Sandboxes 是 LangChain 自家產品，原文即以其為建議實作（另在文末感謝 @caspar_br 協助撰寫）。</p>
+      <p><b>閱讀前提：</b>LangChain 自家內部 agent 的經驗整理（廠商視角）。五個元件對應其產品 Managed Deep Agents 的五項功能。全文無導入團隊數、節省工時等量化數據；「完全改變了這些團隊的工作方式」僅限行銷、業務、工程三個團隊。</p>
     </div>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">五個元件：入口、身分、記憶、沙箱、排程，各自是一道題</h2>
-    <p class="g-p">原文開頭就把「每個團隊最後都收斂到的核心原語」列成五條。值得注意的是它的寫法：五條全部寫成需求句（住在人們工作的地方、知道是誰在問、有記憶、程式跑在沙箱、很大比例是排程執行），而不是技術選型——<strong>先講要滿足什麼，才講用什麼滿足</strong>。</p>
-    <div class="g-glos">
-      <div class="g-card"><b>入口（Slack）</b><span class="w">每個 agent 有自己的 Slack app，可被 DM、也可在頻道被 tag；另有「breakout」機制，把插入人類討論的 agent 對話拆到頻道裡的獨立 thread。</span><span class="why">在頻道裡用，其他人看得到別人怎麼用它；agent 若直接在人類 thread 裡跑，會污染原本的對話。</span></div>
-      <div class="g-card"><b>身分</b><span class="w">認得是誰在叫用它，並依服務決定代該使用者行動（OBO），或用自己的身分／固定憑證行動。</span><span class="why">某些工具必須以本人權限執行（如用你的 GitHub handle 開 PR），某些工具則不該要求每個人逐一登入。</span></div>
-      <div class="g-card"><b>記憶</b><span class="w">兩層：全域記憶套用到所有使用者，個人記憶只套用到特定使用者；由 agent 自己決定哪些事實要記到哪一層。</span><span class="why">原文自認這是目前探索最少的一塊，還有很多想做的事。</span></div>
-      <div class="g-card"><b>沙箱執碼</b><span class="w">agent 本身跑在沙箱外，連進沙箱裡執行程式；三個 agent 的 base image 各不相同、相依套件也不同。</span><span class="why">任務常需要寫並執行程式，而連外服務透過 secret proxy 從沙箱內取用憑證。</span></div>
-      <div class="g-card"><b>排程與事件觸發</b><span class="w">很大比例的執行是排程或由事件在背景觸發，而不是有人直接叫用；來源有兩種：agent 開發者設定，或使用者要求 agent 自己建 cron。</span><span class="why">原文稱之為 ambient agents：沒有人在場點名時，agent 仍要自己動起來。</span></div>
+    <h2 class="g-h2">身分：最棘手的一題，三個 agent 三種混用</h2>
+    <p class="g-p">原文直說 identity 是處理過最棘手、最難纏的問題，問句是：agent 採取行動時，是代替誰行動？</p>
+    <p class="g-p">業界兩種作法：on-behalf-of（代叫用它的那位使用者）與固定憑證（不論誰叫都用同一組，例如 service account）。原文不裁決哪一種對，讓三個 agent 各自混用。</p>
+    <p class="g-p">理由不對稱：有些工具必須用本人權限，例如用你的 GitHub handle 開 PR；有些則不該要求每個人逐一登入，例如 Salesforce。</p>
+    <div class="x-scroll" style="margin-top:16px">
+      <table class="x-tbl">
+        <thead><tr><th>agent</th><th>代你行動（OBO）</th><th>以自己身分／固定憑證</th><th>限制與切換規則</th></tr></thead>
+        <tbody>
+          <tr><td data-l="agent"><b>OpenSWE</b></td><td data-l="代你行動">用你的 GitHub handle 開 PR</td><td data-l="固定憑證">背景審 PR 用 GitHub app 自己的身分</td><td data-l="限定語">同一 agent 依「有沒有人在叫用」切換</td></tr>
+          <tr><td data-l="agent"><b>GTM Agent</b></td><td data-l="代你行動">Email 的回覆與寄送</td><td data-l="固定憑證">Salesforce 等工具用固定身分</td><td data-l="限定語">email 工具<b>只在 DM 開放</b>，共用頻道不提供</td></tr>
+          <tr><td data-l="agent"><b>Content Studio</b></td><td data-l="代你行動">Notion</td><td data-l="固定憑證">公司 X 帳號用固定憑證</td><td data-l="限定語">只有白名單能發文，其餘只能讀或寫草稿</td></tr>
+        </tbody>
+      </table>
     </div>
-    <figure class="g-fig">
-      <img src="https://cdn.prod.website-files.com/65c81e88c254bb0f97633a71/6add442530f2704b9d5e03af_HVZbWoXb0AAOzqm.png" alt="架構圖：GTM Agent、OpenSWE、Content Studio 三個 agent 掛在 Managed Deep Agents 這一層，該層提供 UX、Identity、Memory、Sandboxes、Schedules 五項能力，最底層是開源的 Deep Agents harness" width="2400" height="1350" loading="lazy" decoding="async">
-      <figcaption>三個 agent 共用同一層 Managed Deep Agents，五項能力（UX、Identity、Memory、Sandboxes、Schedules）對應原文的五個元件（編輯推論：圖上 UX／Schedules 對應原文的 channels／crons）；底層是開源 Deep Agents harness。<span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/components-building-company-harness" target="_blank" rel="noopener">原文</a></span></figcaption>
-    </figure>
-    <p class="g-p">這五者怎麼互相扣著？原文沒談先後順序，而是把它們當<strong>同一層平台能力</strong>一次給：Managed Deep Agents 建在開源 Deep Agents harness 之上，提供 channels、crons、sandboxes、memory、identity，同時留給團隊改 agent 行為的彈性。拆開看，依賴關係其實很清楚（編輯推論：以下是從原文事實推導，原文未明說）：<strong>排程</strong>讓 agent 在沒有使用者叫用時仍要行動，於是「這一步用誰的身分」立刻變成必答題——原文正是這樣解釋 OpenSWE：被訊息叫用時代你行動，背景跑 code review 時改用 GitHub app 自己的身分；<strong>沙箱執碼</strong>必然經過身分與憑證，所以走的是 secret proxy；<strong>記憶</strong>的兩層切法也與身分的分場景思路一致——把「個人脈絡」與「共用脈絡」分開放（編輯推論）。</p>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="x-src">表中工具為原文點名者，非全部；兩制在同一個 agent 內並存，界線由各工具自己決定。</p>
+    <p class="g-p">把三列並排，界線畫在「工具 × 場景」上，而不是 agent 層級上（編輯推論）：同一個 agent，對不同的人開放不同的能力。</p>
+    <p class="g-p">混用方式三列不同：OpenSWE 兩邊都用，GTM Agent 以固定身分為主、email 是例外，Content Studio 按工具分（編輯推論）。</p>
+    <p class="g-p">原文在此附了兩份自家文件當實作指引：Add identity to Managed Deep Agents、Manage connections。這一題在原文裡是產品功能，不是抽象原則。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">身分：原文自稱最棘手的一題，三個 agent 給三個答案</h2>
-    <p class="g-p">原文直說 identity 是「我們處理過最棘手、最難纏的問題」，核心問句是：<em>agent 採取行動時，是代替誰行動？</em>業界有兩種作法——<strong>on-behalf-of</strong>（代理叫用它的那位使用者）與<strong>固定憑證</strong>（不論誰叫用都用同一組憑證，例如 service account）。原文沒有裁決哪一種才對，而是讓三個 agent 各自混用：</p>
-    <p class="g-p"><strong>OpenSWE：前景代你、背景代自己。</strong>你傳訊息給它，它代你行動，例如用你的 GitHub handle 開 PR；它在背景執行時（例如當 code review agent），則以自己的身分（GitHub app）行動。</p>
-    <p class="g-p"><strong>GTM Agent：靠固定身分省登入，靠本人身分守住敏感工具。</strong>Salesforce 之類的工具用固定身分，這樣不必每個人都去登入；email 之類的工具則代叫用者行動，而且<strong>這些工具只在 DM 開放</strong>，在共用頻道裡不提供。</p>
-    <p class="g-p"><strong>Content Studio：公司帳號用固定憑證，但加上白名單。</strong>Notion 之類的工具代叫用者行動；Twitter 則用固定憑證（公司帳號），但只有白名單上的使用者能叫用某些操作——不是每個人都能發文，其他人可能只能讀或先寫草稿。</p>
-    <p class="g-p">把這三段並排，會看到同一個模式：<strong>同一個 agent，對不同的人開放不同的能力，界線畫在「工具 × 場景」上而不是 agent 層級上</strong>。GTM Agent 的 email 工具在 DM 開、在頻道關；Content Studio 的發文權限按人名開放；OpenSWE 則按「有沒有真的有人在叫用」切換身分。這也解釋了原文那條元件為什麼寫成兩件事——「知道是誰在問」加上「代他行動或用自己的身分」（編輯推論）。</p>
+    <h2 class="g-h2">入口、記憶、沙箱：三個元件各自的限定</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>三個元件的限制</b> — 並列，非流程</figcaption>
+      <p class="x-grid-h">並列三項限制，原文未給順序</p>
+      <div class="x-grid">
+        <div class="c"><b><i>①</i>入口</b><small>Slack 不是萬能：量大、要逐筆追蹤的活（如審一整批 email）→ 自建 UI</small></div>
+        <div class="c"><b><i>②</i>記憶</b><small>只有兩層：全域與個人，由 agent 自己決定記哪層</small></div>
+        <div class="c"><b><i>③</i>沙箱</b><small>金鑰不進沙箱：憑證由 proxy 在沙箱外補上</small></div>
+      </div>
+      <p class="x-src">本站整理；三項並列，原文分節敘述、未做此對照。「金鑰不進沙箱」依原文原圖標示 No keys inside；其餘兩格為原文敘述。</p>
+    </figure>
+    <p class="g-p">入口的預設是 Slack，理由是頻道裡看得到別人怎麼用它。每個 agent 有自己的 app，可被 DM，也可在頻道被 tag。</p>
+    <p class="g-p">breakout 是為了不污染人類對話：agent 被拉進討論時，它的發言拆到頻道裡的獨立 thread，原對話保持乾淨。</p>
+    <p class="g-p">發起方不只人類：agent 自己也能把後續處理搬進自己的 thread，主頻道只留結論（編輯推論）。</p>
+    <p class="g-p">沙箱的分工是 agent 跑在外面、連進去執行程式。三個 agent 的 base image 與相依套件各不相同，OpenSWE 會依頻道／使用者決定起哪一個。</p>
+    <p class="g-p">記憶則是原文自己舉手認帳的一塊：<em>這大概是目前探索最少的一塊，我們還有很多工作要做</em>。它把共用事實與個人脈絡分開放，三種 agent 都吃同樣兩層（編輯推論）。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">記憶、沙箱、排程：兩層記憶、憑證留在沙箱外、誰按下開始</h2>
-    <p class="g-p"><strong>記憶：只有兩層，而且承認還很粗。</strong>所有 agent 都有兩層記憶——全域記憶套用到所有使用者、個人記憶只套用到特定使用者，由 agent 自己決定哪些事實寫進哪一層。原文對這塊的評語很直接：<em>這大概是目前探索最少的一塊，我們還有很多工作要做</em>。</p>
-    <p class="g-p"><strong>沙箱：agent 在外、程式在內，憑證留在沙箱外。</strong>三個 agent 都能寫並執行程式，共同模式是 agent 跑在沙箱外、連進沙箱裡執行；三者的 base image 與相依套件各不相同，其中 OpenSWE 會依頻道／使用者判斷該起哪一個 base image。連外服務走 LangSmith Sandboxes 上的 <strong>secret proxy</strong>，讓 agent 從沙箱內部取用憑證（編輯推論：原文正文只說「三個 agent 都採用了 secret proxy」，金鑰不進沙箱一說依原圖「No keys inside」標示）。</p>
+    <h2 class="g-h2">排程：很大比例的 run，沒有人按下開始</h2>
+    <p class="g-p">原文這一節只有一句事實：很大比例的 run 不是使用者直接叫用，而是排程或事件在背景觸發；未給比例。</p>
+    <p class="g-p">來源有兩種。開發者設定：OpenSWE 監聽 PR，一有新 PR 就去審。使用者當場要求：作者請 GTM Agent 每天送簡報，它就自己建了一個 cron。</p>
     <figure class="g-fig">
-      <img src="https://cdn.prod.website-files.com/65c81e88c254bb0f97633a71/6ade4515f950f250960af9f0_LangSmith%20sandbox.jpeg" alt="流程圖：Agent 執行程式到 LangSmith Sandbox 內的 Code（標註 No keys inside），Code 發出請求給 Auth proxy，Auth proxy 由 Workspace secrets 加上憑證後，再連向 GitHub、Salesforce、Model APIs" width="2400" height="1350" loading="lazy" decoding="async">
-      <figcaption>agent 在沙箱外、把程式碼送進 LangSmith Sandbox 執行（標明 No keys inside）；連外由 auth proxy 加憑證，再連 GitHub、Salesforce、Model APIs。<span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/components-building-company-harness" target="_blank" rel="noopener">原文</a></span></figcaption>
+      <a class="fig-zoom" href="../assets/guide/company-harness/06.webp" target="_blank" rel="noopener"><img src="../assets/guide/company-harness/06.webp" alt="流程圖：三個觸發方塊——Someone messages it（DM 或 @mention）、An event fires（新 PR、新 lead）、A schedule runs——都指向右側的 Agent；左下 Developer 以 Sets up 箭頭指向 A schedule runs；另有一條由 Agent 回到 A schedule runs、標示 Creates 的回饋箭頭" width="1200" height="675" loading="lazy" decoding="async"></a>
+      <figcaption>三條觸發路徑收斂到同一個 agent；重點是下方那條 Creates 迴圈——使用者只開口要一份每日簡報，agent 就替自己建了 cron。原文：a large percent of runs 由排程或事件在背景觸發。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/components-building-company-harness" target="_blank" rel="noopener">原文</a></span></figcaption>
     </figure>
-    <p class="g-p"><strong>排程：誰來按下開始，有兩種答案。</strong>很大比例的執行是排程或事件在背景觸發，而非使用者直接叫用。有些由 agent 開發者設定——OpenSWE 監聽 PR，一有新 PR 就去審；有些由使用者當場要求——作者請 GTM Agent 每天送簡報，它就自己建了一個 cron。原文用「ambient agents」稱呼這種狀態：agent 不只是被叫才動的工具，而是持續在背景做事的角色。</p>
+    <p class="g-p">原文用 ambient agents 稱呼這種狀態：agent 不只是被叫才動的工具，而是持續在背景做事的角色。</p>
+    <p class="g-p">兩個例子正好對上圖上兩條路徑：OpenSWE 走 event，GTM Agent 走 schedule。差別在誰設定，不在 agent 能力。</p>
+    <p class="g-p">這一條把前四題從例外變成預設：沒有人叫用時，身分、記憶、憑證都得自己成立（編輯推論）。這也是原文把五者打包成一層平台、而非留給各團隊各解的理由。</p>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">帶走三件事</h2>
-    <div class="g-take">
-      <p><b>五個元件其實是五個介面決策，不是五個技術選項。</b>入口在哪（Slack，加上非同步量大時的自建 UI）、用誰的身分、記到哪一層、程式在哪跑、誰觸發——原文的「通用配方」全寫成需求句，先回答要滿足什麼，才輪到用什麼框架滿足。</p>
-      <p><b>身分要能分場景，這是「多團隊共用」的真正門檻。</b>OpenSWE 前景代你、背景代自己；GTM 的 email 工具只在 DM 開；Content Studio 的發文權限按白名單開放——同一個 agent 對不同人給不同能力，界線畫在工具與場景的組合上，而不是把 agent 切成好幾支（編輯推論）。</p>
-      <p><b>排程把 agent 從工具變成同事，也把所有難題逼出來。</b>很大比例的執行沒有人在場，於是「誰的身分」「哪一層記憶」「憑證怎麼進沙箱」都必須在無人叫用時仍成立（編輯推論：這正是原文把五者打包成同一層平台、而不是留給各團隊各自解的理由）。</p>
+    <div class="x-take">
+      <p><b>五個元件是五個介面決策。</b>先答要滿足什麼，再挑框架。</p>
+      <p><b>身分要能分場景。</b>界線在工具×場景，不在把 agent 切開。</p>
+      <p><b>排程是分水嶺。</b>沒有人在場，五個元件都得自立（編輯推論）。</p>
     </div>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">同一主題的其他館藏</h2>
     <div class="g-rel">
-      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：一行 system prompt 的退步，該在評分表上現形</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">法律工作的代理式作業系統：NDA 初篩如何從吃掉約 20% 產能降到 1% 以下</a><span class="d">2026-10-28</span></div>
-      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司會坐哪裡：地板下、桌邊、中間那一層——三種組織圖與四個未定的大問題</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：平均 2.75 的兩種病，只有逐案分得出來</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">Legora 法律代理：NDA 初篩從吃掉約 20% 產能到 1% 以下</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司坐哪裡：三種組織圖，四個未定的大問題</a><span class="d">2026-10-28</span></div>
     </div>
   </section>
 
-  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文，非官方文件）；文中數字與量詞均照原文引述（原文未提供量化成效數據，「company harness」的定義句為編輯推論），小標與分節為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。原文未提供量化成效數據；「company harness」的定義句與圖解 A 的三項對照為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
 </main>
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
