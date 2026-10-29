@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>導讀版式 A/B 實驗 · AI 每日動態檔案</title>
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../index.html" class="day-catalog">目錄</a></nav>
+</div></header>
+<main class="wrap">
+  <header class="g-head">
+    <div class="day-title-row"><h1>導讀版式 A/B 實驗</h1><span class="stamp">內部</span></div>
+    <p class="g-orig">同一篇原文、兩種寫法：現行散文版 vs 圖解精簡版。供人工複核用，不進館藏。</p>
+  </header>
+
+  <section class="g-sec">
+    <h2 class="g-h2">受測配對</h2>
+    <div class="x-grid">
+      <div class="c"><b>LangChain · 迴圈工程</b><small><a href="l-a.html">A 現行散文版</a>（2,699 字）<br><a href="l-b.html">B 圖解精簡版</a>（820 字）</small></div>
+      <div class="c"><b>OpenAI · Retell 語音代理</b><small><a href="r-a.html">A 圖解精簡版</a>（973 字）<br><a href="r-b.html">B 現行散文版</a>（1,699 字）</small></div>
+    </div>
+    <p class="g-p" style="margin-top:14px">兩組刻意交換 A/B 位置（不是固定「新版＝A」），避免評審被順序影響。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">評審結果（4 位 fresh-eye，互不知情）</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>評審</th><th>角色</th><th>結論</th></tr></thead>
+        <tbody>
+          <tr><td data-l="評審">judge1</td><td data-l="角色">懂技術的讀者</td><td data-l="結論">圖解版勝（25 : 19）</td></tr>
+          <tr><td data-l="評審">judge2</td><td data-l="角色">技術編輯</td><td data-l="結論">圖解版易讀（19 : 16），但精確度略輸</td></tr>
+          <tr><td data-l="評審">judge3</td><td data-l="角色">技術編輯</td><td data-l="結論">圖解版勝（20 : 12.5），前提是修掉手機截斷</td></tr>
+          <tr><td data-l="評審">judge-final</td><td data-l="角色">讀者（修正後複測）</td><td data-l="結論">圖解版勝（23 : 19）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">共識：圖解版掃讀成本低、3 分鐘能複述骨架；散文版事實較全但重複多。修正項已回填（自報標記、箭頭語意、表頭名實、手機卡片模式）。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">新元件（已進 archive.css）</h2>
+    <div class="x-grid">
+      <div class="c"><b>x-stack</b><small>巢狀環：誰包住誰＋回饋箭頭</small></div>
+      <div class="c"><b>x-dec</b><small>決策分支：症狀 → 該改哪層</small></div>
+      <div class="c"><b>x-seq</b><small>時序階梯：A 把球傳給 B</small></div>
+      <div class="c"><b>x-flow</b><small>流程鏈：單一主體線性步驟</small></div>
+      <div class="c"><b>x-grid</b><small>並列選項：無箭頭</small></div>
+      <div class="c"><b>x-bars</b><small>數據條：同基準比較</small></div>
+      <div class="c"><b>x-tbl</b><small>表格：手機自動轉卡片</small></div>
+      <div class="c"><b>x-cmp</b><small>前後／左右對照</small></div>
+    </div>
+  </section>
+</main>
+<footer class="foot"><div class="foot-in"><p class="foot-src">AI 每日動態檔案 — 內部實驗頁</p><p class="foot-gen">建置於 2026-10-29 (UTC+8)</p></div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

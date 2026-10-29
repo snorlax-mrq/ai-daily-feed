@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>導讀 — 迴圈工程：四層迴圈堆疊 · AI 每日動態檔案</title>
+<meta name="description" content="導讀 LangChain〈The Art of Loop Engineering〉：agent 迴圈、驗證迴圈、事件驅動迴圈、hill climbing 四層堆疊，分別對應 create_agent、RubricMiddleware、LangSmith Deployment、Engine；原文主張價值在第 3、4 層複利，並在每一層各留一個人工介入點。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>迴圈工程：四層迴圈往上疊，讓 agent 從「會做事」變成「會自己變好」</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain Blog〈The Art of Loop Engineering〉——方法論文章，以自家內部 docs agent 為例說明四層迴圈的堆疊</p>
+    <p class="g-meta">
+      <span>LangChain Blog</span>·<span>2026-06-16 發布</span>·<span>2026-10-29 收錄</span>·
+      <a href="https://www.langchain.com/blog/the-art-of-loop-engineering" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>4 層</b><span>agent 迴圈 → 驗證迴圈 → 事件驅動迴圈 → hill climbing 迴圈，可逐層往外包</span></div>
+    <div class="g-stat"><b>第 4 層</b><span>前三層自動化「工作」，只有這一層（原文稱「可說是最重要的一層」）自動化「改進」</span></div>
+    <div class="g-stat"><b>2 類 grader</b><span>驗證迴圈的打分者可為 deterministic 或 agentic（LLM as judge）</span></div>
+    <div class="g-stat"><b>#docs-plz</b><span>內部 docs agent 的觸發方式：Slack 頻道有人發訊息就跑</span></div>
+    <div class="g-stat"><b>4 個</b><span>原文在每一層各列一個「人類該在哪裡介入」的位置</span></div>
+  </div>
+
+  <section class="g-sec">
+    <div class="g-tldr">
+      <h2 class="g-tldr-h">30 秒版本</h2>
+      <p class="one">LangChain 把 agent 拆成四層可堆疊的迴圈：模型反覆呼叫工具、grader 依 rubric 打分並退回重做、事件觸發讓 agent 常駐系統、最後用 trace 餵分析 agent 回頭改寫 harness。原文主張前兩層談得久了，價值複利在第 3、4 層，每層都留了人類介入的位置。</p>
+      <ul>
+        <li>四層各配一個原語，從 create_agent 到 Engine。</li>
+        <li>驗證划算的前提是品質比速度重要；代價是延遲與成本上升。</li>
+        <li>第四層的回饋箭頭伸進內層，直接改寫 harness 設定。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">可靠的 agent 不是模型問題，是 harness 問題</h2>
+    <p class="g-p">原文開頭就把命題釘死：agent 有用，是因為它能在真實世界採取動作、幫我們把工作自動化；但要它<strong>可靠地</strong>做出有價值的工作，靠的不只是好模型，還需要一個<strong>針對一組任務設計過的 harness</strong>。核心演算法本身簡單到近乎無聊——給 LLM context，讓它反覆呼叫工具直到完成——原文先自己定調：這是最基礎的那一個迴圈；接著引 swyx 的〈loopcraft: the art of stacking loops〉補上<em>迴圈可以往上疊、往外延伸</em>這個想法。</p>
+    <p class="g-p">接下來的四層，原文都配了一個 LangChain 自家的原語，也用同一個內部 docs agent 貫穿全文當例子（它接收「改進某份文件」的需求，產出變更並開 PR）。四層的差別不只在規模，而在<strong>各層解的問題不一樣</strong>（原文的 Impact 欄位正是這樣分：自動化工作／確保品質／規模化自動／harness 改進）：第一層解「能不能動手」，第二層解「做得對不對」，第三層解「什麼時候該跑」，第四層解「怎麼愈跑愈好」。</p>
+    <div class="g-steps">
+      <div class="g-steprow"><div class="n">01<small>自動化工作</small></div><div><h3>Agent loop：模型反覆呼叫工具直到任務完成</h3><p>原文說這就是 <code>create_agent</code> 給的東西：挑一個模型、接上工具，就有一個可用的 agent 迴圈；<strong>工具才是讓 agent 能在真實世界動手的東西</strong>。docs agent 在這一層收到需求後，模型規劃並起草變更，再用工具 clone repo、讀檔、寫文件、開 PR。</p></div></div>
+      <div class="g-steprow"><div class="n">02<small>確保正確</small></div><div><h3>Verification loop：把迴圈包起來，不及格就退回重做</h3><p>agent 迴圈能把事做完，但不保證第一次就正確、也不保證每次一致。驗證迴圈加一個 <strong>grader</strong>：拿 rubric 檢查產出，沒過就帶著回饋退回模型。grader 可以是 deterministic，也可以是 agentic（LLM as judge 是經典例子）；實作走 <code>RubricMiddleware</code>，或在 <code>create_agent</code> 掛 <code>after_agent</code> hook。</p></div></div>
+      <div class="g-steprow"><div class="n">03<small>接上生態系</small></div><div><h3>Event driven loop：事件一來就跑，agent 變成系統裡的一個元件</h3><p>事件驅動迴圈負責把 agent 接進你的生態系：新文件落地、排程觸發、webhook 進來，agent 就開跑。原文的措辭很關鍵——<em>agent 不再是被你手動叫用的東西，而是持續跑在更大系統裡的一個元件</em>。觸發基礎設施由 LangSmith Deployment 支援（含 cron 排程與 webhook）；openclaw 的「heartbeat」是原文舉的常見用法，把 agent 變成一直在線的主動式助理。至於文中的 docs agent 本身，原文說是由 Fleet（no-code agent builder）驅動，Fleet 的 channels 與 schedules 負責事件與 cron 觸發——`#docs-plz` 頻道一有訊息就開跑。</p></div></div>
+      <div class="g-steprow"><div class="n">04<small>自動化改進</small></div><div><h3>Hill climbing loop：讀 trace，回頭改寫 harness</h3><p>每一次 agent run 都會產生一份 <strong>trace</strong>——模型做了什麼、呼叫了哪些工具、grader 給了什麼回饋。hill climbing 迴圈讓一個分析 agent 讀這些 trace，再把發現拿去重寫 harness 設定：prompt／工具的微調、grader 的微調都算。LangSmith 裡負責這一層的是 trace 分析 agent <strong>Engine</strong>。</p></div></div>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">驗證迴圈的兩件事：rubric 寫得出來，錯誤才攔得住</h2>
+    <p class="g-p">docs agent 的 grader 在每次嘗試後跑測試，檢查三件事：<strong>所有連結要能解析、所有 CI 檢查要通過、diff 只限於真正被要求的範圍</strong>。原文的結論是「這幾類錯誤不需要人工複查」——注意限定語是<em>這幾類</em>，不是全部。（編輯推論：）能被自動驗收的錯誤，前提是先把它寫成一條可判定的 rubric；寫不出判準的問題，grader 也接不住（編輯推論的界線也在此：原文在「人類監督」一節承認，grader 能檢查連結解不解析得了，但「框架對這群讀者是錯的」只有人看得出來）。</p>
+    <p class="g-p">代價原文講得很直白：<strong>加驗證會增加每次 run 的延遲與成本</strong>，划算的條件是「品質比速度重要」——而原文認為那涵蓋了大多數生產場景。這是一句立場宣示而非量測結果：全篇沒有給任何 benchmark 數字或比例，四層的效益欄位（自動化工作／確保品質／規模化自動／harness 改進）都是定性描述。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">第 4 層的關鍵：回饋箭頭伸進迴圈裡面，而不只是繞回原點</h2>
+    <p class="g-p">原文對 hill climbing 迴圈最用力的一句話是：<em>這個回饋箭頭不是只繞回最上面，它伸進去、直接更新 agent 迴圈本身</em>——外層迴圈每轉一圈，內層迴圈就更有效。落到 docs agent 的實作上：Engine 跑在 docs agent 的 trace 上找問題，<strong>當多筆 trace 都指向同一個潛在問題時，就開一張 issue 要求修改出問題的 prompt 或工具</strong>。這一步是「多筆 trace」而非單筆——單一失敗可能只是雜訊（編輯推論：這是把 trace 當訊號而非當日誌用的分界）。</p>
+    <figure class="g-fig">
+      <img src="https://cdn.prod.website-files.com/65c81e88c254bb0f97633a71/6ae2625395697658b1d69ad5_loop-eng-07-hill-climbing-loop.png" alt="四層迴圈嵌套圖：最外是事件觸發（New events），往內依序是 event loop、verification loop、agent loop（Model 與 Tools 之間 Observation／Action），Result 交給 Grader（rubric／eval）不及格則 Retry with feedback；右側 Engine analysis 讀 Trace，以 Harness improvements 的紅色箭頭直接指回 Tools" width="1200" height="947" loading="lazy" decoding="async">
+      <figcaption>四層疊起來的樣子：事件觸發在最外、驗證在中、agent 迴圈在內；右側 Engine 讀 trace，改動以「harness improvements」直接打回內層的工具與設定。<span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/the-art-of-loop-engineering" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <p class="g-p">原文也把「往上長」的邊界講開：prompt 與工具設定是最容易改的，但不是唯一選項。跑 open-weight 模型的團隊，可以讓 hill climbing 的結果接上 RL fine-tuning，用 trace 或 eval 的結果當訓練訊號去改模型本身；memory 與取回的 skills 這類輔助 context 也一樣。<em>迴圈是模式，要它去最佳化什麼由你決定</em>。</p>
+    <p class="g-p">至於為什麼重心要移：原文自承團隊「想第 1、2 層想了一段時間」，但<strong>注意力該轉向第 3、4 層</strong>——把 agent 嵌進生態系、讓它依你的判準持續改進，價值才會複利。同一段也把產業側的說法並列：Steipete、Boris、Andrej 都得到同一個結論，agent 的潛力在<em>你圍繞它建的那些迴圈</em>；Satya Nadella 則把這件事拉到組織層次——早一步建起學習迴圈、讓人類判斷與 token 資本一起複利的公司，會建立難以複製的優勢。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">人類不是被移出迴圈，而是被安排在四個可攔截的位置</h2>
+    <p class="g-p">原文對「自動化」的定義不含「去掉人」：<strong>每一層都有自然人為監督能加值的位置</strong>。它給的判準很具體——自動 grader 能檢查連結解不解析得了，但要發現「這個框架對這群讀者是錯的」，只有人能看出來；這種判斷來自脈絡、經驗與品味，也正是人類審查掙得其位置的地方。另一條紅線是<em>敏感動作需要真人即時審查</em>，原文點名的是金融交易與資料庫操作。</p>
+    <div class="g-glos">
+      <div class="g-card"><b>第 1 層／動作前</b><span class="w">在 agent 迴圈裡，敏感的動作或工具呼叫之前要求人類輸入。</span><span class="why">攔在副作用發生之前，是代價最小的位置（編輯推論：原文未做此比較）。</span></div>
+      <div class="g-card"><b>第 2 層／當打分者</b><span class="w">敏感的工作流，直接由人來當 grader。</span><span class="why">rubric 寫不出來的判斷，就由人補上。</span></div>
+      <div class="g-card"><b>應用層／交出去前</b><span class="w">輸出回給終端使用者之前，由人批准。</span><span class="why">原文此處名之為 application loop，未與前文的 event driven loop 對齊。</span></div>
+      <div class="g-card"><b>第 4 層／上線前</b><span class="w">harness 的改動可以在部署前先過人類審查。</span><span class="why">為自動改進保留一道人工閘門（編輯推論：原文只說這條路徑存在，未要求強制）。</span></div>
+    </div>
+    <p class="g-p">原文強調，LangChain 的所有開源框架都把「human in the loop」當<strong>一等公民原語</strong>——換句話說，人類介入不是事後補的流程，而是跟工具、grader 同一層級的積木。有些專業知識應該直接寫進 prompt／工具裡，但敏感動作這一類，原文的立場是必須留真人即時審查。</p>
+    <div class="g-know">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+      <p><b>閱讀前提。</b>這是 LangChain 自己的方法論文章，四層的對應原語全部指向 LangChain／LangSmith 產品（create_agent、RubricMiddleware、LangSmith Deployment、Fleet、Engine），屬廠商視角；同文也把 loopcraft 的概念歸給 swyx 的〈loopcraft: the art of stacking loops〉。全篇沒有附任何量化數據或評測方法，所有效益描述都是定性；文末致謝 Vivek、Mason、Harrison、Hunter 審閱。另：小節標題編號在原文並不統一（第一層寫「Loop 1」，其後寫「Level 2／3／4」），人類介入清單第 3 點寫的是「application loop」，與前文的 event driven loop 名稱不一致，本頁以「應用層／輸出交出去前」描述。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="g-take">
+      <p><b>分層的意義是「把不穩定拆成四個可分別診斷的位置」。</b>agent 不穩、品質不一、跑得不夠勤、改了也沒變好，是四種病，對應四層；用第 4 層去解第 1 層的病（改 prompt 掩蓋工具設計不良）只會繞圈（編輯推論）。原文自承團隊「想第 1、2 層想了一段時間」，真正的診斷能力是知道症狀落在哪一層。</p>
+      <p><b>第 4 層的入場券是「trace 落地＋harness 可寫」。</b>回饋箭頭能伸進內層，前提是每次 run 都有可讀的 trace、且設定以檔案／參數形式存在而能被改寫；這兩件事缺一，hill climbing 就只能停在人工調參，複利不會發生（編輯推論）。</p>
+      <p><b>人類的位置要當成架構決策來設計。</b>原文四個介入點全都長在「可攔截」的節點：副作用發生前、grader 的位置、輸出交出去前、harness 改動上線前——判準不是「保留人類」，而是「人的脈絡與品味在哪裡比 rubric 準」。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：一行 system prompt 的退步，該在評分表上現形</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">法律工作的代理式作業系統：NDA 初篩如何從吃掉約 20% 產能降到 1% 以下</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司會坐哪裡：地板下、桌邊、中間那一層——三種組織圖與四個未定的大問題</a><span class="d">2026-10-28</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-29 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
