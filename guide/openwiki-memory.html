@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 讓代理的記憶有出處 · AI 每日動態檔案</title>
+<meta name="description" content="導讀〈How to build evidence-grounded agent memory with OpenWiki and Graphs〉：LangChain 用 111 份合成保險文件、972 條事實帳本實測 OpenWiki 記憶層——跨來源 50 題準確率 0.10（純關鍵字搜尋）→0.52（wiki，約 5 倍）→0.66（再加證據圖，+27%）；citation 一致性 0.25→0.50、每題答對成本約 $0.19→$0.080、中位作答 30→18 秒。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>讓代理的記憶有出處：wiki 編譯器把 citation 變成可以走的證據圖</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain Blog〈How to build evidence-grounded agent memory with OpenWiki and Graphs〉——OpenWiki 與證據圖的自家 benchmark 實驗報告</p>
+    <p class="g-meta">
+      <span>LangChain Blog</span>·<span>2026-10-28 發布</span>·<span>2026-10-29 收錄</span>·
+      <a href="https://www.langchain.com/blog/building-agent-memory-openwiki-graphs" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>111 份／972 條</b><span>合成保險文件庫的文件數，以及用來評分的「事實帳本」條目數</span></div>
+    <div class="g-stat"><b>0.10→0.52</b><span>50 題跨來源連結題的準確率：純關鍵字搜尋對上 OpenWiki 編譯的 wiki，約 5 倍</span></div>
+    <div class="g-stat"><b>+27%</b><span>再加一層證據圖之後，準確率由 0.52 升到 0.66（相對 wiki 單獨）</span></div>
+    <div class="g-stat"><b>0.25→0.50</b><span>加證據圖後，連結題的 citation 一致性翻倍；每題答對成本約 $0.19→$0.080</span></div>
+    <div class="g-stat"><b>$4.15</b><span>把 111 份文件編譯成約原大小十分之一的 wiki；之後每補一份文件約 $0.09</span></div>
+  </div>
+
+  <section class="g-sec">
+    <div class="g-tldr">
+      <h2 class="g-tldr-h">30 秒版本</h2>
+      <p class="one">LangChain 把開源 CLI OpenWiki 編譯的 wiki 當 agent 記憶層：每句陳述存成帶來源行號與 hash 的 claim，來源一改就標記過期。111 份合成保險文件、50 題跨來源推理實測，準確率從純關鍵字搜尋的 0.10 升到 0.52，加證據圖再到 0.66、引用一致性翻倍。</p>
+      <ul>
+        <li>單純查找題沒差別：0.84 對 0.83，wiki 還慢 3 秒。</li>
+        <li>證據圖不呼叫模型，只把 wiki 既有引用變成 typed edge。</li>
+        <li>值得與否看重用：答案成本不含編譯，編譯 111 份 $4.15。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">問題不在「找不到段落」，在「拼不回關係」</h2>
+    <p class="g-p">企業裡的 agent 要橫跨政策文件、手冊、wiki、工單與程式碼，原文第一句就把難處講清楚：<strong>找到相關段落只是開始</strong>，後面還要判斷哪一條規則適用、什麼東西變了、一個來源如何影響另一個來源。持久記憶層的用途就是把這些知識與關係保存下來，讓 agent 跨任務重用；沒有它，agent 每一個問題都得重新建構一次理解，<em>讓工作又貴又容易出錯</em>。原文點名銀行與保險最難，因為那裡的保單與規範經常互相修訂、互相取代（amend or supersede）。</p>
+    <p class="g-p">為什麼一般 RAG 不夠？語意或混合搜尋取回的是<strong>彼此孤立的 chunk</strong>，chunk 之間怎麼關聯，留給 agent 自己拼。LangChain 說他們探討過用 agentic RAG 與 graph-based metadata filtering 改善檢索，但「找到相關段落只是工作的一部分」：跨來源問題得追引用、解掉互相衝突的規則、搞清楚依賴。編譯式 wiki 的做法是把來源材料<strong>綜合</strong>成互相連結、解釋關鍵概念與其關係的頁面，並隨來源變動更新。（編輯推論：既然衝突規則是常態，「哪一條還有效」就不是相似度排序能回答的問題——這也解釋了為何後面要引入 supersede／amend 這類有型別的邊。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">OpenWiki：每句話都是一條帶 hash 的 claim</h2>
+    <p class="g-p"><a href="https://docs.langchain.com/oss/openwiki/overview" target="_blank" rel="noopener">OpenWiki</a> 是 LangChain 的開源命令列工具，蓋在 Deep Agents 之上，產出的是<strong>每一句都回連來源</strong>的 wiki；它最初是為了讓 coding agent 不必在每個任務重新發現架構與程式行為而做。真正關鍵的設計在 claim 這一層：</p>
+    <div class="g-steps">
+      <div class="g-steprow"><div class="n">01<small>編譯</small></div><div><h3>把散落的來源合成互相連結的 wiki 頁</h3><p>wiki 解釋關鍵概念與它們之間的關係，每個陳述都附上回到原始來源的 citation；來源變動時 wiki 跟著更新。</p></div></div>
+      <div class="g-steprow"><div class="n">02<small>存成 claim</small></div><div><h3>陳述＝斷言＋來源行號＋該行的 hash</h3><p>OpenWiki 的每一句都落成一條 claim：一個斷言，綁定支撐它的來源行，以及那些行的 hash。</p></div></div>
+      <div class="g-steprow"><div class="n">03<small>比 hash</small></div><div><h3>來源行一改，hash 就對不上</h3><p>hash 變化讓 OpenWiki 在不呼叫模型的情況下標記受影響的 claim——省 token，也讓「過期」的判定變成確定性動作，而不是再問一次模型。</p></div></div>
+      <div class="g-steprow"><div class="n">04<small>裁決</small></div><div><h3>只有被標記的 claim 進模型</h3><p>這些 claim 才送去模型做確認、修訂或撤回（confirm／revise／retract），記憶層於是能隨來源自我修正。</p></div></div>
+    </div>
+    <figure class="g-fig">
+      <img src="https://cdn.prod.website-files.com/65c81e88c254bb0f97633a71/6ae0debd562405116e843727_OpenWiki%20on%20Deep%20Agents.png" alt="兩段機制圖：上段為 wiki 頁的一句話存成 claim（含來源行號與 hash）再指向原始程式碼行；下段為來源被編輯後重新計算 hash、不呼叫模型就標記該 claim 為 stale，最後才交給模型確認、修訂或撤回" width="1600" height="1098" loading="lazy" decoding="async">
+      <figcaption>記憶怎麼「自己知道過期」：wiki 的一句話存成 claim，帶來源行號與 hash；來源行一改、hash 不符，就只標記這一條（不必呼叫模型），最後才交模型確認、修訂或撤回。<span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/building-agent-memory-openwiki-graphs" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <p class="g-p">成本原文給了具體數字：把 111 份文件編譯成<strong>約原大小十分之一</strong>的 wiki 花了 <strong>$4.15</strong>，之後再補 17 份文件，每份約 <strong>$0.09</strong>。要提醒的是，原文後面所有檢索與作答的比較<strong>都不含編譯與更新成本</strong>。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">證據圖：把 Markdown 裡的 citation 變成可以走的 edge</h2>
+    <p class="g-p">只加 wiki 還有半個問題沒解。在需要跨來源的連結題上，wiki agent 三次作答的引用重疊（0.74 → 0.25）明顯低於簡單查找題，換句話說它<strong>答得比較準了，但每次走的證據路徑不一樣</strong>。原文講得很清楚：citation 穩定度不等於正確性，可是<em>換了證據就可能換答案</em>，尤其在來源互相衝突時；關鍵業務要的是可以重現、可以稽核的答案，不只是好一點的平均準確率。</p>
+    <p class="g-p">證據圖的定義是：<strong>一張把 wiki citation 變成 claim、wiki 頁、段落與主題之間顯式 typed edge 的地圖</strong>。原本 citation 只是 Markdown 檔裡的文字引用，圖把它 materialize 成有型別的邊，於是 agent 有一條穩定路徑可走，不必每次用搜尋重新發現同一批連結。做法兩步：</p>
+    <div class="g-glos">
+      <div class="g-card"><b>① 段落成為新 primitive</b><span class="w">確定性流程把每份文件切成段落、各給唯一識別碼。</span><span class="why">段落成了資訊的原子單位，claim 可以連到「精確的那一段」，而不是整份文件。</span></div>
+      <div class="g-card"><b>② 用 typed edge 連接</b><span class="w">claim <code>cite</code> 段落、較新文件 <code>supersede</code> 較舊的、章節 <code>refers_to</code> 其他文件。</span><span class="why">邊說的是關係而不只是連線；工具定義裡另有 <code>amends</code>、<code>attaches_to</code> 與各自的反向邊。</span></div>
+    </div>
+    <p class="g-p">這些邊有兩種來源。一部分是從文件引用<strong>以確定性方式抽出</strong>的；另一部分靠 wiki claim 本來就帶著的文字 citation——因為 citation 已經存在，<code>refers_to</code>、<code>supersedes</code> 這類邊可以直接 materialize，<strong>不需要再跑一次模型</strong>。原文的實測結果是：建圖花不到一秒，而且解析了測試庫裡<strong>每一個顯式的交叉引用</strong>。</p>
+    <p class="g-p">導航靠兩個工具：<code>locate</code> 依問題比對文件標題、章節標題、wiki 頁與 claim 敘述，找出起點；<code>expand</code> 打開節點、列出它的 typed edge，只有單一路徑時自動沿著走，<strong>遇到分支才讓 agent 自己選</strong>。原文把這個「先定位節點、再收集相連脈絡」的模式，類比到 GraphRAG 這類系統（例如 Microsoft 的 GraphRAG）。</p>
+    <p class="g-p">但它不是萬靈丹，原文自己劃了界線：圖的職責是<strong>證據導航</strong>，不是把整個組織知道的事情都建模起來，綜合仍然是 wiki 的工作。它也和抽取式知識圖譜管線不同——這一層重用既有的引用與 citation，不用模型去抽取、對齊實體，建圖不需要額外模型呼叫；代價是<em>由 wiki 衍生的邊，仍然依賴模型生成的 citation 準不準</em>。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">實測：0.10→0.52→0.66，代價是編譯費，簡單查找還慢 3 秒</h2>
+    <p class="g-p">實驗設定值得先講清楚：同一個檢索 agent 跑兩種條件——<strong>Search</strong>（對原始文件做關鍵字搜尋）與 <strong>Wiki</strong>（同一個 agent，但能讀 OpenWiki 編譯、帶來源連結的 wiki）。底層模型、指令、文件與題目全部固定，<em>唯一改變的是 agent 能不能讀編譯後的記憶</em>。題目是 <strong>80 題簡單查找</strong>加上 <strong>50 題需要沿文件依賴推理的連結題</strong>，每題問三次以觀察同一題的重跑變異。三個指標：準確率（grader 對照 972 條事實帳本給分，獎勵必要事實、扣矛盾）、一致性（三次作答引用集合的平均 pairwise Jaccard，只測「是否引用同一批來源」，不測對錯）、成本與延遲（模型花費 USD、每題 wall-clock 時間）。</p>
+    <p class="g-p"><strong>簡單查找當對照組</strong>：原文預期 wiki 幫不上忙，結果也確實如此——準確率 0.84 對 0.83（搜尋對 wiki）、引用重疊 0.72 對 0.74、每題答對成本 $0.020 對 $0.021，<strong>但延遲從 9 秒變成 12 秒</strong>。這一組是整篇最重要的反向證據：對單段落問題，編譯記憶沒有回報，還變慢。</p>
+    <p class="g-p"><strong>連結題</strong>：準確率從純搜尋的 0.10 升到 0.52，約 5 倍；編譯好的脈絡讓 agent 用<strong>更少的工具呼叫</strong>就套用領域知識、找到相關關係，每題答對成本由約 $0.55 降到 $0.19。但引用重疊只有 0.25——準確率是靠「跨來源綜合」換來的，代價是每次走的證據不一樣。</p>
+    <p class="g-p"><strong>再加上證據圖</strong>：準確率升 27%（0.52 → 0.66）、citation 一致性翻倍（0.25 → 0.50）、中位作答時間降 40%（30 秒 → 18 秒）、每題答對成本降 58%（約 $0.19 → $0.080）。原文補了一句限定：這些改善是「用更有指向性的檢索補上 wiki 的脈絡」，<strong>並沒有讓 agent 變成完全確定性</strong>。</p>
+    <figure class="g-fig">
+      <img src="https://cdn.prod.website-files.com/65c81e88c254bb0f97633a71/6ae0e289d91ee9dbea7c7433_Wiki%20and%20Graph%20results%20for%20agent%20memory.png" alt="連結題四張柱狀圖：準確率 0.10（Search）／0.52（Wiki）／0.66（Wiki+graph）；citation 一致性 0.44／0.25／0.50；每題答對成本約 0.55／0.19／0.08 美元；中位作答時間 31／30／18 秒" width="1600" height="1320" loading="lazy" decoding="async">
+      <figcaption>連結題三種條件的絕對值：準確率 0.10／0.52／0.66；citation 一致性 0.44／0.25／0.50；中位作答 31／30／18 秒；每題答對成本約 $0.55／$0.19／$0.080。<strong>注意一致性那一格：只有 wiki 的 0.25 低於純搜尋的 0.44</strong>，加圖後才到 0.50。<span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/building-agent-memory-openwiki-graphs" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <p class="g-p">這張圖上有一個原文敘述沒有點明的對照：連結題的 citation 一致性，<strong>純搜尋是 0.44，只有 wiki 是 0.25</strong>——也就是說編譯記憶先把「引用穩定」這件事弄差了，再加上證據圖才追過搜尋、到 0.50。原文只說 wiki 的引用重疊「從 0.74 掉到 0.25」，圖則把它和搜尋的基準放在一起，代價看得更清楚。</p>
+    <p class="g-p"><strong>什麼時候值得付這筆錢</strong>：最強的理由是<strong>重複的跨來源推理</strong>。前述結果的成本不含編譯——111 份 $4.15、每份新文件約 $0.09；對簡單查找，純搜尋一樣準而且更快，企業規模下資料匯入與長期維護可能吃掉檢索省下的錢。反之，當多個 agent 反覆回答「橫跨同一批彼此離散的來源」的問題時，共享的 wiki 保住來源之間的關係、graph 的邊把 agent 帶到支撐證據，原文的實驗就到達更準且每題答對成本更低；<em>重用次數夠多，省下的重複脈絡建構才攤得平記憶的建置與維護</em>。下一步他們想做更動態的 wiki（只編譯跨來源問題真正需要的脈絡，而不是整個 repo），並把 claim 與 typed edge 當成語意記憶、情節記憶、程序記憶的基礎。</p>
+    <div class="g-know">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+      <p><b>讀數前提。</b>本文引用的 0.66、0.44、0.50、31 秒、$0.080 等絕對值，部分是原文結果圖上的標示值（正文只給相對變化），已在各段與圖說中標明。語料是 111 份<strong>合成</strong>保險文件，散文由 LLM 生成、再用自動檢查確認必要事實都在，並刻意混入過期版本、矛盾、間接引用鏈、不同措辭與超長文件。對照組是<strong>純關鍵字搜尋</strong>，未與向量或混合 RAG 相比，因此那 5 倍不可直接外推到語意檢索。準確率是 grader 對照 972 條事實帳本評分，一致性是引用集合的 Jaccard 重疊（不測正確性），成本與延遲只算檢索與作答、排除編譯與更新，延遲為 wall-clock、圖上為中位數。原文未說明 grader 的模型與計分權重等細節。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="g-take">
+      <p><b>檢索的終點不是段落，是可重複的路徑。</b>純搜尋在連結題只有 0.10、wiki 到 0.52，差的是「關係」；但 wiki 三次作答只重疊 0.25——「答對」和「每次走同一條路」是兩件事，而稽核與重現要的是後者，這才是證據圖存在的理由。</p>
+      <p><b>圖之所以便宜，是因為它不重新理解世界。</b>建圖不到一秒、不呼叫模型，因為邊是從 wiki 既有的 citation 與文件引用直接 materialize 出來的；反過來說，模型寫的 citation 錯了，圖就跟著錯——便宜與脆弱是同一個設計決定。</p>
+      <p><b>記憶的經濟學看重用次數，不看平均準確率。</b>簡單查找 wiki 沒贏（0.83 對 0.84、還慢 3 秒），而 $4.15 的編譯費與每份 $0.09 不計入答案成本；只有多個 agent 反覆問同一批離散來源，這筆帳才攤得回來。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：一行 system prompt 的退步，該在評分表上現形</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="legora-legal-agents.html">法律工作的代理式作業系統：NDA 初篩如何從吃掉約 20% 產能降到 1% 以下</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="future-of-the-firm.html">AI 進公司會坐哪裡：地板下、桌邊、中間那一層——三種組織圖與四個未定的大問題</a><span class="d">2026-10-28</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文，非官方文件）；引述數據均出自原文（LangChain 自家 benchmark），小標與分節為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-29 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
