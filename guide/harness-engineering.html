@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — Make Opus 5.5 Finish Long Tasks · AI 每日動態檔案</title>
+<meta name="description" content="beamnxw〈七層 harness〉導讀：用 7 層對照表與一輪交接時序，把 Claude Code 的 CLAUDE.md、skill、MCP、hook、subagent、effort、/goal 拆成「各封哪種失敗」，並拆解原文自陳的 60% 省 token 數字。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E4%BA%BA%E7%89%A9%E8%A7%80%E9%BB%9E" class="day-catalog">人物觀點</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E4%BA%BA%E7%89%A9%E8%A7%80%E9%BB%9E">人物觀點</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>長任務 harness：七層配置，把交件與證據寫成檔案</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：X Article〈Make Opus 5.5 Finish Long Tasks: A Reusable Harness Engineering Setup〉——個人配置教學，七層全部用 Claude Code 既有功能拼成，無自製外掛</p>
+    <p class="g-meta">
+      <span>X @beamnxw</span>·<span>2026-10-06 發布</span>·<span>2026-10-30 收錄</span>·
+      <a href="https://x.com/beamnxw/status/2107522996046905797" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>7 層</b><span>四個設定檔＋一個選用連線＋每任務一個目標</span></div>
+    <div class="g-stat"><b>3 個指令</b><span>開跑前用 /context、/agents、/permissions 驗載入</span></div>
+    <div class="g-stat"><b>3 個產出</b><span>草稿、檢查表、進度筆記，缺一就接不上</span></div>
+    <div class="g-stat"><b>60%</b><span>Anthropic 早期試用者報告的數字，不是這套的量測</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">這篇不是 prompt 技巧集：它把「交件、證據、進度」三件事先寫進流程，再讓模型在流程裡跑。</p>
+
+    <p class="g-p">原文先給定義——harness 協調模型周邊的<em>指令、工具、權限、狀態與檢查</em>。七層不是抽象架構，是七個可以動手的地方，示範用文件工作流：來源放 sources/、草稿放 drafts/、定稿放 published/。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>七層各封一種失敗</b> — 層／落點／它防的是什麼（本站整理原文七節）</figcaption>
+      <div class="x-scroll">
+        <table class="x-tbl">
+          <thead><tr><th>層</th><th>落點</th><th>封住的失敗</th></tr></thead>
+          <tbody>
+            <tr><td data-l="層"><b>1 事實</b></td><td data-l="落點">根目錄 CLAUDE.md＋.claude/rules/</td><td data-l="封住的失敗">跨任務的輸出路徑、來源要求被每次重講</td></tr>
+            <tr><td data-l="層"><b>2 程序</b></td><td data-l="落點">.claude/skills/write-draft/SKILL.md</td><td data-l="封住的失敗">同一套流程每次重寫，步驟結果無法驗收</td></tr>
+            <tr><td data-l="層"><b>3 來源</b></td><td data-l="落點">MCP 連線（選用）＋/mcp</td><td data-l="封住的失敗">抓不到就開始編，失敗原因沒留下</td></tr>
+            <tr><td data-l="層"><b>4 動作</b></td><td data-l="落點">settings.json 權限規則＋PreToolUse hook</td><td data-l="封住的失敗">模型直接改動定稿區</td></tr>
+            <tr><td data-l="層"><b>5 審查</b></td><td data-l="落點">.claude/agents/evidence-reviewer.md</td><td data-l="封住的失敗">審查只回「看起來可以」，沒有依據</td></tr>
+            <tr><td data-l="層"><b>6 力道</b></td><td data-l="落點">啟動參數／skill・subagent 的 effort</td><td data-l="封住的失敗">思考深度靠一句「想仔細點」交代</td></tr>
+            <tr><td data-l="層"><b>7 完成</b></td><td data-l="落點">/goal 的完成條件</td><td data-l="封住的失敗">完成條件沒寫成檔案，收工時只剩一段對話</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="x-hint">→ 可橫向滑動</p>
+      <p class="x-src">本站整理；原文以七個小節分述，未給「封住的失敗」這一欄。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">分界線是「跨任務」與「單次任務」，不是重要程度</h2>
+    <p class="g-p">根目錄 CLAUDE.md 只放<em>長期有效</em>的事：輸出路徑、來源要求、寫作慣例。臨時截止日、還沒解決的來源疑問跟著那一次任務走。</p>
+    <p class="g-p">原文順手拆了一個常見誤解：用 @path 拆大檔只是整理用，import 進來的內容在 session 開始時一樣全部進 context；偶發才用的流程放 skill，那才是真的省。</p>
+    <p class="g-p">第二層的判斷標準很實用：每一步都要有可觀測的結果。讀資料→交出選定的來源；寫稿→存成檔案；審查→交出作者能處理的 finding。<em>「檢查正確性」這種步驟把太多判斷留空。</em></p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">一輪跑完，誰把球傳給誰</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>一輪長任務的交接</b> — 主 agent 與 reviewer 的分工（本站重排）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">人 → sources/</span><span class="tr"><i>任務簡報＋參考資料＋驗收條件</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">主 agent → drafts/</span><span class="tr"><i>跑 skill，產出 article.md</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">主 agent → reviewer</span><span class="tr"><i>交草稿路徑、來源位置、待查主張</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">reviewer → 主 agent</span><span class="tr"><i>每條 finding 連到一份被打開過的來源</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">主 agent → 草稿</span><span class="tr"><i>只有主 agent 有修改權；改完重看鄰句</i></span></span></li>
+        <li><span class="st">06</span><span class="body"><span class="hop">→ progress.md</span><span class="tr"><i>現有檔案／已完成檢查／未解問題／下一步</i></span></span></li>
+        <li class="side"><span class="st">接棒</span><span class="body"><span class="hop">新 session 接手</span><span class="tr"><i>讀進度筆記續跑，不重來</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重排；原文分節敘述，未畫此流程，也未把「新 session 接手」標為另一個階段。</p>
+    </figure>
+    <p class="g-p">第三層的驗收方式很樸素：先抓一頁已知的頁面，確認內容對得上，再讓長流程依賴它；抓取失敗時留下文件識別碼與失敗原因，別重複同一個請求。</p>
+    <p class="g-p">沒角色的伺服器就從 /mcp 關掉；原文只給這個動作，沒給省下多少 context 的數字。</p>
+    <p class="g-p">第五層最值得抄：reviewer 拿讀取與搜尋工具，<em>不拿修改權</em>。判「錯」必須附衝突證據與可套用的修正；判「未解」要指出缺哪份證據。</p>
+    <p class="g-p">原文補了一句很容易被忽略的話：一份自信的審查報告，背後仍要有可用的證據。所以驗收看的是環境裡留下的成品，不是對話有多漂亮。</p>
+    <p class="g-p">恢復手段要分清楚：/rewind 只還原被追蹤的檔案編輯，shell 的改動與多數 subagent 的編輯要另外回收，版本控制才是耐久紀錄。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">哪幾條站得住：機制事實、作者配置、該打折的主張</h2>
+    <p class="g-p">先把三類分開，再決定要不要抄：① 對得上官方文件的功能行為；② 作者的配置選擇；③ 需要打折的通則。</p>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>主張</th><th>類型</th><th>依據</th><th>編輯觀點</th></tr></thead>
+        <tbody>
+          <tr><td data-l="主張"><b>/goal 的 turn clause 由模型評估</b></td><td data-l="類型">① 機制</td><td data-l="依據">原文自陳：完成條件靠對話中浮現的證據判定；硬性上限仍需執行控制</td><td data-l="編輯觀點">把它當完成度檢查，不是預算煞車</td></tr>
+          <tr><td data-l="主張"><b>權限規則擋得住亂改</b></td><td data-l="類型">① 機制（有範圍）</td><td data-l="依據">原文自承：檔案工具限制有明確範圍；python／node 可用自己的程式碼開檔，需要時靠 OS 沙箱補位</td><td data-l="編輯觀點">第四層給的是工具邊界，不是機器邊界</td></tr>
+          <tr><td data-l="主張"><b>主 session 用 medium</b></td><td data-l="類型">② 配置</td><td data-l="依據">原文說 Opus 5.5 預設即 medium（除非設定覆寫），reviewer 另請 high；effort 受模型支援層級限制</td><td data-l="編輯觀點">設定綁模型版本，換版要重驗</td></tr>
+          <tr><td data-l="主張"><b>這套能省 60% token</b></td><td data-l="類型">③ 主張</td><td data-l="依據">低：原文說該數字「屬於那個模型實驗」，要自己量</td><td data-l="編輯觀點">引用前先確認它是不是你的工作負載</td></tr>
+          <tr><td data-l="主張"><b>七層值得一次鋪滿</b></td><td data-l="類型">③ 主張</td><td data-l="依據">低：原文未給七層的導入優先序與鋪設成本，只說改設定時一次動一個元件、重跑同一任務</td><td data-l="編輯觀點">先補第 1、5、7 層，這三層最難用人工補位</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">那條 60% 是全文最該打折的地方，也是原文自己打折的地方：它引的是 Anthropic 早期試用者報告，接著明講「屬於那個模型實驗」，省多少要用<em>自己完成的任務</em>量出來。</p>
+    <p class="g-p">量測方式原文也給了：用 /usage 看回報用量、/context 看什麼佔住視窗，把委派的審查與重試算進同一個任務，再記下你花多少時間複核、成品被退回幾次。</p>
+    <p class="g-p">第六層的寫法值得單獨學：寫一句「請深入思考」不會改變已設定的 effort，要改的是設定本身；而且換設定時只動一個元件、重跑同一個任務、同時看成品與證據。</p>
+    <div class="g-know">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+      <p><b>閱讀前提。</b>這是個人配置教學，非 Anthropic 官方文件；七層的落點都對得上 Claude Code 既有功能，但設定細節以你家版本的文件為準。原文的程式碼片段以截圖呈現，本導讀只轉寫文字描述的部分，未轉抄設定內容。</p>
+      <p><b>立場與查證。</b>原文結尾有 Substack 與 Telegram 導流，屬個人品牌經營。分類中的「① 機制」是原文對官方文件的援引，本站未逐條複驗官方文件。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>先寫驗收再開跑。</b>草稿、檢查表、進度筆記，是長任務唯一的下限。</p>
+      <p><b>審查要能指回來源。</b>給 reviewer 讀取權而非修改權，它才不會改掉證據。</p>
+      <p><b>七層是配置，不是門檻。</b>先挑一層動一個元件，重跑同一任務再比較。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">X @addyosmani</span><a href="claude-code-mods.html">Claude Code Mods：事件是接縫，三個動詞就能改寫行為</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">X @addyosmani</span><a href="claude-code-review.html">六層過濾＋一道回滾：Claude Code 團隊怎麼審自己寫的碼</a><span class="d">2026-10-26</span></div>
+      <div class="g-relrow"><span class="s">X @thorstenball</span><a href="how-i-work-with-agents.html">與 agent 協作：說 What、要證據、只審爆炸半徑</a><span class="d">2026-10-25</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述語句出自原文，圖解與小標為編輯整理。原文無可用機制圖，圖解與表格為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-30 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
