@@ -413,7 +413,7 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 }
 
 /* ── 圖解元件 x-（2026-10-29 新增：圖解優先版導讀使用） ── */
-/* 實驗：圖解優先元件（guide-exp 專用，通過後再併入 archive.css） */
+/* 圖解優先元件（x-*）：導讀頁正式使用，改版式時一併維護 */
 
 /* ── 圖解外框 ── */
 .x-fig{margin-top:20px;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:16px 16px 14px}
