@@ -238,13 +238,13 @@
         </article></li>
 <li><article class="item">
           <div class="item-meta"><span class="item-date">2026-10-28</span><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">智能代理</i></div>
-          <h3 class="item-title"><a href="https://www.langchain.com/blog/context-engineering-deep-agents-remember" target="_blank" rel="noopener">Context Engineering with Deep Agents: How To Remember Without Keeping Everything In Context<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <h3 class="item-title"><a href="https://www.langchain.com/blog/context-engineering-deep-agents-remember" target="_blank" rel="noopener">Context Engineering with Deep Agents: How To Remember Without Keeping Everything In Context<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/context-rot.html">導讀</a></h3>
           <p class="item-sum">Long-running agents degrade as context piles up. Learn how offloading, summarization, skills, subagents, and memory keep your agent&#39;s context window focused.</p>
           <ul class="item-points"><li>工具結果超過約 20,000 token 時會先寫入 /large_tool_results/{tool_call_id}，模型只看到前後幾行預覽與檔案路徑，需要時再用 read_file 翻頁讀取。</li><li>超過 50,000 token 的使用者訊息同樣寫入 /conversation_history/；摘要 middleware 在用量達模型上下文視窗 85% 時，把舊訊息壓成摘要並保留最近訊息原文。</li><li>被摘要的訊息會存到 /conversation_history/{session_id}.md，之後仍可讀回，因此壓縮是可回溯的，且下一次摘要會包含前一次摘要。</li><li>技能採漸進式揭露，只有 SKILL.md 的名稱與描述常駐系統提示，完整指令等模型判斷需要時才載入；長期記憶則是可跨模型與供應商共用的 Markdown 檔。</li></ul>
         </article></li>
 <li><article class="item">
           <div class="item-meta"><span class="item-date">2026-10-28</span><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">開發者工具</i></div>
-          <h3 class="item-title"><a href="https://www.langchain.com/blog/proactive-agents" target="_blank" rel="noopener">How to Build Proactive, Always-On Agents with the Schedules SDK in Managed Deep Agents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <h3 class="item-title"><a href="https://www.langchain.com/blog/proactive-agents" target="_blank" rel="noopener">How to Build Proactive, Always-On Agents with the Schedules SDK in Managed Deep Agents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/proactive-schedules.html">導讀</a></h3>
           <p class="item-sum">Most proactive agents run on a simple cron. Learn what scheduled runs unlock, from memory to smart triage, and how to add them to Managed Deep Agents.</p>
           <ul class="item-points"><li>在 LangSmith 上執行的 Managed Deep Agents，超過 70% 的執行來自排程，而非使用者手動輸入訊息。</li><li>cron 支撐長期記憶（俗稱 dreaming 的背景整理）、主動發訊息、Slack 或 Email 分流監控、提醒回訪與代理艦隊編排等能力。</li><li>排程本質就是一段 prompt 加一個時間表，沿用建立者的執行緒與記憶，伺服器會加入 jitter 分散同時段的執行負載。</li><li>可用 define_schedule 寫在 schedules/ 目錄做固定排程，或把 runtime.schedules.create 包成工具，讓使用者自行建立、列出與刪除排程。</li></ul>
         </article></li>
@@ -262,7 +262,7 @@
         </article></li>
 <li><article class="item">
           <div class="item-meta"><span class="item-date">2026-10-26</span><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">智能代理</i></div>
-          <h3 class="item-title"><a href="https://www.langchain.com/blog/context-engineering-starts-with-retrieval" target="_blank" rel="noopener">Context Engineering (Agent Memory) for AI Agents Starts with Retrieval<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <h3 class="item-title"><a href="https://www.langchain.com/blog/context-engineering-starts-with-retrieval" target="_blank" rel="noopener">Context Engineering (Agent Memory) for AI Agents Starts with Retrieval<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/retrieval-first.html">導讀</a></h3>
           <p class="item-sum">Agents waste time and context on clumsy searches, oversized results and stale data. Learn the retrieval techniques LangChain&#39;s Deep Agents harness uses to get the right context in.</p>
           <ul class="item-points"><li>內建 glob 可依檔名樣式找檔、grep 直接在檔案內比對而不把內容載入上下文，避免代理為了看內容而讀遍所有檔案。</li><li>read_file 預設每次讀 100 行並可用 offset 與 limit 跳段；工具結果超過約 20,000 token 時改存到 /large_tool_results/，只回傳路徑與前後幾行預覽。</li><li>grep 只比對字面文字，像「Company A closes $50M Series B」這類同義表述需另外接上向量資料庫做語意檢索。</li><li>文章提出「先檢索、再卸載、後委派」模式：檢索工具只回傳檔案路徑，由 chunk-analyst 子代理讀取並只回傳關鍵事實與來源網址。</li></ul>
         </article></li>
@@ -278,7 +278,7 @@
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">資料來源：OpenAI · Anthropic · Google DeepMind · Google Research · Google Blog · xAI · Meta AI · DeepSeek · Mistral · NVIDIA · AMD · OpenRouter · LangChain · Unsloth — 僅收錄官方第一手公告。</p>
   <p class="foot-md">原始資料：<a href="../md/2026-10-29.md" target="_blank" rel="noopener">2026-10-29.md</a></p>
-  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-10-30 14:57 (UTC+8)</p>
+  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-10-30 15:48 (UTC+8)</p>
 </div></footer>
 <script src="../assets/site.js" defer></script>
 </body>

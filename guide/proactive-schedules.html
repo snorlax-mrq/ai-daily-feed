@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 常駐代理的排程底座 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain〈Proactive, Always-On Agents with the Schedules SDK〉導讀：用 fixed／dynamic 排程對照圖與兩張表，拆解 cron 解鎖的五種能力、兩個必要零件，以及超過 70% 排程執行佔比（原文敘述）。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>常駐代理的底座：五種 cron 用法，兩個關鍵零件</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain Blog〈How to Build Proactive, Always-On Agents with the Schedules SDK in Managed Deep Agents〉——產品方法論，含 static／dynamic 兩種排程範例碼</p>
+    <p class="g-meta">
+      <span>LangChain Blog</span>·<span>2026-10-28 發布</span>·<span>2026-10-30 收錄</span>·
+      <a href="https://www.langchain.com/blog/proactive-agents" target="_blank" rel="noopener">閱讀官方原文</a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>超過 70%</b><span>LangSmith 上 Managed Deep Agents 執行來自排程（原文敘述，無第三方驗證）</span></div>
+    <div class="g-stat"><b>5 個小標</b><span>cron 解鎖：記憶、主動、分流、追蹤、編排（編輯計數）</span></div>
+    <div class="g-stat"><b>10 分鐘</b><span>智慧分流 cron 的舉例節奏</span></div>
+    <div class="g-stat"><b>2 個</b><span>關鍵零件：cron server 與代理友善介面（原文：generally two key parts）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">主動型代理的機制不新——就是超過五十年歷史的 cron；難的是排程屬於誰、記憶跟著誰、以及能不能被治理。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/proactive-schedules/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/proactive-schedules/01.webp" alt="原文對照圖：左側 Fixed 標註 You write it／Ships with the agent／Same for every user，程式碼放在 schedules/daily_digest.py 用 define_schedule 設定 cron 與 timezone；右側 Dynamic 標註 The agent writes it／Created at runtime／Scoped to one user，程式碼是以 set_schedule 工具包住 runtime.schedules.create" width="1200" height="575" loading="lazy" decoding="async"></a>
+      <figcaption>排程的兩種來源：左邊是你寫進程式庫、跟著代理出貨、所有使用者共用；右邊由代理在執行時自己建立，綁在單一使用者身上。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／LangChain Blog，<a href="https://www.langchain.com/blog/proactive-agents" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <p class="g-p">原文的觀察很直白：市面上幾個新興的主動型代理（Muse、Instinct、Dots、Claude Duet、Hone）底層都是同一招——把代理當 cron 任務跑。</p>
+    <p class="g-p">開場用的是巴德－邁因霍夫現象：學會一個設計模式之後，突然覺得它到處都是。原文的解讀是，這種「到處都是」通常代表機制已經收斂成一種簡單形狀。</p>
+    <p class="g-p">形狀就是：一個超過五十年歷史的作業系統原理，套在很新的用途上。cron 只決定「何時」，做什麼由那一段提示決定。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">cron 解鎖的五種行為（編輯依原文小標計數）</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>能力</th><th>典型節奏（原文舉例）</th><th>底層機制</th></tr></thead>
+        <tbody>
+          <tr><td data-l="能力"><b>記憶</b></td><td data-l="節奏">每天一次</td><td data-l="底層">背景任務把過去對話壓成更密的記憶，原文稱「dreaming」</td></tr>
+          <tr><td data-l="能力"><b>主動</b></td><td data-l="節奏">每小時一次</td><td data-l="底層">依目標提示代理找新動作，動作再變成主動訊息</td></tr>
+          <tr><td data-l="能力"><b>智慧分流</b></td><td data-l="節奏">每十分鐘一次</td><td data-l="底層">盯 Slack、Email 等事件流，只挑值得講的</td></tr>
+          <tr><td data-l="能力"><b>追蹤提醒</b></td><td data-l="節奏">使用者指定的時點（原文未給固定週期）</td><td data-l="底層">cron 到期醒來提醒——原文強調 cron 不只用於背景</td></tr>
+          <tr><td data-l="能力"><b>編排</b></td><td data-l="節奏">定期（原文：at regular intervals）</td><td data-l="底層">編排代理用 cron 監看整批代理，睡著等非同步子任務結束再醒來查看</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">這五種行為共用同一個前提：代理必須能「在沒人講話時自己啟動」。這也是原文敢說主動已成為代理預設行為的依據。</p>
+    <p class="g-p">（編輯觀點：節奏是可調的參數，不是能力的界線——調快一點就是監控，調慢一點就是每日彙整。）</p>
+    <p class="g-p">「主動」的內容則看代理類型：通用代理的目標只是當好助理——提前提醒截止日、追蹤未結案的對話、丟出跟工作相關的新聞。</p>
+    <p class="g-p">專門代理（原文舉 Hone 為例）有明確目標，cron 每隔一段時間提示它找新動作，動作再變成給使用者的訊息。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">兩個零件：一個會排程，一個能被代理操作</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>零件</th><th>原文要求</th><th>沒做到會怎樣（編輯推論）</th></tr></thead>
+        <tbody>
+          <tr><td data-l="零件"><b>cron server</b></td><td data-l="要求">讓開發者用任何排程加一段提示就能建，需要技能或權限時一併帶上；同一時點執行太多要用 jitter 把負載攤開</td><td data-l="後果">排程同時觸發會擠在同一瞬間，回應被拖慢</td></tr>
+          <tr><td data-l="零件"><b>代理友善介面</b></td><td data-l="要求">代理能自己建立與修改提醒，但要是「容易、且受治理」的方式</td><td data-l="後果">追蹤提醒只能由人設定，代理無法為你排下一次</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">Managed Deep Agents 把第一個零件內建了。一次排程執行在原文眼裡很單純：就是一段被排程觸發的提示，加上建立者本人的 thread 與記憶。</p>
+    <p class="g-p">同一個提示，不同人建立就該看到不同的上下文——權限與資料邊界因此綁在「誰建的排程」，而不是綁在代理身上（編輯推論）。</p>
+    <p class="g-p">（編輯推論：這也解釋了為什麼原文把 owner 放進每個動態排程呼叫裡，而不是放在代理設定檔。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">動態排程要多想一層：工具面</h2>
+    <p class="g-p">靜態排程只是一個檔案：<code>define_schedule</code> 寫死 cron 與時區，隨代理一起部署。動態排程則要把 Schedules SDK 包成工具丟給代理。</p>
+    <p class="g-p">原文示範三個工具：建立、列出、刪除。刪除要帶擁有者條件，否則代理拿到 id 就能動別人的排程（編輯推論）。</p>
+    <p class="g-p">單次提醒可以更省：<code>check_in_later</code> 只吃提示與分鐘數，時間到跑一次就結束，不必設計整套週期。</p>
+    <p class="g-p">原文也提醒工具面要分級：不同類型的代理需要的排程工具集不同，有時一個 <code>remind_me</code> 或 <code>check_in_later</code> 就夠，不必一開始就給完整 SDK。</p>
+    <p class="g-p">部署端只剩兩步：<code>mda init</code> 與 <code>mda deploy</code>。</p>
+    <p class="g-p">治理那句原文只給了「容易、但受治理」，沒有給出權限模型的實作細節（編輯觀點）。</p>
+    <p class="g-p">（編輯觀點：這篇是產品文件性質，多數能力敘述缺少可驗證的成效數字；唯一量化的是排程執行占比，且為 LangChain 自家平台統計。範例碼可讀性高，但刪除類工具務必自行補上權限檢查。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>主動型代理＝cron 加判斷，不是新架構。</b>難題在治理不在排程。</p>
+      <p><b>排程要綁人，不綁代理。</b>記憶與權限跟著建立者走。</p>
+      <p><b>先給代理最小工具面。</b>能建、能列、能刪，刪要帶條件。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="context-rot.html">上下文腐化：五種機制把資訊搬出視窗，再按需取回</a><span class="d">2026-10-30</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="retrieval-first.html">上下文工程從檢索開始：選對工具，少燒一次 context</a><span class="d">2026-10-30</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="managed-deep-agents-v010-async.html">子代理搬進背景：主代理一邊對話，一邊等結果</a><span class="d">2026-10-29</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-30 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
