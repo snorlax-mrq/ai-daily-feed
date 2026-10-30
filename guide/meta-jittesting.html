@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — LLM 連夜寫測試：Meta 半年攔下 74 個隱私 SEV · AI 每日動態檔案</title>
+<meta name="description" content="Meta Engineering〈Catching Bugs Before They Land〉導讀：夜間為高風險 diff 即時生成測試，LLM 評審團排名、human-on-the-loop 把關，589 名工程師回報 60% 真陽性。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>LLM 連夜寫測試：Meta 半年攔下 74 個隱私 SEV</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Meta Engineering〈Catching Bugs Before They Land: JiTTesting's Human-on-the-Loop Approach at Full Scale〉——工程實務分享</p>
+    <p class="g-meta">
+      <span>Meta Engineering</span>·<span>2026-10-29 發布</span>·<span>2026-10-30 收錄</span>·
+      <a href="https://engineering.fb.com/2026/10/29/security/catching-bugs-before-they-land-jittestings-human-on-the-loop-approach-at-full-scale/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>74</b><span>2026 上半年 diff 階段攔下的隱私 SEV</span></div>
+    <div class="g-stat"><b>−20%</b><span>同期隱私 SEV 發生率降幅</span></div>
+    <div class="g-stat"><b>60%</b><span>工程師回報的真陽性率</span></div>
+    <div class="g-stat"><b>589 人</b><span>參與工程師，占觸及對象 64%</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">代理寫碼越快，測試越要跟著快。Meta 的解法是「測試跟著 diff 走」：<strong>夜間閒置算力自動為高風險變更生成測試，評審排名後才打擾工程師</strong>。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>x-seq 時序</b> — JiTTesting 五階段管線（本站重繪，原文未給流程圖）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">選 diff</span><span class="tr"><i>夜間跑在閒置算力，用 DRS 式風險分挑前一天最可能出事的變更</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">雙工作流生成</span><span class="tr"><i>突變導向＋意圖感知兩路並行，產出「weak catches」</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">評審排名</span><span class="tr"><i>LLM-as-Judge 多模型評審團＋規則式 RubFake，過濾誤報</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">決定觸及</span><span class="tr"><i>排名夠高才找工程師，控制打擾率</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">human-on-the-loop</span><span class="tr"><i>人設準則、總量層級審核，不逐件監督</i></span></span></li>
+      </ul>
+      <p class="x-src">目標是攔在「land 進主線之前」——測試左移到 diff 階段。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">兩種生成策略，一軟一硬的評審</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>x-cmp 左右對照</b> — 雙工作流分工（本站整理）</figcaption>
+      <div class="x-cmp">
+        <div class="cmp">
+          <p class="cmp-h">突變導向（dodgy diff）</p>
+          <p>把 diff 本身當突變體，生成能分辨「新舊行為」的測試，最大化 weak catch 池，讓強 catch 從裡面浮出來。</p>
+        </div>
+        <div class="cmp">
+          <p class="cmp-h">意圖感知（intent-aware）</p>
+          <p>LLM 先從變更、標題與摘要推斷「這個 diff 想做什麼」，列出實作可能的出錯方式，據此構造突變體再生成殺突變測試。</p>
+        </div>
+      </div>
+      <p class="x-src">評審側：RubFake 提供可驗證的確定性判決，補上 LLM 評審「語意豐富但非確定」的短板，兩者合力排名。</p>
+    </figure>
+    <p class="g-p">這個組合的用意明顯：LLM 負責<strong>語意判斷</strong>，規則負責<strong>可驗證</strong>——規模化靠後者，理解力靠前者。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">成效：打擾少，命中率不差</h2>
+    <p class="g-p">589 名工程師（觸及對象的 64%）實際參與，回報<strong>60% 真陽性率</strong>——找出來的問題多半真的會咬人。2026 上半年，Catching JiTTests 在 diff 階段攔下 <strong>74 個嚴重（SEV）隱私 bug</strong>，同期整體隱私 SEV 發生率下降 <strong>20%</strong>（Meta 自報，無第三方驗證）。</p>
+    <p class="g-p">human-on-the-loop 是這套系統的靈魂：工程師<strong>設定準則、在總量層級審核結果</strong>，而不是一件件盯——人力花在設計邊界，不在逐案把關。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>測試生成要挑對象。</b>風險分先篩 diff，算力與注意力都花在刀口。</p>
+      <p><b>LLM 評審必須配確定性規則。</b>否則誤報會先把工程師的信任耗光。</p>
+      <p><b>human-on-the-loop 是可規模的監督。</b>設準則與看總量，比逐件審便宜得多。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="managed-deep-agents-v010-async.html">子代理搬進背景：主代理一邊對話，一邊等結果</a><span class="d">2026-10-29</span></div>
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="a2ui-copilotkit-genui.html">代理開始長 UI：A2UI 一套宣告，框架與介面打通</a><span class="d">2026-10-29</span></div>
+      <div class="g-relrow"><span class="s">NVIDIA Blog</span><a href="nvidia-omniverse-agent-sims.html">用說的就能組模擬：三個 Omniverse 代理案例</a><span class="d">2026-10-29</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文（Meta 自報成效），圖解與小標為編輯整理（本篇圖解為本站重繪，原文未附圖）。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-30 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

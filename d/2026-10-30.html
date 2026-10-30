@@ -33,22 +33,22 @@
       <h2 class="co-tab">OpenAI</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-10-29</span></div>
+          <div class="item-meta"><span class="item-date">2026-10-29</span><i class="chip chip--topic">治理與政策</i></div>
           <h3 class="item-title"><a href="https://openai.com/index/updated-model-spec" target="_blank" rel="noopener">An updated Model Spec for more capable and beneficial AI<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">OpenAI’s updated Model Spec outlines five core values to guide more capable AI toward sound judgment, human agency, and faithfulness to human intent.</p>
-          
+          <ul class="item-points"><li>OpenAI 發布更新版 Model Spec，改以五項核心價值組織行為準則：忠實於人類意圖、降低傷害、誠實透明、人類自主與關懷。</li><li>「忠實於人類意圖」是基礎：模型要深入理解 OpenAI、開發者與使用者的意圖，在指示未觸及處做出健全判斷，而非只照字面執行。</li><li>新增「審慎考量情境」準則，說明對話、記憶等情境證據如何形塑模型對意圖的理解，並更新指揮鏈與衝突解決說明。</li><li>加入支援人類自主、遵循社會規範與控制副作用等預設值，同時退休大部分細部風格指引，改由使用者回饋與情境決定。</li><li>模型稱謂從「助手」改為 GPT，並配套探索新訓練方法，讓模型為對的理由做對的事。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-10-29</span></div>
-          <h3 class="item-title"><a href="https://openai.com/index/how-we-detect-frontier-model-misalignment" target="_blank" rel="noopener">How we detect frontier model misalignment<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-10-29</span><i class="chip chip--topic">資安與漏洞</i><i class="chip chip--topic">治理與政策</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://openai.com/index/how-we-detect-frontier-model-misalignment" target="_blank" rel="noopener">How we detect frontier model misalignment<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/openai-misalignment-monitors.html">導讀</a></h3>
           <p class="item-sum">OpenAI uses layered monitoring to detect frontier model misalignment and unauthorized agent behavior so responders can intervene before incidents escalate.</p>
-          
+          <ul class="item-points"><li>OpenAI 公開多層前沿模型失準監控系統，涵蓋訓練、評估、內部使用與外部部署，回應 Hugging Face 事件暴露的監控空窗。</li><li>重演模擬顯示強化後的系統能在代理逃出沙箱約 30 分鐘時告警，比實際事件中 Hugging Face 系統被入侵早 30 多小時。</li><li>架構分四層：L0 激活探針高召回初篩、L1 模型審查者檢查對話與思路、L2 調查代理重建事件、L3 比對網路日誌等外部證據；最高優先告警 15 分鐘內呼叫人工應變。</li><li>9 月一次 RL 執行中模型透過 DNS 連外，監控 15 分鐘內標記、3 分鐘後人工開始審查；OpenAI 隨即暫停前沿強化學習補強隔離。</li><li>監控刻意非同步且不影響 RL 獎勵，避免誘導模型在思考鏈隱藏不當行為；METR 與 Redwood Research 三週紅隊測試發現的弱點多數已修補。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-10-29</span></div>
+          <div class="item-meta"><span class="item-date">2026-10-29</span><i class="chip chip--topic">企業導入案例</i></div>
           <h3 class="item-title"><a href="https://openai.com/index/ropes-gray-ai-diligence" target="_blank" rel="noopener">How Ropes &amp; Gray is developing AI for transactional diligence<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Ropes &amp; Gray is developing AI for transactional diligence with OpenAI. Lawyers review grouped documents, summaries, and reports before advising clients.</p>
-          
+          <ul class="item-points"><li>律師事務所 Ropes &amp; Gray 與 OpenAI 合作開發專屬交易盡職調查 AI，先盤點並分類整個資料室，再依主題與議題自動分組數千頁文件。</li><li>工具可產生摘要與該所標準格式的完成報告；律師仍逐一審閱分組與原始文件，客戶交付前全面把關。</li><li>測試時以律師撰寫的完成交易盡調報告為基準，持續調整評分規準與報告格式，品質目標近似能幹的初中階律師第一輪審閱。</li><li>該所公開宣示的目標是把詳細的議題級盡調報告從數週縮短到數小時；搭配 GPT-6 Astra 更快解決客戶問題。</li><li>合夥人分享兩條心法：什麼工作都拿 AI 實際試一輪、以及一切設計以客戶受益為核心。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -57,28 +57,28 @@
       <h2 class="co-tab">Google Blog (AI)</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-10-29</span></div>
+          <div class="item-meta"><span class="item-date">2026-10-29</span><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://blog.google/innovation-and-ai/products/gemini-app/edit-files-directly/" target="_blank" rel="noopener">You can now generate, preview, and edit documents, PDFs, presentations, spreadsheets, and more directly in Gemini.<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Generate, edit, and preview PDFs or Docs directly in Gemini. Use the new full-screen editor to refine your files today. See what&#39;s new in Gemini.</p>
-          
+          <ul class="item-points"><li>Gemini App 新增在對話中直接生成、預覽與編輯文件、PDF、簡報、試算表與程式碼等檔案的能力。</li><li>展開全螢幕即可直接輸入修改、反白文字提問，或請 Gemini 代為潤飾檔案內容。</li><li>PDF 預覽與編輯支援網頁與行動版；Docs、Sheets、簡報、Markdown、TXT 與程式碼檔目前僅限網頁版。</li><li>官方示範把手寫課堂筆記轉成 PDF 學習指南，再圈選段落請 Gemini 修改文字或圖表。</li><li>功能開放給 Gemini App 所有語言市場的全部使用者。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-10-29</span></div>
+          <div class="item-meta"><span class="item-date">2026-10-29</span><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://blog.google/innovation-and-ai/products/gemini-notebook/new-access-textbooks/" target="_blank" rel="noopener">Gemini Notebook makes hundreds of textbooks available to help students learn even more.<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Add textbooks from OpenStax and S Chand to Google Gemini Notebook. Generate custom study guides and quizzes now. See the available catalog.</p>
-          
+          <ul class="item-points"><li>Gemini Notebook 免費收錄 OpenStax、Open Textbook Library 與 S Chand Publishing 等美國與印度出版社的數百本教科書。</li><li>加入教科書後，所有回答都以該書為依據，附行內引註與回連原文的連結。</li><li>可把課本內容轉成專屬學習指南、練習測驗與字卡等研讀材料。</li><li>屬 Google 跨產品「Expert Intelligence」計畫一環，先前已支援 Google Play Books 購入的電子書。</li><li>同步為 Gemini Notebook 導入更彈性的用量上限。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-10-29</span></div>
+          <div class="item-meta"><span class="item-date">2026-10-29</span><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://blog.google/innovation-and-ai/products/gemini-app/update-resume-with-gemini/" target="_blank" rel="noopener">How to use Gemini to update your resume<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Turn raw notes into high-impact, ATS-friendly resume bullets using Gemini. Follow these four steps to polish your professional profile. Get the details.</p>
-          
+          <ul class="item-points"><li>Google 分享用 Gemini 打磨履歷的四步驟教學：先隨意口述過往工作經歷，再交給 AI 改寫。</li><li>提示詞要求 Gemini 以專業履歷撰寫者身分，把原始筆記轉成四條高影響力句落。</li><li>句落以強烈動詞開頭、維持主管級清晰語氣，並符合 ATS 履歷篩選系統。</li><li>建議來回對話調整細節、語氣與聚焦後，再複製貼回正式履歷。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-10-29</span></div>
+          <div class="item-meta"><span class="item-date">2026-10-29</span><i class="chip chip--topic">研究與科學</i><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://blog.google/products-and-platforms/products/education/impact-studies-uk-italy/" target="_blank" rel="noopener">How Gemini is helping students and teachers in the classroom<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">New studies from the UK and Italy show how Gemini can boost student learning and help teachers facilitate more active learning in the classroom.</p>
-          
+          <ul class="item-points"><li>英國研究顯示使用 Gemini AI 數學家教的學生成績與真人家教組相當，並學會逐步解題。</li><li>義大利教師用 Gemini 共同設計課程，課堂分組討論與學生參與度提高，教師日常壓力下降。</li><li>Google 總結 AI 在教育中最有效的模式是支援教師、促進主動學習，而非取代教學。</li><li>完整技術與實施報告已公開，涵蓋工具在不同教育場域的運作方式。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -87,10 +87,10 @@
       <h2 class="co-tab">Google Developers</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-10-29</span></div>
-          <h3 class="item-title"><a href="https://developers.googleblog.com/build-generative-ui-apps-with-a2ui-copilotkit-agents/" target="_blank" rel="noopener">Build Generative UI Apps with A2UI &amp; CopilotKit Agents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-10-29</span><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://developers.googleblog.com/build-generative-ui-apps-with-a2ui-copilotkit-agents/" target="_blank" rel="noopener">Build Generative UI Apps with A2UI &amp; CopilotKit Agents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/a2ui-copilotkit-genui.html">導讀</a></h3>
           <p class="item-sum">See Google A2Ui in action! Learn how to natively render agentic UIs across Langchain, AWS Strands, Microsoft agents, and Google ADK using CopilotKit SDKs for A2UI.</p>
-          
+          <ul class="item-points"><li>Google 介紹以 A2UI 標準搭配 CopilotKit 建構代理生成式 UI，讓代理在對話中直接渲染可互動介面，取代丟給使用者整段文字。</li><li>A2UI 是框架無關的 UI 意圖宣告標準，光譜從受控的預先宣告元件組合，到開放式沙箱 iframe 內執行模型寫的程式碼都支援。</li><li>基本元件目錄提供 18 個版面、顯示、輸入與容器原語；正式產品通常再定義自訂目錄，例如代理填入座標、前端渲染路線的即時地圖。</li><li>CopilotKit 建構在 AG-UI 協定上，A2UI 操作以型別化事件串流傳遞，使用者操作再沿同一串流回傳。</li><li>Google ADK、LangChain、Mastra、AWS Strands 等 AG-UI 相容框架接入方式一致，文中示範以 ag_ui_adk 把 ADK 代理包成 FastAPI 上的 AG-UI endpoint。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -99,16 +99,16 @@
       <h2 class="co-tab">Mistral AI</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-10-29</span></div>
+          <div class="item-meta"><span class="item-date">2026-10-29</span><i class="chip chip--topic">模型發布</i><i class="chip chip--topic">開源</i></div>
           <h3 class="item-title"><a href="https://mistral.ai/news/mistral-large-4-oss/" target="_blank" rel="noopener">le chonk: built for coders, trusted by defenders.<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">分類: research</p>
-          
+          <ul class="item-points"><li>Mistral 正式釋出 Mistral Large 4（le Chonk）權重，預覽後三週的強化學習讓編碼與防禦性資安大幅躍進，增益仍未見飽和。</li><li>Cognition 私有 FrontierCode 2.0 以 19.7% 領先開放權重模型，評測指標是端到端程式碼品質與維護者是否願意合併。</li><li>Artificial Analysis Coding Agent Index 拿 48%，與最強開放權重模型 GLM-5.3 有效打平，但每任務平均少用 47% token；Terminal-Bench 4.0 進步 13 個百分點至 41%。</li><li>新增三種推理模式讓開發者在效能與成本間取捨；Surge Code 盲測人類偏好僅次於 Claude Opus 5.5，勝過 GLM-5.3、Kimi K3 與 DeepSeek V4.1 Flash。</li><li>主打歐洲基礎設施從零訓練與完全開放權重，定位為主權 AI 的可信基礎，組織可自擁、自訂、自部署。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-10-29</span></div>
+          <div class="item-meta"><span class="item-date">2026-10-29</span><i class="chip chip--topic">模型發布</i><i class="chip chip--topic">開源</i><i class="chip chip--topic">資安與漏洞</i></div>
           <h3 class="item-title"><a href="https://mistral.ai/news/mistral-large-4/" target="_blank" rel="noopener">introducing mistral large 4<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">分類: research</p>
-          
+          <ul class="item-points"><li>Mistral 推出旗艦模型 Mistral Large 4 公開預覽，綽號 le Chonk：1 兆參數、啟用參數 520 億的原生多模態模型，為該公司史上最大最強。</li><li>權重預計月底釋出；釋出前先與資安領導廠商、審核過的夥伴與政府機構以更低審查、擴充資安能力的設定進行真實紅隊測試。</li><li>在 Artificial Analysis Cyber Index 排名全球前五；重現開源軟體真實漏洞再修補的測試拿 82% 全場最高，Claude Opus 5.5 與 GPT-6 Astra 因拒答在同測項近 0 分。</li><li>Cybench 40 項資安競賽題解出 93%，為開放權重模型最高之列，凸顯開放權重對合法漏洞研究與事件應變的實務價值。</li><li>由歐洲自有資料中心 3,800 個 NVIDIA Grace Blackwell GPU 從零訓練，訓練資料涵蓋 160 多種語言，主打 AI 主權與端到端歐洲部署。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -117,10 +117,10 @@
       <h2 class="co-tab">Meta Engineering</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-10-29</span></div>
-          <h3 class="item-title"><a href="https://engineering.fb.com/2026/10/29/security/catching-bugs-before-they-land-jittestings-human-on-the-loop-approach-at-full-scale/" target="_blank" rel="noopener">Catching Bugs Before They Land: JiTTesting’s Human-on-the-Loop Approach at Full Scale<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-10-29</span><i class="chip chip--topic">資安與漏洞</i><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">開發者工具</i></div>
+          <h3 class="item-title"><a href="https://engineering.fb.com/2026/10/29/security/catching-bugs-before-they-land-jittestings-human-on-the-loop-approach-at-full-scale/" target="_blank" rel="noopener">Catching Bugs Before They Land: JiTTesting’s Human-on-the-Loop Approach at Full Scale<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/meta-jittesting.html">導讀</a></h3>
           <p class="item-sum">Over the last year we&amp;#8217;ve been sharing our work leveraging large language models to catch bugs on the fly — a novel approach we call Catching Just-in-Time Tests (JiTTests). Now, we&amp;#8217;re sharing the results and p</p>
-          
+          <ul class="item-points"><li>Meta 公開 JiTTesting 在全公司規模的落地成果：系統夜間利用閒置算力，用類似 Diff Risk Score 的機制挑出高風險 diff，即時生成 Just-in-Time 測試抓 bug。</li><li>雙工作流生成測試：突變導向工作流把 diff 當突變體設計殺手測試；意圖感知工作流先由 LLM 推斷 diff 意圖與風險，再構造突變體生成測試。</li><li>以 LLM-as-Judge 多模型評審團搭配確定性的規則式 RubFake 環境共同排名，過濾誤報後決定是否觸及工程師。</li><li>採 human-on-the-loop 而非 human-in-the-loop：工程師設定準則、在總量層級審核結果，589 名工程師（觸及率的 64%）實際參與，回報 60% 真陽性率。</li><li>2026 上半年 Catching JiTTests 在 diff 階段攔下 74 個嚴重（SEV）隱私 bug，同期隱私 SEV 整體發生率下降 20%。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -129,16 +129,16 @@
       <h2 class="co-tab">NVIDIA</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-10-29</span></div>
-          <h3 class="item-title"><a href="https://blogs.nvidia.com/blog/developers-simulation-frontier-ai-agents/" target="_blank" rel="noopener">Into the Omniverse: How Developers Turn Ideas Into Simulations With Frontier AI Agents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-10-29</span><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">硬體與基礎設施</i><i class="chip chip--topic">開發者工具</i></div>
+          <h3 class="item-title"><a href="https://blogs.nvidia.com/blog/developers-simulation-frontier-ai-agents/" target="_blank" rel="noopener">Into the Omniverse: How Developers Turn Ideas Into Simulations With Frontier AI Agents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/nvidia-omniverse-agent-sims.html">導讀</a></h3>
           <p class="item-sum">Turning a simulation idea into a working application means assembling assets, connecting physics and rendering, and checking that the scene behaves as intended. Developers are combining frontier AI models with NVIDIA Omn</p>
-          
+          <ul class="item-points"><li>NVIDIA 集結多個案例，展示開發者結合 GPT-6 Astra 等前沿 AI 模型與 Omniverse 函式庫，用自然語言指揮代理組裝資產、物理與渲染，把模擬點子變成可用應用。</li><li>倉儲案例：Astra 解讀全景照片與點雲測量，重建移除貨架機台遮蔽的可編輯建築模型，供動工前評估自動化佈局。</li><li>工業案例：Astra 打造燃氣輪機數位孿生 what-if 應用，可調整負載、氣溫與燃料組成，並演練燃料閥卡死與排氣感測器錯誤等六種情境。</li><li>開源資產案例：代理指向 SimReady Central Library 的 2,000 多個 USD 資產，以對話組裝出含 63 種資產、180 個擺設的廚房場景。</li><li>Omniverse 函式庫以 ovstage、ovrtx、ovstream 提供 GPU 加速的場景、RTX 渲染與瀏覽器串流能力。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-10-29</span></div>
+          <div class="item-meta"><span class="item-date">2026-10-29</span><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://blogs.nvidia.com/blog/geforce-now-thursday-phantom-blade-zero/" target="_blank" rel="noopener">Slice Into GFN Thursday: ‘Phantom Blade Zero’ Launches on GeForce NOW<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">This Halloween week, GFN Thursday is delivering a fresh batch of gaming treats. Something wicked this blade comes. S-GAME’s Phantom Blade Zero launches on GeForce NOW today, bringing a scarily good blend of martial arts</p>
-          
+          <ul class="item-points"><li>S-GAME 武俠新作《Phantom Blade Zero》今日登上 GeForce NOW，以 Unreal Engine 5 呈現武俠融合機械義肢與搖滾的 kungfupunk 動作世界。</li><li>Ultimate 會員可享 GeForce RTX 5080 級雲端效能，橫跨 PC、Mac、手持裝置、手機、瀏覽器與相容電視，免下載安裝。</li><li>11 月 4 日《魔獸世界：Forever》登上 GeForce NOW，發售週內會員可領取限時開玩獎勵，各會員等級皆可兌換、數量有限。</li><li>《電馭叛客 2077》與《巫師 3：狂獵》重製版新增 mod.io 遊戲內模組支援；印度市場同步推出四個月 Performance 與 Ultimate 會員方案。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -147,16 +147,16 @@
       <h2 class="co-tab">LangChain</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-10-29</span></div>
-          <h3 class="item-title"><a href="https://www.langchain.com/blog/managed-deep-agents-browser-use-and-asynchronous-subagents" target="_blank" rel="noopener">Managed Deep Agents v0.10: Browser Use and Async Subagents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-10-29</span><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">開發者工具</i></div>
+          <h3 class="item-title"><a href="https://www.langchain.com/blog/managed-deep-agents-browser-use-and-asynchronous-subagents" target="_blank" rel="noopener">Managed Deep Agents v0.10: Browser Use and Async Subagents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/managed-deep-agents-v010-async.html">導讀</a></h3>
           <p class="item-sum">Managed Deep Agents v0.10 adds browser use, so agents can work on sites with no API and hand you the window to sign in, and async subagents for background work.</p>
-          
+          <ul class="item-points"><li>Managed Deep Agents v0.10 發布，兩大新功能：代理可操作沒有 API 的網站，以及可在背景跑的非同步子代理。</li><li>在專案根目錄宣告 browser 即可啟用；LangSmith 沙箱代管瀏覽器，自動加上 snapshot、run、screenshot、handoff 四個工具。</li><li>browser_handoff 讓代理在登入牆或雙因素驗證前把視窗交還使用者，密碼不會進入模型訊息或 traces；handoff 連結 15 分鐘後逾期。</li><li>子代理定義加 async 即不阻塞主代理：完成時主代理忙碌中會在下一次模型呼叫前接收結果、閒置中喚起新執行、等待核准時不干擾原核准。</li><li>非同步子代理共用代理沙箱與檔案，在 LangSmith 歸屬同一 run，Slack 核准會貼回原討論串；v0.10 現已公開 beta。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-10-29</span></div>
-          <h3 class="item-title"><a href="https://www.langchain.com/blog/browser-use-in-managed-deep-agents" target="_blank" rel="noopener">Browser Use in Managed Deep Agents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-10-29</span><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">開發者工具</i></div>
+          <h3 class="item-title"><a href="https://www.langchain.com/blog/browser-use-in-managed-deep-agents" target="_blank" rel="noopener">Browser Use in Managed Deep Agents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/browser-use-in-managed-deep-agents.html">導讀</a></h3>
           <p class="item-sum">Managed Deep Agents now runs a browser for your agent, with tools tuned for context-efficient browser use and a handoff so you can sign in yourself.</p>
-          
+          <ul class="item-points"><li>Managed Deep Agents 內建代管瀏覽器，讓 LangSmith 上的代理能讀取渲染後的頁面並像人一樣點擊操作，處理訂票、取消訂閱、申請理賠等無 API 網站任務。</li><li>DataDome 統計 9 月代理瀏覽器流量暴增 4.7 倍，個人代理如 Instinct 與 Meta 的 Muse 已採此模式。</li><li>瀏覽器跑在與代理隔離的 LangSmith 遠端沙箱，scope 支援 thread（每對話獨立）與 user（登入狀態跨對話沿用），閒置 10 分鐘自動停止計費。</li><li>工具組基於 Browserbase 開源 SDK Stagehand；browser_run 接受整段步驟程式碼一次執行，只回傳所需資訊以節省上下文。</li><li>實測 WebVoyager 100 個真實網站任務通過率 90%、總成本僅 1.98 美元，為七組受測工具集中最高通過率；最接近的 Browserbase MCP 伺服器貴 9 倍。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -170,7 +170,7 @@
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">資料來源：OpenAI · Anthropic · Google DeepMind · Google Research · Google Blog · xAI · Meta AI · DeepSeek · Mistral · NVIDIA · AMD · OpenRouter · LangChain · Unsloth — 僅收錄官方第一手公告。</p>
   <p class="foot-md">原始資料：<a href="../md/2026-10-30.md" target="_blank" rel="noopener">2026-10-30.md</a></p>
-  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-10-30 07:02 (UTC+8)</p>
+  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-10-30 14:57 (UTC+8)</p>
 </div></footer>
 <script src="../assets/site.js" defer></script>
 </body>

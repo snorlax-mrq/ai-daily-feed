@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 子代理搬進背景：主代理不再苦等 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain〈Managed Deep Agents v0.10〉導讀：子代理加一個 async 就改背景執行、通知驅動免輪詢，加上瀏覽器操作與 handoff，v0.10 公開 beta。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>子代理搬進背景：主代理一邊對話，一邊等結果</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain Blog〈Managed Deep Agents v0.10: Browser Use and Asynchronous Subagents〉——版本發布文</p>
+    <p class="g-meta">
+      <span>LangChain Blog</span>·<span>2026-10-29 發布</span>·<span>2026-10-30 收錄</span>·
+      <a href="https://www.langchain.com/blog/managed-deep-agents-browser-use-and-asynchronous-subagents" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>v0.10</b><span>今日起公開 beta</span></div>
+    <div class="g-stat"><b>1 行</b><span>子代理定義加 async 即改背景執行</span></div>
+    <div class="g-stat"><b>0 輪詢</b><span>完成時主動通知，不空轉等結果</span></div>
+    <div class="g-stat"><b>10 分鐘</b><span>瀏覽器閒置 TTL 預設值</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">v0.10 兩件大事：<strong>瀏覽器操作</strong>（另見同日深度篇導讀）與<strong>非同步子代理</strong>——長任務搬進背景，orchestrator 不再被單一任務卡死。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>x-seq 時序</b> — 非同步子代理的生命週期（本站重繪，原文未給此流程圖）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">主代理 → 子代理</span><span class="tr"><i>定義加 "async": True，子代理在自己的 thread 啟動</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">主代理 ↔ 使用者</span><span class="tr"><i>對話照常進行，不被長任務阻塞</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">子代理 → 主代理</span><span class="tr"><i>完成時主動通知（不輪詢）</i></span></span></li>
+        <li class="side"><span class="st">分支</span><span class="body"><span class="hop">依主代理狀態接結果</span><span class="tr"><i>忙碌＝下次模型呼叫前檢查未完任務；閒置＝喚起新 run；等人核准＝結果等核准後送達</i></span></span></li>
+      </ul>
+      <p class="x-src">主代理以一組 async task 工具啟動、查進度、更新與取消；每個代理另附背景版通用子代理，執行期才決定前景或背景。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">從 inline 到 async：差別在哪</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>x-cmp 前後對照</b> — 子代理執行模式（本站整理）</figcaption>
+      <div class="x-cmp">
+        <div class="cmp">
+          <p class="cmp-h">v0.9 及以前：inline</p>
+          <p>代理呼叫子代理後原地等答案。快查沒問題；長任務或要 fan-out 多工時，使用者跟著等，orchestrator 的其他互動全被擋下。</p>
+        </div>
+        <div class="cmp">
+          <p class="cmp-h">v0.10：async</p>
+          <p>子代理背景執行，完成才通知。通知機制省掉輪詢迴圈；fan-out 多個研究線互不阻塞。</p>
+        </div>
+      </div>
+      <p class="x-src">inline 模式仍是支援的用法，官方定位是「快查」。</p>
+    </figure>
+    <p class="g-p">工程細節上，非同步子代理<strong>共用主代理的沙箱</strong>，接手主代理已寫的檔案；run 記錄歸屬同一 trace，LangSmith 裡看得見。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">瀏覽器與 Slack：核准回到原討論串</h2>
+    <p class="g-p">瀏覽器能力與〈Browser Use in Managed Deep Agents〉同一套：沙箱代管、四工具（snapshot/run/screenshot/handoff），登入牆用 handoff 交還使用者。本篇定位是「怎麼開」，深度篇講「怎麼設計」。</p>
+    <p class="g-p">Slack 整合值得注意：子代理要人工核准時，<strong>核准請求貼回原始討論串</strong>，在那裡回覆即恢復子代理——人不用切換工具，監督點跟著對話走。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>長任務背景化是 orchestrator 標配。</b>inline 等答案的模型撐不過 fan-out。</p>
+      <p><b>通知驅動優於輪詢。</b>省 token 也省等待；忙碌中代理在下一次呼叫前收結果。</p>
+      <p><b>沙箱共用讓子代理真的省工。</b>檔案與 trace 延續，不用重鋪環境。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Meta Engineering</span><a href="meta-jittesting.html">LLM 連夜寫測試：Meta 半年攔下 74 個隱私 SEV</a><span class="d">2026-10-29</span></div>
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="a2ui-copilotkit-genui.html">代理開始長 UI：A2UI 一套宣告，框架與介面打通</a><span class="d">2026-10-29</span></div>
+      <div class="g-relrow"><span class="s">NVIDIA Blog</span><a href="nvidia-omniverse-agent-sims.html">用說的就能組模擬：三個 Omniverse 代理案例</a><span class="d">2026-10-29</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理（本篇圖解皆為本站重繪）。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-30 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

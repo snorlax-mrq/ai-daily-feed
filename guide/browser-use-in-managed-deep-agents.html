@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 給 agent 一個瀏覽器：登入交還給人 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain〈Browser Use in Managed Deep Agents〉導讀：遠端瀏覽器內建進代理，四個工具省上下文，WebVoyager 100 任務 90% 通過、總成本 1.98 美元，登入用 handoff 交還給人。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>給 agent 一個瀏覽器：登入交還給人，工具為省 token 而生</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain Blog〈Browser Use in Managed Deep Agents〉——產品技術文章，含工具組設計與實測數字</p>
+    <p class="g-meta">
+      <span>LangChain Blog</span>·<span>2026-10-29 發布</span>·<span>2026-10-30 收錄</span>·
+      <a href="https://www.langchain.com/blog/browser-use-in-managed-deep-agents" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>4 個</b><span>瀏覽器工具：snapshot/run/screenshot/handoff</span></div>
+    <div class="g-stat"><b>90%</b><span>WebVoyager 100 任務通過率（原文自測）</span></div>
+    <div class="g-stat"><b>US$1.98</b><span>該批 100 任務總成本</span></div>
+    <div class="g-stat"><b>4.7×</b><span>DataDome 觀測 9 月代理瀏覽流量成長</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">訂票、退訂、申請理賠都發生在給人點的網頁上；LangChain 把遠端瀏覽器變成 Managed Deep Agents 的內建能力，<strong>登入交還給人、工具按省上下文調校</strong>。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/www-langchain-com-blog-browser-use-in-ma/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/www-langchain-com-blog-browser-use-in-ma/01.webp" alt="原文架構圖：deep agent 透過 snapshot、run、screenshot 三個瀏覽器工具，把指令送進 browser sandbox 內的 Stagehand extension，再由 Stagehand 以 CDP 驅動瀏覽器，畫面顯示在 bistro.example/reserve 訂位頁上" width="1200" height="450" loading="lazy" decoding="async"></a>
+      <figcaption>代理不直接碰瀏覽器：snapshot／run／screenshot 送進沙箱，<b>Stagehand 擴充套件在瀏覽器內</b>以 CDP 驅動頁面；負責登入的第四個工具 handoff 另見下文。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／LangChain Blog，<a href="https://www.langchain.com/blog/browser-use-in-managed-deep-agents" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">工具組：一次送整段步驟，只回傳需要的</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>工具</th><th>做什麼</th><th>省下什麼</th></tr></thead>
+        <tbody>
+          <tr><td data-l="工具"><b>snapshot</b></td><td data-l="做什麼">讀頁面無障礙樹並編元素 ID</td><td data-l="省下什麼">不抓整頁 HTML</td></tr>
+          <tr><td data-l="工具"><b>run</b></td><td data-l="做什麼">接受程式碼，一次執行開頁、填欄、點擊、驗結果</td><td data-l="省下什麼">多步驟一個呼叫完成，只回傳所需</td></tr>
+          <tr><td data-l="工具"><b>screenshot</b></td><td data-l="做什麼">截圖，可存進沙箱</td><td data-l="省下什麼">圖不進對話也能留證</td></tr>
+          <tr><td data-l="工具"><b>handoff</b></td><td data-l="做什麼">把視窗交還給人（登入用）</td><td data-l="省下什麼">密碼不進模型訊息與 traces</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">工具底層基於 Browserbase 開源 SDK <em>Stagehand</em>。LangChain 強調設計主軸是省 token：長任務快不快，取決於代理要不要把整頁塞進 context。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">scope 決定登入記多久，handoff 處理例外</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>x-cmp 前後對照</b> — 兩種 scope（本站整理，原文分別敘述）</figcaption>
+      <div class="x-cmp">
+        <div class="cmp">
+          <p class="cmp-h">scope="thread"（預設）</p>
+          <p>每個對話一個瀏覽器，跨輪重用，但 cookie 不與其他對話共用。</p>
+        </div>
+        <div class="cmp">
+          <p class="cmp-h">scope="user"</p>
+          <p>每位登入者一個瀏覽器，登入狀態跨對話沿用——<b>每個網站只需登入一次</b>。</p>
+        </div>
+      </div>
+      <p class="x-src">瀏覽器閒置 idle_ttl_seconds 預設 600 秒後停止，避免為沒人用的瀏覽器付費。</p>
+    </figure>
+    <p class="g-p">登入牆與雙因素驗證是瀏覽器代理最常卡死的地方。代理改呼叫 <em>browser_handoff(reason)</em>：LangSmith Studio 或 Slack 出現互動卡片，你登入後點 Hand back，代理確認後續作；連結 15 分鐘逾期。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">實測：90% 通過率，比次便宜 9 倍</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>x-bars 數據條</b> — WebVoyager 100 任務通過率（基準：LangChain 自測，2026-10；愈高愈好）</figcaption>
+      <div class="x-bars">
+        <div class="bar"><span class="lb">Managed Deep Agents 工具組</span><span class="tr"><i style="width:90%">90% ・ US$1.98</i></span></div>
+        <div class="bar"><span class="lb">最接近的 Browserbase MCP</span><span class="tr"><i style="width:89%">89% ・ 約 9× 成本</i></span></div>
+      </div>
+      <p class="x-src">7 組受測工具集中最高通過率；數字為原文自測、無第三方驗證。</p>
+    </figure>
+    <p class="g-p">這組數字的主張不是「比較強」，而是<strong>同等通過率下便宜一個數量級</strong>——省 token 的工具設計直接反映在帳單上。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>瀏覽器是 agent 標配，不是外掛。</b>日常網路任務多數沒有 API，會點網頁才接得上。</p>
+      <p><b>憑證不該進模型。</b>handoff 把登入交還給人，密碼不落在訊息、traces 或模型供應商手裡。</p>
+      <p><b>省 token 是工具設計問題。</b>一次執行整段步驟、只回傳所需，通過率不變而成本差 9 倍（原文自測）。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Meta Engineering</span><a href="meta-jittesting.html">LLM 連夜寫測試：Meta 半年攔下 74 個隱私 SEV</a><span class="d">2026-10-29</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="managed-deep-agents-v010-async.html">子代理搬進背景：主代理一邊對話，一邊等結果</a><span class="d">2026-10-29</span></div>
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="a2ui-copilotkit-genui.html">代理開始長 UI：A2UI 一套宣告，框架與介面打通</a><span class="d">2026-10-29</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理（架構圖為原文圖、對照表為本站重排）。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-30 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
