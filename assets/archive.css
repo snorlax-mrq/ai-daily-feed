@@ -1,4 +1,4 @@
-/* AI \u6BCF\u65E5\u52D5\u614B\u6A94\u6848 \u2014 card catalog \u65B9\u5411 | \u6DF1\u6DFA\u8272: html[data-theme] */
+/* AI 每日動態檔案 — card catalog 方向 | 深淺色: html[data-theme] */
 @font-face{font-family:'Archivo';src:url('fonts/Archivo-500.woff2') format('woff2');font-weight:500;font-display:swap}
 @font-face{font-family:'Archivo';src:url('fonts/Archivo-600.woff2') format('woff2');font-weight:600;font-display:swap}
 @font-face{font-family:'Archivo';src:url('fonts/Archivo-700.woff2') format('woff2');font-weight:700;font-display:swap}
@@ -24,8 +24,8 @@ html[data-theme="dark"]{
   --shadow-soft:0 1px 0 rgba(255,255,255,.03);
   color-scheme:dark;
 }
-/* \u2500\u2500 \u5B57\u7D1A\u65CB\u9215\uFF08100% / 113% / 126%\uFF09\uFF1A\u95B1\u8B80\u5167\u6587\u4E00\u5F8B calc(var(--fs)*Npx) \u8DDF\u96A8\uFF1B
-      \u5370\u7AE0 .stamp\u3001\u6A19\u7C64 .chip\u3001\u54C1\u724C\u5B57 .mark \u7B49\u7C3D\u540D\u5143\u7D20\u523B\u610F\u56FA\u5B9A\uFF0C\u907F\u514D\u7248\u9762\u8B8A\u5F62 \u2500\u2500 */
+/* ── 字級旋鈕（100% / 113% / 126%）：閱讀內文一律 calc(var(--fs)*Npx) 跟隨；
+      印章 .stamp、標籤 .chip、品牌字 .mark 等簽名元素刻意固定，避免版面變形 ── */
 :root{--fs:1;--fs-bar:33%}
 html[data-font="lg"]{--fs:1.13;--fs-bar:66%}
 html[data-font="xl"]{--fs:1.26;--fs-bar:100%}
@@ -42,7 +42,7 @@ a{color:inherit}
 ::selection{background:color-mix(in srgb,var(--stamp) 24%,transparent)}
 :focus-visible{outline:2px solid var(--stamp);outline-offset:2px;border-radius:2px}
 
-/* \u2500\u2500 \u9802\u6B04 \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+/* ── 頂欄 ─────────────────────────── */
 .bar{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--ground) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
 .bar-in{max-width:880px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:16px}
 .mark{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-family:'Archivo',sans-serif;font-weight:700;font-size:15px;letter-spacing:.02em}
@@ -61,20 +61,20 @@ html[data-theme="dark"] .ico-moon{display:none}
 html[data-theme="dark"] .ico-sun{display:block}
 .font-btn{position:relative;margin-left:6px;display:inline-flex;align-items:center;justify-content:center;gap:6px;height:34px;padding:0 10px 3px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink-2);cursor:pointer;font-family:'Archivo',sans-serif;font-weight:700;font-size:13.5px;line-height:1;transition:color .15s,border-color .15s,background-color .15s}
 .font-btn:hover{color:var(--ink);border-color:var(--ink-3)}
-.font-btn::after{content:"\6A19 \6E96";font-size:10.5px;font-weight:600;letter-spacing:.1em;color:var(--ink-3);transition:color .15s}
+.font-btn::after{content:"標準";font-size:10.5px;font-weight:600;letter-spacing:.1em;color:var(--ink-3);transition:color .15s}
 .font-btn::before{content:"";position:absolute;left:50%;transform:translateX(-50%);bottom:4px;width:22px;height:3px;border-radius:2px;background:linear-gradient(90deg,currentColor 0 var(--fs-bar),color-mix(in srgb,currentColor 20%,transparent) var(--fs-bar))}
 html[data-font="lg"] .font-btn{font-size:16px}
 html[data-font="xl"] .font-btn{font-size:19.5px}
-html[data-font="lg"] .font-btn::after{content:"\653E \5927"}
-html[data-font="xl"] .font-btn::after{content:"\7279 \5927"}
+html[data-font="lg"] .font-btn::after{content:"放大"}
+html[data-font="xl"] .font-btn::after{content:"特大"}
 html[data-font="lg"] .font-btn,html[data-font="xl"] .font-btn{color:var(--stamp-ink);border-color:color-mix(in srgb,var(--stamp) 45%,var(--line));background:color-mix(in srgb,var(--stamp) 8%,var(--paper))}
 html[data-font="lg"] .font-btn::after,html[data-font="xl"] .font-btn::after{color:var(--stamp-ink)}
 
 
-/* \u2500\u2500 \u7248\u5FC3 \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+/* ── 版心 ─────────────────────────── */
 .wrap{max-width:880px;margin:0 auto;padding:40px 24px 72px}
 
-/* \u2500\u2500 \u65E5\u671F\u7AE0\uFF08\u7C3D\u540D\u5143\u7D20\uFF09 \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+/* ── 日期章（簽名元素） ───────────── */
 .stamp{
   display:inline-block;font-family:'Archivo',sans-serif;font-weight:700;font-size:13px;letter-spacing:.1em;
   color:var(--stamp);border:2.5px solid var(--stamp);border-radius:9px;padding:7px 15px 6px;white-space:nowrap;
@@ -85,7 +85,7 @@ html[data-font="lg"] .font-btn::after,html[data-font="xl"] .font-btn::after{colo
 @keyframes stamp-in{from{opacity:0;transform:rotate(-3.5deg) scale(1.14)}to{opacity:1;transform:rotate(-3.5deg) scale(1)}}
 @media (prefers-reduced-motion: reduce){.stamp{animation:none}}
 
-/* \u2500\u2500 \u6BCF\u65E5\u9801\u982D \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+/* ── 每日頁頭 ─────────────────────── */
 .day-head{padding-bottom:34px}
 .day-title-row{display:flex;align-items:flex-start;gap:22px;flex-wrap:wrap}
 h1{font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(clamp(30px,5vw,44px) * var(--fs));line-height:1.12;letter-spacing:-.02em}
@@ -93,7 +93,7 @@ h1 a{text-decoration:none}
 h1 a:hover{color:var(--stamp)}
 .day-stats{margin-top:10px;font-family:'Archivo',sans-serif;font-weight:500;font-size:calc(var(--fs)*13px);letter-spacing:.02em;color:var(--ink-2)}
 
-/* \u2500\u2500 \u516C\u53F8\u5361\uFF08\u62BD\u5C5C\u5361\u7247 + tab\uFF09 \u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+/* ── 公司卡（抽屜卡片 + tab） ─────── */
 .stack{display:flex;flex-direction:column;gap:44px;margin-top:8px}
 .co-card{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:0 10px 12px 12px;box-shadow:var(--shadow);margin-top:30px}
 .co-tab{
@@ -114,7 +114,7 @@ h1 a:hover{color:var(--stamp)}
 .item-title a:hover .ext{opacity:1}
 .item-sum{margin-top:8px;font-size:calc(var(--fs)*15.5px);line-height:1.7;color:var(--ink-2);max-width:68ch}
 
-/* \u2500\u2500 \u9801\u5C3E\u65E5\u671F\u5207\u63DB \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+/* ── 頁尾日期切換 ─────────────────── */
 .day-foot{margin-top:52px;padding-top:26px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .df-link{display:inline-flex;flex-direction:column;gap:2px;text-decoration:none;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper);transition:border-color .15s,color .15s}
 .df-link:hover{border-color:var(--stamp);color:var(--stamp)}
@@ -123,7 +123,7 @@ h1 a:hover{color:var(--stamp)}
 .df-link{font-family:'Archivo',sans-serif;font-weight:600;font-size:calc(var(--fs)*14px)}
 .df-home{justify-content:center;text-align:center}
 
-/* \u2500\u2500 \u76EE\u9304\u9801\uFF1A\u6700\u65B0\u4E00\u671F \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+/* ── 目錄頁：最新一期 ─────────────── */
 .latest{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:4px 14px 14px 14px;box-shadow:var(--shadow);padding:34px 34px 30px;
   background-image:repeating-linear-gradient(to bottom,transparent 0 30px,var(--rule) 30px 31px);
 }
@@ -139,7 +139,7 @@ h1 a:hover{color:var(--stamp)}
 .read-full:hover{background:var(--stamp);color:var(--paper)}
 .read-full svg{width:15px;height:15px}
 
-/* \u2500\u2500 \u76EE\u9304\u9801\uFF1A\u6708\u4EFD\u62BD\u5C5C \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+/* ── 目錄頁：月份抽屜 ─────────────── */
 .catalog{margin-top:64px}
 .catalog-h,.month-h{font-family:'Archivo',sans-serif;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
 .catalog-h{font-size:calc(var(--fs)*15px);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;gap:14px}
@@ -159,7 +159,7 @@ h1 a:hover{color:var(--stamp)}
 .row-count{font-family:'Archivo',sans-serif;font-weight:600;font-size:calc(var(--fs)*14px);color:var(--ink-2);min-width:34px;text-align:right}
 .row-count small{font-size:calc(var(--fs)*11px);color:var(--ink-3);margin-left:2px;letter-spacing:.06em}
 
-/* \u2500\u2500 \u9801\u5C3E \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+/* ── 頁尾 ─────────────────────────── */
 .foot{border-top:1px solid var(--line);background:var(--cabinet)}
 .foot-in{max-width:880px;margin:0 auto;padding:26px 24px 34px;display:flex;flex-direction:column;gap:8px}
 .foot p{font-family:'Archivo',sans-serif;font-weight:500;font-size:calc(var(--fs)*12px);letter-spacing:.02em;color:var(--ink-3);line-height:1.7}
@@ -167,7 +167,7 @@ h1 a:hover{color:var(--stamp)}
 .foot-md a{color:var(--ink-2)}
 .foot-md a:hover{color:var(--stamp)}
 
-/* \u2500\u2500 \u6BCF\u65E5\u9801\uFF1A\u4E3B\u984C chips \u8207\u91CD\u9EDE \u2500\u2500\u2500\u2500\u2500 */
+/* ── 每日頁：主題 chips 與重點 ───── */
 .item-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .chip--topic{font-style:normal;font-family:'Archivo',sans-serif;font-weight:600;font-size:11px;letter-spacing:.05em;color:var(--stamp-ink);border:1px solid color-mix(in srgb,var(--stamp) 38%,var(--line));border-radius:5px;padding:2px 8px 1.5px;background:color-mix(in srgb,var(--stamp) 7%,var(--paper-2));white-space:nowrap}
 .guide-badge{display:inline-flex;align-items:center;margin-left:9px;font-family:'Archivo',sans-serif;font-weight:700;font-size:11px;letter-spacing:.08em;color:var(--stamp-ink);border:1.5px solid var(--stamp);border-radius:5px;padding:1.5px 8px;text-decoration:none;transform:rotate(-2deg);background:color-mix(in srgb,var(--stamp) 6%,transparent);transition:background-color .15s,color .15s;vertical-align:2px}
@@ -176,7 +176,7 @@ h1 a:hover{color:var(--stamp)}
 .item-points li{position:relative;padding-left:15px;font-size:calc(var(--fs)*14.5px);line-height:1.66;color:var(--ink-2)}
 .item-points li::before{content:"\2013";position:absolute;left:0;color:var(--stamp);opacity:.75}
 
-/* \u2500\u2500 \u76EE\u9304\u9801\uFF1A\u4E3B\u984C\u76EE\u9304\u5165\u53E3 \u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+/* ── 目錄頁：主題目錄入口 ─────── */
 .topics-entry{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;margin-top:16px;padding:15px 20px;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-soft);text-decoration:none;transition:border-color .15s}
 .topics-entry:hover{border-color:var(--stamp)}
 .topics-entry>svg{width:16px;height:16px;color:var(--ink-3);transition:transform .18s cubic-bezier(.22,1,.36,1),color .15s}
@@ -187,7 +187,7 @@ h1 a:hover{color:var(--stamp)}
 .te-body strong{font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*15px);letter-spacing:.02em;color:var(--ink)}
 .te-body span{font-family:'Archivo',sans-serif;font-weight:500;font-size:calc(var(--fs)*12.5px);color:var(--ink-2)}
 
-/* \u2500\u2500 \u4E3B\u984C\u76EE\u9304\u9801\uFF1A\u6AA2\u7D22\u5668 \u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+/* ── 主題目錄頁：檢索器 ─────── */
 .finder{margin-top:6px}
 .search-card{display:flex;align-items:center;gap:12px;background:var(--paper);border:1px solid var(--line);border-radius:4px 12px 12px 12px;box-shadow:var(--shadow-soft);padding:13px 20px;background-image:repeating-linear-gradient(to bottom,transparent 0 30px,var(--rule) 30px 31px)}
 .search-card>svg{width:17px;height:17px;color:var(--ink-3);flex:none}
@@ -208,7 +208,7 @@ h1 a:hover{color:var(--stamp)}
 .facet-reset{margin-top:6px;align-self:center;border:none;background:none;font-family:'Archivo',sans-serif;font-weight:600;font-size:calc(var(--fs)*12px);letter-spacing:.05em;color:var(--stamp-ink);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .facet-reset:hover{color:var(--stamp)}
 
-/* \u2500\u2500 \u4E3B\u984C\u76EE\u9304\u9801\uFF1A\u7D50\u679C\u7D22\u5F15\u5361 \u2500\u2500\u2500\u2500\u2500 */
+/* ── 主題目錄頁：結果索引卡 ───── */
 .results{margin-top:8px}
 .res-group{margin-top:34px}
 .res-date{font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*20px);letter-spacing:-.01em;color:var(--ink);display:flex;align-items:baseline;gap:10px}
@@ -232,7 +232,7 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .empty p{font-family:'Archivo',sans-serif;font-weight:500;font-size:calc(var(--fs)*13.5px);color:var(--ink-2)}
 .empty button.read-full{background:transparent;cursor:pointer}
 
-/* \u2500\u2500 \u97FF\u61C9\u5F0F \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500 */
+/* ── 響應式 ────────────────────────── */
 @media (max-width:640px){
   .wrap{padding:28px 18px 56px}
   .bar-in{padding:12px 16px}
@@ -266,8 +266,8 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 }
 
 
-/* \u2500\u2500 \u5C0E\u8B80\u9801\uFF08guide/*.html\uFF09\u2014 \u9928\u85CF\u7814\u7A76\u5C0F\u9593 \u2500\u2500 */
-/* \u2500\u2500 \u5C0E\u8B80\u9801\uFF08mockup\uFF09\u2014 \u6CBF\u7528 card catalog \u8A9E\u5F59 \u2500\u2500 */
+/* ── 導讀頁（guide/*.html）— 館藏研究小間 ── */
+/* ── 導讀頁（mockup）— 沿用 card catalog 語彙 ── */
 .g-crumb{font-family:'Archivo',sans-serif;font-weight:600;font-size:calc(var(--fs)*12px);letter-spacing:.06em;color:var(--ink-3)}
 .g-crumb a{text-decoration:none}
 .g-crumb a:hover{color:var(--stamp)}
@@ -288,13 +288,13 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .g-pain{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
 .g-pain i{font-style:normal;font-family:'Archivo',sans-serif;font-weight:600;font-size:calc(var(--fs)*12px);letter-spacing:.04em;color:var(--stamp-ink);border:1px dashed color-mix(in srgb,var(--stamp) 45%,transparent);border-radius:6px;padding:5px 11px;background:color-mix(in srgb,var(--stamp) 5%,transparent)}
 
-/* \u6578\u5B57\u689D */
+/* 數字條 */
 .g-stats{margin-top:26px;display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px}
 .g-stat{background:var(--paper);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-soft);padding:13px 15px;text-align:center}
 .g-stat b{display:block;font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*21px);letter-spacing:-.01em;color:var(--stamp-ink)}
 .g-stat span{display:block;margin-top:3px;font-family:'Archivo',sans-serif;font-weight:500;font-size:calc(var(--fs)*11.5px);letter-spacing:.04em;color:var(--ink-3)}
 
-/* 30 \u79D2\u7248\u672C\uFF08\u7D22\u5F15\u5361\u6A6B\u7DDA\uFF09 */
+/* 30 秒版本（索引卡橫線） */
 .g-tldr{margin-top:26px;background:var(--paper);border:1px solid var(--line);border-radius:4px 14px 14px 14px;box-shadow:var(--shadow);padding:24px 26px 22px;background-image:repeating-linear-gradient(to bottom,transparent 0 30px,var(--rule) 30px 31px)}
 .g-tldr-h{font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*12px);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;gap:12px}
 .g-tldr-h::after{content:"";flex:1;height:1px;background:var(--line)}
@@ -303,7 +303,7 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .g-tldr li{position:relative;padding-left:16px;font-size:calc(var(--fs)*14.5px);line-height:1.75;color:var(--ink-2);max-width:72ch}
 .g-tldr li::before{content:"\2013";position:absolute;left:0;color:var(--stamp);opacity:.75}
 
-/* \u5716\u89E3\u5361 */
+/* 圖解卡 */
 .g-dg{margin-top:22px;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:22px 22px 20px}
 .g-dg-h{font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*12px);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;gap:12px}
 .g-dg-h::after{content:"";flex:1;height:1px;background:var(--rule)}
@@ -323,7 +323,7 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .g-loop{margin-top:14px;display:flex;align-items:center;gap:10px;justify-content:center;font-family:'Archivo',sans-serif;font-weight:500;font-size:calc(var(--fs)*12.5px);letter-spacing:.02em;color:var(--ink-2)}
 .g-loop svg{width:15px;height:15px;color:var(--stamp);flex:none}
 
-/* 7 \u6B65\u5354\u5B9A */
+/* 7 步協定 */
 .g-proto{margin-top:16px;display:flex;gap:7px;flex-wrap:wrap;align-items:center}
 .g-step{width:38px;height:38px;border:1px solid var(--line);border-radius:9px;background:var(--paper-2);display:grid;place-items:center;font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*14px);color:var(--ink-3);position:relative}
 .g-step--llm{border:2px solid var(--stamp);color:var(--stamp-ink);background:color-mix(in srgb,var(--stamp) 9%,var(--paper));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--stamp) 20%,transparent)}
@@ -338,7 +338,7 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .g-stepnames{margin-top:30px;text-align:center;font-family:'Archivo',sans-serif;font-weight:500;font-size:calc(var(--fs)*12.5px);letter-spacing:.02em;color:var(--ink-3)}
 .g-stepnames b{color:var(--stamp-ink);font-weight:700}
 
-/* \u6A21\u677F lanes \u8207\u4EE3\u7406\u6C60 */
+/* 模板 lanes 與代理池 */
 .g-lanes{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .g-lane{background:var(--paper-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
 .g-lane b{font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*12.5px);letter-spacing:.06em;color:var(--ink-2);display:block}
@@ -354,7 +354,7 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .g-know p{font-size:calc(var(--fs)*13.5px);line-height:1.7;color:var(--ink-2)}
 .g-know p b{color:var(--ink)}
 
-/* \u9010\u6B65\u62C6\u89E3 */
+/* 逐步拆解 */
 .g-steps{margin-top:20px;border-top:1px solid var(--line)}
 .g-steprow{display:grid;grid-template-columns:64px 1fr;gap:18px;padding:20px 4px;border-bottom:1px solid var(--rule)}
 .g-steprow .n{font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*27px);color:var(--stamp);opacity:.85;line-height:1}
@@ -362,14 +362,14 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .g-steprow h3{font-family:'Source Serif 4',serif;font-weight:600;font-size:calc(var(--fs)*17.5px);line-height:1.5;color:var(--ink)}
 .g-steprow p{margin-top:6px;font-size:calc(var(--fs)*14.5px);line-height:1.8;color:var(--ink-2);max-width:70ch}
 
-/* \u8853\u8A9E\u5C0F\u5361 */
+/* 術語小卡 */
 .g-glos{margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
 .g-card{background:var(--paper);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-soft);padding:15px 17px}
 .g-card b{font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*13.5px);letter-spacing:.04em;color:var(--stamp-ink);display:block}
 .g-card .w{margin-top:7px;font-size:calc(var(--fs)*13.5px);line-height:1.7;color:var(--ink)}
 .g-card .why{margin-top:7px;font-size:calc(var(--fs)*12px);line-height:1.65;color:var(--ink-3)}
 
-/* \u6210\u6548\u6642\u9593\u8EF8 */
+/* 成效時間軸 */
 .g-eco{margin-top:20px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .g-eff{background:var(--paper);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-soft);padding:17px 19px}
 .g-eff b{font-family:'Archivo',sans-serif;font-weight:600;font-size:calc(var(--fs)*12px);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);display:block}
@@ -379,12 +379,12 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .g-eff .flow svg{width:14px;height:14px;color:var(--stamp)}
 .g-eff p{margin-top:10px;font-size:calc(var(--fs)*13px);line-height:1.7;color:var(--ink-2)}
 
-/* \u5E36\u8D70\u4E09\u4EF6\u4E8B */
+/* 帶走三件事 */
 .g-take{margin-top:20px;display:flex;flex-direction:column;gap:12px}
 .g-take p{border-left:3px solid var(--stamp);padding:4px 0 4px 16px;font-size:calc(var(--fs)*15.5px);line-height:1.8;color:var(--ink);max-width:70ch}
 .g-take p b{color:var(--stamp-ink)}
 
-/* \u539F\u6587\u5716\uFF08figure\uFF09\uFF1A\u7D30\u6846\u3001\u4F4E\u8ABF\u5716\u8AAA\uFF0C\u7DAD\u6301\u6A94\u6848\u9928\u8A9E\u5F59 */
+/* 原文圖（figure）：細框、低調圖說，維持檔案館語彙 */
 .g-fig{margin-top:24px;max-width:72ch;background:var(--paper);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow-soft);padding:9px 9px 0}
 .g-fig img{display:block;width:100%;height:auto;border-radius:6px;background:var(--paper-2)}
 .g-fig figcaption{margin:9px 3px 11px;font-family:'Archivo',sans-serif;font-weight:500;font-size:calc(var(--fs)*12px);line-height:1.7;color:var(--ink-3)}
@@ -394,7 +394,7 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .g-fig--wide{max-width:100%}
 @media (max-width:640px){.g-fig{padding:6px 6px 0}.g-fig figcaption{font-size:calc(var(--fs)*11.5px)}}
 
-/* \u76F8\u95DC\u9928\u85CF */
+/* 相關館藏 */
 .g-rel{margin-top:20px;display:flex;flex-direction:column;gap:10px}
 .g-relrow{display:flex;align-items:baseline;gap:12px;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:13px 17px;box-shadow:var(--shadow-soft)}
 .g-relrow .s{flex:none;font-family:'Archivo',sans-serif;font-weight:600;font-size:calc(var(--fs)*11px);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);width:130px}
@@ -412,17 +412,17 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
   .g-steprow{grid-template-columns:48px 1fr;gap:12px}
 }
 
-/* \u2500\u2500 \u5716\u89E3\u5143\u4EF6 x-\uFF082026-10-29 \u65B0\u589E\uFF1A\u5716\u89E3\u512A\u5148\u7248\u5C0E\u8B80\u4F7F\u7528\uFF09 \u2500\u2500 */
-/* \u5BE6\u9A57\uFF1A\u5716\u89E3\u512A\u5148\u5143\u4EF6\uFF08guide-exp \u5C08\u7528\uFF0C\u901A\u904E\u5F8C\u518D\u4F75\u5165 archive.css\uFF09 */
+/* ── 圖解元件 x-（2026-10-29 新增：圖解優先版導讀使用） ── */
+/* 實驗：圖解優先元件（guide-exp 專用，通過後再併入 archive.css） */
 
-/* \u2500\u2500 \u5716\u89E3\u5916\u6846 \u2500\u2500 */
+/* ── 圖解外框 ── */
 .x-fig{margin-top:20px;background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:16px 16px 14px}
 .x-cap{font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*11.5px);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .x-cap b{color:var(--stamp-ink)}
 .x-cap::after{content:"";flex:1;height:1px;background:var(--rule)}
 .x-src{margin-top:10px;font-family:'Archivo',sans-serif;font-size:calc(var(--fs)*10.5px);letter-spacing:.03em;color:var(--ink-3);opacity:.85}
 
-/* \u2500\u2500 \u6D41\u7A0B\u93C8 \u2500\u2500 */
+/* ── 流程鏈 ── */
 .x-flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:6px}
 .x-flow>.fn{flex:1 1 118px;min-width:100px;background:var(--paper-2);border:1px solid var(--line);border-radius:9px;padding:9px 10px;text-align:center}
 .fn b{display:block;font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*12.5px);letter-spacing:.02em;color:var(--ink)}
@@ -431,7 +431,7 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .fn.hot b{color:var(--stamp-ink)}
 .x-flow>.ar{align-self:center;font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*13px);color:var(--stamp);opacity:.8}
 
-/* \u2500\u2500 \u6642\u5E8F\u968E\u68AF\uFF08\u8AB0\u628A\u7403\u50B3\u7D66\u8AB0\uFF09 \u2500\u2500 */
+/* ── 時序階梯（誰把球傳給誰） ── */
 .x-seq{list-style:none;display:flex;flex-direction:column}
 .x-seq>li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;align-items:center;padding:6px 0;border-bottom:1px dashed var(--rule)}
 .x-seq>li:last-child{border-bottom:none}
@@ -446,7 +446,7 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .x-seq .back .tr i{color:var(--ink-3)}
 .x-seq .tag{font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*10px);letter-spacing:.06em;color:var(--stamp-ink)}
 
-/* \u2500\u2500 \u5DE2\u72C0\u8FF4\u5708 \u2500\u2500 */
+/* ── 巢狀迴圈 ── */
 .x-stack{display:flex;flex-direction:column}
 .ring{border:1px dashed var(--line);border-radius:12px;padding:10px 12px 12px;margin-top:8px;background:color-mix(in srgb,var(--paper-2) 55%,transparent)}
 .ring:first-child{margin-top:0}
@@ -458,7 +458,7 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .ring-inner{padding:10px 12px;font-size:calc(var(--fs)*12px);line-height:1.6;color:var(--ink-2);text-align:center;background:var(--paper);border:1px solid var(--line);border-radius:8px}
 .ring-inner b{font-family:'Archivo',sans-serif;font-size:calc(var(--fs)*12px);color:var(--ink)}
 
-/* \u2500\u2500 \u6C7A\u7B56\u5206\u652F \u2500\u2500 */
+/* ── 決策分支 ── */
 .x-dec>.q{background:var(--paper-2);border:1px solid var(--line);border-radius:9px;padding:9px 12px;text-align:center;font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*12.5px);letter-spacing:.02em;color:var(--ink)}
 .x-dec>.q{position:relative}
 .x-dec>.q::after{content:"";position:absolute;left:50%;bottom:-11px;width:1px;height:11px;background:var(--line)}
@@ -470,7 +470,7 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .x-dec .br b{display:block;margin-top:5px;font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*12px);color:var(--ink)}
 .x-dec .br small{display:block;margin-top:3px;font-size:calc(var(--fs)*11.5px);line-height:1.5;color:var(--ink-3)}
 
-/* \u2500\u2500 \u6578\u64DA\u689D \u2500\u2500 */
+/* ── 數據條 ── */
 .x-bars{display:flex;flex-direction:column;gap:9px}
 .x-bar{display:grid;grid-template-columns:112px minmax(0,1fr) 62px;gap:9px;align-items:center}
 .x-bar b{font-family:'Archivo',sans-serif;font-weight:600;font-size:calc(var(--fs)*11.5px);color:var(--ink-2);letter-spacing:.01em}
@@ -479,7 +479,7 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .x-bar.hot .t span{background:var(--stamp)}
 .x-bar i{font-style:normal;font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*11.5px);color:var(--ink);text-align:right;font-variant-numeric:tabular-nums}
 
-/* \u2500\u2500 \u8868\u683C \u2500\u2500 */
+/* ── 表格 ── */
 .x-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .x-tbl{width:100%;border-collapse:collapse;font-family:'Archivo',sans-serif}
 .x-tbl td:first-child,.x-tbl th:first-child{white-space:nowrap}
@@ -491,7 +491,7 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .x-tbl td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 .x-tbl .win{color:var(--stamp-ink);font-weight:700}
 
-/* \u2500\u2500 \u5C0D\u7167\uFF08\u524D\u5F8C\uFF09 \u2500\u2500 */
+/* ── 對照（前後） ── */
 .x-cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .x-cmp>div{background:var(--paper-2);border:1px solid var(--line);border-radius:9px;padding:10px 12px}
 .x-cmp>div>b{display:block;font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*10.5px);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);margin-bottom:5px}
@@ -499,7 +499,7 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .x-cmp p b{color:var(--stamp-ink);font-weight:700}
 .x-cmp .after{border-color:color-mix(in srgb,var(--stamp) 35%,var(--line));background:color-mix(in srgb,var(--stamp) 6%,var(--paper))}
 
-/* \u2500\u2500 \u5E36\u8D70\uFF08\u6975\u77ED\uFF09 \u2500\u2500 */
+/* ── 帶走（極短） ── */
 .x-take{margin-top:18px;display:flex;flex-direction:column;gap:8px;counter-reset:tk}
 .x-take p{counter-increment:tk;position:relative;padding-left:26px;font-size:calc(var(--fs)*15px);line-height:1.7;color:var(--ink);max-width:66ch}
 .x-take p::before{content:counter(tk);position:absolute;left:0;top:2px;width:17px;height:17px;border:1px solid var(--stamp);border-radius:3px;font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*10.5px);color:var(--stamp-ink);display:grid;place-items:center}
@@ -515,7 +515,7 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
   .ring{padding:8px}
 }
 
-/* \u2500\u2500 \u4E26\u5217\u9078\u9805\u683C\uFF08\u7121\u7BAD\u982D\uFF0C\u907F\u514D\u9020\u51FA\u5047\u6D41\u7A0B\uFF09 \u2500\u2500 */
+/* ── 並列選項格（無箭頭，避免造出假流程） ── */
 .x-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px}
 .x-grid .c{background:var(--paper-2);border:1px solid var(--line);border-radius:9px;padding:9px 11px}
 .x-grid .c b{display:block;font-family:'Archivo',sans-serif;font-weight:700;font-size:calc(var(--fs)*11.5px);letter-spacing:.03em;color:var(--ink)}
@@ -523,14 +523,14 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 .x-grid .c small{display:block;margin-top:4px;font-size:calc(var(--fs)*11.5px);line-height:1.5;color:var(--ink-3)}
 .x-grid-h{font-family:'Archivo',sans-serif;font-size:calc(var(--fs)*10.5px);letter-spacing:.08em;color:var(--ink-3);margin-bottom:8px}
 
-/* \u2500\u2500 \u624B\u6A5F\u6A6B\u5411\u6ED1\u52D5\u63D0\u793A \u2500\u2500 */
+/* ── 手機橫向滑動提示 ── */
 .x-hint{display:none;font-family:'Archivo',sans-serif;font-size:calc(var(--fs)*10px);letter-spacing:.06em;color:var(--ink-3);margin-top:5px}
 .x-seq .side .tr::before{opacity:.2}
 .x-seq .side .tr i{color:var(--ink-3)}
 .x-seq .side .tr::after{opacity:.3}
 @media (max-width:560px){.x-hint{display:block}.x-flow>.fn{flex:0 0 auto}.x-seq .tr i{white-space:normal;text-align:center}}
 
-/* \u2500\u2500 \u56DE\u994B\u7BAD\u982D\uFF08\u5DE2\u72C0\u5716\u7528\uFF09 \u2500\u2500 */
+/* ── 回饋箭頭（巢狀圖用） ── */
 .x-fb{margin-top:9px;display:flex;align-items:center;gap:8px;background:color-mix(in srgb,var(--stamp) 6%,var(--paper));border:1px dashed color-mix(in srgb,var(--stamp) 45%,var(--line));border-radius:8px;padding:7px 11px;font-family:'Archivo',sans-serif;font-size:calc(var(--fs)*11.5px);line-height:1.5;color:var(--ink-2)}
 .x-fb b{color:var(--stamp-ink);font-weight:700}
 .x-fb .ic{color:var(--stamp);font-size:calc(var(--fs)*14px);font-weight:700;flex:none}
@@ -556,7 +556,7 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
   .x-seq .side .hop,.x-seq .side .tr i{color:var(--ink-3)}
 }
 
-/* \u2500\u2500 \u8868\u683C\u624B\u6A5F\u5361\u7247\u6A21\u5F0F\uFF08td \u9700\u5E36 data-l\uFF09 \u2500\u2500 */
+/* ── 表格手機卡片模式（td 需帶 data-l） ── */
 @media (max-width:600px){
   .x-tbl,.x-tbl tbody,.x-tbl tr,.x-tbl td{display:block;width:100%}
   .x-tbl thead{display:none}
@@ -568,6 +568,6 @@ mark.hit{background:color-mix(in srgb,var(--stamp) 16%,transparent);color:inheri
 }
 
 .fig-zoom{display:block;position:relative}
-.fig-zoom::after{content:"\u2922";position:absolute;right:8px;bottom:8px;width:22px;height:22px;display:grid;place-items:center;border-radius:5px;background:color-mix(in srgb,var(--ink) 62%,transparent);color:var(--paper);font-size:calc(var(--fs)*12px);opacity:.72;pointer-events:none}
+.fig-zoom::after{content:"⤢";position:absolute;right:8px;bottom:8px;width:22px;height:22px;display:grid;place-items:center;border-radius:5px;background:color-mix(in srgb,var(--ink) 62%,transparent);color:var(--paper);font-size:calc(var(--fs)*12px);opacity:.72;pointer-events:none}
 .fig-zoom:hover::after{opacity:1}
 .fig-zoom-hint{font-family:'Archivo',sans-serif;font-size:calc(var(--fs)*10.5px);letter-spacing:.03em;color:var(--ink-3)}

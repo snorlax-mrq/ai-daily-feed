@@ -1,4 +1,4 @@
-/* \u6DF1\u6DFA\u8272\u5207\u63DB\uFF1AlocalStorage \u8A18\u61B6\uFF1B\u7121\u504F\u597D\u6642\u8DDF\u96A8\u7CFB\u7D71\u3002head \u5167\u806F\u8173\u672C\u5DF2\u5148\u884C\u8A2D\u5B9A data-theme\u3002 */
+/* 深淺色切換：localStorage 記憶；無偏好時跟隨系統。head 內聯腳本已先行設定 data-theme。 */
 (function () {
   var btn = document.getElementById("themeBtn");
   if (!btn) return;
@@ -9,20 +9,20 @@
     try { localStorage.setItem("ai-news-theme", next); } catch (e) {}
   });
 })();
-/* \u5B57\u7D1A\u5207\u63DB\uFF1A\u6A19\u6E96 \u2192 \u653E\u5927 \u2192 \u7279\u5927 \u2192 \u6A19\u6E96\uFF08100% / 113% / 126%\uFF09\uFF1BlocalStorage \u8A18\u61B6\uFF0C
-   head \u5167\u806F\u8173\u672C\u5DF2\u5148\u884C\u8A2D\u5B9A data-font\uFF1B\u6B64\u8655\u8CA0\u8CAC\u628A\u6A94\u4F4D\u72C0\u614B\u540C\u6B65\u5230\u6309\u9215\uFF08aria-pressed\uFF0Ftitle \u53EF\u898B\uFF09\u3002 */
+/* 字級切換：標準 → 放大 → 特大 → 標準（100% / 113% / 126%）；localStorage 記憶，
+   head 內聯腳本已先行設定 data-font；此處負責把檔位狀態同步到按鈕（aria-pressed／title 可見）。 */
 (function () {
   var btn = document.getElementById("fontBtn");
   if (!btn) return;
-  var NAME = { "": "\u6A19\u6E96", lg: "\u653E\u5927", xl: "\u7279\u5927" };
+  var NAME = { "": "標準", lg: "放大", xl: "特大" };
   var NEXT = { "": "lg", lg: "xl", xl: "" };
   var PCT = { "": "100%", lg: "113%", xl: "126%" };
   function sync() {
     var cur = document.documentElement.dataset.font || "";
-    var name = NAME[cur] || "\u6A19\u6E96", nextName = NAME[NEXT[cur]];
+    var name = NAME[cur] || "標準", nextName = NAME[NEXT[cur]];
     btn.setAttribute("aria-pressed", cur ? "true" : "false");
-    btn.setAttribute("aria-label", "\u5B57\u7D1A\uFF1A" + name + "\uFF08" + (PCT[cur] || "100%") + "\uFF09\uFF0C\u9EDE\u64CA\u5207\u63DB\u70BA" + nextName);
-    btn.title = "\u5B57\u7D1A\uFF1A" + name + "\uFF08" + (PCT[cur] || "100%") + "\uFF09\u2192 \u9EDE\u64CA\u5207\u63DB\u70BA" + nextName;
+    btn.setAttribute("aria-label", "字級：" + name + "（" + (PCT[cur] || "100%") + "），點擊切換為" + nextName);
+    btn.title = "字級：" + name + "（" + (PCT[cur] || "100%") + "）→ 點擊切換為" + nextName;
   }
   sync();
   btn.addEventListener("click", function () {
@@ -31,7 +31,7 @@
     sync();
   });
 })();
-/* \u4E3B\u984C\u76EE\u9304 filter/query\uFF1A\u4E3B\u984C/\u4F86\u6E90\u591A\u9078\uFF08\u540C\u5C64 OR\u3001\u8DE8\u5C64 AND\uFF09\u3001\u95DC\u9375\u5B57 AND\u3001URL \u72C0\u614B\u3001\u547D\u4E2D\u7AE0\u7D05\u5E95\u7DDA */
+/* 主題目錄 filter/query：主題/來源多選（同層 OR、跨層 AND）、關鍵字 AND、URL 狀態、命中章紅底線 */
 (function () {
   var q = document.getElementById("q");
   if (!q) return;
@@ -89,7 +89,7 @@
       if (ok) { shown++; markCard(c, words); }
     });
     groups.forEach(function (g) { g.hidden = !g.querySelector(".idx-card:not([hidden])"); });
-    if (stamp) stamp.textContent = shown === total ? total + " \u7B46\u9928\u85CF" : shown + " / " + total + " \u7B46\u9928\u85CF";
+    if (stamp) stamp.textContent = shown === total ? total + " 筆館藏" : shown + " / " + total + " 筆館藏";
     empty.hidden = shown !== 0; results.hidden = shown === 0;
     resetBtn.hidden = !(topics.size || sources.size || words.length);
     qClear.hidden = !q.value;
