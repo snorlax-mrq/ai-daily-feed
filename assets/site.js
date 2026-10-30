@@ -9,16 +9,26 @@
     try { localStorage.setItem("ai-news-theme", next); } catch (e) {}
   });
 })();
-/* \u5B57\u7D1A\u5207\u63DB\uFF1A\u6A19\u6E96 \u2192 \u653E\u5927 \u2192 \u7279\u5927 \u2192 \u6A19\u6E96\uFF1BlocalStorage \u8A18\u61B6\uFF0Chead \u5167\u806F\u8173\u672C\u5DF2\u5148\u884C\u8A2D\u5B9A data-font\u3002 */
+/* \u5B57\u7D1A\u5207\u63DB\uFF1A\u6A19\u6E96 \u2192 \u653E\u5927 \u2192 \u7279\u5927 \u2192 \u6A19\u6E96\uFF08100% / 113% / 126%\uFF09\uFF1BlocalStorage \u8A18\u61B6\uFF0C
+   head \u5167\u806F\u8173\u672C\u5DF2\u5148\u884C\u8A2D\u5B9A data-font\uFF1B\u6B64\u8655\u8CA0\u8CAC\u628A\u6A94\u4F4D\u72C0\u614B\u540C\u6B65\u5230\u6309\u9215\uFF08aria-pressed\uFF0Ftitle \u53EF\u898B\uFF09\u3002 */
 (function () {
   var btn = document.getElementById("fontBtn");
   if (!btn) return;
-  btn.addEventListener("click", function () {
+  var NAME = { "": "\u6A19\u6E96", lg: "\u653E\u5927", xl: "\u7279\u5927" };
+  var NEXT = { "": "lg", lg: "xl", xl: "" };
+  var PCT = { "": "100%", lg: "113%", xl: "126%" };
+  function sync() {
     var cur = document.documentElement.dataset.font || "";
-    var next = cur === "" ? "lg" : cur === "lg" ? "xl" : "";
-    document.documentElement.dataset.font = next;
-    btn.setAttribute("aria-label", "\u5B57\u7D1A\uFF1A" + (next === "lg" ? "\u653E\u5927" : next === "xl" ? "\u7279\u5927" : "\u6A19\u6E96") + "\uFF0C\u9EDE\u64CA\u5207\u63DB");
-    try { localStorage.setItem("ai-news-font", next); } catch (e) {}
+    var name = NAME[cur] || "\u6A19\u6E96", nextName = NAME[NEXT[cur]];
+    btn.setAttribute("aria-pressed", cur ? "true" : "false");
+    btn.setAttribute("aria-label", "\u5B57\u7D1A\uFF1A" + name + "\uFF08" + (PCT[cur] || "100%") + "\uFF09\uFF0C\u9EDE\u64CA\u5207\u63DB\u70BA" + nextName);
+    btn.title = "\u5B57\u7D1A\uFF1A" + name + "\uFF08" + (PCT[cur] || "100%") + "\uFF09\u2192 \u9EDE\u64CA\u5207\u63DB\u70BA" + nextName;
+  }
+  sync();
+  btn.addEventListener("click", function () {
+    document.documentElement.dataset.font = NEXT[document.documentElement.dataset.font || ""];
+    try { localStorage.setItem("ai-news-font", document.documentElement.dataset.font || ""); } catch (e) {}
+    sync();
   });
 })();
 /* \u4E3B\u984C\u76EE\u9304 filter/query\uFF1A\u4E3B\u984C/\u4F86\u6E90\u591A\u9078\uFF08\u540C\u5C64 OR\u3001\u8DE8\u5C64 AND\uFF09\u3001\u95DC\u9375\u5B57 AND\u3001URL \u72C0\u614B\u3001\u547D\u4E2D\u7AE0\u7D05\u5E95\u7DDA */

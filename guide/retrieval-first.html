@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 檢索先行 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain〈Context Engineering Starts with Retrieval〉導讀：用「retrieve, offload, delegate」流程圖與工具選型表，拆解低效搜尋、一次灌太多、過時無關三類檢索失敗，含約 2 萬 token 卸載門檻與 read_file 100 行分頁。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>上下文工程從檢索開始：選對工具，少燒一次 context</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain Blog〈Context Engineering (Agent Memory) for AI Agents Starts with Retrieval〉——方法論文章，以 Deep Agents 的競爭分析 agent 貫穿舉例</p>
+    <p class="g-meta">
+      <span>LangChain Blog</span>·<span>2026-10-23 發布</span>·<span>2026-10-30 收錄</span>·
+      <a href="https://www.langchain.com/blog/context-engineering-starts-with-retrieval" target="_blank" rel="noopener">閱讀官方原文</a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>3 類</b><span>原文列的檢索失敗：低效搜尋、一次灌太多、過時或無關</span></div>
+    <div class="g-stat"><b>約 2 萬 token</b><span>工具結果超過此量，harness 自動卸載成檔案</span></div>
+    <div class="g-stat"><b>100 行</b><span>read_file 預設每次讀一頁，可用 offset／limit 調整</span></div>
+    <div class="g-stat"><b>4 篇／次</b><span>範例檢索工具每次回傳數（k=4），五家累積就很快撐滿</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">檢索的目標不是查到最多，而是讓主代理只看到結論——原文三類失敗共用同一帖藥：把「讀」這件事往外丟（編輯綜整）。</p>
+
+    <h2 class="g-h2">三種失敗，同一筆帳</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>失敗類型</th><th>原文舉的症狀</th><th>代價</th></tr></thead>
+        <tbody>
+          <tr><td data-l="類型"><b>搜得笨</b></td><td data-l="症狀">每份檔都打開看內容；來源用詞不同就反覆改寫查詢</td><td data-l="代價">每搜一次都付 token 與時間，還沒查到就先塞滿視窗</td></tr>
+          <tr><td data-l="類型"><b>一次灌太多</b></td><td data-l="症狀">為了一個數字載入整份 4 萬列匯出；檢索工具每次直接回 4 篇</td><td data-l="代價">視窗一步填滿，沒空間留給真正的工作</td></tr>
+          <tr><td data-l="類型"><b>過時或無關</b></td><td data-l="症狀">同名不同公司的報導、兩年前的舊聞</td><td data-l="代價">模型分不出真假，錯誤沿著後面每一步放大</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/retrieval-first/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/retrieval-first/02.webp" alt="原文流程圖：search_news 把四篇檢索結果寫成 /retrieved/ 下的檔案；四個 chunk-analyst 子代理平行各讀一篇，其中標記「兩年前報導」的那篇被子代理判為不相關、就地止步；最後只有三份摘要加來源進到主代理的 context window" width="1200" height="808" loading="lazy" decoding="async"></a>
+      <figcaption>對應原文 retrieve→offload→delegate 的收斂：1 Search 只回 /retrieved/ 四個路徑，2 Delegate in parallel 由四個 chunk-analyst 各讀一篇（兩年前那則判為 not relevant、就地止步），3 Synthesize 讓主代理只收 3 份摘要＋來源。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／LangChain Blog，<a href="https://www.langchain.com/blog/context-engineering-starts-with-retrieval" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <p class="g-p">這張圖就是全文骨架。原文的競爭分析 agent 每週一跑，要研究上百家對手、產出一份套用團隊範本的報告。</p>
+    <p class="g-p">它對每家對手只找三樣東西，但每樣都可能耗掉十幾次嘗試——光是「打開看裡面有什麼」就足以在動筆前燒光視窗。</p>
+    <p class="g-p">原文按病灶分節（低效、過量、過時），每節再給對應工具；編輯整理成一句：先辨病，再選藥。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">先查一次再回答，研究型代理不夠用</h2>
+    <p class="g-p">原文把「開場查一次、接著直接作答」這種配置標為 2-step RAG；它撐得起 FAQ bot，撐不起研究。</p>
+    <p class="g-p">理由是中途才知道要查什麼：代理研究 Company C 時讀到一則沒聽過的新品發表，接著才需要該產品定價——開場它不可能知道要查這個。</p>
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/retrieval-first/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/retrieval-first/01.webp" alt="原文對照圖：上半部 2-step RAG 為 Retrieve 直接虛線指向 Answer；下半部 agentic retrieval 依序 Think、Search、Read、Need more? 四個節點，Need more? 答 no 才走向 Answer，答 yes 則沿虛線折回 Search 再查一次，圖下註記「發現 Company C 的新品 → 去查定價」" width="1200" height="700" loading="lazy" decoding="async"></a>
+      <figcaption>同一任務的兩種控制流：2-step RAG 查一次就交卷；agentic retrieval 在「Need more?」可折回 Search，補齊才回答——原文的例子正是發現新品後回頭查定價。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／LangChain Blog，<a href="https://www.langchain.com/blog/context-engineering-starts-with-retrieval" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <p class="g-p">Deep Agents 預設就是後者：代理跑在迴圈裡，任何工具可呼叫任意次。搜尋的 know-how 則可打包成 skill。</p>
+    <p class="g-p">skill 平時只露名稱與簡短描述，任務需要才載入全文——原文稱此為 progressive disclosure，好處是冷門知識不必常駐佔位。</p>
+    <p class="g-p">寫進 skill 的是 know-how：該查哪個索引、查詢怎麼措辭、引用格式怎麼排（原文未與 system prompt 對比，此為編輯推論）。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">工具選型：先上最省的那個</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>情況</th><th>該用的工具／機制</th><th>原文怎麼說</th></tr></thead>
+        <tbody>
+          <tr><td data-l="情況"><b>知道檔名特徵</b></td><td data-l="工具"><code>glob</code></td><td data-l="原文說法">依名稱樣式找檔，例 <code>**/company-a*.md</code> 找出上週筆記</td></tr>
+          <tr><td data-l="情況"><b>知道關鍵字</b></td><td data-l="工具"><code>grep</code></td><td data-l="原文說法">只比對字面文字；在檔內搜尋而不把整檔載進 context，可回檔案、行或計數</td></tr>
+          <tr><td data-l="情況"><b>只知語意</b></td><td data-l="工具">retrieval tool（向量庫）</td><td data-l="原文說法">回最接近的匹配；也可架在 SQL、搜尋 API、MCP server 上，匹配方式跟著資料源變</td></tr>
+          <tr><td data-l="情況"><b>檔案很大</b></td><td data-l="工具"><code>read_file</code></td><td data-l="原文說法">一次讀一頁，預設 100 行；可設 offset（起點）與 limit（行數）跳讀</td></tr>
+          <tr><td data-l="情況"><b>結果超大</b></td><td data-l="工具">harness 卸載</td><td data-l="原文說法">超過約 2 萬 token 才觸發，存到 /large_tool_results/，只給路徑與首尾幾行預覽</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">原文的判準很直白：知道字，grep 勝過 embedding 查詢；語意搜尋留給真的需要的那一次。省下的是 token 與時間，也少一次重試。</p>
+    <p class="g-p">grep 的極限也很具體：搜「Company A funding」會漏掉標題寫「Company A closes $50M Series B」的那篇——這正是接上語意檢索的時機。</p>
+    <p class="g-p">glob 與 grep 在每個 deep agent 都內建，與 ls、read_file、write_file、edit_file 並列；retrieval tool 則要自己加。</p>
+    <p class="g-p">檔案放在 agent state、本機磁碟、持久儲存或沙箱都一樣能用，因為全都走 agent 的 backend。</p>
+    <p class="g-p">自己寫檢索工具也照同一個道理：讓它把每筆結果寫成檔案、只回傳路徑。範例程式用 <code>similarity_search</code> 取 4 筆，主代理看到的只是四個短路徑。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">兩條原文標明的邊界</h2>
+    <p class="g-p">一，過濾擋得掉無關，擋不掉過時。範例 agent 每週一跑，上個月的索引抓不到本週新聞——解法是接搜尋 API 或 MCP server，或在工具裡按日期過濾。</p>
+    <p class="g-p">二，檢索回來的文字是資料，不是指令。原文明說沒有任何 prompt 或分隔符策略能完全防住注入，剩下的只有驗證：答案引用的來源是否如預期、說法是否對得上原文。</p>
+    <p class="g-p">驗證的具體做法有兩步：確認引用的是預期來源，再逐句核對說法與被引用段落是否相符。</p>
+    <p class="g-p">原文最後收成五條通用策略：用最有效的工具、分頁而不整載、回路徑不回內容、把讀的工作委派出去、驗證接地（grounding）。</p>
+    <p class="g-p">（編輯觀點：原文稱這五條不分 harness 皆適用，但範例與工具全用 LangChain Deep Agents，讀來仍偏廠商方法論；換框架時這五條照樣成立。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>讀的工作外包給子代理。</b>無關內容進主視窗，會被當可信材料沿用。</p>
+      <p><b>每次檢索先問有沒有更省的工具。</b>grep 夠用時，向量查詢是浪費。</p>
+      <p><b>回路徑，不回內容。</b>讓代理自己決定讀哪幾行。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="loop-engineering.html">迴圈工程：四層 loop 疊起來，外層自動化「改進」</a><span class="d">2026-10-29</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="openwiki-memory.html">OpenWiki：把記憶畫成圖，代理自己決定記什麼</a><span class="d">2026-10-29</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="managed-deep-agents-v010-async.html">子代理搬進背景：主代理一邊對話，一邊等結果</a><span class="d">2026-10-29</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-30 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

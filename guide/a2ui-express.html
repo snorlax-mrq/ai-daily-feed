@@ -42,7 +42,7 @@
   </div>
 
   <section class="g-sec">
-    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">原文的主張很直接：慢的不是生成式 UI，是逼 LLM 逐字吐出受 schema 約束的 JSON 樹。這一版把「模型輸出什麼格式」變成可替換的參數。</p>
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">原文的主張很直接：慢的不是生成式 UI，是逼 LLM 逐字吐出受 schema 約束的 JSON 樹。這一版把「模型輸出什麼格式」變成可替換的參數。</p>
 
     <figure class="g-fig">
       <a class="fig-zoom" href="../assets/guide/a2ui-express/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/a2ui-express/01.webp" alt="原文雙路徑圖：左側 A2UI Express，模型以 Express 寫元件樹（root = Card(col)、col = Column([icon, title, text, actions])、title = Text($/title) 等），箭頭指向一張 Enable notification 卡片，標註 ~3× fewer tokens than JSON；右側 Controlled generation · Jev，決策模型在預先定義的版面中挑選（問句 What kind of row is Auto-download?，答案 switch、p ≈ 1.00），標註 components on screen in ~0.2 s；兩條路都匯入 A2UI messages（createSurface、updateComponents、updateDataModel），底部標示 Renderers don't change：React、Angular、Lit、Flutter、SwiftUI、Compose" width="1200" height="1041" loading="lazy" decoding="async"></a>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 上下文腐化 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain〈Context Engineering with Deep Agents〉導讀：以 context 用量曲線圖拆解 offloading 止尖峰、summarization 重設爬升，含約 2 萬 token 卸載門檻、85% 摘要觸發點、5 萬 token 訊息門檻與五種 middleware 機制。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>上下文腐化：五種機制把資訊搬出視窗，再按需取回</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain Blog〈Context Engineering with Deep Agents: How To Remember Without Keeping Everything In Context〉——方法論文章，以每週一跑的競爭分析 agent 貫穿舉例</p>
+    <p class="g-meta">
+      <span>LangChain Blog</span>·<span>2026-10-14 發布</span>·<span>2026-10-30 收錄</span>·
+      <a href="https://www.langchain.com/blog/context-engineering-deep-agents-remember" target="_blank" rel="noopener">閱讀官方原文</a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>約 2 萬 token</b><span>工具結果超過此量就寫成檔案，模型只看預覽</span></div>
+    <div class="g-stat"><b>85%</b><span>用量達模型 context window 的此比例即觸發摘要（預設）</span></div>
+    <div class="g-stat"><b>5 萬 token</b><span>使用者訊息走同一套卸載，門檻更高</span></div>
+    <div class="g-stat"><b>5 種</b><span>卸載／摘要／skill／子代理／長期記憶</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:19px;font-weight:600">模型背得愈多，推理愈鈍——原文稱此為 context rot。檢索管「進得來」，這篇管「已經在裡面的」。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/context-rot/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/context-rot/01.webp" alt="原文曲線圖：縱軸 token 用量 0–50k，橫軸為執行進程（圖上未標軸名）。三個黑點標記 context offloading，尖峰落在約 18k、28k、34k，隨即被削平；虛線在約 42.5k 標示 Trigger at 85%；藍點之後曲線垂直掉回約 6k，標記 Summarization，之後再緩步爬升" width="1200" height="667" loading="lazy" decoding="async"></a>
+      <figcaption>同一條曲線上的兩種病：尖峰是大型工具結果與長訊息湧入，卸載把它換成短預覽、只漲一點點；緩坡是長跑累積，用量到 85% 觸發摘要、曲線掉回約 6k 再重爬。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／LangChain Blog，<a href="https://www.langchain.com/blog/context-engineering-deep-agents-remember" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <p class="g-p">原文把手法先分兩類：不讓無用資訊進視窗，以及管理已經進來的。前者是檢索與卸載，後者是摘要與過濾（編輯歸納）。</p>
+    <p class="g-p">病徵寫得很直接：模型帶的歷史、噪音與工具輸出愈多，準確度與推理通常愈差。原文用考前抱佛腳比喻——讀得愈多，前面幾章反而先滑掉。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">五種機制，各自掛在迴圈的哪一點</h2>
+    <p class="g-p">agent 就是「模型加一圈 harness」。原文的實作方式是 middleware：程式掛進迴圈的特定時點（開跑前、每次模型呼叫、每次工具呼叫），讀 context、改 context，再讓下一步跑。</p>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>機制</th><th>做什麼</th><th>掛鉤點（何時跑）</th></tr></thead>
+        <tbody>
+          <tr><td data-l="機制"><b>卸載</b></td><td data-l="做什麼">工具結果超過約 2 萬 token 就寫進 /large_tool_results/{tool_call_id}，模型只看首尾幾行＋路徑</td><td data-l="掛鉤點">FilesystemMiddleware，每次工具呼叫、進對話之前</td></tr>
+          <tr><td data-l="機制"><b>摘要</b></td><td data-l="做什麼">用量到 85%（預設）時把舊訊息壓成一份摘要，最近訊息逐字保留、排在摘要之後</td><td data-l="掛鉤點">SummarizationMiddleware，每次模型呼叫前查用量</td></tr>
+          <tr><td data-l="機制"><b>Skill</b></td><td data-l="做什麼">平時只讀每份 SKILL.md 的標頭，模型判斷相關才載入全文</td><td data-l="掛鉤點">SkillsMiddleware，開跑前掃資料夾、每次模型呼叫注入名稱與描述</td></tr>
+          <tr><td data-l="機制"><b>子代理</b></td><td data-l="做什麼">確定會很吵的工作丟到另一個 context window，只回結果</td><td data-l="掛鉤點">SubAgentMiddleware，任務派進獨立視窗，可另配 system prompt 與工具</td></tr>
+          <tr><td data-l="機制"><b>長期記憶</b></td><td data-l="做什麼">學到的偏好寫進一份 markdown，跨對話沿用</td><td data-l="掛鉤點">MemoryMiddleware，開跑時讀檔、每次呼叫注入、學到新事時更新</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">原文補一句：大部分行為內建，不寫 middleware 也能用；要客製門檻或提示詞才需要自己掛。</p>
+    <p class="g-p">五種不是替代關係（編輯歸納）：卸載管單次尖峰，摘要管總量，skill 管知識，子代理管噪音，長期記憶管跨對話。</p>
+    <p class="g-p">skill 是一個資料夾，內含指示，可選腳本與參考文件。原文的例子是每季才用一次的 QBR 報告格式：放進 system prompt，等於每次呼叫都付 token 與回應時間。</p>
+    <p class="g-p">範例的 pull_market_report 每次回整份匯出（數千列），模型卻只要其中幾個數字——正是卸載要解的場景。</p>
+    <p class="g-p">範例 agent 每週一研究五家對手。到第四步動筆時，它已經帶著五份原始匯出、數十筆搜尋結果與兩份過時草稿跑每一輪模型呼叫。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">子代理與摘要：兩個容易做錯的細節</h2>
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/context-rot/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/context-rot/02.webp" alt="原文架構圖：Input 進到 Model，Model 在中央的 context window 內；左右各有一個虛線框包住 Subagent A／B 與各自的 Tool，兩框都標註 separate context window + separate tools，跨越虛線框的只有 Model 與子代理的往返箭頭，最後輸出到 Output" width="1200" height="658" loading="lazy" decoding="async"></a>
+      <figcaption>子代理把「吵」的部分關在自己的視窗：跨越虛線框的只有任務與結果，中間的工具呼叫與原始素材都留在外框內，主模型看不到。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／LangChain Blog，<a href="https://www.langchain.com/blog/context-engineering-deep-agents-remember" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <p class="g-p">原文建議子代理只回結論：範例的 market-researcher 讀完整份報告，只回三個要點，主代理連原始報告的預覽都看不到。子代理任務通常小且界線清楚，因此可跑較便宜的模型，也能平行。</p>
+    <p class="g-p">摘要有兩個容易漏的性質。一是可回收：被摘要掉的訊息寫進 /conversation_history/{session_id}.md，需要細節時讀得回來。二是會循環：用量再爬升，下一次摘要會把前一次摘要一起吃進去。</p>
+    <p class="g-p">同一套邏輯也用在長訊息：貼上的長逐字稿超過 5 萬 token 就卸載到 /conversation_history/，處理方式與工具結果一樣。</p>
+    <p class="g-p">原文的策略第一條是：大輸入該卸載、不該截斷。截斷是有損的，卸載之後還查得回來。</p>
+    <p class="g-p">原文在檢索那篇說管理 context 只是半套；這篇補上另一半——決定什麼進得來，與進來之後怎麼不塞爆（編輯歸納）。</p>
+    <p class="g-p">長期記憶則解決重複交代：每週都要講一次「摘要用項目符號、不要段落」。寫進記憶檔後不必再講；記憶是自有儲存裡的純檔案，換模型、換供應商都能沿用。</p>
+    <p class="g-p">（編輯觀點：原文稱記憶是自有儲存裡的純檔案、換供應商可沿用，是設計主張而非已驗證成效；摘要後準確度回升這點，原文同樣未給實測數字。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>卸載與摘要治不同的病。</b>尖峰靠搬檔案，緩坡靠重設。</p>
+      <p><b>摘要必須可回收。</b>壓掉的內容要留檔，否則細節永久消失。</p>
+      <p><b>噪音工作該隔離，不該壓縮。</b>壓縮已發生的事，隔離讓它不發生。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="retrieval-first.html">上下文工程從檢索開始：選對工具，少燒一次 context</a><span class="d">2026-10-30</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="openwiki-memory.html">OpenWiki：把記憶畫成圖，代理自己決定記什麼</a><span class="d">2026-10-29</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="loop-engineering.html">迴圈工程：四層 loop 疊起來，外層自動化「改進」</a><span class="d">2026-10-29</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-30 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
