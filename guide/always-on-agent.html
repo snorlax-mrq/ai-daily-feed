@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 常駐代理上線四件事 · AI 每日動態檔案</title>
+<meta name="description" content="OpenRouter 的常駐代理教學：排程、工具、檔案記憶、花費上限四件零件；每次檢查成本 0.03 至 0.12 美分，單趟花費上限 5 美分。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>常駐代理上線四件事：排程、工具、檔案記憶、花費上限</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：OpenRouter Blog〈How to Build Your Own Always-On AI Agent (TypeScript)〉——教學文，含完整範例碼與四列實測成本（三趟排程＋一次重啟）</p>
+    <p class="g-meta">
+      <span>OpenRouter Blog</span>·<span>2026-10-31 發布</span>·<span>2026-10-31 收錄</span>·
+      <a href="https://openrouter.ai/blog/tutorials/build-always-on-ai-agent/" target="_blank" rel="noopener">閱讀官方原文</a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>0.03–0.12 美分</b><span>每次檢查成本；Claude Haiku 5.5，原文 10 月 13 日實測</span></div>
+    <div class="g-stat"><b>5 美分</b><span>單趟花費上限 maxCost(0.05)，與六步上限並用；非硬性</span></div>
+    <div class="g-stat"><b>0.86–3.46 美元</b><span>每 15 分鐘一次、每月 30 天（96 趟／日）的估算</span></div>
+    <div class="g-stat"><b>4 件零件</b><span>排程迴圈、工具、記憶、上限＋人工批准，原文開頭即列出</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">常駐代理不是新架構，是「定時醒來、用工具查、判斷後報告」這條迴圈加上四個零件；難的是沒人看著時它會做什麼。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/openrouter-ai-blog-tutorials-build-alway/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/openrouter-ai-blog-tutorials-build-alway/01.webp" alt="原文流程圖：Timer（每 15 分鐘）→ Paused?（awaiting approval）→ 否則 callModel（新對話、limits 與 stopWhen）→ digest.md；是則 Wait or resume（decisions.json）。另有 Limits（6 步或 0.05 美元）、Team post（需批准）與 Memory（seen.json／state.json，虛線連回 callModel）" width="600" height="280" loading="lazy" decoding="async"></a>
+      <figcaption>圖解 A · 一次檢查的節點：Timer 每 15 分鐘啟動，遇待批准轉 Wait or resume，否則進 callModel 產出 digest.md；Memory 以虛線連回 callModel。<span class="g-fig-src">圖／OpenRouter Blog，<a href="https://openrouter.ai/blog/tutorials/build-always-on-ai-agent/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">原文以 OpenAI 在 DevDay 2026 發表的 Dots 對照：同一種東西，差別是模型、工具與花費可以自己挑。</p>
+    <p class="g-p">四個零件各幾行：一個跑代理的排程迴圈、代理用來觀察與行動的工具、撐過重啟的記憶、以及每次執行的步數與金額上限。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">四個零件與各自的職責</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>零件</th><th>原文做法</th><th>缺了會怎樣（編輯推論）</th></tr></thead>
+        <tbody>
+          <tr><td data-l="零件"><b>排程迴圈</b></td><td data-l="原文">for 迴圈加 setTimeout，預設每 15 分鐘一趟</td><td data-l="缺了">只能手動觸發，就不是常駐</td></tr>
+          <tr><td data-l="零件"><b>工具</b></td><td data-l="原文">查 Hacker News、寫摘要、發到團隊頻道（後者需批准）</td><td data-l="缺了">模型只能空想，碰不到外部世界</td></tr>
+          <tr><td data-l="零件"><b>記憶</b></td><td data-l="原文">seen.json 記已看過的 ID；state.json 存對話</td><td data-l="缺了">重啟後重複報告同一則新聞</td></tr>
+          <tr><td data-l="零件"><b>上限與批准</b></td><td data-l="原文">stopWhen: [stepCountIs(6), maxCost(0.05)]；有後果的工具有人批准</td><td data-l="缺了">迴圈失控時帳單沒有煞車</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">原文提醒 0.11.0 版是在工具呼叫輪次之間檢查停止條件，之後還會補一次關閉工具的收尾呼叫，所以可能超出上限一兩次呼叫；每通呼叫約 0.0004 美元。</p>
+    <p class="g-p">單趟之外還要一道鎖：金鑰的信用額度（limit）封住帳戶總量，limit_reset 決定額度多久重置一次（日／週／月）。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">記憶寫檔案，對話每趟重開</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>檔案</th><th>存什麼</th><th>原文的設計理由</th></tr></thead>
+        <tbody>
+          <tr><td data-l="檔案"><b>seen.json</b></td><td data-l="內容">已報告過的文章 ID</td><td data-l="理由">長期記憶；一趟結束（含因批准而暫停）才寫入</td></tr>
+          <tr><td data-l="檔案"><b>fetched.json</b></td><td data-l="內容">本趟新抓到、尚未計入的 ID</td><td data-l="理由">中途崩潰也不丟；下一趟先補記</td></tr>
+          <tr><td data-l="檔案"><b>state.json</b></td><td data-l="內容">對話狀態與待批准呼叫</td><td data-l="理由">暫停的執行可換程序續跑</td></tr>
+          <tr><td data-l="檔案"><b>pending.log</b></td><td data-l="內容">待人工決定的呼叫與 ID</td><td data-l="理由">在你決定之前，任何東西都不會送到團隊</td></tr>
+          <tr><td data-l="檔案"><b>decisions.json</b></td><td data-l="內容">approve／reject 的呼叫 ID</td><td data-l="理由">續跑成功後才刪除，失敗可重試</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">最關鍵的一行是每趟開頭清掉 state.json：重複使用同一段對話，會把先前所有檢查重送給模型，成本逐趟往上爬。</p>
+    <p class="g-p">原文的取捨：若摘要已寫、記錄未落就崩潰，可能重複列出一則；它選「重複」而非「漏掉」，因為重複好修。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">要動手之前，先過人這一關</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>批准鏈</b> — 一個對外動作要經過誰（本站重排）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">計時器 → 代理</span><span class="tr"><i>時間到，啟動一趟檢查</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">代理 → 工具</span><span class="tr"><i>要求執行 post_to_team_channel，此工具設 requireApproval</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">SDK → 狀態檔</span><span class="tr"><i>暫停，status 為 awaiting_approval；你的 finish() 再把呼叫 ID 寫進 pending.log</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">人 → decisions.json</span><span class="tr"><i>以 ID 寫入 approve 或 reject</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">下一趟 → 續跑</span><span class="tr"><i>帶 approveToolCalls／rejectToolCalls 續上，工具這時才真的執行</i></span></span></li>
+        <li class="side"><span class="st">分支</span><span class="body"><span class="hop">未回應期間</span><span class="tr"><i>每一趟都只讀到暫停狀態、什麼都不做——原文稱這是刻意取捨</i></span></span></li>
+      </ul>
+      <p class="x-src">原文以文字與程式碼描述；本站重排為序列，原文未給此圖。</p>
+    </figure>
+    <p class="g-p">這個設計的代價是：一則沒人回應的批准請求，會讓整個監看停擺。原文說它寧可如此，也不要同時跑多條對話。</p>
+    <p class="g-p">最壞時機的測試也做了：批准後用錯的 API key 續跑，工具執行了、下一次模型呼叫失敗，狀態停在 in_progress；換回正確金鑰後續上，沒有重複發文。</p>
+    <p class="g-p">提示注入是這類代理的天敵。原文在指示裡要求把新聞標題當資料、不當指令，真正的保險是那道批准關卡。</p>
+    <p class="g-p">（編輯觀點：過濾標題永遠比不過白名單。對外動作一律要求人工批准，比在提示裡寫十行防禦更可靠。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>先設上限，再寫提示。</b>步數與金額比提示詞更能約束行為。</p>
+      <p><b>記憶放檔案，對話每趟重開。</b>成本才會平，重啟也不重工。</p>
+      <p><b>對外動作一律要批准。</b>外部世界只認得人的簽核。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">NVIDIA Blog</span><a href="seti-agentic-telescope.html">代理住進望遠鏡：一句話轉天線，邊收邊算 2.4 Tb/s</a><span class="d">2026-10-30</span></div>
+      <div class="g-relrow"><span class="s">Meta Engineering</span><a href="meta-jittesting.html">LLM 連夜寫測試：Meta 半年攔下 74 個隱私 SEV</a><span class="d">2026-10-29</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="managed-deep-agents-v010-async.html">子代理搬進背景：主代理一邊對話，一邊等結果</a><span class="d">2026-10-29</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-31 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

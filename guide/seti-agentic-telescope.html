@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 代理住進望遠鏡：一句話轉天線，邊收邊算 · AI 每日動態檔案</title>
+<meta name="description" content="SETI 與 Breakthrough Listen 把代理式 AI 接進艾倫望遠鏡陣列：Nexus 當 harness、CyberEther 算訊號、DAQIRI 把每秒兆位元資料灌進 GPU，2.4 Tb/s 在 RTX PRO 6000 Blackwell 上即時處理。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>代理住進望遠鏡：一句話轉天線，邊收邊算 2.4 Tb/s</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：NVIDIA Blog〈Things That Go Beep in the Night: Agentic AI Joins the Search for Extraterrestrial Signals〉——案例報導，數字出自 NVIDIA 自家、無第三方驗證；文中引述 SETI 研究院的 Andrew Siemion</p>
+    <p class="g-meta">
+      <span>NVIDIA Blog</span>·<span>2026-10-30 發布</span>·<span>2026-10-30 收錄</span>·
+      <a href="https://blogs.nvidia.com/blog/ai-joins-the-search-for-extraterrestrial-signals/" target="_blank" rel="noopener">閱讀官方原文</a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>2.4 Tb/s</b><span>整條管線（Holoscan＋CyberEther＋Nexus）在 RTX PRO 6000 Blackwell 上的處理量</span></div>
+    <div class="g-stat"><b>3 個零件</b><span>DAQIRI、CyberEther、Nexus，各管資料、運算、操作</span></div>
+    <div class="g-stat"><b>小時 vs 數週～數年</b><span>原文稱代理把人類要花數週到數年的工作，壓到數小時</span></div>
+    <div class="g-stat"><b>首例</b><span>首度以 AI 即時偵測到蟹狀星雲的脈衝星（原文未稱全球首例）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">無線電望遠鏡每秒吐出兆位元的訊號，等人看完早就過去了；SETI 的解法是讓代理直接住在儀器裡，一句話就能轉天線、修資料、出圖。</p>
+    <p class="g-p">原文場景是北加州的艾倫望遠鏡陣列（ATA）。Breakthrough Listen 與 SETI 研究院把代理式 AI 接進日常觀測，不只停在離線分析（編輯推論：原文未述先前做法）。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>三層疊起來</b> — 誰包住誰：代理操作、訊號運算、資料進卡（本站重繪）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>3 · Nexus</b><small>代理 harness：儀器狀態、算力、pipeline 的唯一真相</small><span class="pi">操作層</span></div>
+          <div class="ring">
+            <div class="ring-lb"><b>2 · CyberEther</b><small>SETI 自研訊號處理框架，跑 cuFFT、cuBLAS 等 CUDA-X 函式庫</small></div>
+            <div class="ring-inner"><b>1 · DAQIRI</b> — Holoscan 平台函式庫，把每秒兆位元感測資料直接拉進 GPU 記憶體</div>
+          </div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑</b>：研究人員可請代理監看封包遺失、讀即時頻譜、改寫訊號處理區塊（原文未述改動的回饋時效）。</span></div>
+      <p class="x-src">本站重繪；原文以文字分述三個元件，未附架構圖，也未給此包覆關係。三層為編輯分類，非原文的從屬宣告。</p>
+    </figure>
+
+    <p class="g-p">最內層解決的是搬運：DAQIRI 讓資料邊收邊算，不必先寫滿硬碟。原文說無線電望遠鏡的資料量，正是「等觀測結束再分析」行不通的原因。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">代理實際做的四件事</h2>
+    <figure class="x-fig">
+      <div class="x-grid">
+        <div class="c"><b>・轉天線</b><small>以自然語言指令讓代理轉動 ATA 的天線</small></div>
+        <div class="c"><b>・校準對焦</b><small>為乾淨訊號調整並對焦儀器</small></div>
+        <div class="c"><b>・抓錯修錯</b><small>偵測並修正資料錯誤</small></div>
+        <div class="c"><b>・出圖</b><small>把處理結果畫成研究人員可讀的圖</small></div>
+      </div>
+      <p class="x-src">本站整理；原文以一句話並列這四項能力，未給順序或優先級。</p>
+    </figure>
+    <p class="g-p">這四件事過去分散在不同工具與不同人手上（編輯推論：原文未述）。原文的關鍵是把它們收進同一個介面：研究人員只要描述要做什麼。</p>
+    <p class="g-p">Nexus 這個網頁式觀測排程器因此被稱為 agent harness：它給代理一份儀器狀態、算力與 pipeline 的單一真實來源，代理才有東西可操作。</p>
+    <p class="g-p">（編輯觀點：這個 harness 的價值不在模型，而在把「儀器狀態」變成代理讀得懂的介面。換模型不難，換介面才是工程。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">為什麼要把運算放在儀器旁</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>環節</th><th>原文說法</th><th>換掉的代價（編輯推論）</th></tr></thead>
+        <tbody>
+          <tr><td data-l="環節"><b>資料搬運</b></td><td data-l="原文">DAQIRI 把每秒兆位元直接拉進 GPU 記憶體，觀測中即時處理</td><td data-l="代價">先落地再讀，延遲與儲存都吃不住</td></tr>
+          <tr><td data-l="環節"><b>推論位置</b></td><td data-l="原文">推論在地端、就在儀器旁執行</td><td data-l="代價">送雲端要多付頻寬，且訊號離開現場</td></tr>
+          <tr><td data-l="環節"><b>代理行動</b></td><td data-l="原文">一句自然語言提示即可監看封包遺失、讀即時頻譜、改寫處理區塊（原文主詞為研究人員透過 Nexus）</td><td data-l="代價">人得記住多套指令與工具，反應慢半拍</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">成果不只是流程變快。原文說這條 pipeline 已首度以 AI 即時偵測到脈衝星，地點在蟹狀星雲。</p>
+    <p class="g-p">下一步是模型選擇：團隊正在評估 Nemotron 等開放模型，用在資料必須留在本地、或未來要在月球背面離線運作的觀測站。</p>
+    <p class="g-p">SETI 研究院 Bernard M. Oliver 講席、Breakthrough Listen 計畫主持人 Andrew Siemion 說：新一批代理式天文台在宇宙中發現的東西，可能與它自己（而非創造它的人類）更有共通點——這不是該怕的事，而是「翻譯」上的突破。</p>
+    <p class="g-p">（編輯觀點：本文是 NVIDIA 自家平台的案例報導，效能數字無第三方驗證；但把代理放進儀器迴路、而非只放在資料末端，是這篇最可帶走的方法論。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>代理要碰硬體，先給它介面。</b>儀器狀態講清楚，模型才動得了手。</p>
+      <p><b>資料在哪，推論就在哪。</b>搬不動的資料，才是代理的邊界。</p>
+      <p><b>即時性本身就是成果。</b>同樣的模型，早數小時就有不同意義。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenRouter Blog</span><a href="always-on-agent.html">常駐代理上線四件事：排程、工具、檔案記憶、花費上限</a><span class="d">2026-10-31</span></div>
+      <div class="g-relrow"><span class="s">Meta Engineering</span><a href="meta-jittesting.html">LLM 連夜寫測試：Meta 半年攔下 74 個隱私 SEV</a><span class="d">2026-10-29</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="managed-deep-agents-v010-async.html">子代理搬進背景：主代理一邊對話，一邊等結果</a><span class="d">2026-10-29</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-10-31 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
