@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 審查代理動手驗 · AI 每日動態檔案</title>
+<meta name="description" content="OpenRouter 的 AI 程式碼審查器教學：把變更檔與 diff 送進 Linux 沙箱，模型跑出證據才算 confirmed；五個 bug 實測每次 0.015 至 0.045 美元。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>審查代理動手驗：bug 要跑得出來才算數</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：OpenRouter Blog〈Build an AI Code Reviewer with OpenRouter〉——教學文，附 233 行 Python 腳本、五個植入 bug 的實測與四模型對照表</p>
+    <p class="g-meta">
+      <span>OpenRouter Blog</span>·<span>2026-11-01 發布</span>·<span>2026-11-02 收錄</span>·
+      <a href="https://openrouter.ai/blog/tutorials/ai-code-review/" target="_blank" rel="noopener">閱讀官方原文</a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>233 行</b><span>review.py 全文行數，只用 Python 標準庫</span></div>
+    <div class="g-stat"><b>3＋1 個工具</b><span>Files、Shell、Apply Patch 三個伺服器工具，加一個 submit_review 函式工具</span></div>
+    <div class="g-stat"><b>20 個檔案 ID</b><span>單次請求上限：19 個檔案＋diff；超過 19 個檔案直接退出碼 2</span></div>
+    <div class="g-stat"><b>8 回合</b><span>模型最多八輪，跑不完以退出碼 2 收場</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">只讀 diff 的審查器先天吃虧：看不到 diff 外的 import 與 helper，也無法證明懷疑的 bug 真的會炸。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一次審查的六步</b> — 從 git diff 到退出碼（本站重繪）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>git diff</b><small>取變更檔與 diff，--context 補測試檔</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>Files API</b><small>上傳變更後的完整檔案，不只 hunk</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>openrouter:shell</b><small>容器內以 cp 指令重建 ~/repo</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>模型動手</b><small>寫檢查、跑出證據、送 V4A 補丁</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>套補丁</b><small>先套本機暫存副本，回報是否成功</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>submit_review</b><small>寫 .git/ai-review.json，定退出碼</small></div>
+      </div>
+      <p class="x-src">依原文「Each review follows this flow」的五步改寫，第 1 步拆成取 diff 與上傳兩格；圖為單趟簡化，原文實際最多循環八回合。原文未給此圖。</p>
+    </figure>
+
+    <p class="g-p">OpenRouter 的做法是把變更搬進沙箱，讓模型自己寫檢查、自己跑；跑得出來才標 confirmed。</p>
+    <p class="g-p">未確認不等於沒問題。連線沒關、競態這類要靠人判，原文把兩類分開陳列，不讓它們混在一起。</p>
+    <p class="g-p">補丁也不直接落地：模型送 patch，腳本先套在本機暫存副本並回報結果，模型再修，才輪到你決定 --apply。</p>
+    <p class="g-p">原文特別註明，沙箱裡跑的還是原始碼，所以 --apply 之後要自己再跑一次測試，才算真的修好。</p>
+    <p class="g-p">報告預設落在 .git：裡面有不只 findings，還有完整 shell 輸出與你的程式碼片段，放那裡才不會被 commit。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">四個工具各管一段</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>工具</th><th>在流程裡做什麼</th><th>原文限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="工具"><b>Files API</b></td><td data-l="作用">上傳變更後完整檔案、context 檔與 diff</td><td data-l="限定">beta；每檔 100 MiB、每工作區 10 GiB，不另計費</td></tr>
+          <tr><td data-l="工具"><b>openrouter:shell</b></td><td data-l="作用">托管 Linux 容器，把上傳檔複製到家目錄再跑指令</td><td data-l="限定">beta；僅 Responses／Messages API，Chat Completions 回 400</td></tr>
+          <tr><td data-l="工具"><b>openrouter:apply_patch</b></td><td data-l="作用">模型以 V4A diff 提議 create／update／delete</td><td data-l="限定">beta；只驗語法並回送錯誤，實際寫檔留給你的程式</td></tr>
+          <tr><td data-l="工具"><b>submit_review</b></td><td data-l="作用">收尾時回傳結構化 findings</td><td data-l="限定">函式工具＋嚴格 JSON schema，非 text.format</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">三個伺服器工具都還在 beta，且只支援全域端點；第四個 submit_review 是函式工具。</p>
+    <p class="g-p">為什麼收尾要用函式工具？原文實測 haiku-5.5 同時帶工具時，text.format 的 json_schema 沒被強制，答案會變散文。</p>
+    <p class="g-p">上傳後的檔案在沙箱叫「檔案 ID 末八碼＋原檔名」，所以提示詞得寫死重建目錄的 cp 指令，否則模型找錯位置。</p>
+    <p class="g-p">補丁路徑由模型給，腳本用 inside() 解析後拒絕 repo 外的路徑；檔名進 shell 前一律 quote。</p>
+    <p class="g-p">原文踩到的坑比功能更值得抄：長請求偶爾被丟包，所以全部改串流並只重試一次；Python 預設的 User-Agent 會被 Files API 回 403。</p>
+    <p class="g-p">還有一個型別坑：原生的 apply_patch 在 Claude 上每次都驗證失敗，得改用 openrouter:apply_patch。</p>
+    <p class="g-p">每份補丁要立刻套、立刻回報。原文試過只回「已存」，結果模型把同一份補丁重送兩三次。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">四款模型：差在敢不敢斷言，也差在補丁對不對</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>模型</th><th>完成場次</th><th>找到 bug</th><th>補丁修好五個</th><th>平均費用</th><th>平均時間</th></tr></thead>
+        <tbody>
+          <tr><td data-l="模型"><b>Claude Haiku 5.5</b></td><td data-l="完成">3/3</td><td data-l="找到">14/15</td><td data-l="補丁">1/3</td><td data-l="費用" class="n">0.0153</td><td data-l="時間" class="n">125 秒</td></tr>
+          <tr><td data-l="模型"><b>Claude Sonnet 5.5</b></td><td data-l="完成">3/3</td><td data-l="找到">15/15</td><td data-l="補丁" class="win">3/3</td><td data-l="費用" class="n">0.0447</td><td data-l="時間" class="n">60 秒</td></tr>
+          <tr><td data-l="模型"><b>GPT-6 Luna</b></td><td data-l="完成">3/3</td><td data-l="找到">12/15</td><td data-l="補丁">1/3</td><td data-l="費用" class="n">0.0167</td><td data-l="時間" class="n">156 秒</td></tr>
+          <tr><td data-l="模型"><b>DeepSeek V4.1 Flash</b></td><td data-l="完成">2/3</td><td data-l="找到">10/10</td><td data-l="補丁">2/2</td><td data-l="費用" class="n">0.0307</td><td data-l="時間" class="n">206 秒</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="x-src">同一個植入五個 bug 的變更，每模型三次、預設參數與 --context 測試檔；「找到 bug」分母為完成場次×5。費用單位美元，原文未給變異數。</p>
+    <p class="g-p">差別在敢不敢斷言：Sonnet 三次都把五個 bug 的補丁修到全過，Haiku 只有一次。</p>
+    <p class="g-p">被刪掉的 conn.close() 成了分水嶺：Haiku 與 Sonnet 判 unconfirmed（Haiku 漏過一次），Luna 從沒回報但有一次補丁順手修好。</p>
+    <p class="g-p">DeepSeek 兩次都確認它，其中一次靠數 /proc/self/fd 的檔案描述符前後差異。</p>
+    <p class="g-p">DeepSeek 另有一次跑滿八回合只顧重送補丁、始終沒交報告，以退出碼 2 收場，花了 0.034 美元。</p>
+    <p class="g-p">補丁要自己讀。Haiku 三份補丁有兩份把 total_revenue 改成取 tuple，反而弄壞呼叫端。</p>
+    <p class="g-p">示範環境是 Python 3.11.14 加 SQLite 3.50.4，有 unittest 沒有 pytest；植入五個 bug 後，兩個既有測試照樣通過。</p>
+    <p class="g-p">成本結構反直覺：沙箱每秒 0.0001 美元，從第一道指令計費到回應結束，慢模型即使 token 便宜，沙箱費仍較高。</p>
+    <p class="g-p">原文的數字：Haiku 的沙箱費 0.0074 至 0.0159 美元，較快的 Sonnet 是 0.0047 至 0.0068 美元。</p>
+    <p class="g-p">純看 diff 的 Chat Completions 審查器（Haiku 5.5）約 0.001 美元一次；換成跑得動程式，貴 10 到 40 倍。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三種收場，別把「沒跑完」當通過</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>退出碼是分類，不是排序</b> — 三個互斥的收場（本站整理）</figcaption>
+      <p class="x-grid-h">三個結局互不相干，故不串箭頭</p>
+      <div class="x-grid">
+        <div class="c"><b><i>0</i>放行</b><small>沒有達到門檻的發現，或根本沒東西可審</small></div>
+        <div class="c"><b><i>1</i>擋下</b><small>至少一條達到 --block-at（預設 high）</small></div>
+        <div class="c"><b><i>2</i>沒跑完</b><small>八回合內沒交報告，或檔案超過 19 個</small></div>
+      </div>
+      <p class="x-src">退出碼定義出自原文；並列關係為本站整理，原文未給此圖。門檻預設 high，在 pre-push hook 就是擋下 push。</p>
+    </figure>
+    <p class="g-p">門檻預設 high，只有安全漏洞、資料遺失、核心行為壞掉才擋；其餘留在報告裡給人看。</p>
+    <p class="g-p">掛成 pre-push hook 時，它比對的是工作區與基底分支，無關的改動得先 commit 或 stash。</p>
+    <p class="g-p">--no-verify 能跳過本地 hook，所以 CI 還是要跑一次；fork 的 PR 一律跳過，因為那份工作會把程式碼送出去。</p>
+    <p class="g-p">沙箱預設沒有外網，pip install 會失敗；要跑第三方套件的檢查，得自己開 network_policy 白名單。</p>
+    <p class="g-p">檔案會上傳到 OpenRouter 工作區並送到模型供應商，機密程式碼不該丟進去——原文寫得很直白。</p>
+    <p class="g-p">原文註明：CI 要用基底分支的 review.py 來跑，PR 才改不動自己的守門人；但那份 workflow 作者並未在 GitHub Actions 實跑。</p>
+    <p class="g-p">模型仍會漏 bug、誇大嚴重度、寫出壞補丁。原文的建議是：confirmed 當強訊號，unconfirmed 當給人看的備註。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>先讓它跑得動，再問準不準。</b>沒有重現證據的 finding 只是猜測。</p>
+      <p><b>補丁一律當草稿讀。</b>原文實測有模型把 bug 修成另一個 bug。</p>
+      <p><b>沙箱會把程式碼送出去。</b>機密 repo 不進第三方沙箱，這是前提。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenRouter Blog</span><a href="always-on-agent.html">常駐代理上線四件事：排程、工具、檔案記憶、花費上限</a><span class="d">2026-10-31</span></div>
+      <div class="g-relrow"><span class="s">NVIDIA Blog</span><a href="seti-agentic-telescope.html">代理住進望遠鏡：一句話轉天線，邊收邊算 2.4 Tb/s</a><span class="d">2026-10-30</span></div>
+      <div class="g-relrow"><span class="s">Meta Engineering</span><a href="meta-jittesting.html">LLM 連夜寫測試：Meta 半年攔下 74 個隱私 SEV</a><span class="d">2026-10-29</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。原文僅有 hero 圖、無機制圖，圖解 A、B 皆為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-02 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
