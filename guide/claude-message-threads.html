@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — Message threads：省延遲，不省 token · AI 每日動態檔案</title>
+<meta name="description" content="Anthropic message threads 導讀：agent 每輪只送增量，50 萬至 100 萬 token 請求的 TTFT 中位數降約 35%，但 token 用量不變；thread 在記憶體加密不落盤，5 分鐘未用即過期，須重送全文。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E9%96%8B%E7%99%BC%E8%80%85%E5%B7%A5%E5%85%B7" class="day-catalog">開發者工具</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E9%96%8B%E7%99%BC%E8%80%85%E5%B7%A5%E5%85%B7">開發者工具</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>Message threads：省延遲，不省 token</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Anthropic 官方產品說明〈Make long-running agents faster with message threads〉——public beta 上線公告兼機制說明，全文沒有圖表，機制只有一段文字。</p>
+    <p class="g-meta">
+      <span>claude.com（Anthropic 官方）</span>·<span>2026-11-02 發布</span>·<span>2026-11-03 收錄</span>·
+      <a href="https://claude.com/resources/articles/message-threads" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>約 35%</b><span>50 萬至 100 萬 token 請求的 TTFT 中位數降幅，前提是 Claude Code 多數使用者預設開啟（Anthropic 自報）</span></div>
+    <div class="g-stat"><b>5 分鐘</b><span>thread 自最後一次請求起算的存活時間，逾時就得重送全文</span></div>
+    <div class="g-stat"><b>1 個參數</b><span>Messages API 加 thread；首輪送全文，之後只送增量＋上一個回應 ID</span></div>
+    <div class="g-stat"><b>0 省</b><span>token 用量不變：Claude 每輪仍讀完整對話，費率與速率限制照舊</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">thread 讓 agent 每輪只送新增的訊息與工具結果，換到更短的首字延遲——但 Claude 每輪照樣讀完整段對話，token 一毛沒省。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>每輪重送 vs 只送增量</b> — 同一個 Messages API，兩種送法（本站重繪）</figcaption>
+      <div class="x-cmp">
+        <div><b>未開 thread</b><p>每一輪都把先前的<b>所有訊息與工具結果</b>重新送上。對話長到數十萬 token 後，重送本身就是一段等待。</p></div>
+        <div class="after"><b>開啟 thread</b><p>首輪送完整對話並建立 thread；之後每輪只送<b>新訊息＋上一個回應的 ID</b>，中間狀態由平台保管。</p></div>
+      </div>
+      <p class="x-src">本站重繪；原文只用文字描述兩者差異，未給此對照。</p>
+    </figure>
+
+    <p class="g-p">「請求變小」與「模型讀得變少」是兩件事。thread 縮的是上傳量，不是推論量，所以省下的是等待，不是帳單。</p>
+    <p class="g-p">原文的場景很具體：coding agent 一個 session 可能發出數百個請求，每一個都把先前的訊息與工具結果重送一次。</p>
+    <p class="g-p">對話長到數十萬 token 後，這段重送就落在模型開口之前，直接計入 TTFT。回合數越多，乘出來越明顯。</p>
+    <p class="g-p">官方給的數字是：Claude Code 多數使用者預設開啟後，50 萬至 100 萬 token 的請求，TTFT 中位數下降約 35%。</p>
+    <p class="g-p">限定語得跟著數字一起讀：區間是 50 萬至 100 萬 token、指標是 TTFT 中位數，不是 p99，更不是成本。原文未給樣本數，也無第三方驗證。</p>
+    <p class="g-p">（編輯觀點：中位數好看，不代表長尾跟著好。長尾往往被工具執行時間吃掉，而工具時間不在 thread 能省的範圍內。）</p>
+    <p class="g-p">這個 35% 綁在 Claude Code 的預設值與它的流量上。換成自建 agent、換一種工作負載，就得自己重量一次。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">五分鐘 TTL：狀態放記憶體，過期就重來</h2>
+    <p class="g-p">回合之間，thread 留在平台的記憶體裡，加密、不寫入磁碟。這是原文對存放位置與壽命的全部描述。</p>
+    <p class="g-p">（編輯推論：不落盤的狀態撐不過一次服務重啟。原文沒承諾跨重啟恢復，就別把它當持久化的 session 儲存。）</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>一條 thread 的生命週期</b> — 誰在什麼時候送什麼（本站重排）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">客戶端 → 平台</span><span class="tr"><i>帶 thread 參數送出完整對話，thread 於此建立</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">客戶端 → 平台</span><span class="tr"><i>只送新訊息與前一個回應的 ID</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">回合之間</span><span class="tr"><i>thread 加密留在平台記憶體，不寫入磁碟</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">平台計時（自最後一次請求起）</span><span class="tr"><i>距最後一次請求滿 5 分鐘，thread 過期</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">客戶端 → 平台</span><span class="tr"><i>重送完整對話，另開一條新 thread</i></span></span></li>
+        <li class="side"><span class="st">分支</span><span class="body"><span class="hop">閒置超過 5 分鐘</span><span class="tr"><i>下一輪實質回到 01，增量優勢消失</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重排自原文敘述，原文未給此順序圖；5 分鐘自最後一次請求起算。</p>
+    </figure>
+
+    <p class="g-p">記憶體、加密、不落盤三個詞在講同一件事：這份狀態的壽命以分鐘計，不是以專案計。</p>
+    <p class="g-p">過期不是錯誤，是設計。原文要客戶端「重送完整對話、開一條新的」，等於把恢復成本明確外包給 client。</p>
+    <p class="g-p">（編輯推論：這是整篇最貴的一條邊界。等人工批准、跑一個長工具、撞上 rate limit 排隊，只要閒置超過 5 分鐘，下一輪就是全量重送。）</p>
+    <p class="g-p">（編輯推論：最需要省延遲的慢流程，剛好拿不到這項優惠。）你的 client 得把「thread 已過期」當常態處理，不是當例外。</p>
+    <p class="g-p">原文只說過期這件事，沒說平台會不會主動通知。實作上就當它不會：收到錯誤或狀態不符，直接補送全文、開新 thread。</p>
+    <p class="g-p">（編輯推論：真正的工程量在 client 端。thread ID 與前一個回應 ID 得跟 session 一起存，串流中斷重試時才判斷得出續用還是重開。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">什麼時候值得開</h2>
+    <p class="g-p">原文把適用範圍收得很窄：正在活躍、且延遲要緊的 session。它列了三類，共同點是每輪都會自動長出新內容。</p>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>場景</th><th>每輪多送掉什麼</th><th>開了 thread 之後</th></tr></thead>
+        <tbody>
+          <tr><td data-l="場景"><b>長時間跑的 coding agent</b></td><td data-l="每輪多送掉什麼">每一則工具結果、每一次檔案編輯，全部隨回合累加</td><td data-l="開了之後">只送增量，重送量不再隨回合數膨脹</td></tr>
+          <tr><td data-l="場景"><b>Computer use agent</b></td><td data-l="每輪多送掉什麼">每一輪重新上傳的截圖</td><td data-l="開了之後">截圖留在 thread 內，請求本身變小</td></tr>
+          <tr><td data-l="場景"><b>文件與圖片密集流程</b></td><td data-l="每輪多送掉什麼">大量文件與圖片，每輪都隨請求再送一次</td><td data-l="開了之後">請求本身變小（原文未說明保留機制）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">原文補了一句判斷準則：agent 帶的 context 越多，TTFT 能降的空間越大。</p>
+    <p class="g-p">（編輯推論：對話只有幾千 token 時，重送的絕對量本來就小。開 thread 換不到多少時間，只換到一層狀態管理與過期處理。）</p>
+    <p class="g-p">原文的 35% 只量 50 萬 token 以上的請求；往下的區間沒有數字，只能推論重送佔 TTFT 的比例較低，能省的延遲也有限。</p>
+    <p class="g-p">所以這是規模門檻，不是通用開關：對話連續、密集、越長越胖時才值得動。</p>
+    <p class="g-p">節奏也綁死：thread 只在同一個活躍 session 內連續跑才有意義；中間一斷，前面累積的狀態就得重新建立。</p>
+    <p class="g-p">可用範圍是 public beta：原生 Claude Platform、AWS 上的 Claude Platform、Microsoft Foundry 上的 Claude，以及 Google Cloud 上的 Claude 模型（Anthropic 管理）。</p>
+    <p class="g-p">標準 token 費率與既有速率限制照舊。這句話再確認一次定位：你付一樣的錢，買到的只有時間。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>先確認要買什麼。</b>這個功能只賣延遲，帳單完全沒動。</p>
+      <p><b>把 5 分鐘寫進錯誤處理。</b>閒置過期＝全量重送，不是異常。</p>
+      <p><b>context 越大，省下的越多——但只有時間。</b>小對話開 thread，只多一層狀態。</p>
+    </div>
+  </section>
+
+    <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">xAI</span><a href="grok-data-bot.html">團隊機器人：把資料科學從瓶頸變成共享技能</a><span class="d">2026-11-02</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="codex-qodo-review.html">跨庫脈絡才是防線：Qodo 把審查搬進 Codex 工作階段</a><span class="d">2026-11-02</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="lifeval-benchmark.html">LifeVal：出題靠時間使用調查，不靠實驗室</a><span class="d">2026-11-02</span></div>
+    </div>
+  </section>
+
+<p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。圖解 A、B 為本站重繪，原文未附任何圖表。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-03 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

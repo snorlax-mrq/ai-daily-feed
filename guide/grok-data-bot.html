@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 團隊機器人：把資料科學從瓶頸變成共享技能 · AI 每日動態檔案</title>
+<meta name="description" content="SpaceXSI 自建 Data Bot 的導入案例導讀：把資料團隊的做法寫成四類共用技能，做成 Grok Bot 裡的 Data Bot；PM 數分鐘拿到分析，上週約 70 小時工作量（公司自報，無第三方驗證）。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>團隊機器人：把資料科學從瓶頸變成共享技能</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Giving every team a data scientist with Grok Bot（SpaceXSI 資料團隊自建 Data Bot 的導入案例）</p>
+    <p class="g-meta">
+      <span>xAI</span>·<span>2026-11-02 發布</span>·<span>2026-11-03 收錄</span>·
+      <a href="https://x.ai/news/data-bot" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>約 70 小時</b><span>一週內被分掉的工作量；SpaceXSI 自報估計，無第三方驗證</span></div>
+    <div class="g-stat"><b>4 類技能</b><span>指標分析、實驗、圖表儀表板、資料工程，由資料團隊集中維護</span></div>
+    <div class="g-stat"><b>3 位具名同事</b><span>產品經理、生命週期行銷、營收成長總監，各自的使用場景不同</span></div>
+    <div class="g-stat"><b>先審後共享</b><span>記憶的新增由 Team Bot 管理者核准或駁回，才對所有人生效</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">Grok Bot 裡的 Team Bot：把資料團隊的做法寫成共用技能，讓全公司隨時叫得到一個分析師。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>誰包住誰</b> — 平台、Team Bot、共享知識層（本站重繪）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>Grok Bot</b><small>平台：個人 bot 與 Team Bot 都住在這裡</small><span class="pi">外層</span></div>
+          <div class="ring">
+            <div class="ring-lb"><b>Data Bot</b><small>Team Bot：查倉庫、跑分析、依個人偏好輸出，可加進 Slack 頻道</small><span class="pi">中層</span></div>
+            <div class="ring-inner"><div class="ring-lb" style="justify-content:center;margin-bottom:4px"><b>共享技能＋共享記憶</b><span class="pi">內層</span></div><div>四類技能與累積下來的經驗，由資料團隊維護，記憶新增須管理者核准</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑</b>：日常使用冒出知識 → 管理者核准 → 進入共享記憶 → 下一個使用者直接受用。</span></div>
+      <p class="x-src">本站重繪；原文以文字分層描述，未附架構圖，也未給此包覆關係。</p>
+    </figure>
+
+    <p class="g-p">原文的起點是容量問題：資料科學團隊人不多，全公司卻整天來問，問題不難但需要專業才答得準，團隊因此變成瓶頸。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">技能：把團隊做法寫成四類可執行規則</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>技能域</th><th>教了什麼</th><th>原文細節</th></tr></thead>
+        <tbody>
+          <tr><td data-l="技能域"><b>指標與分析</b></td><td data-l="教了什麼">全公司核心指標的定義與追查手冊</td><td data-l="原文細節">活躍使用者、營收等指標的來源表與查詢邏輯；異動先依區隔或地區拆解，並排除假日、logging 變更後才歸因產品改動</td></tr>
+          <tr><td data-l="技能域"><b>實驗</b></td><td data-l="教了什麼">A/B 測試從開到收的整套流程</td><td data-l="原文細節">設定測試、跑 power analysis、檢查曝光平衡與樣本偏誤、規劃上線、對反直覺結果做 deep dive、達到 power 後寫 readout</td></tr>
+          <tr><td data-l="技能域"><b>圖表與儀表板</b></td><td data-l="教了什麼">視覺化慣例與團隊樣式</td><td data-l="原文細節">時間趨勢用折線、類別比較用水平長條；沿用團隊的圖表主題，並把對話中的圖變成 Databricks 或 Hex 儀表板</td></tr>
+          <tr><td data-l="技能域"><b>資料工程</b></td><td data-l="教了什麼">管線與埋點的團隊慣例</td><td data-l="原文細節">dbt model 的撰寫與審查、自動化 pipeline 告警的慣例、如何補上 analytics event logging</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">四類技能與指標定義、來源表都由資料團隊集中維護、全員共用；答案標準因此一致，不是各人各一套。</p>
+    <p class="g-p">原文對「團隊怎麼做事」寫得很細：從指標定義到告警慣例，都是可被檢查的規則；圖表主題與樣式指南則屬團隊風格，原文也明列在技能範圍內。</p>
+    <p class="g-p">原文沒有公布技能檔案的格式或數量，只看得出每個域各自管一段流程。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">個人 bot 靠擁有者，Team Bot 靠一群人維護</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>知識所有權的差別</b> — 個人 bot 與 Team Bot（本站整理）</figcaption>
+      <div class="x-cmp">
+        <div><b>個人 bot</b><p>知識取決於<b>擁有者教了它什麼</b></p></div>
+        <div class="after"><b>Team Bot（Data Bot）</b><p>共享技能由<b>資料團隊維護</b>，一次改進全員受益</p><p>共享記憶累積日常經驗，提出後由管理者<b>核准或駁回</b></p><p>技能與記憶都不綁在任何一個擁有者身上</p></div>
+      </div>
+      <p class="x-src">本站整理；原文僅一句「personal bots depend on what their owners know to teach them」，其餘欄位為依文意推演。</p>
+    </figure>
+    <p class="g-p">原文把差別講得很白：個人 bot 靠擁有者會什麼，Team Bot 靠一群人共同維護的一套技能。</p>
+    <p class="g-p">共享記憶讓它從「照規則辦事」變成「累積經驗」：記住哪條管線是誰的、上次指標下滑其實是地區假日。</p>
+    <p class="g-p">所以下一次查類似異動，它會先去看行事曆，而不是直接把原因扣在產品改動上。</p>
+    <p class="g-p">關鍵是那道審核：管理者可以先看過記憶的新增，通過之後才對所有使用者生效。</p>
+    <p class="g-p">（編輯觀點：沒有審核的共享記憶，等於讓一個錯誤全公司同步；治理機制才是這類 bot 能不能規模化的分水嶺。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">從一句提問，到整條分析工作流</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>球怎麼傳</b> — 一次提問到團隊頻道（本站重排）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">使用者 → Data Bot</span><span class="tr"><i>在 Grok Bot 直接問，像問同事一樣追問</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">Data Bot → 倉庫</span><span class="tr"><i>規劃分析、送出查詢、探索可能解釋</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">Data Bot → 產出</span><span class="tr"><i>依個人偏好給結論、圖表、書面報告或 Hex 儀表板</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">Data Bot → Slack 頻道</span><span class="tr"><i>照資料團隊的慣例排程貼週報，同事在討論串裡追問</i></span></span></li>
+        <li class="side"><span class="st">分支</span><span class="body"><span class="hop">工具答不出時</span><span class="tr"><i>Braze 內建轉換指標算不出收信者改方案的比例，改回倉庫自己查（行銷情境，與上方序列非同一流程）</i></span></span></li>
+      </ul>
+      <p class="x-src">原文以段落描述各場景，未附流程圖；本站重排為序列，原文未給此順序。</p>
+    </figure>
+    <p class="g-p">問答只是入口。原文的產品經理場景是一路追問，不必每次重開一份分析。</p>
+    <p class="g-p">同一個問題，不同人拿到不同形狀的答案：有人要一句結論，有人要能貼進簡報的圖。</p>
+    <p class="g-p">產品經理 Kevin Niparko 的說法是「口袋裡有一位資料科學家」；他偏好一句結論配一張圖，Data Bot 就照這個格式給。</p>
+    <p class="g-p">生命週期行銷的 Jon Brenner 把它當 on-call 分析師：丟一個 Braze campaign ID，問收信者後來做了什麼。</p>
+    <p class="g-p">X Subscription 上線時，Braze 內建的轉換指標答不出多少人改了方案，最後是回倉庫自己算收信與轉換。（原文未給數值。）</p>
+    <p class="g-p">營收成長總監 Katy Abbaszadeh 用它衡量活動對 pipeline 的貢獻、盯每週目標進度，結果直接變成簡報用的圖表。</p>
+    <p class="g-p">同一套技能也吃整條工作流：規劃、查詢、找解釋、寫成帶圖報告，或直接在 Hex 蓋一個團隊能接著用的儀表板。</p>
+    <p class="g-p">原文也描述了角色的移動：資料團隊從回答問題，轉為打造並改進這個 AI 隊友。</p>
+    <p class="g-p">規模化的數字只有一個：上週約 70 小時的工作量，原本會落到資料團隊身上。</p>
+    <p class="g-p">原文未說 70 小時怎麼折算成工時。</p>
+    <p class="g-p">原文沒交代安裝權限、可查的表範圍與成本，案例文只講成效。（編輯觀點：這三項才是導入前的必問。）</p>
+    <p class="g-p">原文自己留了邊界：需要更多判斷的複雜分析仍由人做，團隊也還在摸它哪裡需要補指引。</p>
+    <p class="g-p">（編輯觀點：值得抄的是技能庫與審核流程，不是 70 小時這個數字；前者能複製，後者是單一團隊的自述。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>資產是技能庫，不是模型。</b>知識寫成團隊維護的規則，才不會鎖在某個人身上。</p>
+      <p><b>共享記憶必須有審核。</b>核准關卡在哪，決定錯誤會擴散還是被擋住。</p>
+      <p><b>70 小時只當方向。</b>自報估計無第三方驗證，別拿它當產能承諾。</p>
+    </div>
+  </section>
+
+    <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="codex-qodo-review.html">跨庫脈絡才是防線：Qodo 把審查搬進 Codex 工作階段</a><span class="d">2026-11-02</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="lifeval-benchmark.html">LifeVal：出題靠時間使用調查，不靠實驗室</a><span class="d">2026-11-02</span></div>
+      <div class="g-relrow"><span class="s">claude.com（Anthropic 官方）</span><a href="claude-message-threads.html">Message threads：省延遲，不省 token</a><span class="d">2026-11-02</span></div>
+    </div>
+  </section>
+
+<p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數字均出自原文，圖解與小標為編輯整理，三張圖解皆為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-03 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

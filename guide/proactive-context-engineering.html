@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 主動代理的六道新題：脈絡工程從省視窗變成管時間 · AI 每日動態檔案</title>
+<meta name="description" content="導讀 LangChain 執行長 Harrison Chase 的觀察：代理架構已收斂，但常駐、目標導向的用法帶出六個新難題——推播劑量、記憶粒度、非同步狀態、目標追蹤、對齊作弊、瀏覽器脈絡；他自承業界還沒有通用解法。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>主動代理的六道新題：脈絡工程從省視窗變成管時間</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain 部落格〈New context engineering challenges in late 2026〉——LangChain 執行長 Harrison Chase 在 In the Loop 專欄的判斷，非研究報告</p>
+    <p class="g-meta">
+      <span>LangChain Blog</span>·<span>2026-11-02 發布</span>·<span>2026-11-03 收錄</span>·
+      <a href="https://www.langchain.com/blog/context-engineering-challenges-late-2026" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>六題</b><span>從推播劑量到瀏覽器脈絡，六題並列（見下圖）</span></div>
+    <div class="g-stat"><b>六個舊解</b><span>摘要長對話、外置工具結果、skills、tool search、subagents、bash 當主工具</span></div>
+    <div class="g-stat"><b>一年半以上</b><span>Claude Code 問世至今；LangChain 的 Deep Agents 也超過一年</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">Harrison Chase 的判斷：代理架構已經收斂，但常駐、目標導向的用法換出六道新題，他自己也承認業界未必有解法，至少沒有通用解。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>六題：從推播到瀏覽器</b></figcaption>
+      <div class="x-grid">
+        <div class="c"><b><i>①</i>主動而不擾民</b><small>背景靠事件流或心跳醒來；推太少沒感覺，推太多淹沒人</small></div>
+        <div class="c"><b><i>②</i>記憶</b><small>資料結構只是檔案或一段字串；難在智慧層決定記什麼、記多細</small></div>
+        <div class="c"><b><i>③</i>非同步</b><small>工作搬進子代理；主代理還在跑／已結束／等人工核可，通知怎麼送</small></div>
+        <div class="c"><b><i>④</i>目標追蹤</b><small>拆步、做實驗、取回饋；難在不重複、看得遠、長時程一致</small></div>
+        <div class="c"><b><i>⑤</i>對齊</b><small>目標設計防不了作弊；harness 要讓它專注又不過度最佳化</small></div>
+        <div class="c"><b><i>⑥</i>瀏覽器</b><small>正在變成通用代理的 bash；DOM 與截圖都是巨大物件</small></div>
+      </div>
+      <p class="x-src">本站重繪；原文以六個粗體小標並列，未給順序與輕重；僅對齊標為「與上一題相關」。</p>
+    </figure>
+
+    <p class="g-p">六題沒有一題要求換架構。同一個「LLM 在迴圈裡呼叫工具、跑在沙箱」的形狀，改用常駐與目標導向的跑法，問題就長出來了。</p>
+    <p class="g-p">原文的說法是<em>「不必然有解法，至少沒有通用解法」</em>。被否定的是「難題已解」，不是各團隊的土法煉鋼。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">六題的共同形狀：校準、狀態、長期、動機、體積（本站歸納）</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>題目</th><th>原文的說法</th><th>失敗的形狀</th></tr></thead>
+        <tbody>
+          <tr><td data-l="題目"><b>主動而不擾民</b></td><td data-l="原文的說法">要能推訊息給使用者才有「幫到忙」的感覺，推太多又會壓垮對方</td><td data-l="失敗的形狀">劑量：太少像沒在做事，太多變噪音</td></tr>
+          <tr><td data-l="題目"><b>記憶</b></td><td data-l="原文的說法">決定「該記什麼」的智慧層，本身往往就是一個簡單代理</td><td data-l="失敗的形狀">粒度：什麼都不記，或記到太細碎</td></tr>
+          <tr><td data-l="題目"><b>非同步</b></td><td data-l="原文的說法">工作完成時怎麼通知主代理；它還在跑、已結束、或等人核可</td><td data-l="失敗的形狀">狀態：主代理不知道球回來了</td></tr>
+          <tr><td data-l="題目"><b>目標追蹤</b></td><td data-l="原文的說法">拆解目標、跑實驗、取回饋再迭代</td><td data-l="失敗的形狀">長期：重複動作、只看小任務、後期走鐘</td></tr>
+          <tr><td data-l="題目"><b>對齊</b></td><td data-l="原文的說法">盲目最佳化會用我們想不到的方式作弊</td><td data-l="失敗的形狀">動機：達標了，但代價沒人要</td></tr>
+          <tr><td data-l="題目"><b>瀏覽器</b></td><td data-l="原文的說法">跟圖片互動還是跟 DOM？兩個都是大物件</td><td data-l="失敗的形狀">體積：脈絡被單一頁面吃光</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="x-src">前兩欄出自原文；「失敗的形狀」一欄為本站歸納，原文未做此分類。並列只為閱讀方便，六題並非互不相干。</p>
+
+    <p class="g-p">（編輯觀點：六題裡有三題（主動、記憶、非同步）是同一種病——劑量與時機。推多少、記多細、什麼時候通知，全是校準問題，不是能力問題。）</p>
+    <p class="g-p">校準的難處在於兩端都錯：原文對記憶與主動性都說兩端容易出錯，中間那條線沒有公式。</p>
+    <p class="g-p">（編輯觀點：舊解解的是空間——摘要、外置、隔離；新題問的是時間——什麼時候動手、什麼時候閉嘴、誰知道工作結束了。）</p>
+    <p class="g-p">非同步那題的來源是硬約束：主代理必須對使用者的新訊息保持靈敏，於是工作被迫外移到工具與子代理。</p>
+    <p class="g-p">目標追蹤原文以 Hone 為例。難點列了三項：只想重複而不想試新實驗、只看小任務、長時程會走樣。</p>
+    <p class="g-p">那六個舊解可以直接當檢查表：對話太長就摘要、結果太大就外置、工具太多就 tool search、脈絡互汙染就切子代理。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">哪些是事實、哪些是 Chase 的判斷</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>類別</th><th>原文內容</th><th>本站處置</th></tr></thead>
+        <tbody>
+          <tr><td data-l="類別"><b>可驗證事實</b></td><td data-l="原文內容">架構收斂到「LLM 迴圈＋工具＋沙箱」；Claude Code 已問世超過一年半、Deep Agents 超過一年；六個脈絡工程做法已算標準</td><td data-l="本站處置">可查，照原文</td></tr>
+          <tr><td data-l="類別"><b>經驗與偏好</b></td><td data-l="原文內容">「最近聊過的每位代理建置者都在想常駐代理」；他自述幾個月前也許會同意沒有開放問題；認為這些題目「最有趣」</td><td data-l="本站處置">樣本是作者人脈圈，不是普查</td></tr>
+          <tr><td data-l="類別"><b>可受挑戰</b></td><td data-l="原文內容">「能力階躍變化」；「瀏覽器正在變成通用代理的 bash」；六題都沒有通用解</td><td data-l="本站處置">無量測、屬預測，標為判斷</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+
+    <p class="g-p">最該被追問的是「階躍」。原文沒給任何採用率、任務時長或成功率，支撐它的是作者與建置者的談話印象。</p>
+    <p class="g-p">（編輯觀點：主動代理的好壞發生在長期行為上。單回合 demo 與基準分數看不出「推播過量」「記錯重點」這類失敗。）</p>
+    <p class="g-p">對齊的著力點在使用者：目標設計本身很難，很難寫出代理找不到漏洞的目標。</p>
+    <p class="g-p">對齊那段，原文的舉例是<em>「清掉程式碼裡所有 bug」→ 乾脆把程式碼刪光（沒程式碼就沒 bug）</em>。</p>
+    <p class="g-p">（編輯觀點：真實的規格遊戲多半更細——改測試、放寬 bug 的定義、只修看得到的路徑；刪光程式碼只是最好笑的極端。）</p>
+    <p class="g-p">瀏覽器的對照很具體：寫程式的代理靠 bash 執行程式碼，通用代理則靠瀏覽器去點真實世界。</p>
+    <p class="g-p">但原文只停在「DOM 或截圖，兩個都是大物件」。<em>沒說哪個好</em>，把問題留下就走。</p>
+    <p class="g-p">（編輯觀點：這個取捨實務上已有慣例——DOM 便宜但脆、截圖通用但貴。原文沒往下走，讀者得自己補。）</p>
+    <p class="g-p">文末接的是 LangSmith 推廣。LangChain 同時賣 harness（Deep Agents）與觀測平台。</p>
+    <p class="g-p">（編輯觀點：「未必有解法」對賣平台的人是順風敘事，讀者要把它當開場白，不是結論。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事（編輯觀點）</h2>
+    <div class="x-take">
+      <p><b>六題是政策題，不是框架題。</b>至少劑量與時機那三題，換 harness 也解不了。</p>
+      <p><b>推播是產品決策，不是模型能力。</b>先寫下「什麼時候閉嘴」的規則。</p>
+      <p><b>目標寫得越硬，越要留否決權。</b>先寫下不准犧牲的東西。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">xAI</span><a href="grok-data-bot.html">團隊機器人：把資料科學從瓶頸變成共享技能</a><span class="d">2026-11-02</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="codex-qodo-review.html">跨庫脈絡才是防線：Qodo 把審查搬進 Codex 工作階段</a><span class="d">2026-11-02</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="lifeval-benchmark.html">LifeVal：出題靠時間使用調查，不靠實驗室</a><span class="d">2026-11-02</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；原文的三張插圖（六題橫幅、非同步、對齊）為外站素材，本站未轉載，圖解與表格均為本站重繪與歸納。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-03 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

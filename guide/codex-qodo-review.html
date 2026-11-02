@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 跨庫脈絡才是防線：Qodo 把審查搬進 Codex 工作階段 · AI 每日動態檔案</title>
+<meta name="description" content="OpenAI 客戶案例：Qodo 的 Codex 外掛把程式碼知識、組織規則與獨立審查帶進開發工作階段；客戶環境可達 1 萬個以上 repo（Qodo 自述），審查發現在開 PR 前就回到 Codex。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>跨庫脈絡才是防線：Qodo 把審查搬進 Codex 工作階段</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：OpenAI 客戶案例——Qodo 在 Codex 市集上架外掛，主打跨儲存庫依賴下的 P0 bug；文中數字與成效皆為 Qodo 自述</p>
+    <p class="g-meta">
+      <span>OpenAI</span>·<span>2026-11-02 發布</span>·<span>2026-11-03 收錄</span>·
+      <a href="https://openai.com/index/qodo-codex-plugin" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>1 萬個以上</b><span>Qodo 共同創辦人暨執行長 Itamar Friedman 描述的客戶 repo 規模（Qodo 自述）</span></div>
+    <div class="g-stat"><b>200 條規則</b><span>Decisions API 構想的例子：先篩該查哪幾條，再交給模型推理</span></div>
+    <div class="g-stat"><b>GPT-6 Astra</b><span>Qodo 彙整工程知識、審查程式碼與監控品質所用的 OpenAI 模型之一</span></div>
+    <div class="g-stat"><b>開 PR 之前</b><span>Qodo 的審查發現回到 Codex 同一個工作階段，（編輯推論）人先不必進場</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">Codex 把局部任務做完，Qodo 補上跨庫脈絡與獨立審查；兩者來回，開發者開 PR 前就看到爭點。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一次改動的交接</b> — 誰把球傳給誰（本站重繪）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">Codex → Qodo → Codex</span><span class="tr"><i>同一次取回程式碼庫規則＋PR 歷史與既有模式</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">Codex → repo</span><span class="tr"><i>帶著脈絡完成改動</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">Codex → Qodo</span><span class="tr"><i>交出變更做獨立審查</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">Qodo → Codex</span><span class="tr"><i>發現回同一個 session</i></span></span></li>
+        <li><span class="st">04b</span><span class="body"><span class="hop">代理 → 人</span><span class="tr"><i>只上浮未解的爭點</i></span><span class="tag">分支</span></span></li>
+      </ul>
+      <p class="x-src">本站重繪，原文無圖也未給編號；01–04 依原文敘述排序；第 04b 步是 Friedman 對未來工作流的描述，非現行行為，故標為分支。</p>
+    </figure>
+
+    <p class="g-p">原文要解的難題不是寫得快，是改得對：單看一處改動沒錯，卻可能弄壞下游服務。</p>
+    <p class="g-p">Qodo 的本業是程式碼審查與軟體品質工具；它要給代理的，是「讀懂自己所改程式碼」所需的組織知識。</p>
+    <p class="g-p">Qodo 在 Codex 市集上架外掛，透過自家 Agentic Toolbox，把三樣東西交給 Codex：程式碼知識、組織規則、獨立審查。</p>
+    <p class="g-p">有了脈絡，Codex 才看得到跨 repo 的依賴，包含不同 Git 供應商託管的儲存庫，以及靠 Kafka 串接的服務。</p>
+    <p class="g-p">原文那句：把軟體當整體看，才不會漏掉 P0 bug。</p>
+    <p class="g-p">審查的時機也是設計的一部分。Codex 動手前先取回規則與 PR 歷史，改完後由 Qodo 審，發現直接回到同一個 session——此時開發者還沒開 PR。</p>
+    <p class="g-p">模型標準很直白：要最前沿、最會推理，也要真的快。Qodo 用的是含 GPT-6 Astra 在內的 OpenAI 模型。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">兩個代理，各有自己的脈絡</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>角色</th><th>在這條流程裡做什麼</th><th>原文怎麼界定它</th></tr></thead>
+        <tbody>
+          <tr><td data-l="角色"><b>寫手 · Codex</b></td><td data-l="做什麼">取回規則與 PR 歷史後動手改</td><td data-l="界定">「很會把局部任務有效率地做完」</td></tr>
+          <tr><td data-l="角色"><b>審查 · Qodo</b></td><td data-l="做什麼">同一 session 內審變更，把發現回給 Codex</td><td data-l="界定">獨立審查；發生在開 PR 之前</td></tr>
+          <tr><td data-l="角色"><b>人</b></td><td data-l="做什麼">只看兩個代理沒有共識的爭點</td><td data-l="界定">Friedman 的願景，原文未說已上線</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">Friedman 的比喻是陰陽：一個生成程式碼，另一個挑戰它。兩個角色各要自己的設定與脈絡，也可能各有多個代理。</p>
+    <p class="g-p">目標狀態是代理先互相討論，只把彼此不接受的部分上浮。人看到的不只是結論，還有討論、脈絡與過去的決策。</p>
+    <p class="g-p">職稱也跟著改寫：開發者從寫手變成規劃者與審查者——這是願景，原文沒說已發生。</p>
+    <p class="g-p">Qodo 的 AI 開發者關係負責人 Nnenna Ndukwe 說，開發者拿這套流程做新功能與技術債。</p>
+    <p class="g-p">她說，GPT-6 模型在 Codex 裡寫、（編輯推論）交接自動化，Qodo 負責獨立審查（Qodo 自述）。</p>
+    <p class="g-p">她自己也這樣用：以 GPT-6 Astra 的 Extra High 與 Ultra effort 排程 Codex，寫每週成果與下一步。</p>
+    <p class="g-p">同一套流程也用來讀社群上關於 agentic engineering 的討論，檢視自己的變更，並建議該補哪些 agent skills。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">200 條規則：先篩選，再推理</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>規則該由誰挑</b> — 兩案的差別在誰做選擇（本站整理）</figcaption>
+      <div class="x-cmp">
+        <div><b>現況 · 每件事問模型</b><p>哪條規則適用、該套哪個 agent skill，都交給語言模型臨場判斷，等於每個決策都要跑一次推理。</p></div>
+        <div class="after"><b>構想 · Decisions API 先選</b><p>由 OpenAI 新推出的 Decisions API 挑出這階段該查的規則與 skill，模型只推理被挑中的那幾條。</p></div>
+      </div>
+      <p class="x-src">本站整理的對照，原文未給此圖。左欄由原文「rather than rely on language models for every decision」反推（編輯推論）；右欄是 Friedman 說的機會，不是已上線功能。</p>
+    </figure>
+    <p class="g-p">在他口中，規則數量本身就是瓶頸。他的例子是 200 條規則：API 先選出這一階段該檢查哪幾條，模型只推理相關的部分。</p>
+    <p class="g-p">原文給的理由是更快、更便宜，審查品質也更好。這仍是構想——原文沒說 Qodo 已經上線這條路。</p>
+    <p class="g-p">這條路也管 agent skills：每個階段該帶哪些技能，同樣可以交給 API 決定，不必讓模型每次重猜。</p>
+    <p class="g-p">「軟體工廠」是他給的終點名稱：公司知識引導寫程式的代理，獨立審查檢查產出，剩下無解的問題交給人的專業。</p>
+    <p class="g-p">Ndukwe 形容這套做法取的是「AI 的長處」加上「傳統軟體工程與腳本的長處」（原文為 Nnenna says）。</p>
+    <p class="g-p">Friedman 則把它說成客戶可自行組裝、自己擁有的系統，並理解軟體在生產環境怎麼變。</p>
+    <p class="g-p">（編輯觀點：把「選哪條規則」搬出模型，等於承認有些判斷該留給可稽核、可重跑的程式，而不是留在提示詞裡。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>外掛賣的是脈絡，不是速度。</b>跨 repo 依賴才是 P0 bug 的藏身處。</p>
+      <p><b>發現要回到同一個 session，不是開完 PR 再回補。</b>晚一步，修的是人的時間。</p>
+      <p><b>只上浮未解爭點，前提是討論留下紀錄。</b>沒有紀錄，人只收到結論。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">xAI</span><a href="grok-data-bot.html">團隊機器人：把資料科學從瓶頸變成共享技能</a><span class="d">2026-11-02</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="lifeval-benchmark.html">LifeVal：出題靠時間使用調查，不靠實驗室</a><span class="d">2026-11-02</span></div>
+      <div class="g-relrow"><span class="s">claude.com（Anthropic 官方）</span><a href="claude-message-threads.html">Message threads：省延遲，不省 token</a><span class="d">2026-11-02</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。原文為 OpenAI 客戶案例，Qodo 的規模與成效屬廠商自述、無第三方驗證。原文無機制圖，圖解 A 為本站重繪、圖解 B 為本站整理的對照，重排處已於圖說註明。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-03 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

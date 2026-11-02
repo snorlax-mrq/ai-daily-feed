@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — LifeVal：出題靠時間使用調查，不靠實驗室 · AI 每日動態檔案</title>
+<meta name="description" content="OpenAI 自建 LifeVal 日常任務評測導讀：題庫起點是 ATUS、MTUS 與 3,995 人代表性調查，五個任務範例單項通過率 90.4%–100%（OpenAI 自報），原文未交代題數、題目與評分細節。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E7%A0%94%E7%A9%B6%E8%88%87%E7%A7%91%E5%AD%B8" class="day-catalog">研究與科學</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E7%A0%94%E7%A9%B6%E8%88%87%E7%A7%91%E5%AD%B8">研究與科學</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>LifeVal：出題靠時間使用調查，不靠實驗室</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LifeVal（OpenAI 官方部落格；出題背景與五個範例任務分數）</p>
+    <p class="g-meta">
+      <span>OpenAI</span>·<span>2026-11-02 發布</span>·<span>2026-11-03 收錄</span>·
+      <a href="https://openai.com/index/lifeval" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>3,995 人</b><span>出題前的人口代表性調查</span></div>
+    <div class="g-stat"><b>7 個領域</b><span>照顧、健康、教育、家務行政、財務、購物、政府服務</span></div>
+    <div class="g-stat"><b>90.4–100%</b><span>五個範例任務通過率（自報）</span></div>
+    <div class="g-stat"><b>逾 10 億人／週</b><span>原文所述 ChatGPT 使用規模</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">LifeVal 是 OpenAI 自建的日常任務評測：題目來自時間使用調查與 3,995 人問卷，量的是能否把事辦完，不是答得好不好。</p>
+    <p class="g-p">題目很雜：找托育、申請政府服務、編預算、備課、改食譜、訂雜貨、排健身計畫，都是原文例子。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>題庫怎麼長出來</b>（本站重繪）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>01 兩份調查</b><small>ATUS＋MTUS：按人口、時段、季節排列的活動目錄</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>02 補問 3,995 人</b><small>人口代表性調查：逐項問最想被代辦什麼</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>03 收斂七領域</b><small>把清單收斂成跨領域任務集</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>04 任務集</b><small>每題指定一個可交付的終點動作</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>05 一年追蹤</b><small>用同一份題庫追一年進步</small></div>
+      </div>
+      <p class="x-src">本站依原文重繪；原文未給流程圖、題數、難度分級與配額。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">題庫不是論文，是時間使用調查</h2>
+    <p class="g-p">出題起點不是學術題庫，是兩份時間使用調查：美國 American Time Use Survey，與跨國 Multinational Time Use Study。</p>
+    <p class="g-p">兩份合起來是活動目錄，按人口、時段、季節排列；「日常」因此由外部定義，不靠研究員印象挑題。</p>
+    <p class="g-p">順序是先有行為資料、再問意願：調查記的是人們實際花掉的時間，問卷只補上哪一段想被代勞，優先序因此由受訪者給出。</p>
+    <p class="g-p">七個領域不是事先畫好的分類，而是問卷排序後的結果：先問意願，才收斂成照顧、健康、教育等範圍。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">五個範例：終點是一個動作</h2>
+    <p class="g-p">原文只公開五個任務，通過率 90.4% 到 100%；共同形狀是跨站查資料、比條件，再整理成可執行的清單。</p>
+    <p class="g-p">原文的判準是「採取真的能把事情辦成的行動」：聊天助理比的是回覆品質，代理型助理得交出成品，題目因此停在交付而不是停在建議。</p>
+    <div class="x-scroll" style="margin-top:14px">
+      <table class="x-tbl">
+        <thead><tr><th>任務</th><th>代理被要求做的事</th><th class="n">單項通過率</th></tr></thead>
+        <tbody>
+          <tr><td data-l="任務"><b>搬家後挑幼兒園</b></td><td data-l="代理被要求做的事">比較新家附近幼兒園、篩到三間最合適的、整理入學細節，並列出兩項仍待你決定的偏好</td><td class="n" data-l="單項通過率">93.1%</td></tr>
+          <tr><td data-l="任務"><b>洪水前調度志工</b></td><td data-l="代理被要求做的事">為四位需防水協助的鄰居組社區志工隊，產出勘察行動計畫</td><td class="n" data-l="單項通過率">98.0%</td></tr>
+          <tr><td data-l="任務"><b>幫家人找落腳處</b></td><td data-l="代理被要求做的事">Luzerne County 內符合預算、有獨立居住單位、通勤短，最後把地契放進購物車待審</td><td class="n" data-l="單項通過率">100%</td></tr>
+          <tr><td data-l="任務"><b>與遠方奶奶看球賽</b></td><td data-l="代理被要求做的事">設好遠端同看的方式，並準備串流失敗時的替代方案</td><td class="n" data-l="單項通過率">96.3%</td></tr>
+          <tr><td data-l="任務"><b>陪父母適應糖尿病</b></td><td data-l="代理被要求做的事">第一週照護與飲食計畫，含餐點、提醒、要問照護團隊的問題</td><td class="n" data-l="單項通過率">90.4%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-src">分數為<b>各任務自己的單項通過率，不是總平均</b>，也不是排名，由 OpenAI 自報；<b>未交代題數、題目全文、評分方式與驗證</b>（滿分亦不代表排序）。</p>
+    <p class="g-p">滿分的「幫家人找落腳處」最能說明取向：預算、獨立居住單位、通勤要同時成立，最後把地契放進購物車待審。</p>
+    <p class="g-p">幼兒園那題的收尾也不是建議書：篩到三間、整理入學細節，留下兩項待你拍板的偏好。人與代理的分工寫在任務定義裡。</p>
+    <p class="g-p">（編輯觀察）五題都收在可交付的終點上：把地契放進購物車、備好串流失敗的替代方案；原文未說明各題實際動用哪些外部系統。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">用途：追蹤並驅動模型改進</h2>
+    <p class="g-p">原文把過去一年進步掛在三類任務：browser use、computer use、connectors，說在 ChatGPT 開放後擴大了可承接的任務。</p>
+    <p class="g-p">LifeVal 的隱含前提是代理會開瀏覽器、動本機、接外部系統：要量的是能否幫人做決定、管好日常責任，分數不是知識測驗。</p>
+    <p class="g-p">用途寫得直接：它用來追蹤並驅動模型改進，未提對外排名或公開榜單。原文說要超越學科知識評量（going beyond academic assessments）。</p>
+    <p class="g-p">同一份題庫固定不動、觀察期拉長，才看得出改進有沒有發生；換一批題，尺也跟著換了，前後就接不起來。</p>
+    <p class="g-p">原文稱這是往目標走的一步，未給時程。</p>
+    <div class="x-scroll" style="margin-top:14px">
+      <table class="x-tbl">
+        <thead><tr><th>項目</th><th>原文怎麼說</th><th>缺口</th></tr></thead>
+        <tbody>
+          <tr><td data-l="項目"><b>題庫</b></td><td data-l="原文怎麼說">兩份調查＋3,995 人問卷，收斂成七領域任務集</td><td data-l="缺口">題數、題目全文（原文未說明）</td></tr>
+          <tr><td data-l="項目"><b>分數</b></td><td data-l="原文怎麼說">五個任務的單項通過率 90.4%–100%</td><td data-l="缺口">總分、平均、評分標準（原文未說明）</td></tr>
+          <tr><td data-l="項目"><b>受測模型</b></td><td data-l="原文怎麼說">「我們最新的模型」（latest models）</td><td data-l="缺口">型號與版本（原文未說明）</td></tr>
+          <tr><td data-l="項目"><b>獨立驗證</b></td><td data-l="原文怎麼說">原文未提及</td><td data-l="缺口">無第三方複核，題庫未見釋出</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-src">本表為本站整理，原文以段落敘述，未提供表格或完整資料表。</p>
+    <p class="g-p">能複核的只有敘述：沒有題庫連結、題數、型號，百分點無法重跑，原文也未說它是否擋下某次上線。</p>
+      </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>抄得出題法，抄不到分數。</b>ATUS＋MTUS＋問卷是可複製流程。</p>
+      <p><b>百分比先當內部訊號。</b>沒有題數與評分細節，不能跨模型比。</p>
+      <p><b>驗收看終點動作。</b>LifeVal 要求把事辦完，比答得漂亮更難假裝。</p>
+    </div>
+  </section>
+
+    <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">xAI</span><a href="grok-data-bot.html">團隊機器人：把資料科學從瓶頸變成共享技能</a><span class="d">2026-11-02</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="codex-qodo-review.html">跨庫脈絡才是防線：Qodo 把審查搬進 Codex 工作階段</a><span class="d">2026-11-02</span></div>
+      <div class="g-relrow"><span class="s">claude.com（Anthropic 官方）</span><a href="claude-message-threads.html">Message threads：省延遲，不省 token</a><span class="d">2026-11-02</span></div>
+    </div>
+  </section>
+
+<p class="g-note">導讀為本站編輯內容（AI 摘解自原文，非官方文件）；引述數字出自原文，圖解與小標為編輯整理。分數為 OpenAI 自報、無第三方驗證；圖解 A 與「缺口」表為本站重繪。</p>
+
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-03 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 代理上線：資料夾即代理，執行環境交給平台 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain Managed Deep Agents 進 public beta（LangSmith Cloud）：一個專案資料夾＝一個代理，mda deploy 上線，durable thread、串流、沙箱、排程由平台負責；define_deep_agent 只回傳定義，編譯交給託管 runtime。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>代理上線：資料夾即代理，執行環境交給平台</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain Blog〈Managed Deep Agents: the fastest way to ship a production deep agent〉——產品公告兼快速上手：專案結構、CLI 指令，以及與開源版「誰編譯代理」的差異</p>
+    <p class="g-meta">
+      <span>LangChain Blog</span>·<span>2026-05-13 發布（2026-11-02 更新）</span>·<span>2026-11-03 收錄</span>·
+      <a href="https://www.langchain.com/blog/introducing-managed-deep-agents" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>public beta</b><span>LangSmith Cloud 上的託管執行環境；原文 2026-11-02 更新</span></div>
+    <div class="g-stat"><b>約 80%</b><span>Content Studio 搬上託管後程式碼縮減幅度（LangChain 自報）</span></div>
+    <div class="g-stat"><b>1 個檔案</b><span>專案唯一必需檔 agent.py，其餘能力都是可加選的資料夾</span></div>
+    <div class="g-stat"><b>2 個函式</b><span>create_deep_agent 回傳已編譯代理，define_deep_agent 只回傳定義</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">把代理寫成一個資料夾：你只交 instructions 與 tools，LangSmith 替你跑 harness、thread、沙箱與排程。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一個資料夾變成一個跑得動的代理</b> — 從本機專案到對外兩個門（本站重繪）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>專案資料夾</b><small>agent.py、instructions.md、skills/、schedules/</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>mda deploy</b><small>推上 LangSmith，順帶注入模型供應商金鑰</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>Agent Server</b><small>durable thread、串流執行</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>API 與 /mcp</b><small>自建應用建 thread 收串流；MCP 客戶端把代理當工具呼叫</small></div>
+      </div>
+      <p class="x-src">依原文「Every deployment runs on LangSmith Agent Server」與 API／/mcp 兩段重排；原文未給此圖。沙箱（sandbox/）與排程（schedules/）是專案裡的資料夾，由 mda deploy 一併開好，原文未把它們算進 Agent Server。</p>
+    </figure>
+
+    <p class="g-p">四格裡只有第一格是你寫的檔案；後面的部署、執行與對外服務，原本都是團隊自己接的線。</p>
+    <p class="g-p">支援型代理是最小可懂的樣本：在 Slack 頻道答問題、每晚掃一次過期工單，兩件事各寫成一個檔案。</p>
+    <p class="g-p">那份清單有夠長：重啟後還活著的 thread、能安全跑程式碼的地方、跨對話的記憶、做過什麼的紀錄，再加一台 cron。</p>
+    <p class="g-p">原文的動機很直白：代理不進正式環境，就不可能主動，也不可能多人共用。</p>
+    <p class="g-p">整篇是產品公告兼快速上手；原文只給最小可跑的骨架程式碼（agent.py、CLI、schedule 各一段），其餘都在 quickstart。</p>
+    <p class="g-p">更新註記也寫得很清楚：私有 beta 起於 2026-05-13，本文描述的是 2026-11-02 當天可用的做法。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">專案裡常見的幾個路徑，各自對應一個已開好的能力（節錄五項；memory.py、channels/、sandbox/、identity.py、evals/ 見原文）</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>檔案／資料夾</th><th>換到什麼能力</th><th>原文說法</th></tr></thead>
+        <tbody>
+          <tr><td data-l="檔案"><b>agent.py</b></td><td data-l="能力">用 define_deep_agent 定名稱、模型與工具</td><td data-l="限定">專案唯一必需檔</td></tr>
+          <tr><td data-l="檔案"><b>instructions.md</b></td><td data-l="能力">系統提示，放在 agent.py 隔壁</td><td data-l="限定">與 skills/ 一起同步到 Context Hub</td></tr>
+          <tr><td data-l="檔案"><b>skills/</b></td><td data-l="能力">每個子資料夾一份 playbook，任務需要時才載入</td><td data-l="限定">由代理依任務自行取用</td></tr>
+          <tr><td data-l="檔案"><b>tools/、tools/mcp.py</b></td><td data-l="能力">普通 Python 函式；mcp.py 接遠端 MCP 伺服器的工具</td><td data-l="限定">要 import 進 agent.py 才生效</td></tr>
+          <tr><td data-l="檔案"><b>schedules/</b></td><td data-l="能力">define_schedule 寫 cron、timezone、prompt</td><td data-l="限定">例：0 8 * * 1-5／America/Los_Angeles</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">mda deploy 掃到什麼就設什麼，所以專案可以從單一個 agent.py 長起，再逐項加資料夾。</p>
+    <p class="g-p">研究助理的定義只有三欄：名稱、model 指到 openai:gpt-5.5、tools 放 web_search。</p>
+    <p class="g-p">（編輯推論：playbook 何時被載入由代理自己判斷，寫得太泛用就可能在不對的時機被拉進來。）</p>
+    <p class="g-p">有些能力連檔案都不用：內建網頁搜尋由 Parallel 提供，不必另開帳號或 API 金鑰。</p>
+    <p class="g-p">瀏覽器遇到要登入的站台會把控制權交回你；想在指定工具呼叫前停下來等人核准，就在定義裡設 interrupt_on。</p>
+    <p class="g-p">三個 mda 指令走完上線（前置還有 uv sync）：mda init 建骨架、mda dev 起本機伺服器、mda deploy 送上雲。</p>
+    <p class="g-p">mda dev 那台本機 Agent Server 開在 LangSmith Studio：可以直接對話、看 trace，滿意了再按 deploy。</p>
+    <p class="g-p">不想手打指令，原文另備一個 managed-deep-agents skill，讓寫程式的代理照同樣步驟做設定。</p>
+    <p class="g-p">之後的教學在同一個專案上追加自訂搜尋工具、durable memory 與每日排程。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">兩個函式同名同姓，差在誰編譯代理</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>同一套 harness，兩種責任邊界</b> — 左為開源 SDK、右為託管（本站整理）</figcaption>
+      <div class="x-cmp">
+        <div>
+          <b>create_deep_agent · 開源 SDK</b>
+          <p>回傳<b>已編譯</b>的代理，你自己跑；backend、store、checkpointer、server 都在你手上。</p>
+        </div>
+        <div class="after">
+          <b>define_deep_agent · 託管</b>
+          <p>參數相同但少了 runtime 管的那些，回傳<b>定義</b>，由託管 runtime 替你編譯。</p>
+        </div>
+      </div>
+      <p class="x-src">對照出自原文「the difference is who compiles the agent」；兩欄能力清單皆為原文列舉，非本站推論。併排不代表優劣排序。</p>
+    </figure>
+    <p class="g-p">harness 本身沒變：同一個 agent loop、同一套檔案系統工具、subagents 與 skills。</p>
+    <p class="g-p">換掉的是責任邊界。你交出編譯權，換回不必維護 store 與 checkpointer。</p>
+    <p class="g-p">少了哪些參數，原文只用一句「same parameters, minus the ones the runtime manages」帶過，沒有列表。</p>
+    <p class="g-p">原文把題目定成上線速度，因此整篇不談 harness 內部怎麼設計，只談誰負責跑。</p>
+    <p class="g-p">已經用 create_deep_agent 寫好的專案，原文另有 Move from Deep Agents 的轉換指引。</p>
+    <p class="g-p">選擇標準只有一條：主機掌控權留在開源 SDK，維運量交給託管。</p>
+    <p class="g-p">原文沒有比較延遲、成本或成功率；這一節只談責任歸屬，談不上誰比較強。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">Context Hub：指令與記憶共用一份，維運因此變成改字</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>一次部署之後的三條回路</b> — 同步、記憶、觀測共用同一個 Hub（本站重排）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">專案 → Context Hub</span><span class="tr"><i>deploy 時同步 instructions.md 與 skills/</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">Context Hub → 代理</span><span class="tr"><i>線上改副本，不必重新部署</i></span></span></li>
+        <li class="side"><span class="st">02b</span><span class="body"><span class="hop">分支：Hub 版本較新</span><span class="tr"><i>CLI 問你保留哪一版</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">代理 → Context Hub</span><span class="tr"><i>durable memory 邊做邊寫回</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">代理 → LangSmith</span><span class="tr"><i>每次工具呼叫與中間步驟都留 trace</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">trace → LangSmith Engine</span><span class="tr"><i>找反覆問題並定位原因</i></span></span></li>
+        <li><span class="st">06</span><span class="body"><span class="hop">Engine → Context Hub</span><span class="tr"><i>接上 Hub repo 後可提修改建議</i></span></span></li>
+      </ul>
+      <p class="x-src">依原文 Context Hub、durable memory 與 LangSmith Engine 三段重排；02b 是條件分支不是步驟，原文未給此順序。回路次序為本站整理。</p>
+    </figure>
+    <p class="g-p">指令與記憶放在同一處，好處是改字變成資料變更：直接改 Hub，不必等下一次部署。</p>
+    <p class="g-p">記憶也住這裡。學會你們的升級通報路徑後，代理在之後每一次對話都留著它。</p>
+    <p class="g-p">若上次部署後有人改過 Hub 的副本，CLI 會先問你保留哪一版，不會默默覆蓋。</p>
+    <p class="g-p">原文以自家三個代理當樣本：GTM Agent、Open SWE 與 Content Studio 都跑在託管版上。</p>
+    <p class="g-p">（編輯觀點：原文把 Engine「提修改建議」寫成現成能力，卻沒給命中率或採用率；這仍是待人工複核的建議，不是自動修好。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>平台收走的是維運，不是智力。</b>代理好壞仍看你寫的 instructions 與 tools。</p>
+      <p><b>換掉的是編譯權，不是 harness。</b>要主機掌控權就留在開源 SDK，別期待能力變多。</p>
+      <p><b>八成的縮減是自家產品自報。</b>拿它當搬遷的訊號，不要當成自己專案的預期。</p>
+    </div>
+  </section>
+
+    <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">xAI</span><a href="grok-data-bot.html">團隊機器人：把資料科學從瓶頸變成共享技能</a><span class="d">2026-11-02</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="codex-qodo-review.html">跨庫脈絡才是防線：Qodo 把審查搬進 Codex 工作階段</a><span class="d">2026-11-02</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="lifeval-benchmark.html">LifeVal：出題靠時間使用調查，不靠實驗室</a><span class="d">2026-11-02</span></div>
+    </div>
+  </section>
+
+<p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數字出自原文，圖解與小標為編輯整理。原文雖有專案對照與 Context Hub 迴圈插圖，本站未使用外部圖檔，圖解 A、B、C 皆為本站重繪／重排。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-03 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
