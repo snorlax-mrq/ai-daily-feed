@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 人類複核：把專家的理由寫成可重跑的評測 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain〈Why human insight is a strategic advantage for building better agents〉導讀：HITL 三原則、run 與 thread 兩種複核單位、標籤的三種用途，以及 Fetch Rewards 用商品卡容量錯配抓錯的案例。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>人類複核：把專家的理由寫成可重跑的評測</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain〈Why human insight is a strategic advantage for building better agents〉— 產品觀點文，說明 human-in-the-loop 的三條原則，並發布 LangSmith 標註佇列的 thread 檢視</p>
+    <p class="g-meta">
+      <span>LangChain</span>·<span>2026-11-03 發布</span>·<span>2026-11-03 收錄</span>·
+      <a href="https://www.langchain.com/blog/human-insight-strategic-advantage-agents" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>3 條原則</b><span>專家定義「好」、情境要完整、判斷要變成資料</span></div>
+    <div class="g-stat"><b>2 種複核單位</b><span>run（單一步驟／span）與 thread（整段多輪對話）</span></div>
+    <div class="g-stat"><b>3 種標籤用途</b><span>對齊 LLM judge、更新線上 evaluator、建 golden dataset</span></div>
+    <div class="g-stat"><b>20 oz 對 2 L</b><span>Fetch Rewards 靠人工抓到商品卡容量錯配（客戶案例）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">代理愈跑愈長，錯因可能藏在前面幾輪。把專家的「為什麼錯」寫成評分與理由，它就成了下一輪的判準，而非用完即散。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>從一個 flag 到可重跑的判準</b> — 原文四步＋前置的標記／進佇列（本站重繪）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>標記</b><small>工程師或線上 evaluator 覺得不對</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>進佇列</b><small>自動化挑要審什麼；項目是 run 或 thread</small></div>
+        <span class="ar">→</span>
+        <div class="fn hot"><b>專家複核</b><small>對照 rubric 評分，附上理由</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>標籤落地</b><small>ground truth：哪個維度壞、好的長怎樣</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>下一輪評測</b><small>判準來自專家複核，不再逐案問</small></div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>迴圈</b>：標註是素材，團隊可重跑同一套判準，不必每次再請專家。</span></div>
+      <p class="x-src">本站重繪，非原文圖；原文以四步條列與一句箭頭式敘述交代此循環，未給排序圖。三種標籤用途並列於下表。</p>
+    </figure>
+
+    <p class="g-p">trace 記錄「一次嘗試」的全部：使用者訊息、模型回覆、工具呼叫與中間步驟。團隊用它除錯、評分、決定修什麼。工程師或線上 evaluator 覺得不對就 flag。</p>
+    <p class="g-p">原文的關鍵一句：<em>flag 是訊號，不是解釋</em>，它通常不足以指出該改哪裡。分工於是很清楚——自動化決定審什麼，人提供建構者能動手的判斷。</p>
+    <p class="g-p">原文把這層判斷說成差異化的來源：它高度綁定公司、角色與個人專長；引用 Snoop Dogg 在 CSU Long Beach 畢業演講那句「沒有人能像你一樣做你」。自動評測補不上這一塊。</p>
+    <p class="g-p">有價值的不是分數，是理由。專家能說出對錯的原因，以及高品質代理該怎麼做。佇列裡的一則註解還會回頭指出更大的毛病：某個 eval 在評錯行為，或 rubric 有缺口，該修的是評測器本身。</p>
+
+    <div class="x-scroll" style="margin-top:16px">
+      <table class="x-tbl">
+        <thead><tr><th>標籤用途</th><th>原文做法</th><th>什麼算奏效（編輯推論）</th></tr></thead>
+        <tbody>
+          <tr><td data-l="用途"><b>對齊 LLM judge</b></td><td data-l="原文做法">同一批 trace 上比 judge 與人的分數，不一致就改 judge prompt 或 rubric</td><td data-l="奏效">人機分歧的案例變少</td></tr>
+          <tr><td data-l="用途"><b>更新線上 evaluator</b></td><td data-l="原文做法">人一直抓到同一個漏，就改該負責的 evaluator，再對新流量重跑</td><td data-l="奏效">同類漏改由機器先抓到</td></tr>
+          <tr><td data-l="用途"><b>建 golden dataset</b></td><td data-l="原文做法">把品質好的標註升級成資料集，agent 或 prompt 改動時跑離線實驗</td><td data-l="奏效">上線前就知道會不會退化</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-src">三種用途為原文並列項，無先後順序；右欄是編輯依「用途」推出的驗收訊號，原文未給。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">多輪代理的單位是整段對話，不是一格 step</h2>
+    <p class="g-p">只看多輪對話裡的一步，會漏掉解釋最終答案的前文、工具呼叫與決定。原文的比喻：改一句話，不等於改那句話所在的文章。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/human-review-loop/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/human-review-loop/01.webp" alt="LangSmith 標註佇列介面：左欄列出 Needs Review 佇列與逐筆項目（多數是 Run，另有幾筆 Thread），中欄顯示一整段對話的 thread 檢視，右欄 Instructions 寫著 Use your best judgment，Feedback 面板為 correctness_categorical，選項是 Incorrect Answer 與 Correct Answer" width="1200" height="735" loading="lazy" decoding="async"></a>
+      <figcaption>佇列項目可以是單一 run，也可以是整段 thread；右欄的判準與理由就落在同一個畫面上，複核者不必先拼出對話。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/human-insight-strategic-advantage-agents" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">回覆單獨看沒錯，卻可能違反使用者前幾輪說過的事。錯發生在幾輪之前，直到最後一則才顯形；代理跑得愈長、步驟愈多，這段消失的歷史愈難靠人工拼回。</p>
+    <p class="g-p">原文的結論：多輪代理的複核單位就是對話。thread 把整個 session 變成一個審查項目，複核者是讀互動，不是先拼互動。</p>
+    <p class="g-p">trajectory 則是對話的另一種視圖：按發生順序列出訊息與工具呼叫，去掉巢狀 run tree 等重複資訊。佇列項目仍是 thread，因為被判斷的是對話本身——領域專家不必先學會讀 trace 樹。</p>
+    <p class="g-p">（編輯觀點：單位與評分粒度是兩件事。原文的 Fetch Rewards 案例裡，複核者其實逐輪評分，再回查 trace metadata 補脈絡；thread 給的是檢視容器，不是唯一計分單位。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">客戶案例：句子流暢，不代表對得上資料</h2>
+    <p class="g-p">Fetch Rewards 的複核者評的是 AI Rewards Assistant 的單輪輸入與輸出，但逐字稿只是起點。答案再流利，沒對上真實資料就是錯的。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/human-review-loop/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/human-review-loop/02.webp" alt="原圖標題為 How Fetch Rewards uses human review to tune its automated judges，五步橫向流程：Step 1 使用者問有哪些可口可樂優惠；Step 2 複核者查工具呼叫，確認用了正確工具且答案對得上結果；Step 3 複核者比對商品卡與圖片，發現瓶身尺寸可疑但優惠確實可領；Step 4 複核者寫下查了什麼、哪裡不明、為何給分；Step 5 工程師調整 judge，讓它與複核者的判斷一致" width="1200" height="600" loading="lazy" decoding="async"></a>
+      <figcaption>五步裡只有第一步是使用者的動作，其餘四步全是複核與修正：查工具、比對圖與可用性、寫理由、調 judge。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/human-insight-strategic-advantage-agents" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">查法是把答案回推到工具：使用者問可樂優惠時，先確認助理真的搜了優惠、回覆對得上搜回的結果。再看圖與可用性——20 oz 的卡片不能配 2 公升瓶身；推薦也要查該使用者真的領得到。</p>
+    <p class="g-p">遇到模糊案例（圖幾乎對、優惠合法卻沒用、答對但沒中意圖），複核者要寫清查了什麼、哪裡不確定、為何給這個分。工程師再拿這些理由，找出自動 judge 的邏輯偏差並調整。</p>
+    <p class="g-p">（編輯觀點：全文沒有量化成效——沒有錯誤率、沒有標註工時、沒有複核吞吐，唯一具體數字是那個可樂瓶尺寸。三條原則可照用，投不投資得自己算。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>flag 只是訊號，理由才是資料。</b>沒寫下哪個維度壞、好的長怎樣，下一輪還是得重問專家。</p>
+      <p><b>複核單位選對話，計分單位看情況。</b>誤判可能發生在好幾輪之前，只看一格 step 會把它當成隨機。</p>
+      <p><b>這篇是產品文，效益得自己算。</b>把專家工時對上被換掉的誤判，才知道划算不划算。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="agents-cli-eval.html">代理品質爬山術：平均 2.75 的兩種病，只有逐案分得出來</a><span class="d">2026-10-29</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="retell-voice-agents.html">Retell 語音代理：1 億通／月，選模型靠一份可重跑的評測</a><span class="d">2026-10-28</span></div>
+      <div class="g-relrow"><span class="s">Claude Code 團隊</span><a href="claude-code-review.html">六層過濾＋一道回滾：Claude Code 團隊怎麼審自己寫的碼</a><span class="d">2026-10-28</span></div>
+    </div>
+  </section>
+
+<p class="g-note">導讀為本站編輯內容（AI 摘解自官方原文與館藏重點，非官方文件）；引述數字與案例出自 LangChain 原文，圖解與小標為編輯整理，圖解 A 與表格右欄為本站重繪／推論。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-03 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

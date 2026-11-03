@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 化學代理的分工：模型負責想，RDKit 負責算 · AI 每日動態檔案</title>
+<meta name="description" content="Google DeepMind 導讀：Antigravity 的 Cheminformatics Skills 讓代理在一小時內從數千顆化合物走到大環設計與合成路線；模型編排推理、RDKit 執行計算。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>化學代理的分工：模型負責想，RDKit 負責算</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Google DeepMind〈Agentic cheminformatics with Google Antigravity〉——技術 walkthrough，含介面截圖與一則完整藥化案例</p>
+    <p class="g-meta">
+      <span>Google DeepMind</span>·<span>2026-11-03 發布</span>·<span>2026-11-03 收錄</span>·
+      <a href="https://deepmind.google/blog/agentic-cheminformatics-with-google-antigravity/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>約 1 小時</b><span>文獻檢索、MMPA 到大環設計與合成路線（原文敘述）</span></div>
+    <div class="g-stat"><b>568 顆</b><span>互動檢視器裡的策展化合物（圖示 N=568）</span></div>
+    <div class="g-stat"><b>5 → 0</b><span>crizotinib 主要可旋轉鍵 → lorlatinib 有效可旋轉鍵</span></div>
+    <div class="g-stat"><b>10,000 名</b><span>原文公告的免費最高用量名額，為期 6 個月</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">Antigravity 加上 Cheminformatics Skills，把文獻檢索、資料整理、建模與分子設計收進同一張工作台：模型負責編排與推理，RDKit 負責算。</p>
+
+    <p class="g-p">化學的公開紀錄橫跨數百萬個結構，同一顆分子卻可能以三種樣子出現：論文裡的 IUPAC 名稱、專利裡的 Markush 結構、型錄裡的 SDF 檔。</p>
+    <p class="g-p">系統要能統一這些來源，還要吞下各式各樣的錯誤。容錯空間是零——改一個原子或一根鍵，描述的就是另一顆化合物。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>三層分工</b> — 誰包住誰（由外而內；包覆關係為編輯歸納）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>1 · 工作台</b><small>Antigravity 介面：對話、互動檢視器、匯出</small><span class="pi">人機共用</span></div>
+          <div class="ring-inner">科學家與代理在同一份化合物資料上對話、逐輪改指令</div>
+        </div>
+        <div class="ring">
+          <div class="ring-lb"><b>2 · 模型</b><small>語言模型</small><span class="pi">編排</span></div>
+          <div class="ring-inner">流程編排、資料庫導航、科學推理——決定下一步與理由</div>
+        </div>
+        <div class="ring ring--core">
+          <div class="ring-lb"><b>3 · 確定性工具</b><small>RDKit＋ChEMBL／PubChem 連接器</small><span class="pi">算數</span></div>
+          <div class="ring-inner">分子計算、抽取、SMARTS 驗證、幾何稽核——數字不由模型生成</div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑</b>：統計與視覺輸出回到工作台，科學家評估後再下指令；原文稱此為無縫的協作。</span></div>
+      <p class="x-src">本站重繪，非原文圖；原文以文字敘述分工與回饋，未給這張分層圖。</p>
+    </figure>
+
+    <p class="g-p">分工的理由很直白：分子計算不能編。編排、導航與推理交給模型，實際計算交給 RDKit 這類確定性工具——這套開源工具已由全球社群開發約二十年。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">剛性化：把熵的代價先付掉</h2>
+    <p class="g-p">藥物分子常靠可旋轉鍵串起多個子結構。鍵能轉，分子在溶液裡就有多種三維構形，變得「軟」。</p>
+    <p class="g-p">要結合標靶，它得鎖進單一活性構形。失去自由度的熵懲罰削弱結合力，效力跟著下降。</p>
+    <p class="g-p">藥化的老招是加鍵：兩段子結構只靠一根可旋轉鍵相連時構形很多，再補一根鍵綁住，三維活動範圍就大幅收斂。</p>
+    <p class="g-p">位置放對，分子就鎖進要的形狀。原文稱這招是「預先付掉熵的成本」，可大幅提升效力。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>項目</th><th>crizotinib</th><th>lorlatinib</th></tr></thead>
+        <tbody>
+          <tr><td data-l="項目"><b>世代與類型</b></td><td data-l="crizotinib">第一代小分子 TKI</td><td data-l="lorlatinib">第三代小分子 TKI</td></tr>
+          <tr><td data-l="項目"><b>可旋轉鍵</b></td><td data-l="crizotinib">5 條主要可旋轉鍵</td><td data-l="lorlatinib">末端成環，有效數降為 0</td></tr>
+          <tr><td data-l="項目"><b>原文所述差異</b></td><td data-l="crizotinib">對照基準</td><td data-l="lorlatinib">效力更高（原文並列其他效應）</td></tr>
+          <tr><td data-l="項目"><b>結構關係</b></td><td data-l="crizotinib">非大環（未成環）</td><td data-l="lorlatinib">與 crizotinib 相似，末端成環</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">這組對照是原文的知名案例，之後所有分析都繞著「可旋轉鍵」這條主線打轉。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">一小時裡，球怎麼傳</h2>
+    <p class="g-p">原文給的對照是：同一套流程過去要數天，還得具備相當的計算專業。</p>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>一輪流程的交接</b> — 誰把球傳給誰（本站依原文順序重排）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">文獻 → 代理</span><span class="tr"><i>掃學術與專利文獻，抽出分子並綁回數據</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">代理 → 報告</span><span class="tr"><i>數分鐘抓回數千顆，濾掉緩衝液與溶劑、記下來源</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">報告 → 科學家</span><span class="tr"><i>互動檢視器：逐顆看 metadata、自己拉散佈圖</i></span></span></li>
+        <li class="side"><span class="st">03b</span><span class="body"><span class="hop">旁支：代理自提 MMPA</span><span class="tr"><i>比較只差一個小改動的分子對（原文：代理獨立建議）</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">資料 → 模型</span><span class="tr"><i>多組特徵集與架構，留出集驗證，時間切分優先</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">模型 → 設計</span><span class="tr"><i>新大環＋藥化理由＋合成路線＋效力預測</i></span></span></li>
+        <li><span class="st">06</span><span class="body"><span class="hop">設計 → 人</span><span class="tr"><i>匯出多格式；合成與實驗驗證仍在實驗台</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重繪。原文分章敘述而非列步驟，本圖的次序取自其行文（檢索→檢視→MMPA→建模→設計）；MMPA 為旁支，原文說代理自己先提議。</p>
+    </figure>
+    <p class="g-p">報告的初判也要緊：大環多被預測可穿透血腦屏障——標靶的肺癌常見腦轉移，這性質因此關鍵。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/deepmind-google-blog-agentic-cheminforma/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/deepmind-google-blog-agentic-cheminforma/01.webp" alt="Antigravity 介面截圖：左側對話框列出核對與收割清單與三個後續分析選項，右側互動檢視器顯示 568 顆策展化合物的四張圖表——化學空間散佈圖、Pfizer CNS MPO 分數、可旋轉鍵數、效力分佈" width="1200" height="694" loading="lazy" decoding="async"></a>
+      <figcaption>右側四張圖就是「代理把資料整理成可看」的成品：CNS 分數、可旋轉鍵數、效力分佈都能當場檢查。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／Google DeepMind，原文</span></figcaption>
+    </figure>
+
+    <p class="g-p">以細胞效力對可旋轉鍵作圖、按大環與否上色，效力最高的一群就是最剛性的——這是原文對檢視器的說法。</p>
+    <p class="g-p">接著的配對分子對分析只比「差一個小改動」的分子對，把環化的效果單獨切出。結論如預期：環化降低可旋轉鍵、整體提升效力。</p>
+    <p class="g-p">建模時它試了多組特徵集與架構，在留出集上驗證。有時間資訊就按時間切分，用舊化合物預測新的；沒有就退回骨架切分。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">設計，與它做不到的事</h2>
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/deepmind-google-blog-agentic-cheminforma/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/deepmind-google-blog-agentic-cheminforma/02.webp" alt="Antigravity 截圖：左側為要求設計新大環的對話，右側顯示分子內環化反應，LOR-PRE-3 酚氧中間體在 Cs2CO3、MeCN、60°C 下生成 12 員環醚 LOR-DES-3，並附 SMARTS 驗證與幾何稽核" width="1200" height="675" loading="lazy" decoding="async"></a>
+      <figcaption>不只是一句「建議環化」：SMARTS 驗證、反應條件、幾何稽核與曲面箭頭機制圖都在同一則回覆裡。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／Google DeepMind，原文</span></figcaption>
+    </figure>
+    <p class="g-p">最後一輪，代理依前面學到的規則設計新大環：附藥化理由、建議合成路線，並用自己剛訓練的模型預測每個設計的效力。</p>
+    <p class="g-p">圖中是分子內 Williamson 巨環醚化，附曲面箭頭推電子機制；代理也查了公開資料庫裡相似的反應。</p>
+    <p class="g-p">設計可匯出成多種格式載入業界標準化學軟體，也能交給 AlphaFold 或分子動力學做後續分析。</p>
+    <p class="g-p">原文同時劃界：資料稀疏、跨實驗室測定噪聲、動態範圍窄，都會限制模型的預測精度。</p>
+    <p class="g-p">計算出的設計是可驗證的假設，不是成藥。每一個都得合成、再做實驗驗證——這句話是原文自己寫的。</p>
+    <p class="g-p">公告面：Skills 即日在 Antigravity 上線，安裝 Science 外掛即可使用；企業用戶以 Google Cloud 憑證登入。</p>
+    <p class="g-p">另釋出 10,000 名科學家、為期 6 個月最高用量層級免費（原文公告，需符合資格、容量與遴選，滾動開通）。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>分層是重點，不是模型大小。</b>計算交給確定性工具，才擋得住原子級的抄誤。</p>
+      <p><b>一小時換來的是假設量。</b>可測清單變長，離成藥還差整段實驗。</p>
+      <p><b>工具鏈贏在資料層。</b>能統一 IUPAC、Markush、SDF，才輪得到自動化。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">xAI</span><a href="grok-data-bot.html">團隊機器人：把資料科學從瓶頸變成共享技能</a><span class="d">2026-11-02</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="lifeval-benchmark.html">LifeVal：出題靠時間使用調查，不靠實驗室</a><span class="d">2026-11-02</span></div>
+      <div class="g-relrow"><span class="s">Google</span><a href="distributed-biological-reasoning.html">數千代理分頭讀腦：把生物發現拆成可平行的碎片</a><span class="d">2026-10-31</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解 A、B 為本站重繪（原文未給該分層圖與步驟排序）。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-03 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

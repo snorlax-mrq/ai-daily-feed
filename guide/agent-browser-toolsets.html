@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 瀏覽器工具設計：少回合、少往返，成本約差 13 倍 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain〈How We Optimized Browser Use for Deep Agents〉導讀：七套瀏覽器工具同題實測，Stagehand 以 90%、US$1.98 勝出；code mode、snapshot、批次往返與頁面安靜即返回，把 HardBench 中位任務時間從 182 秒壓到 124 秒。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>瀏覽器工具設計：少回合、少往返，成本約差 13 倍</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain Blog〈How We Optimized Browser Use for Deep Agents〉——工程實測文章，七套工具同題比較，逐項改工具並以 evals 驗證</p>
+    <p class="g-meta">
+      <span>LangChain Blog</span>·<span>2026-11-03 發布</span>·<span>2026-11-03 收錄</span>·
+      <a href="https://www.langchain.com/blog/how-we-optimized-browser-use-for-deep-agents" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>90%</b><span>WebVoyager 100 題通過率，七套工具最高</span></div>
+    <div class="g-stat"><b>US$1.98</b><span>同批 100 題總成本；Playwright MCP 為 $26.71</span></div>
+    <div class="g-stat"><b>26 → 10 步</b><span>每題平均模型步數，換工具後</span></div>
+    <div class="g-stat"><b>182 → 124 秒</b><span>HardBench 中位代理耗時；等待、結構化答案、模型逾時三項合計</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">七套瀏覽器工具跑同一批網頁題目，LangChain 選了 Browserbase 的 Stagehand，再照 trace 逐項改工具介面；結論是同一顆模型下，最大收益來自工具這一側：回傳多少內容、要走幾個回合。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/agent-browser-toolsets/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/agent-browser-toolsets/01.webp" alt="原文表格：七套瀏覽器工具在 WebVoyager 100 題、Claude Sonnet 5.5 下的呼叫方式、通過率、總成本、中位時間、平均步數與 token 總量對照，Stagehand tools 以 90%、1.98 美元、17.4 秒、10 步拿下第一" width="1200" height="600" loading="lazy" decoding="async"></a>
+      <figcaption>同題、同模型，換的只有工具組：Stagehand 90%／$1.98／4.0M token，Playwright MCP 78%／$26.71／12.7M token。原文註明成本與 token 皆為 100 題合計。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／LangChain Blog，<a href="https://www.langchain.com/blog/how-we-optimized-browser-use-for-deep-agents" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">選型：模型與題目固定，只換工具</h2>
+    <p class="g-p">需求也在長：原文引 DataDome 觀測，代理瀏覽請求在 9 月（原文未寫年份）成長 4.7 倍（比較基準原文未說明，屬開場背景、非本次實測）。</p>
+    <p class="g-p">原文先把兩個難題點名：任務長，一題要幾十個模型回合；頁面雜，一次導航回傳的內容大多與任務無關。兩者都要求工具把 context 管好。</p>
+    <p class="g-p">三個測試集都跑真實網站：WebVoyager 100 題用 Claude Sonnet 5.5、由 Jev 當評審；HardBench 102 題來自 Browserbase、用它自己的驗證器、多用 Claude Opus 5.5；微軟 WebTailBench 取了 150 題。</p>
+    <p class="g-p">每個 harness 都要求回傳 JSON 答案：格式失誤——例如該給表格卻回一行字——不算瀏覽失敗。這個選項後來也 upstream 回 Browserbase 的 evals。</p>
+    <p class="g-p">結果是通過率擠在 78% 至 90%，成本最多差約 40 倍、耗時差三倍多。Stagehand 在四項指標都最好；Playwright MCP 的通過率低 12 個百分點，成本約 13 倍、耗時三倍。</p>
+    <p class="g-p">硬題守住同一趨勢：HardBench 38 題核心題，Stagehand 的 run 過 30 題，Browserbase 的 browse CLI 只過 21 題，原文稱其每題成本是前三倍。</p>
+    <p class="g-p">（編輯觀點：七套裡四套出自 Browserbase 自家，選型結論對它有利；原文附完整結果連結，可自行複核。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">code mode：一段程式取代一串呼叫</h2>
+    <p class="g-p">run 直接吃程式碼。代理把開頁、填欄、點擊、驗結果寫成一段 snippet，中間不必每次停下來等模型決策；中途變數留在程式裡，只有最後回傳的東西進 context。</p>
+    <p class="g-p">步數與回傳量一起降：一題平均 10 步（Playwright MCP 約 26 步）；一次導航回中位 117 字元，Browserbase 代管的 navigate 工具約 17,000 字元。</p>
+    <p class="g-p">選型之前就先看到效果：Browserbase 的 MCP 工具改由程式碼在 interpreter 裡呼叫，成本從 $17.87 降到 $4.52。</p>
+    <p class="g-p">它同時吃 Playwright 風格的程式碼。模型訓練看過大量 Playwright，寫得最順；換成只吃 Stagehand 原生 API 的版本，通過率少 5.3 個百分點、每過關成本多 19%，即使工具說明寫得準。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">往返與等待：從介面擠出秒數</h2>
+    <p class="g-p">一次 Playwright 的 click 其實是五次 CDP 呼叫：把元素捲進視窗、讀位置，再 mouse move、press、release。每次等下一個回應才送下一個，一次點擊就是五次往返。</p>
+    <p class="g-p">瀏覽器離代理越遠越貴，從筆電到沙箱到雲端都算在帳上。Stagehand v4 改成當擴充套件跑在瀏覽器內，低階呼叫在頁面旁發生，run 再把整批動作一次送出。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/agent-browser-toolsets/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/agent-browser-toolsets/02.webp" alt="原文時序對照圖：上半是 Playwright，代理程式與瀏覽器之間三下點擊約 15 次往返；下半是 Stagehand，一個 run 呼叫送出三下點擊、在瀏覽器內執行，只回傳 1 次往返" width="1200" height="540" loading="lazy" decoding="async"></a>
+      <figcaption>三下點擊的往返數：Playwright 每個 CDP 指令各一次往返，約 15 次；Stagehand 把三下點擊包成一個 <em>run</em>，只 1 次。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／LangChain Blog，<a href="https://www.langchain.com/blog/how-we-optimized-browser-use-for-deep-agents" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">讀頁同樣是成本。snapshot 回傳修剪過的可及性樹，每個可互動元素帶 ID，代理直接送 <em>{"op":"click","id":"0-7"}</em>，不必讀原始 HTML 或自己寫 selector。</p>
+    <p class="g-p">截圖則相反：在 WebTailBench 每次呼叫中位 89 KB，還得由模型自己解讀。但修剪要在源頭——事後把 snapshot 壓到 8,000 字元，代理只是重抓一次頁，每過關成本沒有下降。</p>
+    <p class="g-p">最大一筆是等待。trace 裡代理愛寫 page.waitForTimeout(8000)，多數頁面早就好了。改成頁面安靜 500 毫秒即結束、且不超過代理指定的時間；一次測量中 8 秒的等待 0.6 秒就返回。</p>
+    <p class="g-p">HardBench 上與結構化答案、模型呼叫逾時合計，中位任務時間由 182 秒降到 124 秒，準確率在雜訊內；這個修補也已 upstream 回 Stagehand。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>數字</th><th>誰說的</th><th>限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="數字"><b>90% / $1.98</b></td><td data-l="誰說的">LangChain 自測</td><td data-l="限定語">WebVoyager 100 題、Claude Sonnet 5.5，成本為 100 題合計</td></tr>
+          <tr><td data-l="數字"><b>速度約 2 倍</b></td><td data-l="誰說的">Browserbase 自報</td><td data-l="限定語">v4 官方 benchmark 對比 Playwright，無第三方驗證</td></tr>
+          <tr><td data-l="數字"><b>token 效率高約 80%</b></td><td data-l="誰說的">Browserbase 自報</td><td data-l="限定語">v4 對比 Playwright，同樣無第三方驗證</td></tr>
+          <tr><td data-l="數字"><b>89 KB／次</b></td><td data-l="誰說的">LangChain 自測</td><td data-l="限定語">截圖，WebTailBench 每次呼叫的中位數</td></tr>
+          <tr><td data-l="數字"><b>182 → 124 秒</b></td><td data-l="誰說的">LangChain 自測</td><td data-l="限定語">HardBench 中位數，含等待、結構化答案、模型呼叫逾時三項合計，準確率在雜訊內</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">（本站整理：原文未給這張歸屬表；前三列與末列皆為 LangChain 自家實驗、無第三方驗證，後兩列的「2 倍」與「80%」另為 Browserbase 自報，兩者不混算。）</p>
+    <p class="g-p">原文的結論很聚焦：最大收益來自工具——送回模型的東西有多少、要花幾個回合。它也把方法論講白：先搞懂你的用例會產生多少 context，再用 trace 找哪裡浪費，最後用 eval 判斷改動有沒有幫上忙。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>工具介面比模型好換。</b>同題同模型，換工具就把成本拉開約 13 倍。</p>
+      <p><b>修剪要在源頭。</b>事後砍 context，代理只會重抓一次頁。</p>
+      <p><b>等待用訊號不用猜。</b>頁面安靜就前進，別睡滿八秒。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="browser-use-in-managed-deep-agents.html">給 agent 一個瀏覽器：登入交還給人，工具為省 token 而生</a><span class="d">2026-10-29</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="managed-deep-agents-v010-async.html">子代理搬進背景：主代理一邊對話，一邊等結果</a><span class="d">2026-10-29</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="context-rot.html">上下文腐化：五種機制把資訊搬出視窗，再按需取回</a><span class="d">2026-10-14</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理（兩張圖為原文圖，數字歸屬表為本站整理）。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-03 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

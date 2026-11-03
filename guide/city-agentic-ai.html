@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 城市 AI 的門檻：不在模型，在共用底座 · AI 每日動態檔案</title>
+<meta name="description" content="NVIDIA 城市案例彙整導讀：1MillionBot 西班牙 150+ 部署、ITMAX 2027 年支援 17,000+ 支攝影機、尖峰走廊最多省 26%、15 年樹冠模擬 10 分鐘算完——成效皆為自報。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>城市 AI 的門檻：不在模型，在共用底座</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：NVIDIA Blog〈Cities Worldwide Build and Scale AI Services With NVIDIA Physical and Agentic AI〉——跨國城市案例彙整（Smart City Expo 11/3–5 於巴塞隆納）</p>
+    <p class="g-meta">
+      <span>NVIDIA Blog</span>·<span>2026-11-03 發布</span>·<span>2026-11-03 收錄</span>·
+      <a href="https://blogs.nvidia.com/blog/cities-physical-agentic-ai-applications/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>150+</b><span>1MillionBot 在西班牙的部署數（NVIDIA 引述 1MillionBot 部署數）</span></div>
+    <div class="g-stat"><b>17,000+</b><span>ITMAX 2027 年要接的攝影機支數（目標值）</span></div>
+    <div class="g-stat"><b>26%</b><span>尖峰走廊旅行時間降幅上限（NVIDIA 自報）</span></div>
+    <div class="g-stat"><b>10 分鐘</b><span>算完 15 年樹冠模擬；設計迭代另由兩週縮到一小時</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">這是 NVIDIA 的城市案例彙整。共通結構是：<strong>共用算力底座在底層，既有攝影機與感測器是入口，數位孿生負責規劃</strong>。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>四層包覆</b> — 由外而內＝被包住：治理、應用、模型、算力</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>1 · 治理</b><small>敏感資料的處理與用途由地方政府主導，地方政府決定怎麼處理</small><span class="pi">外層</span></div>
+          <div class="ring">
+            <div class="ring-lb"><b>2 · 應用</b><small>服務代理、視覺代理、數位孿生三型並列</small><span class="pi">中層</span></div>
+            <div class="ring">
+              <div class="ring-lb"><b>3 · 模型與 blueprint</b><small>Nemotron、Cosmos、Metropolis VSS</small><span class="pi">內層</span></div>
+              <div class="ring-inner"><b>4 · 共用算力底座</b> — 從 RTX 工作站或小型 GPU 系統起跳，往上到 RTX PRO 伺服器與主權 AI 工廠</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="x-src">本站重繪；原文未附分層圖，層級與包覆關係由編輯依案例歸納。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三種代理，共用一套模型</h2>
+    <p class="g-p">七個案例中有六個可分三型，摩洛哥 Tanger Med 屬計畫中：面向市民的服務代理、看既有攝影機影像串流的視覺代理、給規劃與營運用的數位孿生。</p>
+    <p class="g-p">西班牙案的重點在模型混搭：巴塞隆納超級算力中心訓練的 ALIA 開源模型，與 Nemotron 這類商用模型併用，主權模型與商用模型不必二選一。</p>
+    <p class="g-p">三型用的模型與 blueprint 高度重疊——Nemotron、Cosmos、Metropolis VSS。這才是「共用底座」的實際含義：不是共用一台機器，而是共用同一套算力資源與 blueprint，擴充服務時不必各自再買一輪。</p>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>型態</th><th>案例</th><th>技術組合</th><th>成效與原文限定</th></tr></thead>
+        <tbody>
+          <tr><td class="grp" data-l="型態"><b>服務代理</b></td><td data-l="案例">西班牙：1MillionBot（Madrid Digital、加泰隆尼亞開放行政）</td><td data-l="技術組合">BSC 訓練的 ALIA 開源模型＋Nemotron 等模型</td><td data-l="成效與原文限定">辦市政程序、預約、都計通報；西班牙 150+ 部署</td></tr>
+          <tr><td class="grp" data-l="型態"><b>服務代理</b></td><td data-l="案例">灣區：LiveX</td><td data-l="技術組合">Cosmos＋Nemotron；Omniverse／Metropolis 函式庫，跑 RTX PRO</td><td data-l="成效與原文限定">機場、醫院、活動的對話接待；原文未給量化成效</td></tr>
+          <tr><td class="grp" data-l="型態"><b>視覺代理</b></td><td data-l="案例">波蘭 Wrocław：K2K</td><td data-l="技術組合">Cosmos＋Metropolis VSS blueprint</td><td data-l="成效與原文限定">既有攝影機影像串流轉可行動情報；同一套設施跨多項市政功能</td></tr>
+          <tr><td class="grp" data-l="型態"><b>視覺代理</b></td><td data-l="案例">馬來西亞：ITMAX（SamurAI V2）</td><td data-l="技術組合">RTX PRO 6000；接 Laplace Intelligence 的 TeraSim</td><td data-l="成效與原文限定">2027 年支援 17,000+ 支攝影機；尖峰走廊最多省 26%（NVIDIA 自報）</td></tr>
+          <tr><td class="grp" data-l="型態"><b>數位孿生</b></td><td data-l="案例">奈及利亞：Dangote 煉油廠／Honeywell</td><td data-l="技術組合">Nemotron 代理＋Omniverse 孿生；Dell PowerEdge＋RTX PRO</td><td data-l="成效與原文限定">找瓶頸、預測設備與製程問題；孿生仍屬「規劃中」</td></tr>
+          <tr><td class="grp" data-l="型態"><b>數位孿生</b></td><td data-l="案例">台灣：Linker Vision × MVRDV</td><td data-l="技術組合">Omniverse＋Nemotron 建 ESG 代理</td><td data-l="成效與原文限定">15 年樹冠 10 分鐘算完；迭代由兩週縮到一小時內（NVIDIA 自報）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">波蘭 K2K 的講法最直白：同一套基礎設施跨多個市政功能。馬來西亞 ITMAX 更進一步，把硬體與應用綁成長期託管服務賣給城市。</p>
+    <p class="g-p">另一個共通點：出面的多是系統整合商與軟體商。城市提供場域與資料，模型選型與整合由業者負責。</p>
+    <p class="g-p">進場門檻也不高：原文說視工作負載而定，一台 RTX 工作站或小型 GPU 系統可能就夠，不必先蓋機房。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">數位孿生有兩個用途，別混為一談</h2>
+    <p class="g-p">原文把孿生分成兩件事：規劃期用來加速方案比較，營運期當即時推演。兩者要的資料與驗證方式不同。</p>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>孿生的兩個用途</b> — 並列，無先後關係</figcaption>
+      <div class="x-grid">
+        <div class="c"><b>規劃期</b><small>比較多套方案，減少施工對社區的干擾（原文：加速規劃）</small></div>
+        <div class="c"><b>營運期</b><small>當即時營運模擬，讓跨部門決策更快（原文：即時推演）</small></div>
+      </div>
+      <p class="x-src">本站重繪；原文分述「加速規劃」與「即時營運模擬」，未給導入順序；「兩者資料需求不同」為編輯補充。</p>
+    </figure>
+    <p class="g-p">台灣案例最能說明規劃期價值：Linker Vision 與荷蘭建築事務所 MVRDV 用 Omniverse 與 Nemotron 建 ESG 代理，評估各種都計情境的環境影響。</p>
+    <p class="g-p">原本一次迭代要兩週，現在一小時內完成；15 年的樹冠成果十分鐘算完。這是迭代速度的比較，不是規劃品質的證明。</p>
+    <p class="g-p">營運期案例在奈及利亞：Honeywell 的 Forge Plant Cognition 用 Nemotron 代理讀 Dangote 煉油廠的操作資料，Omniverse 孿生則還在規劃中。</p>
+    <p class="g-p">摩洛哥 Tanger Med 港的 Cires 擴建主權 AI 工廠，應用清單是勞安、壅塞分析、貨櫃調度——同樣掛在「計畫中」。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">成效數字全部自報，且多看一步</h2>
+    <p class="g-p">前文的降幅、算圖時間與攝影機數量，全出自 NVIDIA 與夥伴的敘述，無第三方驗證，部分還是 2027 年的目標值。</p>
+    <p class="g-p">讀這類數字要抓三個限定：上限（up to）、目標年份、是否已上線。原文把 ITMAX 的 TeraSim 號誌測試與 26% 寫在同一句，未說明是模擬結果或實測路網。</p>
+    <p class="g-p">「150+ 部署」也一樣：那是NVIDIA 引述的部署數字，涵蓋幾座城市、多少市民在用，原文都沒交代。</p>
+    <p class="g-p">原文對共用底座的描述更具體：同一套資源讓市政部門、鄰近市鎮與本地開發者站在同一個基礎上，服務往外長時不必各自再買一輪。</p>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>兩種擴充路線</b> — 原文兩處對照，非同一案例前後比較</figcaption>
+      <div class="x-cmp">
+        <div><b>各單位自建</b><p>每個部門自行取得並管理算力，服務要擴充就得各自再買一輪。</p></div>
+        <div class="after"><b>共用底座／託管服務</b><p>跨部門、跨鄰近市鎮共用；在既有設施上加容量即可。（「不必先做大額基建投資」出自原文通則段，非專指此路線。）</p></div>
+      </div>
+      <p class="x-src">本站重繪；對照整理自原文「不必各自取得與管理資源」與「在既有基礎設施上加容量」兩段，原文未做成本比較。</p>
+    </figure>
+    <p class="g-p">這條路線也延伸到生態：巴塞隆納超級算力中心的 AI Factory 加速器，給新創主權算力、技術支援與訓練，範圍含農業、醫學影像、知識檢索與語音。</p>
+    <p class="g-p">（編輯觀點：這是廠商案例彙整，選擇性很強。它證明「可以這樣做」，沒證明「這樣做比較便宜」。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>瓶頸在資料到動作那一段。</b>攝影機早就有，缺的是派工與應變的代理。</p>
+      <p><b>共用底座決定擴充成本。</b>一套設施餵多個市政功能，才不必每案重買。</p>
+      <p><b>成效一律先當自報讀。</b>遇到百分比與「變快幾倍」，先問上限、年份。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">NVIDIA Blog</span><a href="nvidia-omniverse-agent-sims.html">用說的就能組模擬：三個 Omniverse 代理案例</a><span class="d">2026-10-30</span></div>
+      <div class="g-relrow"><span class="s">NVIDIA Blog</span><a href="seti-agentic-telescope.html">代理住進望遠鏡：一句話轉天線，邊收邊算 2.4 Tb/s</a><span class="d">2026-10-31</span></div>
+      <div class="g-relrow"><span class="s">xAI</span><a href="grok-data-bot.html">團隊機器人：把資料科學從瓶頸變成共享技能</a><span class="d">2026-11-03</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；成效數字皆為 NVIDIA 與合作夥伴自報、無第三方驗證。原文僅有標題橫幅、無機制圖，本篇圖解均為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-03 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

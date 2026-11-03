@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 找人自動化 · AI 每日動態檔案</title>
+<meta name="description" content="TypeSafe AI 與 Treg 開源找人工具：Jev 當篩人閘門、Treg 接供應商工具；B2B 開發客戶正確率 43%→78.2%，平均每個對上的信箱 0.0056 美元（Treg 自報）。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>找人自動化：貴的不是資料，是判斷</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Jev 新成果，再次引爆開源（量子位，產品發布＋自建評測與成本對比）</p>
+    <p class="g-meta">
+      <span>量子位</span>·<span>2026-11-01 發布</span>·<span>2026-11-01 收錄</span>·
+      <a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&mid=2247938104&idx=2&sn=dcf2c4ed91de12619804ad36acd8dcdb" target="_blank" rel="noopener">閱讀官方原文</a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>0.0089 美元</b><span>查一個信箱的最低價，未找到不收費</span></div>
+    <div class="g-stat"><b>78.2%</b><span>B2B 開發客戶正確率；Claude Code 單獨為 43%</span></div>
+    <div class="g-stat"><b>便宜逾 85%</b><span>同一批名單對比 Clay（Treg 自測）</span></div>
+    <div class="g-stat"><b>6,400 Star</b><span>開源專案熱度（原文敘述）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">TypeSafe AI 與工具平台 Treg 合推的開源找人工具：Treg 把供應商工具接進 Agent，Jev 當篩人的閘門，交付的是一份可直接使用的名單。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一句話到一份名單</b> — 誰把球傳給誰（本站重繪）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">使用者 → Agent</span><span class="tr"><i>一句話交代目標：地區、募資階段、產業、職位、要驗證過的信箱</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">Agent 拆出條件</span><span class="tr"><i>再交給 Treg 查詢人員資料庫</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">Treg → 人才資料庫</span><span class="tr"><i>按條件拉回一批候選人</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">候選人 → Jev</span><span class="tr"><i>逐筆判斷是否真是那個角色，剔除看似沾邊者</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">Agent → Treg 工具</span><span class="tr"><i>補個人資料、工作經歷、LinkedIn、已驗證信箱</i></span></span></li>
+        <li><span class="st">06</span><span class="body"><span class="hop">名單 → 使用者</span><span class="tr"><i>直接用於招募、開發客戶或人物研究</i></span></span></li>
+      </ul>
+      <p class="x-src">原文未給流程圖；本圖依原文敘述順序重繪，節點名稱取自原文，未加入原文沒有的步驟。Treg 可接入 Claude Code、Codex 等 Agent，一把金鑰呼叫其接入的數千個工具介面。</p>
+    </figure>
+
+    <p class="g-p">示範指令寫得很具體：舊金山、B 輪後的 AI 新創、行銷負責人、要驗證過的工作信箱。條件越細，後面越好判。</p>
+    <p class="g-p">三角分工：Agent 懂任務與調度、Jev 只管判斷、Treg 只管接工具。過去的做法是開 Clay、跳 Apollo、再逐個找信箱驗證工具。</p>
+    <p class="g-p">名單粒度才是重點：原文說過去交到手的是長串待人工二次排查的名字，現在是可以直接拿去招募、開發客戶的清單。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">判斷閘門才是門檻</h2>
+    <p class="g-p">Jev 是 TypeSafe AI 的決策模型，9 月爆紅後三天 token 呼叫量破 1 兆（自報）。</p>
+    <p class="g-p">10 月 14 日推出的 1.14.0，加入圖片輸入、更長上下文與 Box。</p>
+    <p class="g-p">放進找人流程後，資料庫只負責「條件符合」，Jev 負責「角色符合」——這是原文著墨最多的差異。</p>
+    <p class="g-p">工具越多、候選人越多，篩選就越值錢；這是 Jev 被擺在中間的原因。原文未揭露它依什麼資料判、誤判率多少。</p>
+    <div class="x-scroll" style="margin-top:14px">
+      <table class="x-tbl">
+        <thead><tr><th>類別</th><th>設定</th><th class="n">任務正確率</th></tr></thead>
+        <tbody>
+          <tr><td data-l="類別">B2B 開發客戶</td><td data-l="設定">Claude Code 單獨</td><td class="n" data-l="任務正確率">43%</td></tr>
+          <tr><td data-l="類別">B2B 開發客戶</td><td data-l="設定">Claude Code 接 Treg</td><td class="n win" data-l="任務正確率">78.2%</td></tr>
+          <tr><td data-l="類別">招募（推定）</td><td data-l="設定">接 Treg</td><td class="n" data-l="任務正確率">80%</td></tr>
+          <tr><td data-l="類別">確定性查找（推定）</td><td data-l="設定">接 Treg</td><td class="n" data-l="任務正確率">76.3%</td></tr>
+          <tr><td data-l="類別">網紅搜尋（推定）</td><td data-l="設定">接 Treg</td><td class="n" data-l="任務正確率">62.9%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-src">Treg 提出的 People Search Bench，119 項任務（原文未說明由誰建立），分數自報、無第三方驗證。原文只寫「其他三個類別分別拿到 80%、76.3%、62.9%」，未逐一點名；本表依列舉順序對應（編輯推論）。原文作「B2B 開發客戶」。</p>
+    <p class="g-p">B2B 開發客戶從 43% 升到 78.2%，是原文著墨最多、也是唯一給出前後對照的一組成績。</p>
+    <p class="g-p">（編輯觀點：這條差距同時換了資料源與判斷層，不能全記在 Jev 頭上；題庫也出自賣方。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">不到一美分的購買力（原文稱 6 分錢）</h2>
+    <p class="g-p">計價分兩路：自帶 Hunter 等供應商金鑰，呼叫不經 Treg 計費；沒有金鑰則由 Treg 代呼叫，從預付餘額按次扣款。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>平均每個「對得上」的信箱成本</b> — 同一批名單自測，條愈短愈好（本站重繪）</figcaption>
+      <div class="x-bars">
+        <div class="x-bar hot"><b>Treg</b><span class="t"><span style="--p:14"></span></span><i>0.0056</i></div>
+        <div class="x-bar"><b>Clay</b><span class="t"><span style="--p:100"></span></span><i>0.0395</i></div>
+      </div>
+      <p class="x-src">單位：美元／每個與企業公開地址完全一致的信箱，取樣為原文所述的那批名單。原始資料：Treg 找到 289 個、264 個完全一致、總花 1.49 美元；Clay 找到 280 個、262 個一致、總花 10.34 美元。單價差約 7 倍。</p>
+    </figure>
+
+    <p class="g-p">查一個信箱 0.0089 美元起、找不到不收費；驗證真偽、補履歷、查公司近期動態要另外付錢。新使用者另送 1 美元額度。</p>
+    <p class="g-p">驗證與補資料另計，才是這類工具的成本結構：查詢便宜，確認一個人值不值得往來，工時仍然在自己手上。</p>
+    <p class="g-p">接入方式也不必另開平台：接進自家儀表板或 Claude Code、Codex 就能用；已有 Hunter 等帳號的團隊，遷移成本只是一把金鑰（編輯推論）。</p>
+    <p class="g-p">成本對比只算「找信箱」一項，驗證與補履歷的費用沒進分母（編輯推論）——這是 85% 這個數字的邊界。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">便宜之後，準頭還沒跟上</h2>
+    <p class="g-p">原文自陳的反例：有人搜自己與隊友，Treg 沒撈到有意義的內容，連 LinkedIn 都難找；同一題 ChatGPT、Gemini 找得到，但貴得多。</p>
+    <p class="g-p">Treg 的回應是公開徵測試集、當場調校；對「不需要中間商加價」的質疑，原文只寫它舉手回應，未交代內容。</p>
+    <p class="g-p">評測只有 119 題，四類各佔多少原文未說；小樣本下的 78.2%，不宜當成穩定的長期水位。</p>
+    <p class="g-p">母公司背景：Jev 發布 24 天後完成 8.7 億美元 A 輪，估值 75 億美元、稱漲 37 倍（自報）；微軟、OpenAI 等大廠隨後進場做決策模型。</p>
+    <p class="g-p">資料覆蓋是下一個問號：原文案例集中在美國 B2B 場景，台灣本地的人才與企業名錄查不查得到，原文未提。</p>
+    <p class="g-p">（編輯觀點：0.0056 美元只算「已對上」的信箱，未計人工複核；便宜的是查詢，不是名單可用性。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>開源的是介面，不是資料。</b>價值在金鑰、計費與工具清單。</p>
+      <p><b>判斷層是最容易被外包的一格。</b>Jev 換得掉，驗證工時換不掉。</p>
+      <p><b>便宜只證明查得到。</b>準頭要題庫與複核，原文兩者都是賣方提供。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Meta</span><a href="thin-orchestrator.html">薄層編排器：中央只排順序，可靠性交給程式碼</a><span class="d">2026-10-20</span></div>
+      <div class="g-relrow"><span class="s">Claude</span><a href="fold-subagents.html">子代理不是組織圖：router、planner 摺回主迴圈的時機</a><span class="d">2026-10-29</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="retell-voice-agents.html">Retell 語音代理：1 億通／月，選模型靠一份可重跑的評測</a><span class="d">2026-10-29</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。本頁兩張圖解皆為本站重繪（原文無對應圖表），原文未給該流程排序與成本對照的製圖。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-03 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

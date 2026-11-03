@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 桌寵當介面：150 元開源硬體，把 Agent 請上桌面 · AI 每日動態檔案</title>
+<meta name="description" content="小米開源 AI 桌搭 HachimoDock 導讀：硬體自製成本約 150 元人民幣、三鍵一搖桿加語音與觸控，把桌寵當成 Agent 的狀態介面，並以 GitHub 源碼＋物料清單開放復刻。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>桌寵當介面：150 元開源硬體，把 Agent 請上桌面</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：小米開源了個 150 元的 AI 小玩意，火到配件都漲價了（量子位，含產品定位、四類玩法與開源復刻資訊）</p>
+    <p class="g-meta">
+      <span>量子位</span>·<span>2026-11-02 發布</span>·<span>2026-11-03 收錄</span>·
+      <a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247938245&amp;idx=2&amp;sn=423e3ef22af9d7537d31e5bd60f5288d" target="_blank" rel="noopener">閱讀官方原文</a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>約 150 元</b><span>硬體自製成本（人民幣，團隊自述）</span></div>
+    <div class="g-stat"><b>3 鍵＋1 搖桿</b><span>再加語音與觸控，共四種輸入</span></div>
+    <div class="g-stat"><b>數萬個形象</b><span>社群自製桌寵，可一鍵套用</span></div>
+    <div class="g-stat"><b>開源</b><span>軟體源碼上 GitHub、物料清單上嘉立創</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">小米把小螢幕做成 Agent 的門面：一句話交辦，桌寵用表情與聲音回報進度。硬體自製成本約 150 元，源碼與物料清單全部公開。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一句話到一個結果</b> — 使用者、桌寵、電腦端 Agent 的交接（本站重繪）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">使用者 → HachimoDock</span><span class="tr"><i>自然語言交辦，原文的例子：整理桌面檔案並換一張壁紙</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">HachimoDock → 電腦端 Agent</span><span class="tr"><i>「分配給 Agent 執行」；原文未說明用什麼協定或連線方式轉交</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">Agent 執行 → 螢幕</span><span class="tr"><i>同步顯示思考、執行、等待確認等任務狀態</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">HachimoDock → 使用者</span><span class="tr"><i>桌寵的表情、動作與聲音報信，把結果回饋給人</i></span></span></li>
+        <li class="side"><span class="st">分支</span><span class="body"><span class="hop">同一句話 → 家中裝置</span><span class="tr"><i>走另一個開源專案 xiaomi Miloco 控制智慧家電，與電腦任務並行、非接續</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重繪。原文僅有兩張產品照、無流程圖；四步順序為原文明述，編號依「語音輸入→交辦→執行→回饋」排列。原文只寫「分配給 Agent 執行」，未給傳輸方式；家電分支屬另一節的場景，不接在電腦任務之後。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">從「錄入方」變成「需求提出方」</h2>
+    <p class="g-p">專案起點不是造型，而是問題：在辦公場景下語音比打字快上數倍，團隊先想到做結合麥克風與按鍵的語音輸入硬體。</p>
+    <p class="g-p">但這條路已經很擠——原文點名 ChatGPT 官方的 Codex Micro，也提到小米自家藍牙遙控器因此重新被看見。</p>
+    <p class="g-p">於是團隊往前推一步：按鍵語音仍要動手，更省事的是即時語音，只動口、不動手。</p>
+    <div class="x-scroll" style="margin-top:14px">
+      <table class="x-tbl">
+        <thead><tr><th>團隊自問</th><th>原文給的答案</th><th>落在產品上</th></tr></thead>
+        <tbody>
+          <tr><td data-l="團隊自問">按鍵語音輸入已是最簡單的互動？</td><td data-l="原文給的答案">不是，更自然的是「只動口、不動手」的即時語音</td><td data-l="落在產品上">常駐桌面的「搭子」，隨時接話</td></tr>
+          <tr><td data-l="團隊自問">除了優化輸入，創作還有新玩法？</td><td data-l="原文給的答案">原文的期待：把 Vibe Coding 從軟體推到硬體，身邊的嵌入式裝置也能客製化</td><td data-l="落在產品上">分鐘級組件創作</td></tr>
+          <tr><td data-l="團隊自問">只能用在程式開發與辦公？</td><td data-l="原文給的答案">家庭是另一個同樣重要的場景</td><td data-l="落在產品上">透過 xiaomi Miloco 控制家電</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">定位一旦變成「搭子」，硬體就得有自己的外形、人設與聲音；它同時是助手與監工，任務卡住時要能出聲。</p>
+    <p class="g-p">團隊背景也解釋了取捨：這是小米技術委員會下的創新產品小團隊，目標是「新奇酷」，不是再做一個更好用的輸入法。</p>
+    <p class="g-p">官方說法收得很克制：把定義 HachimoDock 的空間留給每一位使用者，並稱它只是探索 AI 硬體的開端。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">玩法開放，外觀也開放</h2>
+    <p class="g-p">按鍵、搖桿、語音、觸控四種輸入並用，原文的說法是讓幾乎各類遊戲與工具都能做出來。</p>
+    <p class="g-p">組件用自然語言生成、直接跑在機上：原文列了自選股行情（看價格與漲跌）、待辦清單、電腦狀態與 Token 用量儀表板，也有電台、農民曆、番茄鐘與貪食蛇。</p>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>四類用途</b> — 並列，無先後順序（本站整理）</figcaption>
+      <p class="x-grid-h">四者互不排序，可各自取用；原文分節敘述，未給優先級</p>
+      <div class="x-grid">
+        <div class="c"><b><i>①</i>桌寵陪伴</b><small>寵物照、情侶照、卡通角色都能做成形象；社群累積數萬個版本可一鍵套用</small></div>
+        <div class="c"><b><i>②</i>Agent 遙控與副屏</b><small>交辦任務、看思考／執行／等待確認；等於一塊桌面狀態螢幕</small></div>
+        <div class="c"><b><i>③</i>組件創作</b><small>自然語言生成、跑在自己機上；遊戲與趣味工具同樣是組件</small></div>
+        <div class="c"><b><i>④</i>家電中控</b><small>靠小米另一開源專案 xiaomi Miloco 當家庭管家，連動並控制裝置</small></div>
+      </div>
+      <p class="x-src">本站整理；原文三節涵蓋這四類，①②同在第一節，未給順序、權重或使用者分布。</p>
+    </figure>
+    <p class="g-p">遊戲與趣味工具跑的是同一套機制：迷宮、接球、切水果、電子寵物、轉盤、抽籤、擲硬幣、塔羅牌、敲木魚，都能自己改。</p>
+    <p class="g-p">電台組件能聽不同城市的節目與每日資訊，工作以外的時間也被算進設計裡。</p>
+    <p class="g-p">外觀同樣是可改的介面：鍵帽與外殼可自行列印，讓機身配色與螢幕角色配成一整套。</p>
+    <p class="g-p">社群那層才是飛輪：網友做的形象與組件可分享、被別人改進，新手一開箱就有東西可用。</p>
+    <p class="g-p">原文的畫面很具體：同一張書桌前，交代電腦做事、叫家裡裝置回應，都是對這隻狗開口。</p>
+    <p class="g-p">（編輯推論：實體按鍵與常駐螢幕的價值，是不必先開一個 App；這是它與手機語音助理最大的差別。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">150 元要打折看，開源三件套才是重點</h2>
+    <p class="g-p">原文只寫「硬體自製成本約 150 元」，未列這筆錢含哪些工序（編輯推論：焊接、組裝與除錯的時間成本另計）；同篇也寫明開發板與螢幕至今漲價、缺貨。</p>
+    <p class="g-p">兩件事放在一起，復刻的實際花費可能高於這個數字（編輯推論）。</p>
+    <p class="g-p">「支援萬款遊戲」是原文的宣傳語，沒有清單或實測；能確認的是四種輸入加上可自訂組件的能力。</p>
+    <p class="g-p">真正降低門檻的是三件套：GitHub 上的軟體源碼、嘉立創平台上的物料清單與結構件模型，再加上組裝教學。</p>
+    <p class="g-p">社會面也寫進原文：有人因為它，第一次動手做出屬於自己的 AI 硬體。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>便宜不是賣點，可改才是。</b>源碼加物料清單，讓復刻變成可重複的路。</p>
+      <p><b>介面選在情緒上。</b>桌寵的表情與聲音，補的是 Agent 執行時的不確定感。</p>
+      <p><b>低價要打折看。</b>零件漲價與缺貨，會把這道門檻往上推。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="adk-voice-agent.html">語音 agent 不冷場：把 13 秒死寂換成先開口</a><span class="d">2026-10-19</span></div>
+      <div class="g-relrow"><span class="s">OpenRouter Blog</span><a href="always-on-agent.html">常駐代理上線四件事：排程、工具、檔案記憶、花費上限</a><span class="d">2026-10-31</span></div>
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="a2ui-copilotkit-genui.html">代理開始長 UI：A2UI 一套宣告，框架與介面打通</a><span class="d">2026-10-29</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述資料出自原文，圖解與小標為編輯整理（原文僅有產品照，圖解皆為本站重繪）。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-03 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
