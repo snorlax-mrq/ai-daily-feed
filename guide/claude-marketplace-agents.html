@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 代理上架：企業買的不是模型，是治理外殼 · AI 每日動態檔案</title>
+<meta name="description" content="Claude Marketplace 新增 14 項夥伴代理與產品，總數超過 25 個。治理描述已具體到身分、權限與稽核（Asana、Cyera、Netlify 各有寫法），企業承諾額度還可折抵採購。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>代理上架：企業買的不是模型，是治理外殼</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Anthropic／Claude〈New agents and products for security, productivity, and creative work on Claude Marketplace〉——Marketplace 夥伴代理與產品清單更新（原文未標發布日）</p>
+    <p class="g-meta">
+      <span>Claude 官方資源中心</span>·<span>原文未標日期</span>·<span>2026-11-05 收錄</span>·
+      <a href="https://claude.com/resources/articles/new-agents-and-products-claude-marketplace" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>25+</b><span>Marketplace 上夥伴代理與產品的總數（原文：over 25）</span></div>
+    <div class="g-stat"><b>14 項</b><span>這批點名的方案（編輯清點）；分屬資安、開發、行銷、生產力</span></div>
+    <div class="g-stat"><b>1 份合約</b><span>合資格企業可把承諾支出的一部分挪來買夥伴方案</span></div>
+    <div class="g-stat"><b>0 個量化成效</b><span>原文只給功能與治理描述，未附任何 benchmark 或客戶成效</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">這是一份上架清單，不是產品發布。<strong>治理語言已講到規格層次：Asana 的代理有自己的身分與限權，Cyera 在 Claude 執行前先管權限</strong>（編輯歸納）。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>三層包覆</b> — 治理在最外層，代理跑在 Claude 之上（由外而內＝被包住）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>3 · 治理</b><small>盤點部署、限縮權限、核准動作、留下稽核軌跡</small><span class="pi">外層</span></div>
+          <div class="ring">
+            <div class="ring-lb"><b>2 · 代理</b><small>接手多步工作；跨工具與服務執行，需被觀測</small><span class="pi">中層</span></div>
+            <div class="ring-inner"><b>1 · Claude 模型</b> — 推理與工具選擇的底座；原文把模型視為既有前提，重點全放在上面兩層</div>
+          </div>
+        </div>
+      </div>
+      <p class="x-src">本站重繪；原文未附架構圖，三層由編輯依各方案職責歸納（如 Cyera 在 Claude 執行前先管權限）。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">四類清單：賣點幾乎都不是「更聰明」</h2>
+    <p class="g-p">14 個方案分屬四類。把功能描述並排看，賣的多是「怎麼管住它」，而不是「它多會想」（編輯觀察）。</p>
+    <p class="g-p">原文另提到總數已超過 25 個（編輯推論：扣掉這批，約還有十來個先前上架的方案）。</p>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>類別</th><th>這批方案</th><th>主打的動作</th><th>原文說法</th></tr></thead>
+        <tbody>
+          <tr><td class="grp" data-l="類別"><b>資安</b></td><td data-l="這批方案">Chainguard、Checkmarx、Cyera、Rubrik、Tanium</td><td data-l="主打的動作">在隔離環境實測可利用性、紅隊驗證控制、把確認的重大問題轉成 ticket</td><td data-l="原文說法">Chainguard 修可重現的漏洞、Checkmarx 在上線前排優先序、Rubrik 把確認的重大問題開票（編輯歸納）</td></tr>
+          <tr><td class="grp" data-l="類別"><b>開發基礎設施</b></td><td data-l="這批方案">Datadog、Netlify</td><td data-l="主打的動作">追蹤代理跨工具執行的軌跡；把代理部署到邊緣網路並保留 SSO 與稽核</td><td data-l="原文說法">Datadog 的目標是品質、效能與成本三項</td></tr>
+          <tr><td class="grp" data-l="類別"><b>行銷與創意</b></td><td data-l="這批方案">AirOps、Runway、Webflow</td><td data-l="主打的動作">AI 搜尋成效分析、影音生成與自然語言剪輯、網站內容治理</td><td data-l="原文說法">Runway：turn a brief into finished assets（把 brief 變成完成品）</td></tr>
+          <tr><td class="grp" data-l="類別"><b>生產力</b></td><td data-l="這批方案">Asana、Glean、monday、Zoom</td><td data-l="主打的動作">有身分與稽核軌跡的 AI Teammates、跨系統知識查找、權限一致的公司內問答</td><td data-l="原文說法">Asana 明講需判斷的決策交回負責人</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">生產力那一類的共通點，是把代理塞進既有工作物件：Asana 接 Work Graph、monday 接專案與會議、Zoom 接會議摘要（編輯歸納）。</p>
+    <p class="g-p">資安五家站三個位置：上線前找問題（Chainguard、Checkmarx、Rubrik）、執行前管權限（Cyera）、端點持續監控（Tanium）。（編輯歸納）</p>
+    <p class="g-p">Chainguard 在隔離 microVM 內建置並探測實際上線的應用；Checkmarx One 用規則式分析加 AI 推理把發現排優先序。</p>
+    <p class="g-p">Rubrik 對 GitHub 或 Azure DevOps 儲存庫的安全副本做審查，找多步攻擊路徑；Tanium 管的是端點可視性與補丁。</p>
+    <p class="g-p">Datadog 與 Netlify 處理同一件事的兩端：代理跑起來之後看不看得見、部署路徑穩不穩。</p>
+    <p class="g-p">前者把跨工具與服務的執行軌跡攤開、回推修法；後者讓每次變更都有 preview URL，並附 SSO、角色權限與稽核紀錄。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">治理長成四個動作</h2>
+    <p class="g-p">把散在各方案裡的治理描述抽出來，會得到四個互不排序的動作。買方真正要比的，是誰把哪一格做得更細。</p>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>治理的四個動作</b> — 並列，無先後與優劣順序</figcaption>
+      <div class="x-grid">
+        <div class="c"><b>盤點</b><small>先知道公司裡有哪些 Claude 部署在跑（Cyera）</small></div>
+        <div class="c"><b>限權</b><small>執行前就決定它能碰哪些檔案與工具（Cyera、Asana）</small></div>
+        <div class="c"><b>核准</b><small>定義能存取什麼、核准什麼、能花多少（monday）</small></div>
+        <div class="c"><b>驗證</b><small>用紅隊實測這些控制有效；把確認的問題開票追蹤（Cyera、Rubrik）</small></div>
+      </div>
+      <p class="x-src">本站重繪；原文分述各方案功能，未歸納成四類，此處為編輯整理。</p>
+    </figure>
+    <p class="g-p">Zoom 最能說明限權的重要：它在 Claude 內用會議摘要與工作對話回答，前提是每個人只看到自己本來就看得到的東西，不必去分析原始逐字稿。</p>
+    <p class="g-p">Glean 走另一條路：用連接器把跨系統的公司知識與流程接起來，讓員工問一題就能完成多步任務。</p>
+    <p class="g-p">（編輯觀點：四格在實務上有依賴關係——沒有盤點，限權與核准無從設定；原文未給先後順序。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">把採購合約變成通路</h2>
+    <p class="g-p">商業機制那一段，比清單本身更有訊息量：符合資格的企業客戶，可以把已承諾的 Anthropic 支出挪一部分去買這些夥伴方案。</p>
+    <p class="g-p">對買方，這是一個合約涵蓋多家供應商，新採購不必再開一輪預算；對 Anthropic，是把客戶的 AI 預算留在自家生態裡流動。</p>
+    <p class="g-p">原文用字很小心：<em>a portion of their committed spend</em>——是「部分」，不是全額，原文也沒說折抵比例。</p>
+    <p class="g-p">清單裡沒有一句成效數字，也沒有客戶案例。判斷能不能用，得自己回到各方案頁面找。</p>
+    <p class="g-p">原文也沒交代價格、安裝方式，以及這些代理實際跑在哪個執行環境；只有「向任一上架頁面申請購買」這句。</p>
+    <p class="g-p">（編輯推論：折抵對夥伴是雙面刃——拿到 Anthropic 的企業客戶，也讓自己被放進同一張帳單裡被比價。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>代理採購先問治理。</b>沒有盤點與限權的方案，等於把權限外包。</p>
+      <p><b>先問有沒有稽核軌跡。</b>沒有軌跡，出事時只能各說各話。</p>
+      <p><b>額度折抵是鎖客，不是折扣。</b>省了預算流程，也把選項鎖進一家。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="devrev-operator-computer.html">企業代理的分工學：Operator 動手，Computer 遞球</a><span class="d">2026-11-04</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="agent-browser-toolsets.html">瀏覽器工具設計：少回合、少往返，成本約差 13 倍</a><span class="d">2026-11-03</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="human-review-loop.html">人類複核：把專家的理由寫成可重跑的評測</a><span class="d">2026-11-03</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-05 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

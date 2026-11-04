@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 企業代理的分工學：Operator 動手，Computer 遞球 · AI 每日動態檔案</title>
+<meta name="description" content="DevRev 用 Computer 與 Operator 兩個代理接手企業客服：Operator 執行經核准的動作，必要時轉 Computer 準備人接手。CTO 說 GPT-6.1 Sol 在延遲、成本與推理間取得平衡。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>企業代理的分工學：Operator 動手，Computer 遞球</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：OpenAI〈DevRev delivers autonomous self-service with GPT-6.1 Sol〉——客戶案例訪談（DevRev 技術長 Ahmed Bashir）</p>
+    <p class="g-meta">
+      <span>OpenAI</span>·<span>2026-11-04 發布</span>·<span>2026-11-05 收錄</span>·
+      <a href="https://openai.com/index/devrev-enterprise-self-service" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>2 個代理</b><span>Operator 執行已核准動作、Computer 準備交給人接手（視請求而定）</span></div>
+    <div class="g-stat"><b>2 個具名模型</b><span>GPT-6 Astra 與 GPT-6.1 Sol；原文用 including，清單未窮盡</span></div>
+    <div class="g-stat"><b>3 項設計約束</b><span>動作可逆、答案標回來源、團隊可控制代理能做什麼</span></div>
+    <div class="g-stat"><b>0 個數字</b><span>原文未給處理量、成功率或省下多少人力（全篇為訪談敘述）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">這是一篇客戶案例訪談。<strong>最值得抄的不是用了哪個模型，而是把「動手」與「遞球」拆成兩個代理</strong>。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一個請求，兩條路</b> — Operator 可能直接處理，也可能轉出去（本站重繪）</figcaption>
+      <div class="x-dec">
+        <p class="q">客戶或員工提出一個請求（可能很複雜）</p>
+        <div class="brs">
+          <div class="br"><span class="tag">分支一</span><b>Operator 處理</b><small>理解問題、執行已核准的動作；動作可逆、答案標回來源</small></div>
+          <div class="br"><span class="tag">分支二</span><b>轉給 Computer</b><small>把情境整理好，交給正確的人接手處理</small></div>
+        </div>
+      </div>
+      <p class="x-src">本站重繪。原文以「可能要求 Operator 理解問題、採取已核准動作，或轉給 Computer 準備適合的人處理」描述，未給判斷順序與門檻。</p>
+    </figure>
+    <p class="g-p">一個負責把事做完，一個負責把球交好。（編輯推論：前者比成功率，後者比交接後人能不能立刻接手，兩種能力要的評測不同。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">把評測對象換成「模型＋公司情境」</h2>
+    <p class="g-p">原文沒提公開 benchmark；重點是 DevRev 自建 Enterprise-Bench，測的是模型與「餵公司情境、控權限、管動作」那層軟體的組合。</p>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>壓力</th><th>原文描述</th><th>公開評測可能漏掉的地方</th></tr></thead>
+        <tbody>
+          <tr><td class="grp" data-l="壓力"><b>資料有多版本</b></td><td data-l="原文">資料具有多個版本</td><td data-l="盲點">答案該引用哪一版，取決於流程而非語意相似度</td></tr>
+          <tr><td class="grp" data-l="壓力"><b>資訊散在各系統</b></td><td data-l="原文">資訊分散在不同系統</td><td data-l="盲點">要跨系統拼答案，單輪問答看不出組裝能力</td></tr>
+          <tr><td class="grp" data-l="壓力"><b>存取依角色</b></td><td data-l="原文">能否存取取決於當事人的角色</td><td data-l="盲點">同一個問題，不同人該得到不同答案</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">（編輯觀點：第三欄是編輯推論。原文只列出三項壓力，沒有解釋為何公開 benchmark 不夠用。）</p>
+    <p class="g-p">Bashir 對 GPT-6.1 Sol 的評語很節制：效能好，且在「要聽懂請求細節」與「要快、成本要能持續」之間取得平衡。</p>
+    <p class="g-p">原文沒公開 Enterprise-Bench 的題目數量、評分方式，也沒給任何分數；唯一證據是 CTO 的說法。</p>
+    <p class="g-p">harness 是 DevRev 自己那一層：接公司知識、管權限、決定代理能採取哪些動作。（編輯推論：模型換代時，這層可以留著。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">開發端已經全面換工具</h2>
+    <p class="g-p">訪談中最具體的一段不在客服，在內部開發：DevRev 工程團隊全面改用 Codex，並退掉 Cursor 授權。</p>
+    <p class="g-p">Bashir 的說法是先讓工程師試多套工具、後來自然收斂；「開發者只想要最好的工具，騙不了他們」是他給的理由。（DevRev 自報，無第三方驗證）</p>
+    <p class="g-p">銷售工程師則用 GPT-6 Astra 做國際展場的 demo——同一批模型，一邊跑產品、一邊跑銷售流程。</p>
+    <p class="g-p">（編輯觀點：把 Codex 寫進客戶案例，對 OpenAI 是雙重收益——既證明企業採用，也順帶推銷自家 coding agent。）</p>
+    <p class="g-p">下一步他們想要的是「幾秒內自己跑完」：把難用固定規則描述、又依賴變動資訊的判斷，交給 Decisions API 與 Ultrafast 處理，不必每一步都做深度推理。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">可逆與可追溯，是企業代理的門票</h2>
+    <p class="g-p">Bashir 把三個條件當成產品設計前提：動作可逆、答案指回來源、團隊能控制代理可執行的動作。（CTO 自述，無第三方驗證）</p>
+    <p class="g-p">Agent Studio 讓使用者在對話中描述工具行為，部分行為用固定規則釘死。（編輯推論：這等於在提示與程式之間留一個可審核的夾層。）</p>
+    <p class="g-p">（編輯推論：這三條其實在回答採購單位真正的問題——錯了怎麼收回、事後怎麼查、誰准它做的。）</p>
+    <p class="g-p">訪談裡模型提供推理與可靠性，速度與成本則是能不能服務真人的門檻——三者在同一句話裡並列，不是附帶條件。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">自助服務的邊界</h2>
+    <p class="g-p">Bashir 點名目前只算起點的三件事：查知識庫答案、升級方案、退款。（編輯推論：這三件都是規則明確、結果可逆的動作。）</p>
+    <p class="g-p">他真正的目標是更長的請求也能自己跑完，同時保持可追溯、有權限、可回復。</p>
+    <p class="g-p">（編輯推論：若每個決策都要做深度推理，自助服務的成本會隨筆數線性上升。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>拆兩個代理，比做一個全能的好管。</b>動手與遞球分開，權限也分開。</p>
+      <p><b>評測要含公司情境。</b>只比模型分數，挑不到能上線的組合。</p>
+      <p><b>先問可逆與追溯。</b>不能收回的動作，不該給代理自己決定。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="agent-browser-toolsets.html">瀏覽器工具設計：少回合、少往返，成本約差 13 倍</a><span class="d">2026-11-03</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="human-review-loop.html">人類複核：把專家的理由寫成可重跑的評測</a><span class="d">2026-11-03</span></div>
+      <div class="g-relrow"><span class="s">Google DeepMind</span><a href="agentic-cheminformatics.html">化學代理的分工：模型負責想，RDKit 負責算</a><span class="d">2026-11-03</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-05 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
