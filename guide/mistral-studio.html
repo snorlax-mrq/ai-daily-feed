@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 主權 AI 的落地盤：模型會換，平台要留 · AI 每日動態檔案</title>
+<meta name="description" content="Mistral 推出 Mistral Large 4（Le Chonk）並擴充 Studio：代管代理、工作流、Apps、可觀測性與評測，可在雲端、VPC 或地端部署，包括 ABANCA、BNP Paribas 等七組以上客戶已在生產環境使用。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>主權 AI 的落地盤：模型會換，平台要留</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Mistral AI〈Le Chonk brings the brains. Studio puts it to work.〉——產品發布（模型＋平台）</p>
+    <p class="g-meta">
+      <span>Mistral AI</span>·<span>2026-11-05 發布</span>·<span>2026-11-06 收錄</span>·
+      <a href="https://mistral.ai/news/build-with-studio/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>1 個模型</b><span>Mistral Large 4，代號 Le Chonk；主打程式碼、防禦性資安與文件推理</span></div>
+    <div class="g-stat"><b>3 種形態</b><span>代理負責調查與動手、工作流負責編排與核准、App 是員工的入口</span></div>
+    <div class="g-stat"><b>3 種部署</b><span>雲端、自家 VPC、地端，也可混搭；模型與平台一起搬</span></div>
+    <div class="g-stat"><b>至少 7 組客戶與夥伴</b><span>原文列舉 ABANCA、Accenture、Alten、BNP Paribas、Capgemini、CMA CGM、TCS 等，已在生產環境（原文為 including，未窮盡）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">這次賣的不是模型分數，而是<strong>換模型時不用重寫的那一層</strong>。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>誰包住誰</b> — 模型在最內層，平台包住它，部署位置包住兩者（本站重繪）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>3 · 部署位置</b><small>雲端／自家 VPC／地端，可混搭</small><span class="pi">邊界</span></div>
+          <div class="ring">
+            <div class="ring-lb"><b>2 · Studio 平台</b><small>連接器與 MCP 接企業資料，長出代理、工作流、App，外加 trace 與評測</small></div>
+            <div class="ring-inner"><b>1 · 模型</b> — Mistral Large 4（Le Chonk），原文稱其為開放模型</div>
+          </div>
+        </div>
+      </div>
+      <p class="x-src">本站重繪。原文以文字分述三層與部署選項，未提供對應此三層包覆關係的架構圖與層級編號。</p>
+    </figure>
+
+    <p class="g-p">原文的定位句很直白：Le Chonk 提供腦力，Studio 負責讓它在業務裡動起來。</p>
+    <p class="g-p">Studio 的起點是模型，透過連接器與 MCP 伺服器接上企業資料與系統，再往上長出代理、工作流與 App。</p>
+    <p class="g-p">執行由平台托管，團隊事後能回看發生什麼——這句話是整篇產品說明的主軸。</p>
+    <p class="g-p">至於 Le Chonk 本身，原文只給三個方向（程式碼、防禦性資安、文件推理）與「開放模型」四字；第三點原文寫的是文件與業務任務推理，沒有分數、參數或授權條款。</p>
+    <p class="g-p">（編輯觀點：對採購方來說，「開放」現在至少有三種意思——權重可下載、可自架、授權允許商用；原文沒說是哪一種。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三種形態，各管業務流程的一段</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>形態</th><th>原文定義</th><th>這次新增</th></tr></thead>
+        <tbody>
+          <tr><td class="grp" data-l="形態"><b>代理</b></td><td data-l="定義">調查情況並採取行動</td><td data-l="新增">代管代理：skills 記流程、sandbox 跑程式、subagents 分工、hooks 插自訂邏輯</td></tr>
+          <tr><td class="grp" data-l="形態"><b>工作流</b></td><td data-l="定義">協調執行與核准</td><td data-l="新增">中斷可續跑、企業系統事件觸發、可檢視的視覺化流程圖</td></tr>
+          <tr><td class="grp" data-l="形態"><b>App</b></td><td data-l="定義">讓員工使用這些系統</td><td data-l="新增">托管、驗證、存取控制，可用預先核准的可重用元件</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">三者共用同一套基礎設施，這是重點：資料、連接器與權限只接一次，三種形態都吃得到。</p>
+    <p class="g-p">工作流把「固定規則、代理推理、人來決定」三種步驟寫在同一張圖上，哪裡要蓋章一目了然。</p>
+    <p class="g-p">（編輯觀點：企業真正卡住的從來不是模型能不能做，而是誰簽核、出錯誰負責——簽核點放進工作流是對的方向。）</p>
+    <p class="g-p">原文舉例：產品營運用工作流辨識 bug 與功能需求，再依規則分派給對的團隊。</p>
+    <p class="g-p">工作流中斷可續跑這點，實務上比看起來重要：長流程卡在人等簽核時，重跑一次等於把所有副作用再做一遍。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">能上線的差別，在可觀測性與評測</h2>
+    <p class="g-p">每次執行都留 OpenTelemetry trace：模型呼叫、工具使用、核准節點，逐步可查。</p>
+    <p class="g-p">評測讓團隊在發布前，用自家資料集測提示、模型或工具的改動，而不是等出事再回推。</p>
+    <p class="g-p">原文強調 trace 與評測結果都留在客戶手上——這句話同時是技術承諾，也是採購說帖。</p>
+    <p class="g-p">（編輯推論：模型半年換一代，重建的是評測集與 trace 的解讀方式；平台若把這兩件事綁進自家雲，主權就只剩口號。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">兩個自報成效，與一個規模參考</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>場景</th><th>原文描述</th><th>數字與限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="場景"><b>生產事故調查</b></td><td data-l="描述">代理照 runbook 查、敏感動作先要核准、結論貼回 Slack</td><td data-l="數字">每月省數百小時（Mistral 自報）</td></tr>
+          <tr><td data-l="場景"><b>產品營運分流</b></td><td data-l="描述">模型判斷 bug 或功能需求，規則分派給對的團隊</td><td data-l="數字">每週約 35 小時（Mistral 自報）</td></tr>
+          <tr><td data-l="場景"><b>執行環境規模</b></td><td data-l="描述">支撐 Mistral Vibe 工作階段的同一套基礎設施</td><td data-l="數字">每週數百萬次工作階段（原文未給基準日）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">兩個成效數字都是自家團隊、自家流程，沒有分母，也沒有第三方驗證。</p>
+    <p class="g-p">「每月數百小時」聽起來大，但沒說是幾個人、多少案件分攤出來的。</p>
+    <p class="g-p">客戶引述裡反覆出現的理由也不是省時：ABANCA 要留住基礎設施控制權，BNP Paribas 要系統留在自家基礎上。</p>
+    <p class="g-p">名單本身也是訊號：銀行、航運、系統整合商同時在生產環境，代表賣的是可交付的專案，不是概念驗證。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">開發端的摩擦被壓到一行指令</h2>
+    <p class="g-p">新的 Mistral MCP server 讓開發者用 Vibe 或慣用的 coding agent 開發、本機測試，再一行指令部署到 Studio。</p>
+    <p class="g-p">托管、驗證與執行由平台吃下，團隊只設定代理能碰哪些工具、資料與動作。</p>
+    <p class="g-p">原文這次也把 enterprise context 併進 Studio：App 可用搜尋索引取企業文件，並共用同一份脈絡。</p>
+    <p class="g-p">（編輯推論：把部署壓成一行，換來的是治理要更前置——權限邊界得在設計時就寫清楚，否則上線後才補會很痛。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>模型留在可換的那一層。</b>平台與評測才是資產，換代時不重寫。</p>
+      <p><b>三種形態別用一種硬幹。</b>簽核點屬工作流，不屬代理。</p>
+      <p><b>自報成效先問分母。</b>沒有案件量與人力基準，省時只是形容詞。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="devrev-operator-computer.html">企業代理的分工學：Operator 動手，Computer 遞球</a><span class="d">2026-11-05</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="async-subagents.html">非同步子代理：把「等」從迴圈裡搬走</a><span class="d">2026-11-06</span></div>
+      <div class="g-relrow"><span class="s">Claude</span><a href="claude-marketplace-agents.html">代理上架：企業買的不是模型，是治理外殼</a><span class="d">2026-11-05</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-06 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

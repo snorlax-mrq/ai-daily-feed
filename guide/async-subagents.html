@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 非同步子代理：把「等」從迴圈裡搬走 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain 在 Deep Agents 推出 async subagents：主代理留在對話裡，長工作交給背景子代理，用五個工具管理任務；改指令分打斷重跑與排隊兩種策略。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>非同步子代理：把「等」從迴圈裡搬走</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain〈Agents Are Going Async〉——產品公告兼架構說明（作者 Sydney Runkle、Thushanth Bengre）</p>
+    <p class="g-meta">
+      <span>LangChain</span>·<span>2026-11-05 發布</span>·<span>2026-11-06 收錄</span>·
+      <a href="https://www.langchain.com/blog/agents-are-going-async" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>5 個管理工具</b><span>start／check／update／cancel／list，主代理管背景任務的全部介面</span></div>
+    <div class="g-stat"><b>2 種更新策略</b><span>interrupt 打斷重跑（預設）／enqueue 排到當前這輪做完</span></div>
+    <div class="g-stat"><b>3 種回報情境</b><span>主代理忙、閒、卡在核准，處理方式各不相同</span></div>
+    <div class="g-stat"><b>1 個欄位</b><span>Managed Deep Agents 把子代理改非同步，只要 <em>async: True</em></span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">同步迴圈的問題不是慢，而是<strong>不能一邊回應、一邊推進</strong>。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/www-langchain-com-blog-agents-are-going-/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/www-langchain-com-blog-agents-are-going-/01.webp" alt="原文對照圖：左半是同步子代理，主代理把工作交出去後只能等；右半是非同步子代理，主代理把工作交給背景子代理後仍可與使用者對話" width="1200" height="753" loading="lazy" decoding="async"></a>
+      <figcaption>圖解 A · <b>同步與非同步的差別</b>：左半與右半只差一件事——主代理交辦後，能不能繼續跟使用者說話。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／LangChain 部落格，<a href="https://www.langchain.com/blog/agents-are-going-async" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">ReAct 迴圈是「叫工具、等結果、再決定」。一次長呼叫就把整個迴圈停住，後面的任務只能排在它後面。</p>
+    <p class="g-p">非同步子代理像 <em>asyncio.create_task</em>，或一個先不 await 的 Promise：呼叫立刻回傳，結果晚點才到。</p>
+    <p class="g-p">原文把需求收成兩條：使用者到得了主代理，任務並行且互不阻塞。</p>
+    <p class="g-p">原文開場的比喻很直白：一個交辦後就消失、只等成果才出現的幕僚，你大概會直接換掉。</p>
+    <p class="g-p">改成非同步之後，代理能承擔的工作量跟著背景 worker 的數量成長，而不是被單一迴圈的長度綁死。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">五個工具，其實就是一張任務表</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>工具</th><th>做什麼</th><th>對應的動作</th></tr></thead>
+        <tbody>
+          <tr><td data-l="工具"><em>start_async_task</em></td><td data-l="做什麼">在獨立執行緒啟動子代理，立刻回傳</td><td data-l="動作">開</td></tr>
+          <tr><td data-l="工具"><em>check_async_task</em></td><td data-l="做什麼">取得狀態，完成後連結果一起拿</td><td data-l="動作">查</td></tr>
+          <tr><td data-l="工具"><em>update_async_task</em></td><td data-l="做什麼">對執行中的任務追加新指令</td><td data-l="動作">改</td></tr>
+          <tr><td data-l="工具"><em>cancel_async_task</em></td><td data-l="做什麼">停掉執行中的任務</td><td data-l="動作">停</td></tr>
+          <tr><td data-l="工具"><em>list_async_tasks</em></td><td data-l="做什麼">列出所有任務與狀態</td><td data-l="動作">列</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">把五個工具排開，剛好是一張任務表：開、查、改、停、列。（編輯觀點：這是最小控制面，不是排程器。）</p>
+    <p class="g-p">原文沒交代調度細節，例如誰先跑、同時上限幾個、失敗怎麼重試。</p>
+    <p class="g-p">每個非同步子代理有自己的執行緒，所以能被單獨更新、單獨中止，不必整批重來。</p>
+    <p class="g-p">（編輯推論：控制面最小化之後，難題會從「怎麼寫迴圈」搬到「怎麼看住十條執行緒」——上限、逾時與成本歸屬都得自己決定。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">改指令之前，先決定要不要打斷</h2>
+    <div class="x-cmp">
+      <div class="side"><b>interrupt（預設）</b><small>停掉這一輪，用新指令重跑。原文的例子是「改用 Postgres」。</small></div>
+      <div class="side"><b>enqueue</b><small>追加留在佇列，等當前這輪做完再處理。例子是「做完順便跑測試」。</small></div>
+    </div>
+    <p class="g-p">兩種策略由子代理定義上的 <em>update_strategy</em> 欄位決定，不是由主代理臨場判斷。</p>
+    <p class="g-p">（編輯觀點：這其實是重工該由誰吸收——改規格丟掉的是子代理累積的判斷，加驗收丟掉的是它的時間。）</p>
+    <p class="g-p">原文的例子分得很清楚：改方向用 interrupt，補條件用 enqueue。（編輯觀點：選錯就是把已完成的推理丟掉，或讓新指令枯等。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">回報：忙、閒、卡在核准</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>結果怎麼回到主代理</b> — 三種狀態，三條路（本站重繪）</figcaption>
+      <div class="x-dec">
+        <p class="q">子代理做完，主代理當下在幹嘛？</p>
+        <div class="brs">
+          <div class="br"><span class="tag">分支一</span><b>忙</b><small>每次模型呼叫前先查未完成任務，順手撿結果</small></div>
+          <div class="br"><span class="tag">分支二</span><b>閒</b><small>子代理主動叫醒它，開一輪新的執行</small></div>
+          <div class="br"><span class="tag">分支三</span><b>卡在核准</b><small>核准流程不動，結果等使用者回答後才送到</small></div>
+        </div>
+      </div>
+      <p class="x-src">本站重繪。原文本段搭配官方示意圖說明，此處以文字重排三種狀態；原文未給狀態機的判定順序。</p>
+    </figure>
+    <p class="g-p">沒做完的任務一律寫在主代理的系統提示裡，它隨時知道手上有什麼在飛。</p>
+    <p class="g-p">需要核准的子代理顯示為 waiting，使用者在它自己的執行緒回答，不打斷主代理。</p>
+    <p class="g-p">在 Slack 版 Managed Deep Agents，這個請求會貼回原本的討論串，核准與對話留在同一個地方。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">原文看到生態在收斂：不只一家這樣做</h2>
+    <p class="g-p">原文的三個例子是：Claude Code 預設在背景跑子代理；OpenAI 的 dots 把工作交給背景 worker；DeepSeek Harness 用路由器對人說話、背景 worker 平行執行。</p>
+    <p class="g-p">OpenAI 近期也加入非同步工具呼叫：模型呼叫後繼續做事，結果用下一次請求補回。</p>
+    <p class="g-p">Managed Deep Agents 每個上線代理都多一個 general-purpose 的非同步副本，執行時再決定走前景或背景。</p>
+    <p class="g-p">async-deep-agents repo 另有一個可跑的 supervisor 範例，用 researcher 與 coder 兩個子代理，Python 與 TypeScript 各一份。</p>
+    <p class="g-p">（編輯觀點：真正的訊號是三家做法不同、結論相同——瓶頸不在模型多聰明，而在誰被允許佔住那一條迴圈。）</p>
+    <p class="g-p">原文也預期這個模式會擴散到工具層：不只子代理可以非同步，工具呼叫也可以。</p>
+    <p class="g-p">要注意邊界：任務通知還在 beta，API 可能再改。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>阻塞是架構問題，不是速度問題。</b>一次長呼叫就讓整個代理停擺。</p>
+      <p><b>先有控制面，再談調度。</b>五個工具管的是任務，不是優先級。</p>
+      <p><b>打斷或排隊，是設計決策。</b>預設打斷，適合改規格而非加需求。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="devrev-operator-computer.html">企業代理的分工學：Operator 動手，Computer 遞球</a><span class="d">2026-11-05</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="agent-browser-toolsets.html">瀏覽器工具設計：少回合、少往返，成本約差 13 倍</a><span class="d">2026-11-03</span></div>
+      <div class="g-relrow"><span class="s">Claude</span><a href="claude-marketplace-agents.html">代理上架：企業買的不是模型，是治理外殼</a><span class="d">2026-11-05</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-06 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

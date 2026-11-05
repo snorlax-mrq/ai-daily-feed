@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 代理的 CPU 帳：每瓦能養幾個代理 · AI 每日動態檔案</title>
+<meta name="description" content="NVIDIA 稱在 100MW 比較中，Vera 對最快 x86 每瓦多 1.6 倍代理數、對最省電 x86 代理速度快 2 倍；Perplexity、DeepInfra、ClickHouse 等六家夥伴各自公布測試。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>代理的 CPU 帳：每瓦能養幾個代理</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：NVIDIA〈Vera Delivers the Best of Both Worlds: Highest Throughput and Fastest Agents〉——產品說明＋夥伴測試數據</p>
+    <p class="g-meta">
+      <span>NVIDIA</span>·<span>2026-11-05 發布</span>·<span>2026-11-06 收錄</span>·
+      <a href="https://blogs.nvidia.com/blog/vera-cpu-highest-throughput-fastest-agents/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>1.6× 每瓦代理數</b><span>對比最快的 x86 CPU，前提是 NVIDIA 的 100MW 資料中心比較</span></div>
+    <div class="g-stat"><b>2× 代理速度</b><span>對比最省電的 x86 CPU；原文稱同時保有領先的能耗效率</span></div>
+    <div class="g-stat"><b>6 家早期採用者</b><span>Perplexity、DeepInfra、ClickHouse、DuckLabs、Daytona、Modal，各自公布測試</span></div>
+    <div class="g-stat"><b>176 核</b><span>ClickHouse 用標準 binary、未針對 Vera 調校，即近線性擴展</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">代理把算力重心推回 CPU，也把<strong>「每瓦能養幾個代理」</strong>變成採購規格。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一個代理任務在兩種晶片之間來回</b> — 每一步工具呼叫都回到 CPU（本站重繪）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">CPU → GPU</span><span class="tr"><i>送上下文推理，決定下一步</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">GPU → CPU</span><span class="tr"><i>拿到指令，去搜尋或查資料庫</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">CPU → GPU</span><span class="tr"><i>回報結果，再推理一次</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">GPU → CPU</span><span class="tr"><i>寫並測試程式，或真的執行動作</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重繪。原文只以一句「代理在 GPU 推理與 CPU 執行之間移動」描述，未給步驟數與順序；此處按原文列舉的四類動作示意，實際迴圈次數依任務而定。</p>
+    </figure>
+
+    <p class="g-p">代理不只生成答案。它會搜尋資訊、查資料庫、寫並測試程式，然後真的採取行動。</p>
+    <p class="g-p">原文的關鍵句是：這些步驟每一個都依賴 CPU，代理在任務中不斷在兩種晶片之間切換。</p>
+    <p class="g-p">（編輯推論：這也解釋為什麼「模型更快」不一定讓代理更快——慢常常慢在半路的工具呼叫，不在生成。）</p>
+    <p class="g-p">代理越自主，工具呼叫就越密：每次搜尋、每次跑測試，都是一次 CPU 排隊。</p>
+    <p class="g-p">於是「能同時養幾個代理」變成容量問題，而容量在資料中心裡最終換算成瓦數。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">電力上限，把「每瓦」推到規格欄</h2>
+    <p class="g-p">原文用 power limited 形容 AI 工廠：電力有上限，所以營運方只能挑「每瓦做最多事」的基礎設施。</p>
+    <p class="g-p">需求寫得很清楚：更多代理同時跑，但每一個都不該等更久。</p>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>指標</th><th>數字</th><th>對比對象</th></tr></thead>
+        <tbody>
+          <tr><td data-l="指標"><b>每瓦代理數</b></td><td data-l="數字">1.6 倍</td><td data-l="對比">最快的 x86 CPU</td></tr>
+          <tr><td data-l="指標"><b>代理速度</b></td><td data-l="數字">2 倍</td><td data-l="對比">最省電的 x86 CPU</td></tr>
+          <tr><td data-l="指標"><b>100MW 比較結論</b></td><td data-l="數字">單顆勝過兩者</td><td data-l="對比">同上兩個 x86 基準（NVIDIA 測）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">兩個倍數不是同一場比賽：一個比「單位電力能塞幾個代理」，一個比「單一代理跑多快」。</p>
+    <p class="g-p">（編輯推論：原文把它們並列，是主張兩頭都贏；讀者要自己記住對照的是不同對手。）</p>
+    <p class="g-p">那個 100MW 是資料中心規模的推論，不是單機跑分——原文用整座機房的電力預算當分母。</p>
+    <p class="g-p">Vera 的定位因此是把「快」與「密」兩種 x86 需求收進同一顆 CPU，業者不必再靠配比抓平衡。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">六家夥伴，六種工作負載</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>夥伴</th><th>測什麼</th><th>原文數字</th></tr></thead>
+        <tbody>
+          <tr><td data-l="夥伴"><b>Perplexity</b></td><td data-l="測什麼">代理式編碼任務</td><td data-l="數字">快 1.5 倍；計畫導入生產系統</td></tr>
+          <tr><td data-l="夥伴"><b>DeepInfra</b></td><td data-l="測什麼">生產代理工作負載的編排</td><td data-l="數字">最高 2.2 倍，四種架構中最快</td></tr>
+          <tr><td data-l="夥伴"><b>ClickHouse</b></td><td data-l="測什麼">標準 binary、176 核擴展</td><td data-l="數字">近線性擴展、ClickBench 硬體榜首</td></tr>
+          <tr><td data-l="夥伴"><b>DuckLabs</b></td><td data-l="測什麼">TPC-H SF1000</td><td data-l="數字">中位數約 1.5 倍（基線 Intel Xeon 6）</td></tr>
+          <tr><td data-l="夥伴"><b>Daytona</b></td><td data-l="測什麼">代理沙箱上線與併發</td><td data-l="數字">1,000 個 10.8 秒（x86 為 88.4 秒）；2,000 併發每秒完成 12.7 件</td></tr>
+          <tr><td data-l="夥伴"><b>Modal</b></td><td data-l="測什麼">每核沙箱吞吐</td><td data-l="數字">最高 2 倍，負載重時增益更大</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">六個數字分散在編碼、編排、資料庫查詢與沙箱開機，不能加總成一個「快幾倍」。</p>
+    <p class="g-p">性質也不同：ClickHouse 與 DuckLabs 量的是查詢，Daytona 量的是開機與併發，Perplexity 量的是編碼任務。</p>
+    <p class="g-p">唯一由 NVIDIA 自己跑的是 100MW 那一組；其餘都是夥伴自家部落格發布。</p>
+    <p class="g-p">原文沒給對手 x86 的型號（DuckLabs 那組以 Intel Xeon 6 為基線）與基準日，也沒說測試方法。</p>
+    <p class="g-p">Perplexity 那條還帶著下一步：原文說它計畫在即將上線的生產系統部署 Vera，不只停在測試。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">怎麼讀這組數字</h2>
+    <p class="g-p">先看自己的瓶頸在哪：如果你的代理大半時間在等 API 或等人核准，換 CPU 不會救你。</p>
+    <p class="g-p">沙箱開機 10.8 秒對 88.4 秒很漂亮，但它是一次性開銷，占整體迴圈的比例取決於任務長度。</p>
+    <p class="g-p">（編輯推論：真正該問的是「同一批代理腳本，換平台後總完成時間變多少」，而原文沒有這個數字。）</p>
+    <p class="g-p">第二個問題是基準：<em>against the fastest x86</em> 與 <em>against the most energy-efficient x86</em> 是兩個不同的對手，不能互相代換。</p>
+    <p class="g-p">兩個基準服務的讀者也不一樣：在意延遲的買「快」，在意機櫃與電費的買「每瓦代理數」。</p>
+    <p class="g-p">（編輯觀點：硬體發布把兩種對手並列很常見，因為兩邊都贏聽起來最強；讀者要自己拆回兩張表。）</p>
+    <p class="g-p">第三個問題是誰在測：六家夥伴的數字都掛在自己部落格，動機與方法不透明，原文只把它們當旁證。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>代理讓 CPU 回到預算表。</b>每一步工具呼叫都要有人執行。</p>
+      <p><b>電力上限是新的選型軸。</b>比快不夠，要比每瓦養幾個代理。</p>
+      <p><b>六個倍數不能相加。</b>先確認對手與工作負載再比。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain</span><a href="async-subagents.html">非同步子代理：把「等」從迴圈裡搬走</a><span class="d">2026-11-06</span></div>
+      <div class="g-relrow"><span class="s">Mistral AI</span><a href="mistral-studio.html">主權 AI 的落地盤：模型會換，平台要留</a><span class="d">2026-11-06</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="devrev-operator-computer.html">企業代理的分工學：Operator 動手，Computer 遞球</a><span class="d">2026-11-05</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-06 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
