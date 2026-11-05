@@ -12,7 +12,7 @@
 <body>
 <header class="bar"><div class="bar-in">
   <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
-  <nav class="bar-nav"><span class="day-link is-off"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l-7 7 7 7"/></svg>末日</span><a href="../topics.html" class="day-catalog">主題</a><a href="../index.html" class="day-catalog">目錄</a><a href="2026-11-04.html" class="day-link">11-04<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l7 7-7 7"/></svg></a></nav>
+  <nav class="bar-nav"><a href="2026-11-06.html" class="day-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l-7 7 7 7"/></svg>11-06</a><a href="../topics.html" class="day-catalog">主題</a><a href="../index.html" class="day-catalog">目錄</a><a href="2026-11-04.html" class="day-link">11-04<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l7 7-7 7"/></svg></a></nav>
   <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
   <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
     <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
@@ -33,28 +33,28 @@
       <h2 class="co-tab">OpenAI</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-04</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-04</span><i class="chip chip--topic">合作與收購</i><i class="chip chip--topic">開發者工具</i></div>
           <h3 class="item-title"><a href="https://openai.com/index/openai-to-acquire-pierre" target="_blank" rel="noopener">OpenAI to acquire Pierre Computer Company, Inc.<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">OpenAI will acquire Pierre Computer Company, expanding Codex’s tools for building, understanding, and reviewing code.</p>
-          
+          <ul class="item-points"><li>OpenAI 宣布收購 Pierre Computer Company（旗下有 Code Storage 服務與一系列開源開發者工具）；交易仍待監管機關核准等慣例條件，完成前兩家公司維持獨立運作。</li><li>大家其實早就在用 Pierre 的東西：Codex 應用程式裡瀏覽檔案用的 Trees 與檢視變更用的 Diffs 兩套程式庫都出自 Pierre。</li><li>Pierre 其他作品包括 Diffs 的 Edit 模式（直接在 diff 裡改那一行）、可隨打字或 agent 串流即時更新的極速語法高亮 Highlights，以及讓應用程式用 Git 儲存程式碼與歷史的 Code Storage API。</li><li>策略上是延續本週公開的自研 Git 後端 Pando：官方說法是隨 agent 平行開發變多，Git 周邊系統必須跟著演化，目標是讓 Codex 從 agent 開第一個分支到部署上線都包辦。</li><li>收購後 Pierre 的開源專案維持開源並繼續貢獻；Code Storage 客戶可繼續使用，官方計畫把其功能逐步併入 Codex。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-04</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-04</span><i class="chip chip--topic">資安與漏洞</i><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://openai.com/index/daybreak-red-aws-govcloud" target="_blank" rel="noopener">Daybreak Red is now available in AWS GovCloud (US-East)<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Daybreak Red brings GPT-5.6 Cyber to approved customers in AWS GovCloud (US-East) through Amazon Bedrock for authorized cybersecurity work.</p>
-          
+          <ul class="item-points"><li>Daybreak Red 進駐 AWS GovCloud（美東）：搭載 GPT-5.6 Cyber 的資安模型可透過 Amazon Bedrock 提供給通過核准的政府客戶使用。</li><li>Daybreak Red 是 OpenAI 針對資安任務專門訓練的模型存取方案，用途限定在授權的漏洞研究、漏洞利用驗證與安全測試，官方要求合格的資安人員在實際套用前先審查發現與修補建議。</li><li>與一般模型相比，Daybreak Red 對這類授權資安工作給出較少拒絕回答，同時加上更強的身分驗證、監控與存取控制。</li><li>資料處理條件寫得明確：在 Bedrock 上執行 Daybreak Red 時，推論資料不用於訓練模型，客戶也不必把資料分享給 OpenAI。</li><li>取用需要兩道手續：先通過 OpenAI Daybreak Red 核准（填申請表或找業務窗口），再請 AWS 帳號團隊開通；Daybreak Red 的核准本身不會自動在 AWS 上啟用模型存取。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-04</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-04</span><i class="chip chip--topic">資安與漏洞</i><i class="chip chip--topic">研究與科學</i></div>
           <h3 class="item-title"><a href="https://openai.com/index/a-thousand-fewer-paths-to-root" target="_blank" rel="noopener">A thousand fewer paths to root<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">OpenAI built an autonomous pipeline that found, validated, and generated patches for 948 local privilege-escalation vulnerabilities in the Linux kernel.</p>
-          
+          <ul class="item-points"><li>OpenAI 在受控研究環境用自動化管線掃 Linux 核心（逾 4,000 萬行程式碼）：找出 2,308 個候選問題、動態重現 1,724 個漏洞，最終做出 948 個可讓一般本機使用者取得 root 的本地提權（LPE）利用程式。</li><li>管線分五階段：Scout agent 先圈出低權限使用者可觸及的稽核目標（5,034 個、約 280 萬行，僅全庫 7%），Analyst agent 產出候選，接著動態驗證、可利用性評估、產生修補，最後由人類研究員審查後通報。</li><li>驗證階段在跑 KASAN 的隔離 VM 內自動反覆修正 PoC，30 小時內重現 1,724 個（約 74.7%）；剩下的多半需要更高權限、卡在罕見競態或特定觸發條件，只有 3.1% 是模型誤判。</li><li>成本全公開：整體 API 花費約 121 萬美元，平均每個成功 LPE 利用程式 359 美元；對照 Pwn2Own／TyphoonPWN 歷來 2 萬至 7 萬美元的單一核心 LPE 獎金，官方稱這條管線在本研究當下是「淨獲利」的。</li><li>模型變強會找到更多漏洞：2026 年 7 月 GPT-5.6 Sol 只找到 166 個 LPE，10 月的新資安模型找到 948 個；抽樣 166 個利用程式後，發現模型用了 10 種連第三方核心攻擊專家都沒見過的新技巧。</li><li>方法論上兩個反直覺結論：能力更強的模型反而需要更少的外掛框架（為 GPT-5.5 加技巧庫可把成功率從 76.2% 拉到 88.9%，但對 GPT-5.6 只多 1.5 個百分點，於是整套拔掉），以及驗證結果之外還要驗證「路徑」——早期有 20 個宣稱成功的利用其實是打了另一個 0-day。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-04</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-04</span><i class="chip chip--topic">企業導入案例</i><i class="chip chip--topic">智能代理</i></div>
           <h3 class="item-title"><a href="https://openai.com/index/devrev-enterprise-self-service" target="_blank" rel="noopener">DevRev delivers autonomous self-service with GPT-6.1 Sol<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/devrev-operator-computer.html">導讀</a></h3>
           <p class="item-sum">DevRev uses GPT-6.1 Sol to power Computer and Operator, balancing reasoning, speed, and cost for enterprise service.</p>
-          
+          <ul class="item-points"><li>DevRev 用 OpenAI 模型打造 Computer 與 Operator 兩個代理，替服務與營運團隊處理最難的客戶與員工需求；技術長 Ahmed Bashir 強調它們能跨即時資料推理、動作可回溯、答案會標註來源。</li><li>分工上 Operator 負責理解問題並執行經核准的動作，必要時轉給 Computer 準備好人來接手；模型（含 GPT-6 Astra 與 GPT-6.1 Sol）負責推理、規劃與工具選擇。</li><li>DevRev 自建 Enterprise-Bench 評測「模型＋企業情境」的組合：資料有多版本、資訊散在不同系統、存取權限依角色而異；Bashir 說 GPT-6.1 Sol 在延遲、成本與推理準確度之間取得平衡。</li><li>內部開發已全面轉向 Codex，甚至退掉 Cursor 授權；銷售工程師也用 GPT-6 Astra 製作國際展場的 demo。</li><li>下一步是讓 Operator 承擔更長、更複雜的請求，並期待 Decisions API 與 Ultrafast 讓流程「幾秒內自己跑完」；目前知識庫查詢、升級方案、退款等只是起點。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -63,10 +63,10 @@
       <h2 class="co-tab">Claude (Resources)</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">日期未標</span></div>
+          <div class="item-meta"><span class="item-date">日期未標</span><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://claude.com/resources/articles/new-agents-and-products-claude-marketplace" target="_blank" rel="noopener">New agents and products for security, productivity, and creative work on Claude Marketplace<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/claude-marketplace-agents.html">導讀</a></h3>
           
-          
+          <ul class="item-points"><li>Claude Marketplace 新增一批合作夥伴的代理與產品，總數已超過 25 個；符合資格的企業客戶可把已承諾的 Anthropic 支出額度部分挪來買這些方案。</li><li>資安類：Chainguard Harness 在隔離 microVM 內建置並實測應用程式找可利用漏洞、Checkmarx One 結合規則分析與 AI 推理、Cyera Agent Guardian 盤點 Claude 部署並管制權限／prompt／檔案／工具呼叫、Rubrik Code Guardian 掃 repo 找多步攻擊路徑並轉成 ticket、Tanium Cloud 提供端點即時可視性。</li><li>開發基礎設施：Datadog Agent Observability 追蹤代理跨工具與服務的執行軌跡以改進品質、效能與成本；Netlify Enterprise 把應用、網站與代理部署到全球邊緣網路，附 SSO、角色權限與稽核紀錄。</li><li>行銷創意與生產力：AirOps（AI 搜尋策略與內容執行）、Runway（影片／圖像／音訊生成與自然語言剪輯）、Webflow；Asana AI Teammates（各自有身分、權限範圍與稽核軌跡）、Glean、monday agents、Zoom Agentic Search（在 Claude 內用會議摘要與工作對話問答，且權限一致）。</li><li>共同模式是「代理要有身分、權限邊界與稽核軌跡」：Asana 明講需要判斷的決策會交回路人手上，monday 讓管理者控制 AI 能存取、核准與花費的範圍。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -75,10 +75,10 @@
       <h2 class="co-tab">Google Research</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-04</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-04</span><i class="chip chip--topic">研究與科學</i><i class="chip chip--topic">開源</i></div>
           <h3 class="item-title"><a href="https://research.google/blog/agile-deliberation-how-ai-helps-humans-define-the-gray-areas/" target="_blank" rel="noopener">Agile Deliberation: How AI helps humans define the gray areas<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Data Mining &amp; Modeling</p>
-          
+          <ul class="item-points"><li>問題設定：訓練分類器時預設標註者心裡已有清楚定義，但「健康食物」「激勵人心的藝術」「內容審核」這類主觀類別的邊界會隨文化、政策與個人想法變動，人往往要看到真實案例才發現自己的例外規則。</li><li>Agile Deliberation 把「定義主觀類別」改成使用者與 AI 的迭代對話，分兩階段：概念盤點（把大概念拆成子類別並明列排除項）與概念迭代（由視覺語言模型主動挑出語意上邊界模糊的圖片，逼使用者表態）。</li><li>跟主動學習的差異在挑選標準：不是挑讓模型最不確定的樣本，而是挑「挑戰目前文字定義」的樣本，例如拿一杯果昔去質問「健康飲食」的定義——它含生鮮水果，但糖分高算不算加工食品？</li><li>使用者回饋直接餵進自動提示優化迴圈，分類邊界跟著更新的定義一起移動，使用者不必自己寫 prompt。</li><li>評估不用靜態基準，改做 18 場各 1.5 小時的真人實驗（健康食物、內容審核的「Pay-to-Play」點擊誘餌兩題），對照零樣本、全自動協作者、純人工三種基線；結果一致性與表現皆優於基線，最難的主觀圖片差距最大，且使用者回報認知疲勞與焦慮明顯下降、所有人都偏好這個做法。</li><li>程式與演算法已開源在 google-research  repo（含 Colab 示範），論文發表於 CVPR 2026。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -86,13 +86,13 @@
   <nav class="day-foot" aria-label="日期切換">
     <a class="df-link" href="2026-11-04.html"><span class="df-dir">隔日</span>2026-11-04</a>
     <a class="df-link df-home" href="../index.html">館藏目錄</a>
-    <span class="df-link is-off"><span class="df-dir">前一日</span>—</span>
+    <a class="df-link" href="2026-11-06.html"><span class="df-dir">前一日</span>2026-11-06</a>
   </nav>
 </main>
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">資料來源：OpenAI · Anthropic · Google DeepMind · Google Research · Google Blog · xAI · Meta AI · DeepSeek · Mistral · NVIDIA · AMD · OpenRouter · LangChain · Unsloth — 僅收錄官方第一手公告。</p>
   <p class="foot-md">原始資料：<a href="../md/2026-11-05.md" target="_blank" rel="noopener">2026-11-05.md</a></p>
-  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-05 07:09 (UTC+8)</p>
+  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-06 07:00 (UTC+8)</p>
 </div></footer>
 <script src="../assets/site.js" defer></script>
 </body>
