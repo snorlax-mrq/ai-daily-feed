@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 每日動態 — 2026-11-07</title>
+<meta name="description" content="2026-11-07 AI 大廠官方發布：4 個來源、10 則公告。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="2026-11-06.html" class="day-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l-7 7 7 7"/></svg>11-06</a><a href="../topics.html" class="day-catalog">主題</a><a href="../index.html" class="day-catalog">目錄</a><span class="day-link is-off">最新<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l7 7-7 7"/></svg></span></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+  <div class="day-head">
+    <div class="day-title-row">
+      <h1>2026 年 11 月 7 日</h1>
+      <span class="stamp" aria-label="10 則公告">10 則公告</span>
+    </div>
+    <p class="day-stats">4 個來源 · 官方第一手公告，自動抓取後歸檔。原文連結皆指向發布機構。</p>
+  </div>
+  <div class="stack">
+
+    <section class="co-card">
+      <h2 class="co-tab">OpenAI</h2>
+      <ol class="items">
+        <li><article class="item">
+          <div class="item-meta"><span class="item-date">2026-11-06</span><i class="chip chip--topic">研究與科學</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://openai.com/index/measuring-how-ai-agents-handle-wet-lab-science" target="_blank" rel="noopener">Measuring how AI agents handle everyday wet-lab science<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="item-sum">OpenAI introduces BioBasicsBench, a 100-task benchmark measuring how well AI agents interpret raw experimental data and handle everyday wet-lab science.</p>
+          <ul class="item-points"><li>OpenAI 與酵素設計公司 Ligo 合推 BioBasicsBench：100 個任務全部來自科學家自己的實驗資料，測 agent 能不能讀懂凝膠與轉漬影像、菌落盤照片、顯微影像與 z-stack、流式細胞儀原始檔、FASTQ 等「日常濕實驗室」證據，並辨識實驗錯誤、判斷證據能否支持結論。</li><li>任務覆蓋五個領域（蛋白質方法、影像與流式細胞、定量與分析、核酸方法、分子選殖），每題配專家撰寫的評分 rubric，經內部＋外部博士級科學家三層審查；答案按 rubric 分項給分，能區分「結論對」與「分析部分對」。</li><li>成績（xhigh reasoning effort）：GPT‑6 Astra 66.7%、GPT‑6.1 Sol 62.0%，GPT‑5.6 Sol 只有 43.8%；評測共 7 個模型、37 組模型×推理設定、每題 5 次嘗試，合計 18,500 筆結果。</li><li>Astra 的進步在三處：辨識資料能／不能支持什麼（偵測染劑訊號重疊就拒絕下結論）、多模態細節（抓到陰性對照盤上的標籤寫錯抗生素）、保有實驗脈絡（認出顯微序列是 z-stack 而非細胞消失）。</li><li>仍會犯的錯也很具體：讓既有假設壓過對照組證據（菌落 PCR 選錯 lane）、無視矛盾觀察（只記得「液泡較深」）、數菌落不準（鄰近分不開、漏數、把空瓊脂算進去，約高估 12%）。</li></ul>
+        </article></li>
+<li><article class="item">
+          <div class="item-meta"><span class="item-date">2026-11-06</span><i class="chip chip--topic">資安與漏洞</i></div>
+          <h3 class="item-title"><a href="https://openai.com/index/partnering-with-hacktron" target="_blank" rel="noopener">Partnering with Hacktron to find vulnerabilities in OpenAI’s systems<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="item-sum">OpenAI is partnering with Hacktron to find vulnerabilities, test connections with third-party services, and strengthen defenses with frontier AI.</p>
+          <ul class="item-points"><li>OpenAI 宣布與資安團隊 Hacktron 合作找自家系統漏洞，重點放在 OpenAI 系統與第三方服務「怎麼互動」的環節；由雙方工程師與研究員共同挑高優先區域測試。</li><li>Hacktron 是透過 Security Bug Bounty 計畫認識的：這支團隊專門打造程式碼審查、滲透測試與紅隊用的 AI agent，已通報多個應用程式、雲端基礎設施與身分系統之間互動的漏洞。</li><li>合作包含透過 Daybreak Red 擴大 Hacktron 對前沿模型的存取；這是一週內的第三個資安動作——先前才宣布 Cathedral 研究員將加入下一個 security sprint、並提高 bug bounty 獎金。</li></ul>
+        </article></li>
+<li><article class="item">
+          <div class="item-meta"><span class="item-date">2026-11-05</span><i class="chip chip--topic">企業導入案例</i></div>
+          <h3 class="item-title"><a href="https://openai.com/index/franklin-templeton" target="_blank" rel="noopener">Franklin Templeton uses OpenAI to support investment research<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="item-sum">Starting with equity research, Franklin Templeton is developing AI workflows to help portfolio managers compare research views and examine investment risks.</p>
+          <ul class="item-points"><li>Franklin Templeton 從股票研究起步，用 Codex 等工具打造投資研究工作流，目標是把研究、風險、法遵、交易的不同視角整合起來，供給真正做決策的投資組合經理。</li><li>關鍵轉折是加上 agent 與語意層：光把資料塞進資料庫連模型不夠，模型不懂資料彼此的關係；補上結構化的語意層才出現他們所謂的 connected intelligence layer。</li><li>刻意反著推薦系統的直覺做：不讓工具只餵使用者偏好的研究來源（避免觀點越縮越窄），並要求 AI 主動凸顯投資風險——「好的投資點子要經得起風險分析」。</li><li>落地方式：Codex hackathon 讓投資人員自建工具，Investment AI champions 負責把實驗變成含資安審查、專家支援與資料控制的生產級工作流。</li></ul>
+        </article></li>
+<li><article class="item">
+          <div class="item-meta"><span class="item-date">2026-11-05</span><i class="chip chip--topic">企業導入案例</i></div>
+          <h3 class="item-title"><a href="https://openai.com/ads/customers/flipsnack" target="_blank" rel="noopener">Flipsnack grows product signups with conversion optimization<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="item-sum">Flipsnack focused its ChatGPT Ads campaigns on getting people to try its product, growing registrations while lowering the cost per signup.</p>
+          <ul class="item-points"><li>Flipsnack 把五個美國廣告活動從「點擊目標＋固定出價」改成「轉換目標＋最大化轉換出價」：註冊數約 +310%、每筆註冊成本約 −75%，日預算不變（花費僅 +1.3%）。</li><li>打法是把泛用的 Flipbook 活動拆成 Magazine／Catalog／Brochure，再按業務情境開 Sales Enablement、Employee Benefits、Real Estate、Hospitality 等，讓不同職能的買家看出「這產品跟我工作有關」。</li><li>以「完成註冊」為第一個可衡量的動作：視覺化產品的潛客想先動手玩，落地頁直接把人導進註冊流程，再往下接銷售。</li></ul>
+        </article></li>
+<li><article class="item">
+          <div class="item-meta"><span class="item-date">2026-11-05</span><i class="chip chip--topic">企業導入案例</i></div>
+          <h3 class="item-title"><a href="https://openai.com/index/merge-builds-with-openai" target="_blank" rel="noopener">Merge builds product and business tools with OpenAI technology<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="item-sum">Merge uses GPT-6 Astra, ChatGPT, and Codex to review product code and support marketing. Its teams also use AI to plan executive dinners and prepare sales updates.</p>
+          <ul class="item-points"><li>Merge（做統一 API、agent 工具存取與模型路由的整合商）內部全面用 OpenAI：CEO 用 Codex 審產品程式碼、團隊用 GPT‑6 Astra 做產品測試與行銷，銷售團隊也自建核決與預測工作流。</li><li>最有感的應用是「晚餐機器人」：接上 Salesforce、Gong、Google Sheets、Gmail，自動拉出潛在賓客、查過往邀請、寫邀請信、排座位、建行事曆備註；賓客名單與 outreach 從全公司數十小時壓到每場約 30 分鐘，Q3 辦了 16 場（Q2 為 8 場）、Q4 目標 30 場以上。</li><li>順帶一提產品數字：透過 Merge 的 tool call 成功率 99.9%，對比公開 MCP server 約 60%；內部員工自選工具，GPT‑6 Astra 與 Codex 誰比較好寫程式是熱門辯論。</li><li>CEO 的領導心法：「高管的 AI 熟練度就是全組織的天花板」；鼓勵每天撥時間試工具、也允許走進白費的兔子洞。</li></ul>
+        </article></li>
+<li><article class="item">
+          <div class="item-meta"><span class="item-date">2026-11-05</span><i class="chip chip--topic">企業導入案例</i></div>
+          <h3 class="item-title"><a href="https://openai.com/index/cultfit-builds-with-codex" target="_blank" rel="noopener">Cult.fit builds operational muscle with Codex<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="item-sum">Cult.fit is using Codex to help teams across functions build tools, move faster, and change how work gets done.</p>
+          <ul class="item-points"><li>印度健身科技公司 cult.fit（708 家據點、77 城、近百萬付費會員）把工程標準化在 Codex 上：repo 結構、skills、測試、code review 一套慣例，再把 Codex 延伸到 SRE agent（彙整 observability 與 log、查事故、直接開修復 PR）與資安 agent。</li><li>非工程團隊也動起來：資料分析不再塞給中央分析團隊，各組自取自用；HR 自建績效考核工作流，近幾個月非工程團隊蓋了 20+ 個內部應用。</li><li>自報成效：app 的社群 feed 從「原本要超過一年」縮到兩個月端到端上線；儀表板軟體漲價後，一位工程師週末用 Codex 重寫同功能，年省逾 10 萬美元；客服成本降 50% 以上。</li><li>客服改革範例：AI agent 核查天氣、該課程出席模式等訊號，自動決定是否豁免團課曠課罰款，把客服從純人工 chat 模式轉成 AI-first 工作流。</li><li>會員端用 GPT Realtime 做 voice-first AI Trainer（約 20% 健身房用戶在用），鎖定 45% 以上第一次上健身房的新手會員。</li></ul>
+        </article></li>
+<li><article class="item">
+          <div class="item-meta"><span class="item-date">2026-11-05</span><i class="chip chip--topic">企業導入案例</i><i class="chip chip--topic">治理與政策</i></div>
+          <h3 class="item-title"><a href="https://openai.com/index/australian-universities-ai-native-graduates" target="_blank" rel="noopener">Australian universities are creating AI-native graduates<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="item-sum">Australian universities are expanding access to ChatGPT and bringing AI into teaching and learning to prepare students for an AI-enabled workforce.</p>
+          <ul class="item-points"><li>UNSW Sydney、雪梨大學、La Trobe、Adelaide 等校與 OpenAI 合作把 ChatGPT Edu／Codex 帶進校園：UNSW 涵蓋 8 萬名師生、雪梨大學 2027 學期 1 全校開通並設 100 萬澳幣 AI 永續研究基金、La Trobe 全校 4.5 萬人 2027 Q1 開通。</li><li>OpenAI 委託調查 1,018 名澳洲大學生：81% 每週用 AI 數次（33% 一天多次）、28% 已自己做過 AI agent 或助理、79% 希望學校提供更多真實專案的上手機會；61% 認為 AI 技能對職涯必備。</li><li>教學實驗很具體：La Trobe 用 ChatGPT 產生 ECG 判讀、檢傷分類等模擬題，並用 OpenAI 模型驅動的社交機器人 Fletch 讓準老師練習和家長的困難對話；該校還開出澳洲第一個 AI 工程學士（2027）與 AI MBA。</li><li>配套是「使用框架」而非禁令：UNSW 的 Can/Can&#39;t/Must 評量框架（依學習目標指定 AI 可用／禁用／必用）、雪梨大學在監督場域驗證自身能力、開放評量才展現 AI 功力，La Trobe 推免費負責任 AI 學習模組。</li><li>Adelaide University 則是高教首批使用 OpenAI Daybreak Blue 做授權防禦性資安工作的機構，涵蓋漏洞挖掘、安全程式碼審查、惡意程式分析與事件回應。</li></ul>
+        </article></li>
+      </ol>
+    </section>
+
+    <section class="co-card">
+      <h2 class="co-tab">Google Developers</h2>
+      <ol class="items">
+        <li><article class="item">
+          <div class="item-meta"><span class="item-date">2026-11-06</span><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">研究與科學</i></div>
+          <h3 class="item-title"><a href="https://developers.googleblog.com/agent-distraction/" target="_blank" rel="noopener">Agent Distraction<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="item-sum">Analysis of over 913,000 coding agent sessions reveals that 13% expose agents to inline TODO(b/...) comments. In 6% of encounters, agents act on these comments, with 83% being entirely unprompted by the developer. These</p>
+          <ul class="item-points"><li>以程式碼裡遺留的 TODO(b/…)／FIXME(b/…) 當客觀訊號（bug ticket 是唯一真相），分析數千名工程師、上億個 agent 步驟：13% 的讀檔 session 會撞見 bug 註解，6% 的遭遇觸發針對該 bug 的後續動作，其中 83% 完全自發、開發者沒要求。</li><li>自發繞路有兩種樣態：41% 追的是已關閉的死胡同（32% 已修好／驗證完、9% 過時不修、2% 重複或受限 ticket）；57% 的 bug 還開著、agent 自行擴大範圍（61% 只查資料、39% 直接改程式碼）。</li><li>用多路固定效應回歸控制開發者、程式庫複雜度、任務類型、模型等級、讀檔數等變數後，未經要求的 bug 繞路讓每個 session 平均多 70% 步驟、77% tokens、105% 等待時間（全數 p&lt;0.0001）。</li><li>Google 的解法：派 agent 掃整個程式庫、回查 bug 與檔案歷史（有時跨數年），確認 TODO 與其意圖真的過時才送刪除建議；半年清掉數千條、人工審查接受率超過 95%。</li><li>主張「agent-friendly codebase」不只熱路徑要健康：被遺忘的角落現在是對 agent 課稅，dead-todo 清理、presubmit 分析器、全庫掃描值得重新排進優先序。</li></ul>
+        </article></li>
+      </ol>
+    </section>
+
+    <section class="co-card">
+      <h2 class="co-tab">NVIDIA</h2>
+      <ol class="items">
+        <li><article class="item">
+          <div class="item-meta"><span class="item-date">2026-11-06</span><i class="chip chip--topic">開源</i><i class="chip chip--topic">硬體與基礎設施</i><i class="chip chip--topic">研究與科學</i></div>
+          <h3 class="item-title"><a href="https://blogs.nvidia.com/blog/telco-open-source-tools-research-6g-networks/" target="_blank" rel="noopener">How NVIDIA Open Source Tools Are Helping Researchers Build Next-Generation 6G Networks<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="item-sum">A year ago, NVIDIA open sourced its Aerial wireless software, joining Sionna and a broader suite of open source tools for accelerating next-generation 6G network development. Together, they give researchers a foundation</p>
+          <ul class="item-points"><li>開源一年，NVIDIA AI Aerial 與 Sionna 的開發者採用成長 10 倍，5G/6G 開源工具下載破 100 萬次，全球超過 8,000 個研究與學術機構在用；方向是 AI-native 6G：連線、運算、感測收斂在同一個軟體定義平台。</li><li>King&#39;s College London 用 Jetson AGX Orin＋Sionna 做「目標導向語意通訊」：機器人只傳物件／位置／關係的精簡描述而非整張影像，任務完成時間最多縮短 52.6%，還能偵測掉落物、用數位孿生預檢碰撞。</li><li>SoftBank 把神經接收器整合進 Aerial CUDA-Accelerated RAN（ACAR）用商用 5G 手機實測：15 個干擾情境全部勝過傳統接收器，uplink 吞吐最高增益約 60%；ETH Zurich 再證明用在地實測資料調校神經接收器，block error rate 降逾三分之一。</li><li>University of Leeds 用 DGX Spark 供電的 5G network-in-a-box 加數位孿生，預測 10 分鐘後的網路需求來決定基地站休眠：RAN 功耗降 45.6% 且不斷線；CTTC 則把 GPU 加速通道模型塞進 5G-LENA 模擬器，模擬時間從約 3 小時縮到 10–20 分鐘。</li></ul>
+        </article></li>
+      </ol>
+    </section>
+
+    <section class="co-card">
+      <h2 class="co-tab">OpenRouter</h2>
+      <ol class="items">
+        <li><article class="item">
+          <div class="item-meta"><span class="item-date">2026-11-06</span><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://openrouter.ai/blog/announcements/auto-and-auto-code-routers/" target="_blank" rel="noopener">Introducing the New Auto and Auto Code Routers<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <p class="item-sum">OpenRouter 官方部落格 · 公告</p>
+          <ul class="item-points"><li>新一代 Auto Router 打掉重練：不再只靠「任務類型」等粗糙訊號，改由快速決策模型一次評估 11 項請求特徵（任務種類、難度、是否剛切換、速度敏感度、需要視覺或 codebase 知識、更大模型／更多思考是否值得等），再疊上即時價格、供應商健康度與快取狀態，同時選出模型與 reasoning effort。</li><li>實測依 benchmark 最多比舊版好 4 倍，p90 路由判斷 0.65 秒、快 3 倍（舊版 1.96 秒）；Auto Router 每月服務超過 10 萬人、2.5T tokens。</li><li>新增 Auto Code（openrouter/auto-code）：專為編碼 harness 從零調校，起跳就用較高等級的編碼模型、更看重延遲、對失敗懲罰更重；五項 benchmark 成績與 Claude Opus 5.5 相當，但每任務成本省 74%。</li><li>切換模型很節制以保護 prompt cache：beta 期間近九成 agent turns 停在同一模型，寧可先調 reasoning effort；同一錯誤反覆出現或編輯後測試失敗才提高換模型機率。beta 對比舊版：無效工具呼叫少 4 倍、代理回應被截斷少一半。</li><li>治理相容：guardrails、零資料保留、供應商限制、允許／排除模型清單、BYOK 先收斂候選池，再在池內選成本最佳解；slug 不變（openrouter/auto），舊 auto-router 設定直接沿用。官方也坦承 router 仍打不贏單一最強前沿模型，定位是工作混雜、要控成本、不想追新模型的場景。</li></ul>
+        </article></li>
+      </ol>
+    </section>
+  </div>
+  <nav class="day-foot" aria-label="日期切換">
+    <a class="df-link" href="2026-11-06.html"><span class="df-dir">← 前一日</span>2026-11-06</a>
+    <a class="df-link df-home" href="../index.html">館藏目錄</a>
+    <span class="df-link is-off"><span class="df-dir">隔日 →</span>已是最新</span>
+  </nav>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">資料來源：OpenAI · Anthropic · Google DeepMind · Google Research · Google Blog · xAI · Meta AI · DeepSeek · Mistral · NVIDIA · AMD · OpenRouter · LangChain · Unsloth — 僅收錄官方第一手公告。</p>
+  <p class="foot-md">原始資料：<a href="../md/2026-11-07.md" target="_blank" rel="noopener">2026-11-07.md</a></p>
+  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-07 10:33 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
