@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 個人代理三件套：模型、記憶、生態 · AI 每日動態檔案</title>
+<meta name="description" content="機器之心對談千問 AI 演算法負責人蔣冠軍：Personal Agent 靠模型、記憶、生態三件套；千問圍繞 30 多個行業定義 8,000 多項原子能力，並把任務上下文規模降低約 40%。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>個人代理三件套：模型、記憶、生態</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：機器之心〈對談千問蔣冠軍：從模型、記憶到生態，Personal Agent 的技術架構如何搭建？〉——人物訪談（受訪者為千問事業部 AI 演算法負責人）</p>
+    <p class="g-meta">
+      <span>機器之心</span>·<span>2026-11-05 發布</span>·<span>2026-11-08 收錄</span>·
+      <a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651072404&amp;idx=1&amp;sn=1de487a458c1d282c00b4a696aae70ee" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>30 多個行業</b><span>千問拆解需求時劃分的行業範圍，對應 8,000 多項模型的原子能力要求</span></div>
+    <div class="g-stat"><b>約 40%</b><span>受訪者稱近一段時間千問相關任務的上下文規模降幅</span></div>
+    <div class="g-stat"><b>70 元現金</b><span>航班延誤理賠案例：Agent 拒收代金券、持續爭取後的實際結果</span></div>
+    <div class="g-stat"><b>3 個核心</b><span>模型、記憶、生態——受訪者說三者缺一都會影響交付</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">Personal Agent 的難點不是「更會聊天」，而是<strong>它得先知道你是誰、能動用什麼</strong>。</p>
+
+    <p class="g-p">受訪者介紹的是千問正在邀測的 Personal Agent「千問 Go！」，並把技術框架收成三件事：模型、記憶、生態。</p>
+    <p class="g-p">他對 Harness 的定義很具體：組織個人記憶、任務資訊、Skill 與工具，構成模型實際執行任務的環境。</p>
+    <p class="g-p">因此模型與 Harness 不能分開看——模型看得到什麼上下文、能呼叫什麼工具，直接決定交付品質。</p>
+    <p class="g-p">（編輯觀點：這段其實是在反對「換更強的模型就好」。他用的是成本論證：能用工具與 Skill 解決就少讓模型自己想。）</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>三層包覆</b> — 生態在外、Harness 居中、模型在內（本站重排）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>3 · 生態</b><small>工具、專業知識、現實服務；能不能接，取決於使用者授權與服務方允許</small><span class="pi">外層</span></div>
+          <div class="ring">
+            <div class="ring-lb"><b>2 · 記憶 ＋ Harness</b><small>組織個人記憶、任務資訊、Skill 與工具；決定模型看得到什麼、能動什麼</small><span class="pi">中間</span></div>
+            <div class="ring-inner"><b>1 · 模型</b> — 理解、推理、規劃，失敗後重新找路</div>
+          </div>
+        </div>
+      </div>
+      <p class="x-src">本站重排。原文的三核心是「模型、記憶、生態」，Harness 則被描述為「組織個人記憶、任務資訊、Skill 與工具」的環境；原文未給這三者的圖示或包覆關係，此處把記憶與 Harness 併為一層。</p>
+    </figure>
+
+    <p class="g-p">他也直說生態不通不是模型變強就能解決：能走 API、MCP 最好，其他方式還得看授權與服務方是否允許。</p>
+    <p class="g-p">這條邊界，是通用 Personal Agent 繞不過去的部分。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">記憶不是多存，是判斷「記什麼、怎麼用」</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>問題</th><th>原文的例子</th><th>受訪者的判準</th></tr></thead>
+        <tbody>
+          <tr><td data-l="問題">記什麼</td><td data-l="例子">使用者說「月薪 8,000 元」</td><td data-l="判準">記數字，還是記「有穩定收入」的狀態</td></tr>
+          <tr><td data-l="問題">怎麼存</td><td data-l="例子">退休養老＋孩子三十多歲沒工作</td><td data-l="判準">兩件孤立事實連起來，可能是家庭焦慮的線索</td></tr>
+          <tr><td data-l="問題">何時召回</td><td data-l="例子">同一位使用者問天氣</td><td data-l="判準">問孩子就業可提養老金背景，問天氣不必提家庭</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">他把這套思路叫「需求驅動的記憶體系」：從「怎麼用」反推「該記什麼」，而不是盡量多存。</p>
+    <p class="g-p">儲存形式反而次要——純文字仍然有效，因為模型的文字理解能力夠強；該投入的是內容選擇、粒度、分層與時效。</p>
+    <p class="g-p">記憶還必須能更新、能失效，召回時要再判斷一次「這條還適用嗎」。</p>
+    <p class="g-p">（編輯觀點：這與其說是資料庫設計，不如說是編輯判斷——難的是取捨標準，不是儲存引擎。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">穩定度靠原子能力，成本不只靠模型</h2>
+    <p class="g-p">他對「驚豔」與「長期使用」的區分很直白：前者看能力上限，後者看能力下限。</p>
+    <p class="g-p">使用者的預期是「多數票都訂得成」，不會接受換一種票就失敗，所以千問繞著 30 多個行業，把需求拆成 8,000 多項「模型原子能力要求」。</p>
+    <p class="g-p">作法是把不同表達聚類、歸約成可訓練的能力，再用後訓練與強化學習提升穩定性，最後組合起來覆蓋真實需求。</p>
+    <p class="g-p">成本方面，他承認荒謬處境：幫使用者搶到 10 元優惠券，消耗的 token 成本可能更高。</p>
+    <p class="g-p">解法分成三塊：模型路由與大小模型切換、推理優化，以及 Harness 本身——工具與 Skill 是平鋪還是分層、相似工具先選哪個，都會改變執行路徑與成本。</p>
+    <p class="g-p">另一個動作是上下文壓縮：歷史對話提煉成記憶、短期 context 按任務篩選、工具資訊精簡；他稱近一段時間相關任務的上下文規模降低約 40%。</p>
+    <p class="g-p">（編輯觀點：40% 是受訪者自述、沒有計算基準與基準日，只能當方向看。）</p>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>長任務的三個檢查點</b> — 目標不丟、步驟可靠、失敗能換路（本站整理）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>規劃</b><small>路徑合不合理</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>執行</b><small>每一步能不能成功</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>重規劃</b><small>失敗後換路，但不偏離使用者目標</small></div>
+      </div>
+      <p class="x-src">本站整理。原文以「規劃是否合理、每一步能否執行成功、失敗後能否重新規劃」三句描述，未以流程圖呈現；此處順序依原文敘述。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">主動服務與操作邊界</h2>
+    <p class="g-p">航班延誤理賠的例子被用來解釋「目標不丟」：使用者要現金，Agent 就把代金券方案視為未完成，持續溝通並找到其他管道，最後獲賠 70 元現金。</p>
+    <p class="g-p">但主動服務他講得很保守：目前還在初級探索，先挑需求與時間點明確的場景（例如健康復查節點），用產品設計限制範圍。</p>
+    <p class="g-p">他的原則是「相關不等於應該反覆提起」：使用者提過不想多談的疾病，即使與後續健康問題相關，也不該每次都拿出來提醒。</p>
+    <p class="g-p">長期目標也分難易：馬拉松成績可以和訓練、休息連起來；「我要升職」範圍太廣，目前還做不到可靠判斷。</p>
+    <p class="g-p">操作邊界則是硬規則：涉及訂單、交易或個人資料修改，該由使用者確認的必須確認；Skill 說明介面行為，系統框架再加一層強約束。</p>
+    <p class="g-p">（編輯觀點：這套「雙保險」是訪談裡最具體的制度設計——它承認 Agent 只能以助理身分辦事，不能替使用者行使權利。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>生態要自己談。</b>授權與接入邊界，不是模型變強就會消失。</p>
+      <p><b>記憶的難點是取捨。</b>什麼不記、什麼時候不提，比存多少重要。</p>
+      <p><b>穩定度要拆到原子能力。</b>上限靠模型，下限靠一條條可測的環節。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">量子位</span><a href="vista-harness-evolution.html">具身代理自進化：不改權重，改 Harness</a><span class="d">2026-11-07</span></div>
+      <div class="g-relrow"><span class="s">機器之心</span><a href="firefly-toolcall-data.html">先探索再出題：把正確答案做成資料的性質</a><span class="d">2026-11-07</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="async-subagents.html">非同步子代理：把「等」從迴圈裡搬走</a><span class="d">2026-11-05</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述內容出自原文訪談（受訪者為產品方主管，數據為其自述、無第三方驗證），圖解與小標為編輯整理，圖解皆為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-08 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 失敗驅動的自改進：把錯誤現場留給下一輪 · AI 每日動態檔案</title>
+<meta name="description" content="復旦、港中文 MMLab 與上海交大提出 ReTerm：讓終端 Code Agent 從自己的失敗現場學恢復，9B 模型在 Terminal-Bench 2.0 由 20.2% 升到 34.8%，SWE-bench Verified 由 45.2% 升到 58.4%。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>失敗驅動的自改進：把錯誤現場留給下一輪</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：機器之心〈讓 Code Agent 從自己的錯誤中進化：ReTerm 探索失敗驅動的 RSI〉——論文解讀（復旦大學、香港中文大學 MMLab、上海交通大學）</p>
+    <p class="g-meta">
+      <span>機器之心</span>·<span>2026-11-04 發布</span>·<span>2026-11-08 收錄</span>·
+      <a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651072104&amp;idx=3&amp;sn=72caa8c3d846ccf53820d188e298acec" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>20.2% → 34.8%</b><span>9B 模型在 Terminal-Bench 2.0 的成績（ReTerm-9B 對比基礎模型）</span></div>
+    <div class="g-stat"><b>+6.8 個百分點</b><span>相對「標準 GRPO 已達 28.0%」再往上加的幅度，即專練恢復行為的淨值</span></div>
+    <div class="g-stat"><b>約 1 萬條</b><span>ReTerm-10K 的恢復軌跡數量，靠更強教師模型示範失敗現場怎麼修</span></div>
+    <div class="g-stat"><b>4 類未過 32%</b><span>除工具使用外，其餘四類錯誤（規劃、程式實作、驗證、資源管理）的恢復率仍未超過 32%</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">Code Agent 的失敗很少是「答錯一題」，而是<strong>把環境弄壞之後還沿著錯假設往前走</strong>。</p>
+
+    <p class="g-p">終端任務的糾錯比改一題答案難：錯誤動作已經改過檔案、裝過依賴、起過行程。</p>
+    <p class="g-p">Agent 要繼續，得先搞清楚「剛剛到底發生了什麼」，才能判斷問題在哪一層。</p>
+    <p class="g-p">原文的 PyStan 案例最能說明差距：套件明明裝好了，<em>import pystan</em> 卻一直報錯。</p>
+    <p class="g-p">標準 GRPO 訓練的模型反覆匯入、解除安裝、重裝，始終沒跳出錯誤方向；ReTerm 版則去看安裝路徑，發現模組落在 stan 目錄，改用 <em>import stan</em> 就通了。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>把失敗接回訓練閉環</b> — 每一步都留下可驗證的痕跡（本站重排）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">Agent 執行任務失敗</span><span class="tr"><i>系統保留當時的環境與操作紀錄</i></span></span></li>
+        <li class="side"><span class="st">01b</span><span class="body"><span class="hop">旁支：冷啟動</span><span class="tr"><i>ReTerm-10K 用教師模型示範「接手失敗現場」怎麼修，約 1 萬條軌跡</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">從同一現場重來</span><span class="tr"><i>Agent 獨立嘗試多種恢復辦法，不是只走一條</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">任務驗證器判定</span><span class="tr"><i>哪些嘗試真的完成任務，就是正樣本</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">成敗轉成 RL 訊號</span><span class="tr"><i>更新參數；能力變了，新產生的失敗再回到 01</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重排。原文以「保留失敗現場、自主嘗試恢復、依結果學習」描述閉環，未給輪數或每輪嘗試次數。</p>
+    </figure>
+
+    <p class="g-p">關鍵設計是「起點」的選擇：不從乾淨環境學成功軌跡，也不人工注入錯誤。</p>
+    <p class="g-p">理由是這兩種做法都不像模型真正會犯的錯——前者覆蓋不到爛掉的狀態，後者錯得不像它。</p>
+    <p class="g-p">原文把這稱為自身的「失敗現場」：環境已被前一步改動，後續動作面對的是一個被改過的世界。</p>
+    <p class="g-p">（編輯觀點：這也是為什麼「重跑一次」沒有用——重跑換掉的是環境，不是策略。）</p>
+    <p class="g-p">冷啟動的 ReTerm-10K 則補上示範：由更強教師模型接手失敗任務，示範如何檢查、修復、完成，再篩掉品質不夠的軌跡。</p>
+    <p class="g-p">先學會「接手爛攤子」，再進到線上 RL 去解決自己新產生的問題，這是原文安排的順序。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三個評測同步上升，同規模也站得住</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>評測</th><th>基礎模型</th><th>ReTerm-9B</th><th>增幅</th></tr></thead>
+        <tbody>
+          <tr><td data-l="評測">Terminal-Bench 2.0</td><td data-l="基礎">20.2%</td><td data-l="ReTerm"><b>34.8%</b></td><td data-l="增幅">+14.6 點</td></tr>
+          <tr><td data-l="評測">SWE-bench Verified</td><td data-l="基礎">45.2%</td><td data-l="ReTerm">58.4%</td><td data-l="增幅">+13.2 點</td></tr>
+          <tr><td data-l="評測">OpenThoughts-TBLite</td><td data-l="基礎">44.2%</td><td data-l="ReTerm">60.6%</td><td data-l="增幅">+16.4 點</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">消融把功勞分得比較清楚：恢復示範 SFT 讓 20.2% 到 25.8%，標準 GRPO 到 28.0%，ReTerm-GRPO 才到 34.8%。</p>
+    <p class="g-p">也就是說，在「已經用 RL 練過」之上，專門練恢復行為還多賺 6.8 個百分點。</p>
+    <p class="g-p">原文另註明：ReTerm 與 Qwen3.5-9B 用同一套執行框架與評測配置，其他模型的數字取自各自論文或官方發布，配置未必相同。</p>
+    <p class="g-p">換句話說，原文只點名 ReTerm 與 Qwen3.5-9B 共用框架與配置，其餘跨模型比較要打折看。</p>
+    <p class="g-p">同一批實驗也顯示，9B 這種規模在部分評測上贏過參數更大的模型，但仍要放回上面那句配置差異一起讀。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">換框架、換任務，增益還在不在？</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>遷移與邊界</b> — 同一組實驗的兩個方向（本站整理）</figcaption>
+      <div class="x-cmp">
+        <div class="side"><b>站得住</b><small>Terminal-Bench 2.0 換三套執行框架，仍勝過基礎模型，保留 6.7–12.4 個百分點；AIME 2025 Pass@1 由 73.3% 到 93.3%，SpreadsheetBench Verified 由 37.8% 到 48.8%。</small></div>
+        <div class="side"><b>還沒解決</b><small>五類錯誤恢復率都高於基礎與標準 GRPO，但除工具使用外，其餘四類（規劃、程式實作、驗證、資源管理）都還沒超過 32%。</small></div>
+      </div>
+      <p class="x-src">本站整理。原文分別陳述「換框架仍有效」與「四類錯誤恢復率仍低」，未提供兩者的因果解釋。</p>
+    </figure>
+    <p class="g-p">跨到數學推理與表格操作也有提升（AIME 2024、Aider Polyglot 同樣上升），原文的說法是展現跨任務領域的泛化潛力。</p>
+    <p class="g-p">（編輯觀點：真正稀缺的不是「會重試」，而是「知道該去哪裡找證據」——PyStan 那一手看的是安裝路徑，不是再試一次。）</p>
+    <p class="g-p">（編輯推論：若四類錯誤的恢復率卡在三成以下，下一步的瓶頸可能在驗證器：有些失敗無法用最終答案判定對錯。）</p>
+    <p class="g-p">原文的收尾把定位講明白了：失敗從一次執行的終點，變成後續學習的材料。</p>
+    <p class="g-p">它給的是可實驗、可分析的切入點，而不是宣稱 Agent 已經能自我進化。</p>
+    <p class="g-p">（編輯觀點：這條路吃得下多少任務，取決於「做完了沒」能不能被自動判定；開放式任務往往沒有這種驗證器。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>失敗要留現場。</b>沒有環境與操作紀錄，就只剩下「重跑一次」。</p>
+      <p><b>只練恢復才划算。</b>同樣用 RL，專練恢復比一般訓練多 6.8 點。</p>
+      <p><b>驗證器決定上限。</b>判不出對錯的失敗，進不了這個閉環。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">量子位</span><a href="vista-harness-evolution.html">具身代理自進化：不改權重，改 Harness</a><span class="d">2026-11-07</span></div>
+      <div class="g-relrow"><span class="s">機器之心</span><a href="firefly-toolcall-data.html">先探索再出題：把正確答案做成資料的性質</a><span class="d">2026-11-07</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="async-subagents.html">非同步子代理：把「等」從迴圈裡搬走</a><span class="d">2026-11-05</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述資料出自原文（研究團隊自報），圖解與小標為編輯整理，圖解皆為本站重繪／整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-08 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

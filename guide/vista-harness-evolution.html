@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 具身代理自進化：不改權重，改 Harness · AI 每日動態檔案</title>
+<meta name="description" content="清華與新加坡國立大學開源 VISTA：讓 Meta-agent 自己讀執行紀錄、改寫機器人的 Harness，模型權重全程凍結，LIBERO-Pro 整體成功率由 17.5% 升到 95.0%。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>具身代理自進化：不改權重，改 Harness</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：量子位〈機器人自己寫程式修自己，成功率從 17.5% 漲到 95%〉——研究報導（清華大學與新加坡國立大學團隊）</p>
+    <p class="g-meta">
+      <span>量子位</span>·<span>2026-11-07 發布</span>·<span>2026-11-08 收錄</span>·
+      <a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&mid=2247940414&amp;idx=3&amp;sn=6a208ab7dffbe83bfda1e6dd1c91550d" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>17.5% → 95.0%</b><span>LIBERO-Pro 整體任務成功率：初始 Harness 對比演化後版本</span></div>
+    <div class="g-stat"><b>0 次權重更新</b><span>底層模型參數全程凍結，改的只有技能程式與指令</span></div>
+    <div class="g-stat"><b>16/16</b><span>奶油乳酪盒上架任務：兩輪開發後滿分，重測仍滿分</span></div>
+    <div class="g-stat"><b>3 個評測場</b><span>LIBERO、RoboCasa、RoboTwin，評估時 Harness 程式固定不動</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">這篇的重點不是更強的機器人模型，而是<strong>把 Harness 當成程式碼來演化</strong>——動手的是 Meta-agent。</p>
+
+    <p class="g-p">Harness（本文沿用原文用語）指的是包在模型外面的那一層：給模型什麼指令、開放哪些技能、怎麼呼叫工具、怎麼解讀執行回饋。</p>
+    <p class="g-p">技能程式、呼叫邏輯與持久記憶，原文都算在「可以開發」的範圍內；模型本身不在其中。</p>
+    <p class="g-p">（編輯觀察：這條路線的前提假設是——機器人做不好，常常不是模型不夠聰明，而是外層把它的能力組錯了。）</p>
+    <p class="g-p">原文的例子很具體：Meta-agent 能把「定位、學習策略完成的抓取、控制器執行的搬運」串成一個新技能，交給執行 Agent 呼叫。</p>
+    <p class="g-p">原文把技能程式、呼叫邏輯與持久記憶都列為「可以開發」的內容，所以改的是程式碼，不是重新訓練。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>開發與評估分離</b> — 誰寫程式、誰負責打分（本站重排）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">既有 Harness ＋ 執行紀錄</span><span class="tr"><i>交給 Meta-agent 讀：對照觀測、動作與任務結果</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">Meta-agent 改 Harness</span><span class="tr"><i>修技能、指令或決策邏輯；證據不足就進仿真補觀察</i></span></span></li>
+        <li class="side"><span class="st">02b</span><span class="body"><span class="hop">旁支：自主測試</span><span class="tr"><i>開發期可先自跑一輪，按結果繼續調候選版本</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">候選版本凍結受測</span><span class="tr"><i>執行 Agent 自主完成任務；Meta-agent 不得插手</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">優於現行版本才替換</span><span class="tr"><i>沒贏就保留原版；所有版本與證據存進 Harness 圖</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重排。原文以「每輪開發從既有 Harness 與其執行紀錄開始」描述流程，未給編號順序與輪數上限。</p>
+    </figure>
+
+    <p class="g-p">把「寫」與「評」拆開，是整套方法最關鍵的一刀：自己改的東西不能自己驗收。</p>
+    <p class="g-p">Harness 圖保存版本、繼承關係與證據，所以下一輪可以回到較早節點換方向，不必從零重寫。</p>
+    <p class="g-p">為什麼不直接調權重？原文的答案是：模型訓練完成後，能力不該就此定型。</p>
+    <p class="g-p">（編輯觀點：改進寫成程式，勝負能被外部任務驗證；改進寫成權重，就得靠下一次訓練重來。）</p>
+    <p class="g-p">（編輯觀點：凍結權重也讓歸因變乾淨——分數變化只能來自 Harness，不能來自「模型剛好被多訓了一輪」。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三個場地，六列數字</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>評測</th><th>初始 Harness</th><th>演化後</th></tr></thead>
+        <tbody>
+          <tr><td data-l="評測">LIBERO-Pro（整體）</td><td data-l="初始">17.5%</td><td data-l="演化後"><b>95.0%</b></td></tr>
+          <tr><td data-l="評測">LIBERO-T（平均）</td><td data-l="初始">22.8%</td><td data-l="演化後">96.6%</td></tr>
+          <tr><td data-l="評測">LIBERO-S（平均）</td><td data-l="初始">12.2%</td><td data-l="演化後">93.4%</td></tr>
+          <tr><td data-l="評測">RoboTwin（50 個任務）</td><td data-l="初始">48.5%</td><td data-l="演化後">74.0%</td></tr>
+          <tr><td data-l="評測">RoboCasa 多階段·Seen</td><td data-l="初始">16.4%</td><td data-l="演化後">24.2%</td></tr>
+          <tr><td data-l="評測">RoboCasa 多階段·Unseen</td><td data-l="初始">4.7%</td><td data-l="演化後">13.3%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">數字是團隊自報，沒有第三方複驗；評估時固定 Harness 程式，由執行 Agent 自主完成任務。</p>
+    <p class="g-p">（編輯觀點：長程多階段任務只從 4.7% 走到 13.3%，說明這套方法補的是「流程寫錯」，不是「能力不足」。）</p>
+    <p class="g-p">RoboCasa 的 Unseen 欄位最值得看：換到沒見過的場景仍有進展，代表改出來的不是單一場景的特例。</p>
+    <p class="g-p">（編輯推論：Unseen 只走到 13.3%，代表外層改得再好，模型看不懂的場景還是看不懂。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">一輪一輪看：奶油乳酪盒上架</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>兩輪開發，把 0/16 推到 16/16</b> — 每輪的修改都留在 Harness 裡（本站重排）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>初始版本</b><small>16 次開發評估全部失敗</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>第一輪 9/16</b><small>建搬運與釋放流程：先確認已抬起再搬；抓取失敗就重新定位、限次重試</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>第二輪 16/16</b><small>抬升位移的計算起點與實際接觸階段不一致 → 改沿連續閉合接觸階段計算，接觸丟失即重置證據</small></div>
+      </div>
+      <p class="x-src">本站重排。原文給的是單一任務的逐輪結果；未說明其他任務是否同樣兩輪收斂。</p>
+    </figure>
+    <p class="g-p">第一輪的產物不是分數，而是可繼承的技能：搬運、釋放、有限重試被留下來，後面幾輪再修其中的狀態判斷。</p>
+    <p class="g-p">Goal-T 的十個任務裡，有八個在前三輪就出現 16/16；但原文也提醒，不同任務節奏差異大，候選版本表現會波動，要靠評估決定留哪一版。</p>
+    <p class="g-p">（編輯推論：這套做法的成本會轉移到「評估場」——任務夠不夠多、夠不夠像真的，決定演化會不會只是背下模擬器。）</p>
+    <p class="g-p">原文的下一步寫得很清楚：目前全在仿真裡，團隊希望有一天機器人在真實環境也能自己開發、驗證技能。</p>
+    <p class="g-p">那一步的門檻不是演算法，而是評估：真實世界沒有免費的重置鍵，試錯要付物理成本。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>先修外層，再談換模型。</b>Harness 寫錯時，換更強的模型只是更有力地做錯。</p>
+      <p><b>自己改的不能自己驗。</b>凍結候選、由外部任務受測，是這套方法的守門條件。</p>
+      <p><b>技能要能繼承。</b>沒有 Harness 圖，每輪都是重寫，經驗留不下來。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">機器之心</span><a href="firefly-toolcall-data.html">先探索再出題：把正確答案做成資料的性質</a><span class="d">2026-11-07</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="async-subagents.html">非同步子代理：把「等」從迴圈裡搬走</a><span class="d">2026-11-05</span></div>
+      <div class="g-relrow"><span class="s">Mistral AI</span><a href="mistral-studio.html">主權 AI 的落地盤：模型會換，平台要留</a><span class="d">2026-11-05</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文（團隊自報），圖解與小標為編輯整理，圖解皆為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-08 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

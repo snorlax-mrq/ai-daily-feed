@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 先探索再出題：把正確答案做成資料的性質 · AI 每日動態檔案</title>
+<meta name="description" content="NeurIPS 2026 論文 Firefly 反轉工具呼叫 Agent 的資料合成順序：先在真實 MCP Server 上探索，再回頭出題，得到 5,144 個可驗證任務；4B 模型 pass@1 由 28.1% 升到 41.5%。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>先探索再出題：把正確答案做成資料的性質</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：機器之心〈NeurIPS 2026｜從「先出題」到「先探索」：重新思考 Tool-Calling Agent 的訓練資料合成〉——論文作者解讀（Firefly）</p>
+    <p class="g-meta">
+      <span>機器之心</span>·<span>2026-11-07 發布</span>·<span>2026-11-08 收錄</span>·
+      <a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651072774&amp;idx=3&amp;sn=7907f035a6b5b83908acc800cf7b3d96" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>5,144 個任務</b><span>從 9,749 條 DAG 軌跡反推、經五維審查後留下的可驗證任務</span></div>
+    <div class="g-stat"><b>0% 落入 No Data</b><span>訓練期間 Agent 的工具呼叫全被模擬器接住（Exact 42.2%／Fuzzy 57.8%）</span></div>
+    <div class="g-stat"><b>28.1% → 41.5%</b><span>Qwen3-4B 在 Firefly 測試集的 pass@1，同評估協議下對比 Claude Sonnet 4.6 的 42.2%</span></div>
+    <div class="g-stat"><b>約 US$47K</b><span>用 Claude Sonnet 4.5 生成整份資料集的一次性成本（約 23.5B tokens）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">問題不在「怎麼出更好的題」，而在<strong>出題與觀察誰先發生</strong>。</p>
+
+    <p class="g-p">工具呼叫 Agent 要能用 RL 訓練，需要數千個任務，每個都要有正確的中間 tool call 與可驗證答案。</p>
+    <p class="g-p">但主流 agent benchmark 一次只給幾十到幾百題，湊不出這個量。</p>
+    <p class="g-p">原文逐一說明三條補資料的路線各有所長，但都無法同時做到「可靠、規模化、可驗證」。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>路線</th><th>卡在哪</th><th>原文舉的代價</th></tr></thead>
+        <tbody>
+          <tr><td data-l="路線">人工標註</td><td data-l="卡在哪">可靠但難規模化</td><td data-l="代價">單筆通常 200 至 2,000 美元；獨家授權再高 4 到 5 倍</td></tr>
+          <tr><td data-l="路線">純模擬環境</td><td data-l="卡在哪">LLM 演工具，行為偏離真實 API</td><td data-l="代價">學到的是「怎麼跟模擬器互動」</td></tr>
+          <tr><td data-l="路線">前向合成</td><td data-l="卡在哪">先出題、後求解，答案沒人保證</td><td data-l="代價">題目可能根本做不到，solver 的錯答案被當成正解</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">第四個麻煩是 Environment Drift：真實 API 依賴搜尋索引、天氣、金融資料、DNS 等外部狀態，今天和明天的回傳可能不同。</p>
+    <p class="g-p">加上 server 會下線、RL 的大量重複呼叫會撞上 rate limit，就算有了可驗證任務，訓練也難以重現。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">把順序反過來：先看到答案，再回頭出題</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>Firefly 的三段管線</b> — 每一段的產物都是下一段的原料（本站重排）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>Server Collection</b><small>Smithery 約 3,000 個 server，依無狀態、免登入、schema 清楚、非平凡四項篩到 240 個</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>Tool Graph</b><small>993 個工具、約 83K 條有向邊（約 64K 條 medium 以上），平均每個工具有 88 個後繼</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>DAG 探索</b><small>在 live server 上實際呼叫，fan-out／串接／fan-in，每個節點都記錄真實輸出</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>Back-Chaining</b><small>圍繞已觀察到的節點反向寫題，ground truth 直接取自那些輸出</small></div>
+      </div>
+      <p class="x-src">本站重排。原文分節描述三個階段與 Back-Chaining，未以單一流程圖給出這條串接順序。</p>
+    </figure>
+
+    <p class="g-p">原文的域名例子講得最清楚：LLM 先真的去查 whois，看到 amazon.com 是 1994 年、netflix.com 是 1997 年。</p>
+    <p class="g-p">然後它才回頭寫出「哪個先註冊、差幾年」這道題；依原文給的兩個年份，差距是 3 年（編輯推算）。</p>
+    <p class="g-p">正確性因此不是靠事後過濾，而是資料生成方式本身帶來的性質；原文稱之為 Verified by Construction。</p>
+    <p class="g-p">同一條思路要撐到近千個工具，靠的是 Tool Graph 把探索導向語義上接得起來的鄰域，而不是型別硬湊。</p>
+    <p class="g-p">產出的任務再用 LLM Judge 過五關：可驗證、有唯一正解、答案人看得懂、真實性評分不低於 5/10（全資料集平均 7.8/10）、難度標註與軌跡複雜度相符。</p>
+    <p class="g-p">這一關大約刷掉一半候選任務；也因為題目圍繞 DAG 的節點子集生成，其餘節點自然成了干擾項。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">訓練不碰 live API：模擬器三層接球</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>Tool-Call Simulator 的三層策略</b> — 先查快取，查不到才問模型（本站重排）</figcaption>
+      <div class="x-dec">
+        <p class="q">Agent 發出一個 tool call，快取裡有嗎？</p>
+        <div class="brs">
+          <div class="br"><span class="tag">第一層</span><b>Exact Match</b><small>輸入參數做雜湊比對，命中就回傳當初的真實輸出（訓練期占 42.2%）</small></div>
+          <div class="br"><span class="tag">第二層</span><b>Fuzzy Match</b><small>檢索最相似的歷史呼叫，再由 LLM 依真實輸出生成回應（占 57.8%）</small></div>
+          <div class="br"><span class="tag">第三層</span><b>No Data</b><small>該工具沒有任何歷史呼叫就回錯誤；訓練期命中率 0%</small></div>
+        </div>
+      </div>
+      <p class="x-src">本站重排。原文以三層策略描述，並說明第三層「刻意保守」的理由：遠離快取軌跡的呼叫，多半不是解題所必需。</p>
+    </figure>
+
+    <p class="g-p">第三層的設計有個前提：每個任務都是從一條已知軌跡反推的，所以通往答案的路徑一定在快取裡。</p>
+    <p class="g-p">（編輯推論：這等於用「題目只能出自走過的路」換取「訓練永遠有資料」；代價是模型在訓練時遇不到真正的新情況。）</p>
+    <p class="g-p">資料規模：9,275 個候選任務最後留下 5,144 個，200 題做固定測試集、4,944 題訓練。</p>
+    <p class="g-p">難度分布偏中：easy 19.5%、medium 77.0%、hard 3.5%；正解軌跡平均 3.0 次 tool call（範圍 1 到 10），答案 schema 平均 4.6 個欄位。</p>
+    <p class="g-p">其中 38.5% 的任務要跨多個 server 組合工具——這正是多數 benchmark 限制在單一供應商時看不到的場景。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">4B 模型追到 Claude 那一格，但別忘了它只有 4B</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>指標（同評估協議）</th><th>Qwen3-4B 原始</th><th>Firefly RL 後</th><th>對照</th></tr></thead>
+        <tbody>
+          <tr><td data-l="指標">pass@1</td><td data-l="原始">28.1%</td><td data-l="RL 後">41.5%</td><td data-l="對照">Claude Sonnet 4.6：42.2%</td></tr>
+          <tr><td data-l="指標">pass@8</td><td data-l="原始">—</td><td data-l="RL 後">52.8%</td><td data-l="對照">Sonnet 4.6：50.3%；Opus 4.7：54.4%</td></tr>
+          <tr><td data-l="指標">pass@16</td><td data-l="原始">—</td><td data-l="RL 後">57.0%</td><td data-l="對照">Opus 4.7：57.0%（原文稱與此持平）、Sonnet 4.6：53.0%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">訓練設定：GRPO 加 Dynamic Filtering，每個 prompt 取 8 條 rollout；8 條全對的 prompt 永久移出訓練集，全錯的留著。</p>
+    <p class="g-p">共 300 步，16 張 GPU 跑 actor、另 16 張跑非同步 rollout，框架是 Slime。</p>
+    <p class="g-p">公開 benchmark 全部上升（Tau2-Bench Telecom 幅度較小），原文認為這說明模型不是背下了快取軌跡。</p>
+    <p class="g-p">也要看清邊界：只訓練與評估 4B 模型；pass@1 與 pass@16 差距不大，作者推測 4B 已接近難題能力上限。</p>
+    <p class="g-p">資料生成端也有邊界：篩選時排除有狀態與需要使用者認證的 server，而真實世界裡重要的工具常屬這兩類。</p>
+    <p class="g-p">Fuzzy Match 那一層靠 LLM 生成回應，作者自己承認還說不準它多忠實於真實 API 行為。</p>
+    <p class="g-p">（編輯觀點：這份資料集的壽命取決於「難度分佈」而不是「題數」——題再多，都落在 medium 也只練到某一層。）</p>
+    <p class="g-p">（編輯觀點：hard 只占 3.5%，對更強的模型恐怕太淺——這份資料集的價值會隨模型變大而下降，除非難度分佈一起改。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>順序決定正確性。</b>先觀察再出題，答案不必再靠人工複核。</p>
+      <p><b>環境也要一起快取。</b>只存題目不存回應，訓練照樣無法重現。</p>
+      <p><b>篩掉有狀態的 server。</b>換來可驗證，代價是漏掉真實世界一大塊。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">量子位</span><a href="vista-harness-evolution.html">具身代理自進化：不改權重，改 Harness</a><span class="d">2026-11-07</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="async-subagents.html">非同步子代理：把「等」從迴圈裡搬走</a><span class="d">2026-11-05</span></div>
+      <div class="g-relrow"><span class="s">Mistral AI</span><a href="mistral-studio.html">主權 AI 的落地盤：模型會換，平台要留</a><span class="d">2026-11-05</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文（作者自報，無第三方複驗），圖解與小標為編輯整理，圖解皆為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-08 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

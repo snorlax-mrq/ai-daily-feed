@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 常駐代理的護欄：一條會話、一份事實清單、一組證明 · AI 每日動態檔案</title>
+<meta name="description" content="機器之心拆解 Comma：一個工作區只留一條主會話，Router 統籌、Worker 並行；共享事實清單由決策模型 Jev 逐條守門，Agent 自己寫的 eBPF 監控程式另有約 4 萬行 Lean 證明背書。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>常駐代理的護欄：一條會話、一份事實清單、一組證明</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：機器之心〈比 DeepSeek Super-agent 更早，Comma 已經把長期記憶做進 Agent「大管家」〉——技術拆解（產品：Comma）</p>
+    <p class="g-meta">
+      <span>機器之心</span>·<span>2026-11-04 發布</span>·<span>2026-11-08 收錄</span>·
+      <a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651072104&amp;idx=2&amp;sn=76f783cd421be6688eed397816487dfa" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>1 條主會話</b><span>每個工作區只有一個常駐 Router，群聊、私聊、客戶端訊息都進同一條</span></div>
+    <div class="g-stat"><b>3 種 Jev 判斷</b><span>寫入前的「該不該共享」、每輪回覆後的「過時了沒」、「有沒有跑偏」</span></div>
+    <div class="g-stat"><b>約 4 萬行 Lean</b><span>支撐 Agent 自寫監控程式（Loop）的記憶體隔離證明</span></div>
+    <div class="g-stat"><b>早 1 個月</b><span>10/1 正式發布早於 DeepSeek 的 Super-agent 文章；若從 4/28 前身公開發布算起約早半年</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">要讓 Agent 常駐，先解決「它自己會不會記錯、跑偏、讀到不該讀的」。</p>
+
+    <p class="g-p">Comma 的架構是單一會話制：所有入口的訊息收進同一條主會話，由 Router 統籌，具體任務派給 Worker 平行執行。</p>
+    <p class="g-p">Worker 有獨立上下文，做完把結果與來源交回 Router；使用者面對的是一條連續記錄。</p>
+    <p class="g-p">上下文滿了會把較早內容壓縮出模型上下文，但原始紀錄完整保留——Router 可以回頭搜尋被壓縮掉的訊息與工具結果。</p>
+    <p class="g-p">（編輯觀點：這等於把「記得」拆成兩件事：進得了模型的摘要，與留在磁碟上的證據。前者的品質決定它當下會不會蠢。）</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一則訊息的旅程</b> — 三個入口、一份清單、兩個檢查點（本站重排）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">任何入口 → 主會話</span><span class="tr"><i>群聊、私聊、客戶端訊息都匯入常駐 Router</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">Router → 事實清單</span><span class="tr"><i>新事實逐條問 Jev：其他 Agent 需不需要知道</i></span></span></li>
+        <li class="side"><span class="st">02b</span><span class="body"><span class="hop">旁支：被退回</span><span class="tr"><i>機率低於門檻就退回 Agent，由它決定要不要堅持寫入</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">Router → Worker</span><span class="tr"><i>任務交給獨立上下文的 Worker 執行，結果回傳</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">回覆後複查</span><span class="tr"><i>再問 Jev 兩題：清單過時了嗎？這次有沒有偏離？</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重排。原文分節描述單一會話、事實清單與兩次 Jev 判斷，未給這五步的編號順序。</p>
+    </figure>
+
+    <p class="g-p">事實清單是「精簡工作區」裡的一句一條：只放其他 Agent 也該知道的當前事實，例如一個決定、一位負責人、一項限制。</p>
+    <p class="g-p">原文提到問法經過對比測試：用反向問法時，合適的事實也會拿到高機率，幾乎所有更新都被拒；改正向提問才拉得開。</p>
+    <p class="g-p">訂機票的例子串起整套設計：先記下「靠窗、優先上午」，之後使用者說腰不好要改走道，過時檢查會提醒 Agent 更新舊條目。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三種判斷，三種後果</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>時機</th><th>問 Jev 什麼</th><th>觸發後會怎樣</th></tr></thead>
+        <tbody>
+          <tr><td data-l="時機">寫入事實清單前</td><td data-l="問題">這條內容是不是其他 Agent 也需要的當前事實？</td><td data-l="後果">退回 Agent，由它決定是否確認後再送</td></tr>
+          <tr><td data-l="時機">每輪回覆後</td><td data-l="問題">對話裡有沒有清單該補、或已經過時的事實？</td><td data-l="後果">超過門檻就提醒 Agent 修改清單，是否採納由 Agent 判斷</td></tr>
+          <tr><td data-l="時機">每輪回覆後</td><td data-l="問題">最近的回覆與工具呼叫，是否與清單或使用者要求相矛盾？</td><td data-l="後果">提醒它先對照事實與請求重檢計畫</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">三個門檻都不是拍腦袋定的，而是用人工標註的樣本調出來的（原文未給具體數值）。</p>
+    <p class="g-p">（編輯推論：把「要不要記」交給一個小模型擋，換來的是主模型的上下文乾淨；代價是多一次推論與一套標註工作。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">團隊版：記憶按受眾切，發送前先查權限</h2>
+    <p class="g-p">Comma for Teams 讓一個 Router 服務整個團隊，同時收群聊、私聊與私密頻道——但這些訊息的讀者不一樣。</p>
+    <p class="g-p">做法是資訊流控制（IFC）：每份資訊標明誰有權讀，Agent 每次對外發送都要聲明用到哪些來源。</p>
+    <p class="g-p">系統檢查目標對話的讀者是否都能讀這些來源；被攔下時 Agent 會收到原因，可去掉受限內容重發或請人批准。</p>
+    <p class="g-p">判定由一個以 Lean 實作的檢查核心執行；長期記憶也照同一規則，寫成按受眾劃分的筆記，存在檔案裡讓使用者自己改。</p>
+    <p class="g-p">另一條線是「等待」：需要盯著合約簽回、程式庫變更、機票價格時，Agent 會為每項監控寫一段 C 程式，編成 eBPF 常駐。</p>
+    <p class="g-p">這些程式叫 Loop：等定時器或事件、檢查條件、必要時喚醒 Agent；需要語意判斷時就問 Jev，但實際操作與權限仍在 Agent 手上。</p>
+    <p class="g-p">成千上萬個 Loop 跑在同一個行程裡，前提是每個只能碰自己的記憶體——執行時 async-ebpf 用約 4 萬行 Lean 證明確立這件事。</p>
+    <p class="g-p">證明針對的是實際執行的程式：Rust 模組經 Charon 與 Aeneas 翻成 Lean 再證，連編 Loop 用的 C 編譯器也被編成 eBPF 丟進同一個沙箱。</p>
+    <p class="g-p">（編輯觀點：這是全篇最不像「AI 產品」的一段——它把 Agent 自寫程式的風險，交給形式化證明而不是提示詞約束。）</p>
+    <p class="g-p">最後是調度：每個任務歸類（比價訂票、整理郵件），調度層記錄每類用過的模型、推理強度、完成次數與花費。</p>
+    <p class="g-p">成功以人工驗收為準，再選「每完成一個任務平均花費最低」的組合，並留少量任務試其他模型累積依據。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>記憶要能被檢查。</b>一句一條、逐條問，比一整段摘要可靠。</p>
+      <p><b>會話收斂，權限不能收斂。</b>單一會話下，記憶必須按受眾切。</p>
+      <p><b>Agent 寫程式要有硬邊界。</b>沙箱靠證明，不靠它自己乖。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">量子位</span><a href="vista-harness-evolution.html">具身代理自進化：不改權重，改 Harness</a><span class="d">2026-11-07</span></div>
+      <div class="g-relrow"><span class="s">機器之心</span><a href="firefly-toolcall-data.html">先探索再出題：把正確答案做成資料的性質</a><span class="d">2026-11-07</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="async-subagents.html">非同步子代理：把「等」從迴圈裡搬走</a><span class="d">2026-11-05</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述內容出自原文（產品方說法，無第三方驗證），圖解與小標為編輯整理，圖解皆為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-08 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
