@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 代理記憶：四層分工與離線做夢 · AI 每日動態檔案</title>
+<meta name="description" content="Anthropic 拆解代理記憶：逐字稿、記憶筆記、表示層、注入上下文四層，加上離線的 dreaming。CL-Bench 上 Sonnet 4.6 只從 0.330 升到 0.364，Opus 5.5 由 0.655 升到 0.838。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>代理記憶：四層分工與離線做夢</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Anthropic〈The components of agent memory〉——研究部落格，說明代理記憶的分層與自家評測</p>
+    <p class="g-meta">
+      <span>Anthropic</span>·<span>2026-11-06 發布</span>·<span>2026-11-08 收錄</span>·
+      <a href="https://www.anthropic.com/research/components-of-agent-memory" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>約 35 萬份文件</b><span>約 4.2 億 token 的內部語料（Stainless，2026 年 5 月併入），用來測 wiki 表示層（Anthropic 自測）</span></div>
+    <div class="g-stat"><b>13% → 48%</b><span>25 題的評分標準達成率，dreaming 從 2 輪擴到 128 輪</span></div>
+    <div class="g-stat"><b>413 檔 vs 9 檔</b><span>Sonnet 3.7 與 Fable 5 玩寶可夢約 10,000 步時的記憶資料夾規模</span></div>
+    <div class="g-stat"><b>200 行／25KB</b><span>Claude Code auto memory 每次注入 MEMORY.md 的上限，其餘靠索引</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">代理記憶不是一個更大的檔案，而是<strong>四層分工，加一段離線整理時間</strong>。</p>
+
+    <p class="g-p">原文先把範圍縮小：記憶只算跨工作階段留下、之後讀得到的知識。權重更新、單次對話內的學習，以及壓縮舊回合的 compaction 都不算。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/agent-memory-components/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/agent-memory-components/01.webp" alt="記憶四層與 dreaming 的位置：逐字稿、記憶筆記、表示層、注入上下文" width="1200" height="548" loading="lazy" decoding="async"></a>
+      <figcaption>四層的權責：dreaming 的箭頭全部從逐字稿往上，代表它靠原始記錄驗證與生成，而不是憑空想。<span class="g-fig-src">圖／Anthropic，<a href="https://www.anthropic.com/research/components-of-agent-memory" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">最底層是逐字稿：可搜尋的事件日誌。往上是 Claude 自己寫的記憶筆記，記下當下判斷為重要的觀察。</p>
+    <p class="g-p">第三層是表示層，由逐字稿與筆記算出，例如 wiki；最上層是每次工作階段預先載入的注入上下文，直接吃掉 token。</p>
+    <p class="g-p">dreaming 就是橫跨這幾層的離線整理：對照逐字稿糾錯、長出表示層、把該提前載入的筆記往上搬。</p>
+    <p class="g-p">（編輯觀點：這張圖真正的主張在最下方——所有上層都必須能追回逐字稿，否則記憶就沒有裁決者。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">記憶要能自己收斂成規則</h2>
+    <p class="g-p">CL-Bench 1.0 是衡量代理能否用記憶處理長跨度任務的基準。它的資料庫題每題都開新工作階段，唯一延續的是記憶資料夾；答完公布正解，讓模型自己寫下下次怎麼答。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/agent-memory-components/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/agent-memory-components/02.webp" alt="CL-Bench 資料庫題：各模型有記憶與無狀態的長條對照" width="1200" height="675" loading="lazy" decoding="async"></a>
+      <figcaption>斜線柱是無記憶的基準，實心柱是有記憶。六個模型全數上升，但幅度差很大：Sonnet 4.6 只從 0.330 到 0.364，Opus 5.5 從 0.655 到 0.838。<span class="g-fig-src">圖／Anthropic，<a href="https://www.anthropic.com/research/components-of-agent-memory" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">更值得看的是資料夾裡長什麼樣。Sonnet 4.6 散落著一堆沒驗證過的猜測；Opus 4.7 收斂成一份參考文件，開始標記哪些事實查過。</p>
+    <p class="g-p">Opus 5 第一次閉環：每條規則都附上「我怎麼知道它成立」、過去的答案，以及途中發現的陷阱警告。</p>
+    <p class="g-p">Opus 5.5 與 Sonnet 5.5 同樣閉環，有記憶時與 Opus 5 大致相當——但兩者無記憶的基準本來就略高。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">記什麼，比記多少重要</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>模型（約 10,000 步）</th><th>記憶資料夾</th><th>遊戲進度</th></tr></thead>
+        <tbody>
+          <tr><td data-l="模型"><b>Sonnet 3.7</b></td><td data-l="記憶">413 個檔案、225 個資料夾，常逐場戰鬥、逐件道具各開一檔</td><td data-l="進度">1 枚徽章</td></tr>
+          <tr><td data-l="模型"><b>Fable 5</b></td><td data-l="記憶">9 個檔案、2 個資料夾，外加一份 global.md</td><td data-l="進度">4 枚徽章</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">Sonnet 3.7 的毛病不是記太多，是記了會過期的東西：遊戲狀態每回合都在變，它花時間翻舊記錄，而不是玩遊戲。</p>
+    <p class="g-p">Fable 5 只寫畫面讀不到的部分——策略、計畫、驗證過的規則；global.md 當儀表板，放當前目標與打道館的預排計畫。</p>
+    <p class="g-p">它的規則很具體：連七顆球沒抓到鯉魚王後，它寫下「連三球失敗就改變時機，在選單間多按幾次等待」。</p>
+    <p class="g-p">記憶也會錯。Claude 誤記寶可夢中心在東側，走反了還寫「月見山 DONE」，接著掉下單向斜坡三次，最後折返 Pewter，沒到華藍市。</p>
+    <p class="g-p">dreaming 對照逐字稿改掉那條方位筆記後，那一輪在第 1,935 個累積動作抵達華藍市（圖表尺度為 3,000 個動作）。逐字稿提供了裁決真偽的基準。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">wiki 表示層：有效，但有盈餘條件</h2>
+    <p class="g-p">用 Stainless（2026 年 5 月併入的軟體公司）約 35 萬份內部文件、約 4.2 億 token 的語料做 25 題，dreaming 從 2 輪擴到 128 輪，評分標準達成率由 13% 升到 48%。</p>
+    <p class="g-p">同時給搜尋工具時，總分隨 wiki 成長由 54% 升到 61%（只有搜尋是 53%），每題還省下約 20,000 token。</p>
+    <p class="g-p">代價是可能白做：Harvey LAB 中能靠單一文件查到的法務簡報題，wiki 沒有明顯增益；有一次 wiki 長到語料的 1.77 倍，什麼都沒抽象化。</p>
+    <p class="g-p">合約條款那題最直接：簡報只涵蓋 57 項事實中的 41 項（72%）。</p>
+    <p class="g-p">改成每份合約一頁、由單一代理逐字引述條文後，達成率變成 100%。原文把前一次的缺口歸因於多個代理同時改同一張共享表、互相覆蓋。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">給指引，不要給規則</h2>
+    <p class="g-p">只告知「有記憶資料夾」就足以讓 Opus 4.7 與 Opus 5 用起來；但規定「只記失敗」反而讓兩者失去大部分記憶增益。</p>
+    <p class="g-p">強模型要的是判斷空間。較舊的模型相反：提示 Sonnet 4.6 先讀記憶再驗證假設，分數由 0.364 升到 0.641。</p>
+    <p class="g-p">Sonnet 5 已能自己做到——不必提示，十次有九次先讀記憶；Sonnet 4.6 不到一半。</p>
+    <p class="g-p">代價壓在最上層：Claude Code 的 auto memory 每次只載入 MEMORY.md 前 200 行或 25KB 當索引，因為指令檔越長、遵循度越差。</p>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 · <b>記憶寫在什麼時候</b> — 兩個時機，兩種代價（本站整理）</figcaption>
+      <div class="x-cmp">
+        <div class="side"><b>當下寫</b><small>在任務中直接寫入記憶。來源最新、立刻可用，代價是占掉模型對主任務的注意力。</small></div>
+        <div class="side"><b>離線 dreaming</b><small>背景跑，可跨工作階段比對與糾錯。不打斷任務，代價是算力，而且產出不一定即時可用。</small></div>
+      </div>
+      <p class="x-src">本站整理。原文以「何時該建立記憶」列為開放問題，未給此對照表；此處僅並列，不代表先後順序。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>記憶要能追回逐字稿。</b>沒有原始記錄，錯的筆記會被一路信任下去。</p>
+      <p><b>寫死規則會害到強模型。</b>「只記失敗」讓 Opus 5 的記憶增益大幅縮水。</p>
+      <p><b>表示層要有盈餘。</b>wiki 比原始文件還大，就只是更貴的複本。</p>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自 Anthropic 自家評測（CL-Bench 1.0、內部語料與寶可夢實驗），無第三方驗證，圖解與小標為編輯整理，其中「記憶寫在什麼時候」對照為本站整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-08 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

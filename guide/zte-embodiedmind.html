@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 具身大腦：信用分配不該連坐 · AI 每日動態檔案</title>
+<meta name="description" content="中興通訊 EmbodiedMind 用 RSFT、IR-GRPO、Trie-GRPO 三階段改寫具身大腦訓練：8B 模型在 18 項基準平均 70.02%，長程規劃準確率較現有最優提升 30.31%，訓練樣本僅 52.2 萬。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>具身大腦：信用分配不該連坐</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：機器之心〈讓機器人學會「一口氣幹完一件活」〉——報導中興通訊論文 EmbodiedMind（arXiv:2609.19659，投稿 ICRA 2027）</p>
+    <p class="g-meta">
+      <span>機器之心</span>·<span>2026-11-06 發布</span>·<span>2026-11-08 收錄</span>·
+      <a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651072640&amp;idx=2&amp;sn=b87d67bebe76dda38cc9eb5123d49239" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>70.02%</b><span>EmbodiedMind-8B 在 18 項具身大腦基準的平均成績（論文自報）</span></div>
+    <div class="g-stat"><b>52.2 萬筆</b><span>訓練樣本總數；論文強調以極小樣本量跑贏同量級開源模型</span></div>
+    <div class="g-stat"><b>+30.31%</b><span>長程規劃準確率相對現有最優方法的提升幅度（論文自報）</span></div>
+    <div class="g-stat"><b>77.48 分</b><span>Nebula-EmbodiedBrain-180B 於 SuperCLUE 9 月 EmbodiedCLUE-VLA 國內並列第一</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">瓶頸不在機器人會不會走，而在<strong>一條軌跡失敗時，中間那幾個正確動作該不該一起挨罰</strong>。</p>
+
+    <p class="g-p">原文把長程規劃定為具身大腦的分水嶺：從單步識別走向多步連續決策，是目前頭部模型與專項模型差距最大的維度。</p>
+    <p class="g-p">背景數字引中國電子學會：2026 年上半年中國人形機器人出貨量超過 4 萬台，占全球 97%——量已經不是問題。</p>
+    <p class="g-p">EmbodiedMind 主張要換的是訓練範式，不是模型結構；它把現況歸納成三個結構性缺陷，再一對一配三個機制。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>困境</th><th>機制</th><th>做法</th></tr></thead>
+        <tbody>
+          <tr><td data-l="困境">樣本效率低：低資訊密度軌跡稀釋訊號</td><td data-l="機制"><b>RSFT</b></td><td data-l="做法">高溫係數多次推理分三層：全對為簡單、部分對為不確定、全錯為困難；只留不確定樣本與一定比例的簡單樣本，暫時排除困難樣本</td></tr>
+          <tr><td data-l="困境">任務梯度失衡：DAPO 等動態取樣缺任務級校準</td><td data-l="機制"><b>IR-GRPO</b></td><td data-l="做法">每個任務類型一條先進先出佇列，用指數移動平均平滑有效樣本比例，動態調整下一輪取樣配額</td></tr>
+          <tr><td data-l="困境">信用分配失真：GRPO 把軌跡級優勢均攤給所有 token</td><td data-l="機制"><b>Trie-GRPO</b></td><td data-l="做法">動作前綴樹分組，優勢只算在兄弟節點之間（詳見下一節）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">RSFT 的分層不需要人工標註：同一題以高溫係數多跑幾次，等於用模型自己的表現決定教材。</p>
+    <p class="g-p">排除困難樣本反直覺，原文給的理由是「防止早期分佈坍塌」與「避免錯誤軌跡汙染」兩項，並未再解釋機制。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>三階段訓練</b> — 清洗、配額、記帳（本站重繪）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>RSFT</b><small>拒絕取樣後做 SFT：先決定哪些軌跡值得學</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>IR-GRPO</b><small>按任務調配配額：決定每一類任務學多少</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>Trie-GRPO</b><small>前綴樹上算優勢：決定每一步學到什麼程度</small></div>
+      </div>
+      <p class="x-src">本站重繪。原文有「圖 1 三階段訓練框架」示意圖，但抓不到原圖，此處依文字敘述重畫，順序為原文所述 RSFT→IR-GRPO→Trie-GRPO。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">關鍵一步：把「組」從軌跡搬到動作前綴</h2>
+    <p class="g-p">標準 GRPO 把軌跡級優勢均勻套用到整條路徑的所有 token，於是失敗軌跡裡正確的中間決策也一併挨罰。</p>
+    <p class="g-p">樹搜尋雖能回溯到單步，但要付組合爆炸的代價；原文認為兩者都難以兼顧探索深度與計算可行性。</p>
+    <p class="g-p">Trie-GRPO 的核心主張只有一句：策略優化的「組」不該定義在完整軌跡，而該條件化在動作前綴上。</p>
+    <p class="g-p">所有取樣軌跡並行插入一棵前綴樹，共享同一段歷史的軌跡會在分叉點形成子組，相對優勢只在兄弟節點間計算。</p>
+    <p class="g-p">結果是一條最終失敗的軌跡，其中間正確的動作仍能拿到正向的局部優勢——原文稱此徹底擺脫「連坐」懲罰。</p>
+    <p class="g-p">成本靠三件事壓住：折扣回報沿樹路徑回傳、兄弟節點歸一化、過濾近零優勢樣本。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">成績單：從 18 項基準到真機</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>測試</th><th>EmbodiedMind</th><th>對照</th></tr></thead>
+        <tbody>
+          <tr><td data-l="測試">18 項具身基準平均</td><td data-l="EmbodiedMind">70.02%</td><td data-l="對照">論文稱超越同量級開源模型，未列對手逐項分數</td></tr>
+          <tr><td data-l="測試">VLM-PlanSim-99（最長 25 步）</td><td data-l="EmbodiedMind">66.67</td><td data-l="對照">超越 Cosmos3-Nano</td></tr>
+          <tr><td data-l="測試">ALFWorld-thor 成功率</td><td data-l="EmbodiedMind">60.45%</td><td data-l="對照">SEEA-R1 46.27%</td></tr>
+          <tr><td data-l="測試">A2-Failure 桌面整理規劃</td><td data-l="EmbodiedMind">62.00%</td><td data-l="對照">Qwen3-VL-8B 40.00%</td></tr>
+          <tr><td data-l="測試">A2-Failure 執行監控準確率</td><td data-l="EmbodiedMind">55.31%</td><td data-l="對照">Qwen3-VL-8B 46.88%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">真機部分用 AgiBot A2 建了 50 個桌面場景、採 160 條任務執行監控影片，組成 A2-Failure 資料集。</p>
+    <p class="g-p">數字要分辨兩種量尺：原文只說長程規劃準確率「較現有最優方法提升 30.31%」，未說明是相對幅度或百分點；70.02% 是 18 項基準的平均分，兩者不能互換。</p>
+    <p class="g-p">原文的結論是：在模擬環境裡學到的步級信用分配，能遷移到真實桌面任務，長程規劃不只是基準分數。</p>
+    <p class="g-p">18 項基準橫跨四大能力塊：通用多模態理解、2D 空間推理、3D 空間度量與任務規劃。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">榜單與兩個容易誤讀的地方</h2>
+    <p class="g-p">第三方驗證來自 SuperCLUE 9 月的 EmbodiedCLUE-VLA，覆蓋國內外 10 個代表性模型，分基礎感知、視覺推理、互動與規劃、具身安全四項。</p>
+    <p class="g-p">（編輯觀點：10 個模型、評四項能力的榜單只能看方向，不宜當成產業總排名。）</p>
+    <p class="g-p">中興 Nebula-EmbodiedBrain-180B 以 77.48 分與 2.4T 參數的 Qwen3.8-Max-0902 並列國內第一，具身安全單項 97.92 分。</p>
+    <p class="g-p">第一個容易誤讀處：GPT-6 Astra（86.75）與 Gemini-3.8-Flash（82.12）是參考項、不參與國內排名，不能直接與 77.48 併比。</p>
+    <p class="g-p">第二個：180B 上榜與 8B 論文是兩條線索。原文明確交代的只有 8B 的訓練方法與 SuperCLUE 的 180B 成績；它用「兩條線索合流」與「從底層訓練範式到上層通用能力的完整閉環」把兩者串起來，但從未說明 180B 是否採用 EmbodiedMind 的訓練範式。</p>
+    <p class="g-p">（編輯觀點：這是機器之心對中興通訊論文的報導，全文口徑貼近廠商說法，但原文未標明稿件性質；論文僅「已投稿 ICRA 2027」、未見審查結果，70.02% 與 +30.31% 宜視為作者自報。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>問題出在記帳單位。</b>把優勢算在整條軌跡上，等於懲罰正確的中間步驟。</p>
+      <p><b>資料治理先於演算法。</b>RSFT 先丟掉會污染訊號的軌跡，再談強化學習。</p>
+      <p><b>榜單要看清比較範圍。</b>77.48 是國內排名；86.75 那欄不參與比較。</p>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；原文為機器之心對中興通訊論文的報導，所有效能數字出自論文作者自報或 SuperCLUE 榜單，未經本站複核；抓不到原文圖檔，圖解為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-08 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

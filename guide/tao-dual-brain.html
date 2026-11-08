@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 具身雙腦：把試錯變成可繼承的資產 · AI 每日動態檔案</title>
+<meta name="description" content="大曉機器人首席科學家陶大程的技術文章：雲端大腦 SenseNova 配端側開悟世界模型，用三個遞進閉環把真機互動變成可複用經驗，並以 Real2Sim2Real 校準；全篇未附自家量化結果。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E4%BA%BA%E7%89%A9%E8%A7%80%E9%BB%9E" class="day-catalog">人物觀點</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E4%BA%BA%E7%89%A9%E8%A7%80%E9%BB%9E">人物觀點</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>具身雙腦：把試錯變成可繼承的資產</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：機器之心轉載〈陶大程教授最新技術文章：一台機器人犯過的錯，怎樣讓另一台少走彎路？〉——廠商技術願景文，非研究論文</p>
+    <p class="g-meta">
+      <span>機器之心</span>·<span>2026-11-07 發布</span>·<span>2026-11-08 收錄</span>·
+      <a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651072774&amp;idx=1&amp;sn=17484407e18d75fca1e41a09be82bc03" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>雙腦</b><span>雲端大腦 SenseNova 管任務理解與規劃，端側開悟世界模型管物理狀態與後果預測</span></div>
+    <div class="g-stat"><b>3 個閉環</b><span>自主執行、經驗學習、遞迴自我改進；節奏不同，共用同一批真實互動證據</span></div>
+    <div class="g-stat"><b>Real2Sim2Real</b><span>真機提供證據、模擬擴展比較，挑選下一次實驗的依據是模型之間的分歧</span></div>
+    <div class="g-stat"><b>h-index 197</b><span>作者履歷自述：300+ 篇論文、Google Scholar 引用逾 17 萬次</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">這篇文章關心的不是機器人會不會做，而是<strong>它做錯的那一次，能不能變成別台機器的捷徑</strong>。</p>
+
+    <p class="g-p">起點是一次取杯：找到杯子、規劃接近方向，抬升時滑移，調整接觸位置後成功。對使用者，任務結束；對會學習的系統，問題才開始。</p>
+    <p class="g-p">為什麼滑？這次調整在什麼條件下有效？換一只杯子、一副夾爪，甚至另一台機器人，還成立嗎？</p>
+    <p class="g-p">作者把判準說得很直白：一次失敗若只留下日誌、一次成功若只留下標籤，相似的試錯就可能隨部署擴大，在不同設備、不同專案反覆發生。</p>
+    <p class="g-p">要留下的，是「連同證據與適用範圍」的認識——它可以是一條可召回的經驗、一個可呼叫的技能，或訓練進策略與世界模型。</p>
+    <p class="g-p">原文還要求分辨哪些經歷帶來新資訊：反覆完成已掌握的動作，與一次揭穿舊判斷缺陷的互動，學習價值可能很不相同。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">雙腦：兩個問題，兩種資源約束</h2>
+    <p class="g-p">原文把決策拆成兩問：為了完成目標，下一步該做什麼；在眼前物理條件下，這一步可能帶來什麼結果。</p>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>兩類判斷的分工</b> — 分界是知識範圍與時延，不是聰明程度（本站整理）</figcaption>
+      <div class="x-cmp">
+        <div class="side"><b>雲端大腦 SenseNova</b><small>任務理解、拆解步驟、選技能、情況變化時改計畫；失敗後負責復盤。需要廣泛知識與記憶，雲端便於共享與更新。</small></div>
+        <div class="side"><b>端側開悟世界模型</b><small>判斷物體位置、運動與接觸狀態，構造候選演化過程並預測後果。要貼著現場變化，端側才用得上新觀測。</small></div>
+      </div>
+      <p class="x-src">本站整理。原文以「兩類判斷對資源與時間要求不同」說明分工，未給此並列表；兩者為並列選項，不代表先後或優劣。</p>
+    </figure>
+    <p class="g-p">兩者靠明確介面交換目標、候選行動、預測結果與不確定性；原文特別要求預測要標明哪些條件已充分觀測、哪些仍靠未驗證的假設。</p>
+    <p class="g-p">它同時留了調整空間：兩者可共享表示與部分模型能力，雲端與端側怎麼分，仍應隨任務、算力與時延要求調整。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三個閉環，三種節奏</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>閉環</th><th>改變什麼</th><th>原文給的驗收指標</th></tr></thead>
+        <tbody>
+          <tr><td data-l="閉環"><b>自主執行</b></td><td data-l="改變">當前任務的決策與執行；可在模型參數不變下運作</td><td data-l="原文驗收">任務完成率、偏差發現與恢復時間、人工介入量</td></tr>
+          <tr><td data-l="閉環"><b>經驗學習</b></td><td data-l="改變">後續能力：經驗進長期記憶、技能調整，或針對性訓練策略與世界模型</td><td data-l="原文驗收">獨立測試是否減少重複錯誤、是否用更少示範與真機試驗完成適配、是否在獲得新技能時保持已有能力</td></tr>
+          <tr><td data-l="閉環"><b>遞迴自我改進</b></td><td data-l="改變">獲得能力的方法：資料選擇、實驗設計、訓練流程、評價機制</td><td data-l="原文驗收">同任務同資源下是否更快得到可靠能力、是否省下人工、計算與設備時間</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">第三個閉環則希望研發代理逐步參與：彙整反覆出現的失敗、提出可檢驗的假設、挑能區分假設的實驗，再提案補資料或改系統。</p>
+    <p class="g-p">作者自己加了限制條件：這一層需要更嚴格的對照，收益還得在後續任務中重現，才算成立。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">用模型之間的分歧挑下一個實驗</h2>
+    <p class="g-p">真機很貴：設備調校、場景佈置、人工重置、故障恢復，持續運行還有磨損與環境變化。所以每次互動都得回答一個明確問題。</p>
+    <p class="g-p">校準的判準是可對應：在相近初始條件與動作下，模擬裡的關鍵變化能否與實際觀測對上；對不上的物理屬性，就先保留與現有證據相容的參數範圍。</p>
+    <p class="g-p">全文最漂亮的一招在這裡：若幾個都與現有觀測相容的物理模型，對同一動作給出不同預測，這個分歧本身就是值得優先調查的問題。</p>
+    <p class="g-p">驗收也寫得具體：看它能否正確區分候選方案、能否預見關鍵的接觸失敗，而不是看畫面好不好。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">觀點 triage：哪些是事實，哪些是期待</h2>
+    <p class="g-p">可驗證的事實：作者任大曉機器人首席科學家，亦為新加坡南洋理工大學傑出教授、澳大利亞科學院院士；SenseNova、開悟與具身 Harness 是文中指名的三個元件。</p>
+    <p class="g-p">個人偏好：他主張經驗必須連證據與適用範圍一起保存，反對只存日誌；也選擇雲端與端側分工，並保留兩者共享表示、依任務與算力時延調整的空間。</p>
+    <p class="g-p">可受挑戰的主張：全篇沒有自家真機數據——一篇主張減少真機試錯的文章，沒交出自己省了多少。</p>
+    <p class="g-p">（編輯觀點：原文雖承認本體差異，卻沒給跨本體實測。權重可原樣共享，物理經驗不行，複用仍得重新校準。）</p>
+    <p class="g-p">（編輯觀點：把「研發方法」也交給代理優化，是目前最缺證據的一段；它需要跨任務、跨輪次的對照，而原文只給了應該怎麼驗，沒給結果。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>經驗要連適用範圍一起留。</b>只存日誌，等於讓下一台重跑一次。</p>
+      <p><b>雙腦怎麼分工，看任務與時延。</b>雲端管任務與記憶，端側管接觸與後果。</p>
+      <p><b>分歧比共識有用。</b>兩個模型預測不一致處，就是下一個實驗。</p>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；原文為大曉機器人首席科學家陶大程的技術文章（廠商發表），全篇未提供量化實驗結果，數字僅有作者履歷自述。圖解與小標為編輯整理，圖解為本站自繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-08 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
