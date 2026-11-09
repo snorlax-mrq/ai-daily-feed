@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 全員代理的取捨：底層用現成，難題自己扛 · AI 每日動態檔案</title>
+<meta name="description" content="Stripe 一位工程師一週做出全公司知識代理 Kai：底層用 LangChain 的 Deep Agents，只自建 Stripe 專屬 harness。開放預覽約四週使用者從 296 長到逾 5,000，現每週 83% 員工使用。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>全員代理的取捨：底層用現成，難題自己扛</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain〈How Stripe Built Kai on Deep Agents in 1 Week〉——廠商客戶案例（產品：Stripe Kai／Deep Agents）</p>
+    <p class="g-meta">
+      <span>LangChain Blog</span>·<span>2026-11-09 發布</span>·<span>2026-11-10 收錄</span>·
+      <a href="https://www.langchain.com/blog/how-stripe-built-their-knowledge-ai-platform-on-deep-agents" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>1 位工程師 · 1 週</b><span>Staff Software Engineer Anupam Upadhyay 做出 Kai 初版；原文把速度歸因於 Deep Agents 現成的 middleware</span></div>
+    <div class="g-stat"><b>296 → 逾 5,000</b><span>開放預覽約四週的使用者數，原文稱成長「超過 16 倍」，一週即達季度採用目標（原文敘述，無第三方驗證）</span></div>
+    <div class="g-stat"><b>83%／逾 6 萬</b><span>原文稱現今每週有 83% 的 Stripe 員工使用 Kai，逾 6 萬次 session</span></div>
+    <div class="g-stat"><b>1,000+ skills</b><span>skills 來自 100 多個團隊；另有逾 500 個內部 MCP 工具可呼叫</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">Stripe 的答案是分層外包：通用 agent harness 用現成，Stripe 專屬那層自己建——速度與瓶頸都從這裡長出來。</p>
+
+    <p class="g-p">原本各工程團隊在既有的 Ruby、Java 堆疊上自己疊 orchestration 層。接上內部基礎設施不難，難的是做出可靠、可上線的 agent harness。</p>
+    <p class="g-p">2024 年底 Claude Code 發布後，全公司都想做 agent，但終端機、資料權限與安全對非工程師是硬門檻。Agent Foundation 團隊反過來問：與其把人推去學開發工具，何不直接給一個常駐、可上線的助理？</p>
+    <p class="g-p">這同時是一場語言賭注。Stripe 花十多年在 Ruby、Java 周邊建內部工具、安全層與部署支援；改採 Python-native 堆疊，等於為新語言重建整套服務鷹架，是大投資。</p>
+    <p class="g-p">答案就是 Knowledge AI Platform（Kai）：單一 session 介面，接上內部資料倉儲、Slack 與 Google Suite，產出報告、儀表板與文件，隨對話演進。原文的說法是「給非工程師用的 coding agent」。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>四層堆疊</b> — 外圈是員工看到的介面，核心是現成的開源 harness（本站重繪）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>4 · Kai UI</b><small>員工實際操作的產品體驗</small><span class="pi">外層</span></div>
+          <div class="ring">
+            <div class="ring-lb"><b>3 · Configuration 層</b><small>各團隊自訂 agent 的 skills、行為與角色，不動到下層</small><span class="pi">可自訂</span></div>
+            <div class="ring">
+              <div class="ring-lb"><b>2 · Stripe harness</b><small>接上 Stripe 的安全態勢、基礎設施與內部服務</small><span class="pi">Stripe 專屬</span></div>
+              <div class="ring ring--core">
+                <div class="ring-lb"><b>1 · Deep Agents</b><small>工具呼叫迴圈、middleware 組合、串流、狀態管理</small><span class="pi">開源底座</span></div>
+                <div class="ring-inner">原文：<b>這層把「不 Stripe 的問題」全部解掉</b>，團隊才能專心解 Stripe 的 agent 問題</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="x-src">本站依原文敘述重繪；原文以文字條列這四層、未給靜態架構圖，由外而內的畫法是本站整理。</p>
+    </figure>
+
+    <p class="g-p">分界線值得記住：越是通用的能力，越沒有理由自己寫；越貼近公司內規與安全的那一層，才是投資該放的地方。</p>
+    <p class="g-p">原文引 AI 平台負責人 Chrissie 的說法：「Kai 完全鞏固了大家相信 Deep Agents 是正確方向。」這句話來自客戶端，但刊登在供應商部落格上，讀者需自行折算。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">讓它進到生產環境的三個 middleware</h2>
+    <p class="g-p">一週做出初版靠的不是省略工程，而是三個 middleware 直接兌現：檔案、沙箱、摘要。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>middleware</th><th>解決什麼</th><th>原文限定細節</th></tr></thead>
+        <tbody>
+          <tr><td data-l="middleware"><b>Filesystem</b></td><td data-l="解決什麼">讓檔案成為跨回合可讀寫的上下文；Kai 是雲端服務，不是本機執行的程式</td><td data-l="原文細節">自建 S3 虛擬檔案系統；每次 sandbox 執行前 sync in、執行後 sync out，整個 session 維持一致的檔案環境</td></tr>
+          <tr><td data-l="middleware"><b>Sandbox</b></td><td data-l="解決什麼">跑分析用 Python，也處理 PDF、簡報等多種檔案格式</td><td data-l="原文細節">沙箱只暴露為工具，agent 本身跑在外面、呼叫進去，切開 LLM 生成程式的執行邊界</td></tr>
+          <tr><td data-l="middleware"><b>Summarization</b></td><td data-l="解決什麼">管理長會話累積的上下文，避免效能退化或撞到模型上限</td><td data-l="原文細節">用 deepagents 的 summarization threshold、摘要模型、輸出水準等參數調整；多數使用者間歇使用，避開大 context 的 cache miss 有助控成本</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">三個 middleware 的共同點是「邊界」：檔案有進有出、agent 在沙箱外而生成的程式碼在沙箱內執行、上下文按門檻壓縮。原文明講，這些若從零自建「要花數個月」才能硬化。</p>
+    <p class="g-p">對非工程師使用者，這些機制的體感很單純：上傳簡報、要求分析、拿到圖表，中間不必知道程式在哪裡跑。</p>
+    <p class="g-p">（編輯觀點：原文沒給初版程式碼規模與後續維護人月，一週只能讀成「從零到可試用」，不是上線成本。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">skills 一多，選擇本身變成瓶頸</h2>
+    <p class="g-p">原文對 skill 的定義很具體：可執行的結構化模組，封裝「怎麼做、要載入哪些工具、這類工作怎麼下手」。</p>
+    <p class="g-p">維護是聯邦式：各團隊自己擁有 skills。基礎 skills 隨主 agent 出貨，其餘按職能分層載入，銷售營運與財務看到的組合不同。</p>
+    <p class="g-p">使用者層另有一層個人 profile，可在職能預設之上再加自己要的 skills。</p>
+    <p class="g-p">但 500 多個內部 MCP 工具、1,000 多個 skills 塞不進 context，於是改用 allowedTools 清單做兩段式載入。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>兩段式載入</b> — 先選 skill，再由 skill 的清單決定哪些工具進 context（本站重繪）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>使用者請求</b><small>對話中提出任務</small></div>
+        <span class="ar">→</span>
+        <div class="fn hot"><b>選 skill</b><small>由已有 context 的 LLM 判斷載入哪些 skill</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>allowedTools</b><small>skill 自帶的工具清單，決定工具 context</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>執行</b><small>只有被選到的工具進得來</small></div>
+      </div>
+      <p class="x-src">本站依原文 allowedTools 兩段式描述重繪；箭頭是原文所述的載入順序，非編輯推論。</p>
+    </figure>
+
+    <p class="g-p">原文另有一條硬規則：基礎 skills 會被 pinned，不隨模型卸載而消失，確保 Stripe 的脈絡與政策行為常在。</p>
+    <p class="g-p">原文自己承認限制：frontmatter 上限 1,024 字元，而 skills 超過 150 個、再加系統提示時，前沿模型品質已見下滑。團隊仍在找解法。</p>
+    <p class="g-p">採用曲線則相反地陡：開放預覽一週就達到季度目標，約四週從 296 人長到逾 5,000 人。</p>
+    <p class="g-p">原文說新使用者多是被要求「用 AI」卻一直找不到順手工具的人：業務、財務分析、商業營運。有人形容前一個工具「太難親近，得自己調一堆旋鈕」，Kai 則是「什麼都不用調」。</p>
+    <p class="g-p">原文稱現今行銷 95%、GTM 87% 的使用比例高於工程團隊；連工程團隊自己也拿 Kai 查自家系統、跑自己的 traces 找 skill 缺口。</p>
+    <p class="g-p">下一個瓶頸是「選擇」本身。原文的規劃是：現在純靠 LLM 選還可行，規模再大就得先由 RAG 或分類器預篩，再由 LLM 拍板。</p>
+    <p class="g-p">其餘三件待辦也寫得直白：數千員工規模下的合規護欄、行為層的個人化（有些團隊要 Kai 先計畫再動手，有些只要快問快答），以及目前仍是單人 session 的跨人協作。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>先問哪一層不該自建。</b>通用 harness 已有現成積木，重畫只換到更慢的起步。</p>
+      <p><b>一週做出初版不等於規模化。</b>真正的難題在 skill 與工具的選擇。</p>
+      <p><b>聯邦式供稿要配治理。</b>100 多個團隊寫 skills，沒有護欄就沒有可預測行為。</p>
+    </div>
+  </section>
+
+    <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="eval-driven-agents.html">Eval 驅動開發：平均分會騙人，考卷要先寫</a><span class="d">2026-11-09</span></div>
+      <div class="g-relrow"><span class="s">NVIDIA Blog</span><a href="openshell-agent-safety.html">代理安全層成形：權限歸執行期，偵測歸夥伴</a><span class="d">2026-11-09</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="coderabbit-agentic-review.html">審查成了瓶頸：用代理審代理，換來 20 倍交付</a><span class="d">2026-11-09</span></div>
+    </div>
+  </section>
+
+<p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；原文為廠商客戶案例，採用率、成長倍數與一週開發等成效屬原文敘述，無第三方驗證；圖解與小標為編輯整理，兩張圖皆為本站重繪／本站整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-10 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

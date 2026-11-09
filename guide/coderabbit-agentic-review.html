@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 審查成了瓶頸：用代理審代理，換來 20 倍交付 · AI 每日動態檔案</title>
+<meta name="description" content="OpenAI 客戶案例：CodeRabbit 用 Luna 鋪量子代理、Astra 做規劃，靠 Codex 六個月交付約 20 倍軟體；Cyber 模型做內部滲透測試，兩週 13,000 次深掃找出 43,000 多個漏洞。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>審查成了瓶頸：用代理審代理，換來 20 倍交付</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：OpenAI 客戶案例〈CodeRabbit scales agentic software development and ships 20x more〉——訪談型客戶故事，成效數字為該公司自述</p>
+    <p class="g-meta">
+      <span>OpenAI</span>·<span>2026-11-09 發布</span>·<span>2026-11-10 收錄</span>·
+      <a href="https://openai.com/index/coderabbit-codex-daybreak" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>20,000+ 家組織</b><span>另計 15 萬個以上開源專案；CodeRabbit 平台規模（原文敘述，無第三方驗證）</span></div>
+    <div class="g-stat"><b>約 20 倍</b><span>過去 6 個月用 Codex 交付的軟體量，工程團隊人數不變（原文敘述，無第三方驗證）</span></div>
+    <div class="g-stat"><b>2,500～3,000 個 PR</b><span>Gill 自報在訪談前 30 天內送出的數量；一位 CEO 的個人數字（自報，無第三方驗證）</span></div>
+    <div class="g-stat"><b>13,000 次深掃</b><span>兩週促銷期找出 43,000 多個漏洞；另含 100 萬美元等值免費深掃（原文 $1M）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">一句話：便宜模型鋪量、貴模型做決策，再用擅長攻擊的模型掃自己的程式碼。</p>
+
+    <p class="g-p">CodeRabbit 賣的是「驗證與信任 AI 產出程式碼」的治理層：審查、解釋，並決定哪些代理寫的變更可以上線。</p>
+    <p class="g-p">共同創辦人暨執行長 Harjot Gill 的說法很直白：「每家公司採用編碼代理後撞到的第一個瓶頸，就是 code review。」</p>
+    <p class="g-p">代理讓待審的程式碼變多，審查本身又得靠代理，於是成本結構決定架構：便宜的跑量、貴的做判斷。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>模型按單價分層</b> — 誰做決策、誰鋪量，以及兩者共用的沙箱底座（本站重繪）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>1 · 治理與控制層</b><small>CodeRabbit 平台：驗證、解釋、決定哪些變更可以上線</small><span class="pi">外層</span></div>
+          <div class="ring">
+            <div class="ring-lb"><b>2 · 規劃與編排</b><small>GPT-6 Astra：推理久、單價高，負責 planning 與 orchestration</small><span class="pi">中層</span></div>
+            <div class="ring ring--core">
+              <div class="ring-lb"><b>3 · 子代理群</b><small>GPT-6 Luna 等低成本模型：數量多、分布平台各處</small><span class="pi">內層</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="ring">
+          <div class="ring-lb"><b>4 · 沙箱環境</b><small>2023 年起 clone repo、讓代理寫碼協助審查</small><span class="pi">共用底座</span></div>
+        </div>
+      </div>
+      <p class="x-src">本站重繪，原文未附圖；三層包覆關係與底座位置為編輯判讀。原文只寫 Astra 負責規劃編排、Luna 支撐更多子代理，未把兩者畫成層級。</p>
+    </figure>
+
+    <p class="g-p">這條線走過四代：第一款產品用 GPT-3.5 Turbo，GPT-4 才讓審查真的可用；o1、o3 是早期採用，現在換成 Luna 與 Astra 分工。</p>
+    <p class="g-p">起點是一到兩個子代理做程式碼導航；現在低成本模型撐起平台各處的子代理，規劃與編排交給 GPT-6 Astra。</p>
+    <p class="g-p">審查在雲端非同步執行，模型可以「想久一點」換取更強分析；這是 o1、o3 能被早期採用的前提，也和互動式工具的選型邏輯相反。</p>
+    <p class="g-p">選型的尺是自己建的已知問題集：訪談當下 Gill 估計 GPT-6 Astra 命中其中 50%，在該基準上排第一（自報）。</p>
+    <p class="g-p">Gill 對模型迭代的評價是「每次新模型發布、尤其推理模型，我們在大規模找問題的能力上都看到大幅提升」——這是客戶對供應商的表態，不是量測。</p>
+    <p class="g-p">這把尺會自己長大：代理帶來新的錯誤類型，修好的地方又暴露出舊審查漏掉的問題。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">20 倍交付的代價：整條交付線重做</h2>
+    <p class="g-p">原文對代價的描述比成效還多。Gill 的說法是「整個軟體交付流程得徹底重想」。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>多個代理同時跑，撐爆的是這四處</b> — 並列，原文未給順序（本站整理）</figcaption>
+      <p class="x-grid-h">四項互不相干，故不串箭頭</p>
+      <div class="x-grid">
+        <div class="c"><b><i>①</i>本機記憶體與算力</b><small>原文：laptop memory and compute；開發機層級的限制</small></div>
+        <div class="c"><b><i>②</i>測試</b><small>原文只列為受限環節，未給做法或數據</small></div>
+        <div class="c"><b><i>③</i>編譯與打包工具</b><small>原文：tools that compile and package software</small></div>
+        <div class="c"><b><i>④</i>相依套件</b><small>原文只寫 dependencies，未說明具體衝突</small></div>
+      </div>
+      <p class="x-src">本站整理；原文以一句話並列這些受限環節，未排序、未給各自的量測，也未說明解法細節。</p>
+    </figure>
+
+    <p class="g-p">多個代理同時跑起來，被撐爆的環節才一一浮現；換模型只是起點，採用本身不是解法。</p>
+    <p class="g-p">低風險變更改由 CodeRabbit 自動出貨，不必人簽核；人工核准的位置因此整段重排。</p>
+    <p class="g-p">另有一支 Codex 驅動的 Slack bot，分流生產事故、Slack 訊息與客服單，必要時直接開一張待審 PR 回給人合併。</p>
+    <p class="g-p">原文也提到把開發搬上雲端：減少本機機器的限制，並讓存取權與稽核的控管更強。</p>
+    <p class="g-p">（編輯推論：20 倍沒有計算基準——是 PR 數、程式碼行數還是上線功能數，原文未說明；資料卡裡的 PR 數是 Gill 個人數字，兩者不能相乘。）</p>
+    <p class="g-p">（編輯觀點：把核准權下放給自動化，前提是風險分級本身可信；原文沒給分級規則，也沒給誤放行率。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一套 Codex 也管行銷，Cyber 模型負責攻擊</h2>
+    <p class="g-p">原文的說法是「盡可能把公司當成程式在跑」：行銷開一張 PR、合併即部署 Google Ads；內容工作室的 repo 由 Codex 產簡報與對外文件。</p>
+
+    <div class="x-scroll" style="margin-top:14px">
+      <table class="x-tbl">
+        <thead><tr><th>用途</th><th>原文做法</th><th>原文數字與限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="用途"><b>工程交付</b></td><td data-l="做法">Codex 寫碼出 PR；Codex Slack bot 分流事故與客服單，可回一張待審 PR</td><td data-l="數字">約 20 倍（6 個月、人數不變）；2,500～3,000 個 PR 為 Gill 自報，皆無第三方驗證</td></tr>
+          <tr><td data-l="用途"><b>行銷與營運</b></td><td data-l="做法">Google Ads 以 PR 部署；內容工作室 repo 產簡報與客戶文件</td><td data-l="數字">無量化。原文只有「把行銷問題翻成程式問題會快 10 倍」這句說法，同樣無第三方驗證</td></tr>
+          <tr><td data-l="用途"><b>安全掃描</b></td><td data-l="做法">經 Daybreak 取用 Cyber 模型做內部滲透測試；CodeRabbit Secure 以 Daybreak 搭配 Codex 模型掃客戶程式碼</td><td data-l="數字">促銷期兩週、$1M 等值免費深掃；13,000 次深掃跨出 43,000 多個漏洞</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+
+    <p class="g-p">安全這條線起步更早：團隊在沙箱裡 clone repo、讓代理寫碼協助審查；近期改用 Daybreak 取用 OpenAI 的 Cyber 模型，對自家平台做內部滲透測試。</p>
+    <p class="g-p">Gill 的說法是找到多個漏洞、一些「根本想不到會發生」的進階手法；原文未列漏洞類型或數量。</p>
+    <p class="g-p">同一套能力變成商品 CodeRabbit Secure：促銷兩週、替用戶吸收 100 萬美元等值的深掃費用（原文 $1M），數千個漏洞已由客戶修掉。</p>
+    <p class="g-p">掃描筆數與漏洞總數見上方資料卡，兩者都出自 CodeRabbit 自述；「深掃」的定義與計數口徑，原文沒有交代。</p>
+    <p class="g-p">原文也沒給客戶名單、行業分布，或第三方對其審查準確度的評測；可查的只有該公司自建的基準。</p>
+    <p class="g-p">往前看，CodeRabbit 要把驗證、排優先序、解釋、防護與核實都做成規模化服務，替代理產出的變更把關。</p>
+    <p class="g-p">方向也寫在結尾：背景代理開始自己回應告警，人的工作會變成判斷哪些變更要做到完成。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>審查是代理化的第一道牆。</b>交付出貨變快，待審量先爆。</p>
+      <p><b>20 倍不只靠模型。</b>發布流程與審批位置也得跟著改。</p>
+      <p><b>自報數字先問口徑。</b>「深掃」與「20 倍」原文都沒定義。</p>
+    </div>
+  </section>
+
+    <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="eval-driven-agents.html">Eval 驅動開發：平均分會騙人，考卷要先寫</a><span class="d">2026-11-09</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="stripe-kai-deep-agents.html">全員代理的取捨：底層用現成，難題自己扛</a><span class="d">2026-11-09</span></div>
+      <div class="g-relrow"><span class="s">NVIDIA Blog</span><a href="openshell-agent-safety.html">代理安全層成形：權限歸執行期，偵測歸夥伴</a><span class="d">2026-11-09</span></div>
+    </div>
+  </section>
+
+<p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；原文為 OpenAI 客戶案例，成效、數量與金額皆為 CodeRabbit 敘述，無第三方驗證；兩張圖與一張表皆為本站重繪，原文未附任何圖表。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-10 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

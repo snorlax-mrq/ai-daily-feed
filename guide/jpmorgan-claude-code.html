@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 代理進銀行的前提：摩根大通先鎖權限再擴編 · AI 每日動態檔案</title>
+<meta name="description" content="摩根大通把 Claude 擴大到工程師以外：工程師自建 PR 審查與 self-healing 代理，資安用它找漏洞。Claude Code 跑在自建 Devspace，變更須過自動測試與核准閘門，Claude 不能自己簽核。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>代理進銀行的前提：摩根大通先鎖權限再擴編</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Anthropic 客戶案例〈JPMorganChase expands Claude Code to more employees across the firm〉——廠商發布的客戶案例（非獨立報導）</p>
+    <p class="g-meta">
+      <span>Claude（Anthropic）Resources</span>·<span>未標日期 發布</span>·<span>2026-11-10 收錄</span>·
+      <a href="https://claude.com/resources/articles/jpmorganchase-expands-claude-code" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>工程師以外</b><span>Claude 推行到全公司，原文只寫「更多員工、不限工程師」，未給人數或部門數</span></div>
+    <div class="g-stat"><b>PR 審查＋self-healing 代理</b><span>工程師自己建的兩類代理，原文點名用途，未給數量與準確率</span></div>
+    <div class="g-stat"><b>Project Glasswing</b><span>資安團隊以前沿模型更快找出並修補漏洞，原文稱此工作最早寫在該計畫</span></div>
+    <div class="g-stat"><b>Devspace</b><span>機構自建的容器化開發平台，跑在自家基礎設施上，用來隔離員工憑證與內部系統</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">摩根大通把 Claude 從工程師推向全公司，真正值得看的是它怎麼把代理關進管線。</p>
+
+    <h2 class="g-h2">四類使用者：從寫程式到寫需求</h2>
+    <p class="g-p">原文對商業與投資銀行（Commercial and Investment Bank）的效益說得最具體：工作更快進到生產，機構再把騰出的產能重新部署到業務優先事項上。原文未給倍數或時數（原文敘述，無第三方驗證）。</p>
+    <p class="g-p">（編輯觀點：「重新部署產能」講的是省下的力氣被移去別的優先事項，不是人力縮減；原文只給這個框架，沒有任何數字支撐。）</p>
+    <p class="g-p">原文沒有給人數，只說 Claude 正在全公司推行、範圍超出工程師。使用面可拆成四類，原文並列陳述，未排優先順序。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>四類使用者各拿 Claude 做什麼</b> — 並列四格，彼此不是流程（本站重繪）</figcaption>
+      <div class="x-grid-h">並列陳述，原文未給順序或優先級</div>
+      <div class="x-grid">
+        <div class="c"><b>工程師</b><small>現代化其他老舊系統；自建 PR 審查與 self-healing 代理，並把可行的做法彼此分享</small></div>
+        <div class="c"><b>基礎設施與維運</b><small>用 Claude Code 做監控、告警與根因分析（root cause analysis）</small></div>
+        <div class="c"><b>資安</b><small>用前沿模型更快找出並修補漏洞；這條線最早寫在 Project Glasswing</small></div>
+        <div class="c"><b>產品與非工程團隊</b><small>產品團隊把需求直接轉成工程待辦；其他團隊做風險與內控評估、計畫規劃</small></div>
+      </div>
+      <p class="x-src">本站重繪，原文未附圖；四類為原文段落逐一列出的角色，本圖並列呈現，不宣稱順序或因果。</p>
+    </figure>
+
+    <p class="g-p">原文說工程師會把有效的做法彼此分享，但沒說形式與範圍；能確定的只有 PR 審查與 self-healing 兩類用途。</p>
+    <p class="g-p">最靠近業務的人也在建。原文給的理由是產品開發有一大段不在寫程式：研究、需求、設計、規劃都發生在程式碼之外。</p>
+    <p class="g-p">資產與財富管理（Asset &amp; Wealth Management）走的是組織設計：把最懂業務、最敢提點子的人，與技術及產品專家編成小型授權團隊。</p>
+    <p class="g-p">這樣編組是為了更容易客製並規模化交付客戶投資方案。Claude Code 已納入該部門工程流程；原文稱團隊動得更快，同時在交付客戶前把每筆變更送進更嚴格的測試（原文敘述，無第三方驗證）。</p>
+    <p class="g-p">上個月，J.P. Morgan Asset Management 宣布一個連接器，把 55ip 的 ActiveTax Technology® 接進 Claude for Financial Advisors，讓稅務考量的投資組合轉換分析進入顧問日常工作。</p>
+    <p class="g-p">（編輯觀點：這個做法的重點不是工具，而是把懂業務的人放進交付團隊，而不是留在需求端；編制規模與考核方式原文未提。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">控管：代理不能替自己簽核</h2>
+    <p class="g-p">約束分四層，原文在這一側寫得比成效更具體。第一層是環境：Claude Code 跑在受控環境，含自建容器化平台 Devspace，位置在機構自家基礎設施上。</p>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>控制層</th><th>原文用語</th><th>擋掉什麼</th></tr></thead>
+        <tbody>
+          <tr><td data-l="控制層"><b>執行環境</b></td><td data-l="原文用語">Devspace，機構自建的容器化開發平台，跑在自家基礎設施</td><td data-l="擋掉什麼">代理直接取得員工憑證或內部系統</td></tr>
+          <tr><td data-l="控制層"><b>權限</b></td><td data-l="原文用語">存取分階段放寬（原文：access widens in stages）</td><td data-l="擋掉什麼">一次到位的全面開放</td></tr>
+          <tr><td data-l="控制層"><b>模型</b></td><td data-l="原文用語">新的 Claude 模型須先過機構自己的核准流程</td><td data-l="擋掉什麼">未經核准的模型直接進到生產</td></tr>
+          <tr><td data-l="控制層"><b>交付</b></td><td data-l="原文用語">數千個自動測試與核准閘門；自動閘門只回通過或中止，由 pipeline 強制</td><td data-l="擋掉什麼">未過測試與核准的變更直接進生產</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">分階段放寬與模型核准這兩道，原文都沒給時程或次數；能確認的只有兩道都存在，且先於任何人開始使用。</p>
+    <p class="g-p">（編輯推論：模型要先過機構自己的核准，等於把模型更新的節奏交給客戶端決定，而不是跟著 Anthropic 的發布走。）</p>
+    <p class="g-p">「Claude 不能簽核自己的工作」是原文最硬的一句：自動閘門只有通過與中止兩種結果，由 pipeline 執行，人仍對每一筆生產變更負責。</p>
+    <p class="g-p">（編輯觀點：這頁最可轉移的不是用得多廣，而是「代理不得自我核准」被寫進管線，而不是只寫在規範文件裡。閘門會擋人，公約不會。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">一年內的位移，與兩個待補的缺口</h2>
+    <p class="g-p">原文收在三個階段的位移：過去一年，摩根大通對 Claude 的用法從軟體工程，擴到網路防禦，再到財務顧問的工具。</p>
+    <p class="g-p">原文的定位句是：Claude 在全球最大金融機構之一的控制範圍內運作，這正是 Anthropic 說自己在打造的東西。那是目標陳述，不是驗收結論。</p>
+    <p class="g-p">原文也寫，這家機構對 Anthropic 提出的要求，正在形塑它為其他受監管機構打造的產品。</p>
+    <p class="g-p">（編輯觀點：這是廠商撰寫的客戶案例，成效全屬單方敘述、沒有第三方驗證；可核對的只有名詞與機制——Devspace、Project Glasswing、55ip 連接器。）</p>
+    <p class="g-p">兩個缺口值得追：一是「更快」沒有量化基準，二是自建代理由誰審、怎麼審，原文未交代。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>擴大使用不難，難在不開後門。</b>先隔離環境，才敢放人進來。</p>
+      <p><b>「Claude 不能自己簽核」最值得抄。</b>寫進管線的規則才會真的擋住。</p>
+      <p><b>客戶案例只能讀機制。</b>快多少、誰審代理，原文都留白。</p>
+    </div>
+  </section>
+
+    <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="eval-driven-agents.html">Eval 驅動開發：平均分會騙人，考卷要先寫</a><span class="d">2026-11-09</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="stripe-kai-deep-agents.html">全員代理的取捨：底層用現成，難題自己扛</a><span class="d">2026-11-09</span></div>
+      <div class="g-relrow"><span class="s">NVIDIA Blog</span><a href="openshell-agent-safety.html">代理安全層成形：權限歸執行期，偵測歸夥伴</a><span class="d">2026-11-09</span></div>
+    </div>
+  </section>
+
+<p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；原文為廠商發布的客戶案例，成效與規模敘述皆為單方說法、無第三方驗證；原文未附任何圖表，圖解 A 與表格皆為本站重繪整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-10 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

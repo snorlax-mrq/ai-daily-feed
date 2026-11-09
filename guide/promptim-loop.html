@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — Prompt 最佳化：讓評估分數來改提示詞 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain 開源實驗性函式庫 Promptim：輸入初始 prompt、資料集與自訂評估器，它跑迴圈請 metaprompt 提議改稿，再用 dev 分數決定留新版或原版；原文強調這不是萬靈丹。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>Prompt 最佳化：讓評估分數來改提示詞</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain 部落格〈Promptim: an experimental library for prompt optimization〉——官方函式庫發布與設計說明</p>
+    <p class="g-meta">
+      <span>LangChain Blog</span>·<span>2026-11-09 發布</span>·<span>2026-11-10 收錄</span>·
+      <a href="https://www.langchain.com/blog/promptim" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>實驗性</b><span>原文自稱 experimental library、開源釋出的「第一次嘗試」，範圍只到單一 prompt</span></div>
+    <div class="g-stat"><b>4 件輸入</b><span>初始 prompt、資料集、自訂評估器，加上可選的人類回饋；前三件是必要項</span></div>
+    <div class="g-stat"><b>dev／train／test</b><span>可選的資料切分；基線與每輪比較都在 dev（未切分時用整份）上算，改稿例子取自 train</span></div>
+    <div class="g-stat"><b>pip install promptim</b><span>開源函式庫，接 LangSmith 管資料集、prompt、結果追蹤與選配的人工標註</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">把調 prompt 變成有分數的迴圈：人出資料集與評估器，改稿交給 metaprompt 提案，留不留看 dev 分數。</p>
+
+    <p class="g-p">原文先把地基講清楚：這是「評估驅動開發」。先建一份輸入資料集（可選配期望輸出），再定義幾個評估指標。</p>
+    <p class="g-p">之後每次改動 prompt，就整份跑一遍、逐筆打分，確認在進步，至少不要退步。原文點名 LangSmith 這類工具負責資料集整理與評估。</p>
+    <p class="g-p">Promptim 把迴圈裡「動手改」這一步自動化：改稿由程式提案，再由同一套評估打分決定去留。原文承認 DSPy 早就在做這件事。</p>
+    <p class="g-p">原文給三個動機：省下手工調詞的工程時間；替「介於藝術與科學之間」的調詞帶來嚴謹；以及換模型時少改一次 prompt。</p>
+    <p class="g-p">第三點值得展開。不同模型要不同提示策略，換供應商不是改個 URL 就好；評估與模型無關，prompt 才有關，力氣放在 eval 上更划算。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>改稿迴圈的五個環節</b> — 誰提案、誰打分、誰決定留哪一版（本站重繪）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>初始 prompt</b><small>LangSmith 裡現有的那一版</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>跑 dev 得基線</b><small>用 dev 或整份資料集，先算一個分數</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>跑 train 並打分</b><small>逐例跑 prompt，由本地評估器評分</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>交 metaprompt</b><small>餵輸入、輸出、期望輸出、分數，請它提修改建議</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>新 prompt 回 dev</b><small>用同一套指標重算，與基線比</small></div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑（分支）</b>：新分數有進步就留下新版；沒進步就退回原版，下一輪從 <b>跑 train</b> 再來。原文未給迴圈輪數上限與停止條件。</span></div>
+      <p class="x-src">本站重繪。原文以段落文字描述流程，未附流程圖；「進步／退步」是條件分支，本圖收在回饋列，不是第六個步驟。</p>
+    </figure>
+
+    <p class="g-p">這套設計的紀律在最後一格：只有 dev 分數進步，新 prompt 才留下。留哪一版由量測決定，不由提案的語氣決定。</p>
+    <p class="g-p">改稿的動作範圍也窄：metaprompt 只重寫 prompt 的文字，不動模型、不動工具、也不動資料集。這是它與「直接換一顆更強的模型」的差別。</p>
+    <p class="g-p">（編輯觀點：把「留不留」寫成硬規則，比再多的提示詞技巧都實在——它讓最佳化有可回滾的版本，不是一次口頭承諾。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">人只出三樣東西，外加一段回饋</h2>
+    <p class="g-p">原文的輸入清單很短：LangSmith 裡的一份資料集、LangSmith 裡的一個 prompt，加上本地定義的評估器。</p>
+
+    <div class="x-scroll" style="margin-top:16px">
+      <table class="x-tbl">
+        <thead><tr><th>輸入</th><th>放在哪裡／由誰提供</th><th>原文限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="輸入"><b>初始 prompt</b></td><td data-l="放哪">LangSmith 的 Prompt Hub，事後也回存這裡</td><td data-l="限定語">必填；只最佳化這一個 prompt</td></tr>
+          <tr><td data-l="輸入"><b>資料集</b></td><td data-l="放哪">LangSmith，含可選的期望輸出</td><td data-l="限定語">必填；可再切 train／dev／test</td></tr>
+          <tr><td data-l="輸入"><b>評估器</b></td><td data-l="放哪">本地定義，不必進 LangSmith</td><td data-l="限定語">必填；決定「什麼叫好」</td></tr>
+          <tr><td data-l="輸入"><b>人類回饋</b></td><td data-l="放哪">LangSmith 的標註佇列（Annotation Queues）</td><td data-l="限定語">選配；沒有好自動指標時才用</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-src">表格為本站整理。原文敘述三項必填與一項選配，未給此表；「不必進 LangSmith」指評估器在本地定義。</p>
+
+    <p class="g-p">評估器是重心：它定義什麼叫好，也決定 metaprompt 收到什麼訊號——原文餵進去的是輸入、輸出、期望輸出與分數。</p>
+    <p class="g-p">沒有好指標時，人工回饋是替代路徑。原文說這適合自動指標不夠用、或想調到指標管不到的地方，走的是標註佇列。</p>
+    <p class="g-p">切分也是選配，但原文把它寫進建議做法：基線與每輪比較看 dev，改稿素材看 train，試探與驗收看的是不同批例子。</p>
+    <p class="g-p">原文寫的是跑過 train（或整份）裡的所有例子，不是抽樣；評估器用的是使用者自訂、本地定義的那一份。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">不是萬靈丹：三點與 DSPy 分道</h2>
+    <p class="g-p">原文先自我設限：這是第一個嘗試、定位 experimental，只做「改寫單一 prompt」這一件事。評估標準仍得你自己寫。</p>
+
+    <div class="x-scroll" style="margin-top:16px">
+      <table class="x-tbl">
+        <thead><tr><th>對照點</th><th>promptim</th><th>DSPy（原文歸述）</th></tr></thead>
+        <tbody>
+          <tr><td data-l="對照點"><b>範圍</b></td><td data-l="promptim">單一 prompt；原文認為目前比較可解</td><td data-l="DSPy">整個「複合 AI 系統」</td></tr>
+          <tr><td data-l="對照點"><b>人的位置</b></td><td data-l="promptim">留在迴圈裡：標註佇列、Prompt Hub 事後複核、結果進 LangSmith</td><td data-l="DSPy">原文稱「把人拿掉得多一些」</td></tr>
+          <tr><td data-l="對照點"><b>手段</b></td><td data-l="promptim">只改寫 prompt，並力求把這件事做好</td><td data-l="DSPy">範圍更廣，含 finetuning、few-shot prompting</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-src">表格為本站整理。三點對照取自原文「It's worth comparing our approach to theirs」後三段；原文同時稱 DSPy 是這個領域的領先工具。</p>
+
+    <p class="g-p">原文的結論是兩者解不同問題，不是同一題的兩個名次。範圍小是刻意的取捨，換來的是單一 prompt 這件事比較做得到。</p>
+    <p class="g-p">人的位置也寫得直白：至少留一個人做 sanity check，最後看一眼結果。這是它把 prompt 存回 Prompt Hub 的理由，事後翻得到改了什麼。</p>
+    <p class="g-p">接下來原文列四個方向：推進動態 few-shot、接進 LangSmith 介面、加更多最佳化方法、整張 LangGraph 圖的最佳化（理想上與 DSPy 整合）。</p>
+    <p class="g-p">安裝是一行 pip install promptim，另有 YouTube 走查影片，回饋走 GitHub 與 Twitter。</p>
+    <p class="g-p">（編輯觀點：兩者的分歧與其說是技術，不如說是對人的假設——一邊先假設人可以退場，一邊先假設人得留著。整篇讀下來，它是一把先磨小的刀，不是產線。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>評估器才是資產。</b>prompt 會換、模型會換，判分標準留下來。</p>
+      <p><b>留版規則比提案重要。</b>進步才換、否則退回，最佳化才有回頭路。</p>
+      <p><b>範圍小是設計，不是缺點。</b>單一 prompt 先做，別當成整座系統的自動調校。</p>
+    </div>
+  </section>
+
+    <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="eval-driven-agents.html">Eval 驅動開發：平均分會騙人，考卷要先寫</a><span class="d">2026-11-09</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="stripe-kai-deep-agents.html">全員代理的取捨：底層用現成，難題自己扛</a><span class="d">2026-11-09</span></div>
+      <div class="g-relrow"><span class="s">NVIDIA Blog</span><a href="openshell-agent-safety.html">代理安全層成形：權限歸執行期，偵測歸夥伴</a><span class="d">2026-11-09</span></div>
+    </div>
+  </section>
+
+<p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；原文為 LangChain 官方部落格，介紹自家實驗性開源函式庫，成效敘述無第三方驗證；圖解與表格皆為本站重繪／整理，原文無機制圖（頁面圖片為相關文章封面與作者照，未收錄）。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-10 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

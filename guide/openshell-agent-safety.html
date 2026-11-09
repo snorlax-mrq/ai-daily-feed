@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 代理安全層成形：權限歸執行期，偵測歸夥伴 · AI 每日動態檔案</title>
+<meta name="description" content="NVIDIA 把代理安全收斂到執行期：OpenShell 管沙箱與政策控管，Hyundai 評估 NemoClaw 藍圖，AIM Intelligence 以 Starfort 補惡意指令與外洩偵測。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>代理安全層成形：權限歸執行期，偵測歸夥伴</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：NVIDIA Blog〈Korea’s AI Ecosystem Advances and Secures Agentic AI With NVIDIA〉——官方部落格（生態系公告）</p>
+    <p class="g-meta">
+      <span>NVIDIA Blog</span>·<span>2026-11-09 發布</span>·<span>2026-11-10 收錄</span>·
+      <a href="https://blogs.nvidia.com/blog/korea-secure-agentic-ai/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>OpenShell</b><span>NVIDIA Open Agent Safety Platform 的關鍵元件；原文對它的描述集中在沙箱化執行與政策式控管</span></div>
+    <div class="g-stat"><b>Hyundai Motor Group</b><span>正在評估 NemoClaw 藍圖與 OpenShell 執行期；原文用 exploring，不是採用</span></div>
+    <div class="g-stat"><b>Starfort × OpenShell</b><span>AIM Intelligence 的 agent control platform 整合中：執行期存取控制歸 OpenShell，惡意指令與外洩偵測歸 Starfort</span></div>
+    <div class="g-stat"><b>700 萬筆</b><span>Nemotron-Personas-Korea 的全合成韓國人物誌，以韓國官方統計為基礎</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">代理要進企業，缺的常不是更強的模型，而是一層管得住它手腳的執行期。NVIDIA 把這一層做成元件，夥伴補內容偵測。</p>
+
+    <p class="g-p">原文的前提是一句因果：代理接下愈多工作，就愈需要能力足夠的開放模型，以及同步前進的安全。兩者並列，不是主從。</p>
+    <p class="g-p">（編輯推論：開放模型被拉進來，是因為代理要外掛工具、要客製；但開放也意味著少了廠商端統一的護欄，安全得另外補。）</p>
+    <p class="g-p">OpenShell 落在後半句。把它放回執行鏈看：代理在上層決策，工具與資料在下層，中間那一格才是政策生效的地方。</p>
+    <p class="g-p">「同步前進」是原文的措辭：能力與安全要一起長，不是先把模型做完、再回頭補安全。</p>
+    <p class="g-p">少了這一格，護欄只剩提示詞。提示詞勸得動模型，卻決定不了工具實際拿到什麼權限。</p>
+    <p class="g-p">沙箱化執行是把代理關進隔離環境動手；政策式控管是把可做與不可做寫成規則，不靠模型自我約束。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>平台包執行期，執行期管三個對象</b> — 誰包住誰，以及代理動手的那一格（本站重繪）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>1 · NVIDIA Open Agent Safety Platform</b><small>平台層；原文只說 OpenShell 是它的關鍵元件，其餘未展開</small><span class="pi">外層</span></div>
+          <div class="ring">
+            <div class="ring-lb"><b>2 · OpenShell 執行期</b><small>sandboxed execution ＋ policy-based controls</small><span class="pi">元件層</span></div>
+            <div class="ring ring--core">
+              <div class="ring-lb"><b>3 · 被治理的三件事</b><small>原文逐項點名，未給優先序</small><span class="pi">核心</span></div>
+              <div class="ring-inner"><b>敏感資料 · 企業工具存取 · 自主代理的行動</b><br>代理動手的那一格，政策在此生效</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖。原文只用一段文字交代 OpenShell 的定位與三個治理對象，未畫架構圖；三層包覆關係為本站判讀。Starfort 是同層夥伴，未畫入。</p>
+    </figure>
+
+    <p class="g-p">原文選的三個治理對象也照這個邏輯排：資料、工具、行動。前兩項是既有的權限語言，第三項才新。</p>
+    <p class="g-p">（編輯觀點：從「誰能連線」走到「哪個動作放行」，是代理時代權限模型最實際的位移。）</p>
+    <p class="g-p">反面同樣要讀：原文沒給政策的表達方式、控管粒度與延遲。這一層目前只有定位，沒有可比較的工程參數。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">兩層分工：一個擋越權，一個擋被騙</h2>
+    <p class="g-p">這篇真正的資訊是分工，不是單一產品：NVIDIA 管「能不能做」，AIM Intelligence 管「做的事對不對」。</p>
+    <p class="g-p">前者守執行期的權限邊界，後者判內容的好壞——指令有沒有被注入、資料有沒有被帶走。</p>
+    <p class="g-p">（編輯推論：一個擋越權、一個擋被騙，缺一邊都還是漏。原文只寫兩者互補，未拆這兩種失敗。）</p>
+    <p class="g-p">Starfort 的定位是 agent control platform。原文沒說它跑在雲端或地端，也沒說與 OpenShell 之間用什麼介面。</p>
+    <p class="g-p">整合的用途原文寫得直白：員工生產力與企業流程。是內部怎麼讓代理代跑工作，不是對外的產品功能。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>層</th><th>誰負責什麼（原文用語）</th><th>原文怎麼說（強度與留白）</th></tr></thead>
+        <tbody>
+          <tr><td data-l="層"><b>執行期</b></td><td data-l="誰負責">OpenShell 提供安全執行期、沙箱化執行、政策式控管與執行期存取控制</td><td data-l="強度">定義式陳述；未給政策語法與控管粒度</td></tr>
+          <tr><td data-l="層"><b>內容</b></td><td data-l="誰負責">Starfort 偵測惡意指令與資料外洩（隸屬韓國 AI 安全公司 AIM Intelligence）</td><td data-l="強度">只寫 detection；未給偵測率或誤報率</td></tr>
+          <tr><td data-l="層"><b>需求端</b></td><td data-l="誰負責">Hyundai Motor Group 評估 NemoClaw 藍圖與 OpenShell 執行期</td><td data-l="強度">exploring：評估，不是採用</td></tr>
+          <tr><td data-l="層"><b>場域</b></td><td data-l="誰負責">AIM Intelligence 考慮在公共能源領域先做初步概念驗證</td><td data-l="強度">considering／potential：尚未落地</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-src">本站整理。欄二為原文用語轉寫；欄三記錄原文對各方動作的措辭強度（exploring／integrating／considering），非編輯評價。</p>
+
+    <p class="g-p">先挑公共能源做概念驗證，動機原文沒寫。但這類場域的資料敏感度與誤動作成本，正好是執行期控管的驗收場景。</p>
+    <p class="g-p">其餘場域寫的是潛在——企業、工業、機器人。原文沒有時程、客戶名，也沒有部署規模，讀者不必替它補。</p>
+    <p class="g-p">另一個留白是 NemoClaw 藍圖：原文只寫 Hyundai 在評估，沒說藍圖裡有什麼。這是最該回原文確認的一句。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">模型側：開放 API，語料落在韓國語境</h2>
+    <p class="g-p">同篇公告的另一半在模型側：LG AI Research 開放 K-EXAONE-2.5 的 API，開發過程用到 NVIDIA Nemotron 資料集。</p>
+    <p class="g-p">Nemotron 在這裡的定義是一個家族：開放模型、資料集與技術，幫開發者做出專精而高效的代理。</p>
+    <p class="g-p">人物誌資料的用途寫得最具體：以韓國官方統計為基礎的全合成人物，讓訓練與評測落在韓國語境，不是通用語料的翻譯版。</p>
+    <p class="g-p">原文對這份資料集的限定很清楚：用途是讓訓練與評測貼近韓國語境，沒有宣稱模型能力因此提升。</p>
+    <p class="g-p">（編輯觀點：這是生態系公告。模型線給 LG AI Research，安全線給 AIM Intelligence，同篇綁在一起，但其實是兩套夥伴關係。）</p>
+    <p class="g-p">兩條線的共通點是可被改：模型以 API 對外開放、政策寫成規則。原文沒有展示任何一項的實測，這是公告與技術文件的分界。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>安全要落在執行期。</b>提示詞管不住工具權限，沙箱與政策才是攔截點。</p>
+      <p><b>分工要接得起來。</b>權限與內容偵測各管一半，缺一邊都還是漏。</p>
+      <p><b>強度用語先看清楚。</b>exploring、considering 都不是已部署。</p>
+    </div>
+  </section>
+
+    <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="eval-driven-agents.html">Eval 驅動開發：平均分會騙人，考卷要先寫</a><span class="d">2026-11-09</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="stripe-kai-deep-agents.html">全員代理的取捨：底層用現成，難題自己扛</a><span class="d">2026-11-09</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="coderabbit-agentic-review.html">審查成了瓶頸：用代理審代理，換來 20 倍交付</a><span class="d">2026-11-09</span></div>
+    </div>
+  </section>
+
+<p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；原文為官方部落格的生態系公告，各方動作強度分別為 exploring／integrating／considering，部署狀態與成效原文未給，無第三方驗證；圖解與小標為編輯整理，圖解 A 為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-10 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

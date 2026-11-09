@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — Eval 驅動開發：平均分會騙人，考卷要先寫 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain 把 EDD 拆成 3 步：定義什麼叫好、先寫 eval、改動後比較。docs agent 示範 3 個工具的規劃，收窄工具描述後才達到 100% 通過，並提醒留 held-out 範例防過擬合。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>Eval 驅動開發：平均分會騙人，考卷要先寫</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain 部落格〈What Is Eval-Driven Development? How to Improve AI Agents〉——廠商技術部落格，方法論教學，範例與工具皆取自 LangSmith</p>
+    <p class="g-meta">
+      <span>LangChain Blog</span>·<span>2026-11-09 發布</span>·<span>2026-11-10 收錄</span>·
+      <a href="https://www.langchain.com/blog/what-is-eval-driven-development" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>3 步</b><span>原文把 EDD 收斂成三步：定義什麼叫好、先寫 eval、改動後比較；第二、三步共用同一份資料集與評分器</span></div>
+    <div class="g-stat"><b>3 個工具</b><span>docs agent 現有 search_docs、web_search，計畫新增 create_ticket；考卷在工具還不存在時就先寫</span></div>
+    <div class="g-stat"><b>100%</b><span>收窄 create_ticket 的工具描述後，全部範例通過；原文限定是「小資料集」上的滿分（原文敘述，無第三方驗證）</span></div>
+    <div class="g-stat"><b>5 項</b><span>原文文末列五個常見錯誤，含「信一個沒校準過的 judge」與「加你不需要的 eval」</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">EDD 是代理版的 TDD：先把「什麼叫好」寫成判得出通過或不通過的考卷，再改代理，每次改動都跟上一版實驗比。</p>
+
+    <p class="g-p">原文的起點很普通：寫 prompt、手動問幾題、調整、再問一次。錯誤明顯時這招夠用，改動一多就分不清最新一版是變好還是變壞。</p>
+    <p class="g-p">代理不是程式：同一個問題每次答案可能不同、兩種措辭都算對，它還會自己挑步驟——叫了多餘的工具或漏掉該用的，答案照樣對。</p>
+    <p class="g-p">所以測試要換形狀。eval 是在一組範例上替每次 run 打分，可以只評過程，也能讓另一個 LLM 當裁判（LLM-as-a-judge）。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>五個動作跑成一圈</b> — 從規格到比較，失敗再回寫成範例（本站重繪）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>規格</b><small>一次只鎖一個行為，寫到判得出通過或不通過</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>資料集</b><small>範例＝輸入＋參考輸出，優先用真實 run</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>評分器</b><small>判得死用 code eval，判不死用 LLM 裁判</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>基線</b><small>改動前先跑一次，當比較基準</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>改動後比較</b><small>逐例對照升降，不只看平均</small></div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑</b>：新發現的失敗回寫成資料集範例，每次改動各自成一個 experiment 與上一版比——原文稱這個反覆過程為 hill-climbing。</span></div>
+      <p class="x-src">本站重繪。原文以三步與段落文字敘述，未附流程圖；五格順序依內文整理，原文未給此圖，回饋箭頭出自其 key takeaways 與生產段落。</p>
+    </figure>
+
+    <p class="g-p">「一次只做一個行為」是方法的前提：目標窄，改動的效果才不會互相污染，hill-climbing 也才有方向。</p>
+    <p class="g-p">（編輯觀點：三步中最反直覺的是第二步。eval 要在工具寫好之前就存在，而且當下必須是失敗的。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">規格四欄：先寫會失敗的考卷</h2>
+    <p class="g-p">原文的短規格有四欄，含糊的「回答有幫助」不算規格——它判不出通過或不通過。</p>
+
+    <div class="x-scroll" style="margin-top:16px">
+      <table class="x-tbl">
+        <thead><tr><th>規格欄位</th><th>docs agent 的寫法</th><th>判分時看什麼</th></tr></thead>
+        <tbody>
+          <tr><td data-l="規格欄位"><b>何時</b></td><td data-l="寫法">使用者回報東西壞了，如「筆電連不上 VPN」</td><td data-l="判分時看什麼">決定範例怎麼挑，不進評分程式</td></tr>
+          <tr><td data-l="規格欄位"><b>該做</b></td><td data-l="寫法">呼叫 create_ticket</td><td data-l="判分時看什麼">tool call 裡有沒有出現它</td></tr>
+          <tr><td data-l="規格欄位"><b>不該做</b></td><td data-l="寫法">how-to 問題不開單，如「VPN 要怎麼連」</td><td data-l="判分時看什麼">同一項檢查的反面</td></tr>
+          <tr><td data-l="規格欄位"><b>不能破壞</b></td><td data-l="寫法">search_docs 與 web_search 仍接住目前處理的問題</td><td data-l="判分時看什麼">原本通過的案例是否仍通過</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-src">表格為本站整理；第二欄改寫自原文 docs agent 規格，第三欄依原文「用 code eval 檢查是否呼叫參考輸出裡的工具」整理，原文未給此表格。</p>
+
+    <p class="g-p">範例裡的 create_ticket 還沒做，考卷照樣先寫：規則寫在功能之前，才不會照著已完成的輸出出題。</p>
+    <p class="g-p">資料集優先用真實 run——使用者的措辭猜不到，邊角也在裡面。原文說少量範例就能起步；沒有 run 就手寫，或請 LLM 把現有範例改寫成更生氣的語氣。</p>
+    <p class="g-p">評分器按判法分：判得死的用 code eval，判不死的用 LLM 裁判。docs agent 只問一件事——有沒有叫對工具，所以一段程式就夠。</p>
+    <p class="g-p">代理變複雜後要改看終態。coding agent 的成果是它留在系統裡的狀態，每次還得在乾淨環境跑；原文點名開源框架 Harbor（Terminal-Bench 背後的 harness）作為這類 eval 的跑法。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">平均分上升的那一次，有一例壞了</h2>
+    <p class="g-p">接上 create_ticket、重跑同一份 eval：開單類範例由失敗轉為通過，平均分上升，「VPN 要怎麼連」卻從查文件變成開單。</p>
+
+    <div class="x-scroll" style="margin-top:16px">
+      <table class="x-tbl">
+        <thead><tr><th>範例</th><th>基線</th><th>加 create_ticket</th><th>收窄描述後</th></tr></thead>
+        <tbody>
+          <tr><td data-l="範例">筆電連不上 VPN（報修）</td><td data-l="基線">未通過（工具不存在）</td><td data-l="加 create_ticket">通過</td><td data-l="收窄描述後">通過</td></tr>
+          <tr><td data-l="範例">VPN 要怎麼連（how-to）</td><td data-l="基線">通過</td><td data-l="加 create_ticket">未通過（誤開單）</td><td data-l="收窄描述後">通過</td></tr>
+          <tr><td data-l="範例">其他文件與網路查詢</td><td data-l="基線">通過</td><td data-l="加 create_ticket">通過</td><td data-l="收窄描述後">通過</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-src">表格為本站整理。原文未給逐例分數表；前兩列狀態依內文與原文附圖說明還原，第三列為原文「其他範例仍通過」的概括。</p>
+
+    <p class="g-p">比較要把兩次 experiment 並排：逐例列分數，哪幾例升、哪幾例退一目了然，這是「只看平均」看不出來的。</p>
+    <p class="g-p">找原因靠 trace——一次 run 的完整紀錄，含每次模型呼叫與工具呼叫。失敗那筆顯示工具描述寫了「VPN 與筆電問題」，於是所有提到 VPN 的問題都命中。</p>
+    <p class="g-p">修法是把描述收窄到「需要 IT 動手」的請求，重跑後全部範例通過。但 100% 不是終點：調校用的就是這批範例，容易過擬合。</p>
+    <p class="g-p">檢查方式是留一組 held-out 範例，迭代時不看。調校組上升、held-out 持平，就是過擬合訊號。</p>
+    <p class="g-p">把迴圈接進 CI 與上線後：快的 code check 擋壞 merge，慢的 LLM 評分跑夜間或發版前；pytest 與 Vitest 都能接，eval 跟著 PR 跑。</p>
+    <p class="g-p">範例也要切分（dataset splits）：迭代時只跑正在做的行為那批，發版前再跑全集。</p>
+    <p class="g-p">生產端再用線上評分器抽樣、標註佇列人工複核、看板追分數與成本延遲，把使用者真正問的問題補回資料集。</p>
+    <p class="g-p">judge 也得先校準：對照人工評分，問題問窄，用通過／不通過取代模糊的 1 到 10 分量表。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>先寫會失敗的考卷。</b>修完再補 eval，只會寫出必然通過的題目。</p>
+      <p><b>平均分不是驗收標準。</b>逐例看升降，才知道哪個行為被覆寫。</p>
+      <p><b>滿分要看 held-out。</b>只在自己調過的題目上進步，就是過擬合。</p>
+    </div>
+  </section>
+
+    <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="stripe-kai-deep-agents.html">全員代理的取捨：底層用現成，難題自己扛</a><span class="d">2026-11-09</span></div>
+      <div class="g-relrow"><span class="s">NVIDIA Blog</span><a href="openshell-agent-safety.html">代理安全層成形：權限歸執行期，偵測歸夥伴</a><span class="d">2026-11-09</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="coderabbit-agentic-review.html">審查成了瓶頸：用代理審代理，換來 20 倍交付</a><span class="d">2026-11-09</span></div>
+    </div>
+  </section>
+
+<p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；原文為 LangChain 官方部落格，屬方法論教學並以自家產品 LangSmith 為場景，範例成效無第三方驗證；圖解與表格皆為本站重繪／整理，原文附圖為 LangSmith 介面截圖，本頁未收錄。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-10 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

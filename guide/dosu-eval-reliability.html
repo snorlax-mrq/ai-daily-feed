@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — LLM 可靠性：改動的影響要能被量出來 · AI 每日動態檔案</title>
+<meta name="description" content="Dosu 執行長客座談 EDD：2023 年 6 月上線時靠 grep 逐筆看日誌，量體長到數千個 repo 後改用 LangSmith 的 @traceable 追蹤，以四類訊號搜出失敗模式、回填離線 eval；原文未給量化成效。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>LLM 可靠性：改動的影響要能被量出來</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Devin Stein（Dosu 執行長）〈Iterating Towards LLM Reliability with Evaluation Driven Development〉——廠商客座文（LangChain 部落格），以 Dosu 導入 LangSmith 的過程說明 EDD</p>
+    <p class="g-meta">
+      <span>LangChain Blog（Dosu 客座）</span>·<span>2026-11-09 發布</span>·<span>2026-11-10 收錄</span>·
+      <a href="https://www.langchain.com/blog/iterating-towards-llm-reliability-with-evaluation-driven-development" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>2023 年 6 月下旬</b><span>Dosu 上線；當時量體小到每個回覆都能人工看過，工具只有 grep 與 print</span></div>
+    <div class="g-stat"><b>6 步</b><span>原文給的 EDD 迴圈：少量 eval 起手 → 上線 → 生產找失敗 → 回填離線 eval → 迭代 → 重上線</span></div>
+    <div class="g-stat"><b>4 類訊號</b><span>找失敗模式用的線索：明確回饋、使用者情緒、內部錯誤、回應時間（原文並列，未排序）</span></div>
+    <div class="g-stat"><b>數千個儲存庫</b><span>Dosu 現況與「數十個子模組」皆為原文自述，無第三方驗證</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">EDD 把 eval 當成改動的對照基準：先量出代價，再談上線，失敗模式回填成下一輪的題目。</p>
+
+    <p class="g-p">Dosu 是掛在 GitHub 上的 AI 隊友，替開源專案回答提問、分流 issue、標記 PR。作者 Devin Stein 是它的執行長。</p>
+    <p class="g-p">起點是維護者的日常：專案越紅，回覆使用者吃掉的時間越多，有人索性宣告「issue 破產」——把未處理的 issue 與 PR 一次關掉。</p>
+    <p class="g-p">原文引微軟 2019 年的研究：業界開發者最多 85% 的時間花在非寫程式的雜事上。Dosu 要接手的就是這一塊。</p>
+    <p class="g-p">難處在改動不可預測。原文的描述是：微調一個提示詞，某個場景變好，另一個場景就退步。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>EDD 六步迴圈</b> — 從少量 eval 起手，把生產中的失敗回填成下一輪題目（本站重繪）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>01 起手</b><small>新行為先配幾個初始 eval</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>02 上線</b><small>新行為推給真實使用者</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>03 生產監控</b><small>找出失敗模式（failing 的請求）</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>04 回填離線題庫</b><small>每個失敗模式補成 eval 範例</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>05 迭代</b><small>對著更新後的 eval 改邏輯與提示詞</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>06 重上線</b><small>推新版，然後重跑一次</small></div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑</b>：06 之後重跑整圈，實務上等於回到 03 盯著新版；新冒出的失敗模式再補進題庫——原文稱「relaunch and repeat」。</span></div>
+      <p class="x-src">本站重繪。原文以編號清單列出六步，未附流程圖；迴圈的接回位置取自原文「relaunch &amp; repeat」一句，非原文繪製。</p>
+    </figure>
+
+    <p class="g-p">所以 eval 不只是上線前的門檻，更是每次改動的對照基準。原文自己點明這層關係：EDD 與 TDD 一樣，先有終點再開發。</p>
+    <p class="g-p">六步裡真正費力的是 03 與 04：失敗模式得從生產流量撈，再一則一則補成離線題目，題庫不是憑空寫的。</p>
+    <p class="g-p">（編輯觀點：要求每個改動都回答「對使用者的影響」是作者的標準，不是產業共識；前提是每類改動都有對應的 eval。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">量體一大，第三步就斷了</h2>
+    <p class="g-p">2023 年 6 月剛上線時，量小到每個回覆都能看過。團隊每天用 grep 與 print 翻日誌，作者說痛苦，但因此摸清使用者怎麼用 Dosu。</p>
+    <p class="g-p">現在 Dosu 裝在數千個儲存庫、有數十個子模組，全天候產出回覆（原文自述，無第三方驗證）。逐筆人眼檢視這條路走不通了。</p>
+    <p class="g-p">而生產監控正好是 EDD 的 03。這一端斷掉，04 就沒有材料可回填，迴圈停在半途。</p>
+
+    <div class="x-scroll" style="margin-top:16px">
+      <table class="x-tbl">
+        <thead><tr><th>選型要求</th><th>原文給的理由</th><th>對 EDD 的作用（編輯整理）</th></tr></thead>
+        <tbody>
+          <tr><td data-l="選型要求"><b>提示詞進 Git</b></td><td data-l="原文理由">把提示詞當程式碼，改動走與程式碼相同的標準</td><td data-l="對 EDD 的作用">版本對得上，才追得出是哪次改動造成退步</td></tr>
+          <tr><td data-l="選型要求"><b>程式碼層級 trace</b></td><td data-l="原文理由">一次 trace 內追蹤多次 LLM 請求之間的 metadata</td><td data-l="對 EDD 的作用">失敗常發生在請求之間，不在單次呼叫裡</td></tr>
+          <tr><td data-l="選型要求"><b>資料可匯出</b></td><td data-l="原文理由">既有的 eval 資料集與工具要留著用</td><td data-l="對 EDD 的作用">題庫不搬家，舊題目不必重寫</td></tr>
+          <tr><td data-l="選型要求"><b>可自訂、可擴充</b></td><td data-l="原文理由">LLM 應用沒有標準做法，要能決定追蹤哪些 metadata</td><td data-l="對 EDD 的作用">搜尋面能隨新失敗模式一起長</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-src">表格為本站整理；第 1、2 欄改寫自原文選型清單，第 3 欄為編輯判讀，原文未給此欄與此排序對照。</p>
+
+    <p class="g-p">四項裡最關鍵的是第一項。提示詞不進版控，03 找到的失敗就無法釘在某一版上。</p>
+    <p class="g-p">最後打動作者的是 SDK 而非介面。加一個 <code>@traceable</code> 裝飾器，原文稱幾分鐘完成埋點，上線後 trace 立刻湧入（Dosu 自報）。</p>
+    <p class="g-p">這個裝飾器同時送出函式呼叫與 LLM 呼叫的紀錄，於是函式原始輸入、渲染後的提示詞、模型輸出都落在同一條 trace 裡。</p>
+    <p class="g-p">（編輯觀點：LangChain 是 Dosu 的早期合作夥伴，選型與這層關係切不開；原文也未列出比較過的其他方案。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">失敗模式：四類訊號，沒有先後</h2>
+    <p class="g-p">失敗模式指 Dosu 處理不好的請求。輸入種類越多，失敗面越大，所以原文不靠猜，改看四類訊號。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>四類失敗訊號</b> — 並列的四種線索，原文未給優劣或先後（本站整理）</figcaption>
+      <div class="x-grid">
+        <div class="c"><b><i>01</i>明確回饋</b><small>讚／倒讚，就是 ChatGPT 帶起來的那套</small></div>
+        <div class="c"><b><i>02</i>使用者情緒</b><small>GitHub issue 上的回應口氣，看得出有沒有幫上忙</small></div>
+        <div class="c"><b><i>03</i>內部錯誤</b><small>輸入或輸出過大、產出不符 schema</small></div>
+        <div class="c"><b><i>04</i>回應時間</b><small>品質優先，但仍要知為何慢</small></div>
+      </div>
+      <p class="x-src">本站整理。原文以清單並列四類訊號，未排序；圖中 01–04 僅為編號，不代表先後或權重，圖上也不畫箭頭。</p>
+    </figure>
+
+    <p class="g-p">四類訊號在 LangSmith 變成搜尋條件：明確回饋、近期錯誤事件、回應延遲、負面情緒；也能替 trace 掛自訂 metadata 擴大搜尋面。</p>
+    <p class="g-p">抓到的第一個模式很具體：使用者貼上數千行日誌、或 OpenAI embedding 的原始浮點值時，回應會極慢。</p>
+    <p class="g-p">另一則是團隊最愛講的：被要求替 PR 貼標籤，Dosu 回覆的卻是自己晚上要去的演唱會。</p>
+    <p class="g-p">找到之後走的還是同一套：在 LangSmith 搜更多同類樣本 → 加進 eval 資料集 → 對著 eval 迭代 → 推新版 → 重複。</p>
+    <p class="g-p">下一步是自動蒐集：從生產流量直接長出 eval 資料集，讓工程師按對話主題、使用者分群、請求類別自行整理。</p>
+    <p class="g-p">原文收在一個飛輪：Dosu 變好，LangChain 團隊的維護負擔就減輕，於是有更多時間做 LangSmith，回頭又加速 Dosu。</p>
+    <p class="g-p">（編輯觀點：全文沒有給任何量化改善，飛輪也只是作者的關係描述。讀者能確認流程存在，無法確認效果。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>EDD 的瓶頸是題庫，不是工具。</b>沒有把生產失敗回填成 eval，迴圈只是儀式。</p>
+      <p><b>規模一大，監控就是開發流程。</b>03 一斷，04 到 06 全部空轉。</p>
+      <p><b>廠商客座的成效要打折看。</b>數千個儲存庫、幾分鐘埋點都是自述，無第三方驗證。</p>
+    </div>
+  </section>
+
+    <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="eval-driven-agents.html">Eval 驅動開發：平均分會騙人，考卷要先寫</a><span class="d">2026-11-09</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="stripe-kai-deep-agents.html">全員代理的取捨：底層用現成，難題自己扛</a><span class="d">2026-11-09</span></div>
+      <div class="g-relrow"><span class="s">NVIDIA Blog</span><a href="openshell-agent-safety.html">代理安全層成形：權限歸執行期，偵測歸夥伴</a><span class="d">2026-11-09</span></div>
+    </div>
+  </section>
+
+<p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；原文為 Dosu 執行長投稿 LangChain 部落格的客座文，文中規模、導入速度與成效皆為作者自述，無第三方驗證。原文未附流程圖，兩張圖解皆為本站重繪／整理，排序與對照為編輯判讀。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-10 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
