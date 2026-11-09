@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 常駐代理的三道門檻：架構先行、跨端接力、經驗入帳 · AI 每日動態檔案</title>
+<meta name="description" content="量子位把 Comma 的時間線翻出來：4/28 公開前身 Bridge、6/3 固定主對話上線、9/30 開源；跨環境靠自研框架 Salix，Linear 可雙向接力，專屬小模型則要打贏舊版才准上崗。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>常駐代理的三道門檻：架構先行、跨端接力、經驗入帳</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：量子位〈搶跑 DeepSeek！矽谷華人把下一代 Agent Harness 造出來了！？〉——媒體報導（產品：Comma／AFK AI）</p>
+    <p class="g-meta">
+      <span>量子位</span>·<span>2026-11-07 發布</span>·<span>2026-11-07 收錄</span>·
+      <a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247940414&amp;idx=1&amp;sn=07f6bd438992c5d7dc15b3e9f31cd6be" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>3 至 5 個</b><span>原文引 DeepSeek Harness 團隊的觀察：一般人的注意力，大約只夠同時跟進 3 至 5 個活躍 Session</span></div>
+    <div class="g-stat"><b>4/28 → 9/30</b><span>前身 Bridge 公開到 Comma 開源；原文稱「用了近半年」把架構設想做成產品</span></div>
+    <div class="g-stat"><b>20 天後</b><span>6/3 固定主對話與任務委派上線，原文記 20 天後 Anthropic 推出理念相近的 Claude Tag</span></div>
+    <div class="g-stat"><b>v3 → v4</b><span>專屬小模型換版得先在團隊自建測試中擊敗舊版（產品方敘述，無第三方驗證）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">同一套架構，先把它跑進產品的是 Comma，先把它寫成藍圖的是 DeepSeek。</p>
+
+    <p class="g-p">原文拿 DeepSeek Harness 團隊提出的四個特質當尺規：連續、高效、主動、持久。Comma 的對應版本，是一條主會話加多個執行者。</p>
+    <p class="g-p">AFK AI 的講法是「一個團隊，一個對話」：使用者只面對一條長期存在的主會話，由常駐 Router 統籌，Worker 在獨立上下文並行、把結果回報。</p>
+    <p class="g-p">原文描述的體感是「人只管提需求、看進展、驗收成果」，分派、並行與狀態彙總都由 Comma 接手——管理 Agent 從盯過程變成管結果。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>三層包一個共用底座</b> — 誰包住誰，以及經驗從哪裡回到調度層（本站重繪）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>1 · 使用者</b><small>只提需求、看進展、驗收成果</small><span class="pi">外層</span></div>
+          <div class="ring">
+            <div class="ring-lb"><b>2 · 主會話 Router</b><small>常駐、統籌、派工、彙總</small><span class="pi">中層</span></div>
+            <div class="ring ring--core">
+              <div class="ring-lb"><b>3 · Worker</b><small>各自獨立上下文並行執行</small><span class="pi">內層</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="ring">
+          <div class="ring-lb"><b>4 · 長期狀態</b><small>存在模型上下文之外，Router 與 Worker 共用</small><span class="pi">共用底層</span></div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑</b>：任務結果、人工修改與驗收回饋被記下來當訓練信號，迭代出專屬小模型；成熟工作流改由小模型接手，複雜任務續留大模型。</span></div>
+      <p class="x-src">本站重繪。原文以文字分節描述，未附架構圖；三層包覆與第 4 層「共用底層」的位置為本站判讀，回饋箭頭原文也未畫出。</p>
+    </figure>
+
+    <p class="g-p">「長期狀態存在模型上下文之外」是「連續」在工程上的落點，也是後面能談累積的前提：記憶不佔主對話的位置，才不會被任務細節擠掉。</p>
+    <p class="g-p">（編輯觀點：架構撞題不稀奇。差別在 Comma 把「記憶放哪」寫成產品參數，而不是提示詞裡的一句承諾。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">時間線：多數節點只有產品方說法</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>日期</th><th>產品動作</th><th>原文給的意義（編輯判讀）</th></tr></thead>
+        <tbody>
+          <tr><td data-l="日期"><b>4/28</b></td><td data-l="動作">公開前身 Bridge，介紹裡已有 Lead Agent 與 Subagents</td><td data-l="意義">原文未評價；可查的是架構已公開</td></tr>
+          <tr><td data-l="日期">5/20</td><td data-l="動作">明確「每個群組一個 Router Session」</td><td data-l="意義">原文只記這件事，未說理由</td></tr>
+          <tr><td data-l="日期">6/3</td><td data-l="動作">固定主對話與任務委派機制上線</td><td data-l="意義">原文只記這件事，未說理由</td></tr>
+          <tr><td data-l="日期">6 月下旬<br><small>推算</small></td><td data-l="動作">Anthropic 推出 Claude Tag，一個 Slack 頻道共用同一個 Claude</td><td data-l="意義">原文只寫「僅 20 天後」；日期由 6/3 起算 20 天推得</td></tr>
+          <tr><td data-l="日期">8 月</td><td data-l="動作">推進 Session 切換能力</td><td data-l="意義">原文未給動機與做法</td></tr>
+          <tr><td data-l="日期">9 月</td><td data-l="動作">引入共享 Session 的資訊流控制</td><td data-l="意義">處理多人協作下的敏感資訊流轉</td></tr>
+          <tr><td data-l="日期"><b>9/30</b></td><td data-l="動作">正式開源，隨後公開基於 Lean 形式化驗證的安全機制</td><td data-l="意義">原文只說正式開源</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">原文的結論是：DeepSeek 描繪了形態，Comma 用一個已經在跑的產品給出另一種回答。</p>
+    <p class="g-p">（編輯觀點：能對外查核的是 4/28 的前身公開、6 月下旬 Claude Tag 的推出與 9/30 的開源；8 月與 9 月這兩個節點只剩產品方自述。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">跨環境：任務出了對話框，還得接得住</h2>
+    <p class="g-p">這一層靠團隊自研的分散式 Agent 執行框架 Salix：第三方應用連接器接收不同平台的事件，再由可編程 Loop 持續監聽，需要時喚醒 Agent。</p>
+    <p class="g-p">原文點名的接入平台是微信、Signal、iMessage、Linear（原文以「像……這些」舉例，不是封閉清單）；另支援安全自部署、BYOK，以及接入 Codex 與 Claude Code。</p>
+    <p class="g-p">Linear 是雙向的：在 Comma 交代需求，回頭 Linear 已有拆好任務的 Issue；Linear 的 Issue 也能交回 Comma 執行，進展同步回原任務。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>事件從哪裡進來，結果回哪裡去</b> — 一條去程、一條回程（本站重排）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">平台 → Salix</span><span class="tr"><i>連接器接收 IM、Linear 等外部事件</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">Loop 監聽</span><span class="tr"><i>可編程 Loop 持續監聽外部事件</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">→ 喚醒</span><span class="tr"><i>需要時叫醒 Agent，不是每個事件都跑模型</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">→ Worker</span><span class="tr"><i>喚醒後的 Agent 把任務交給獨立上下文的 Worker</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">寫回原處</span><span class="tr"><i>結果與進展同步回原任務、原對話</i></span></span></li>
+        <li class="back"><span class="st">05r</span><span class="body"><span class="hop">反向：Linear → Comma</span><span class="tr"><i>Issue 也能反向交回 Comma 執行</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重排。原文分節敘述 Salix、Loop 與 Linear 雙向，未給此編號順序；02 的條件判斷與 04 的分派取自原文架構段，本節未逐段說明。05r 屬分支，不是主流程的第 6 步。</p>
+    </figure>
+
+    <p class="g-p">「主動」在這裡有具體形狀：Agent 自己編寫值班程式，就算大模型沒在跑、使用者退出客戶端，系統仍全天候值班，在關鍵時刻才喚醒（產品方敘述，無第三方驗證）。</p>
+    <p class="g-p">原文的例子是每天中午 12 點與晚上 9 點自搜 AI 新聞、整理成選題推送。企業場景還可由 IM 裡的 Comma Bot 下任務，員工電腦提供本地環境，並以權限與資訊流控制約束可存取範圍。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">經驗入帳：新模型得先打贏舊模型</h2>
+    <p class="g-p">原文的「持續學習」是一條資料管線：記錄 Agent 的任務結果、人工修改與驗收回饋，轉成訓練信號，迭代出專屬小模型。</p>
+    <p class="g-p">換版有硬門檻——新模型必須在團隊自己的測試中擊敗舊版才能上崗。重點在「自己的測試」：驗證的尺握在產品方手上。</p>
+    <p class="g-p">例子是一個分類錯誤：v3 把退款請求誤判成 Bug，吸收人工糾正之後，v4 能正確判為帳單問題。</p>
+    <p class="g-p">節奏是按月更新評測資料，成熟工作流逐步交給小模型接手，複雜任務繼續留給大模型。</p>
+    <p class="g-p">（編輯觀點：同題的機器之心拆解補的是架構內部——事實清單與形式化證明；這篇補的是它怎麼走到今天，以及跑起來之後累積了什麼。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>架構撞題，靠時間證明。</b>先落地半年，比事後論述有說服力。</p>
+      <p><b>跨端不只是多接幾個平台。</b>結果要回寫原處，資訊才不斷。</p>
+      <p><b>累積要設晉升門檻。</b>沒有打贏舊版的測試，學習只是換版號。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">機器之心</span><a href="comma-single-session.html">常駐代理的護欄：一條會話、一份事實清單、一組證明</a><span class="d">2026-11-08</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；原文為媒體報導，時間線、成效與測試門檻屬產品方敘述，無第三方驗證；圖解與小標為編輯整理，兩張圖皆為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 館藏以官方第一手公告為主，媒體報導另標來源；導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-09 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
