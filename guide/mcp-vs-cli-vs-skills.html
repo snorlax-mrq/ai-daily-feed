@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 工具成本：MCP 貴在定義與結果，不在模型 · AI 每日動態檔案</title>
+<meta name="description" content="OpenRouter 用一道 cli/cli 題目實測三種接法：Sonnet 5.5 上 CLI 1,421 個 input token、46 工具 MCP 59,417，差 42 倍；錢在工具定義與工具結果，並附裁結果、Tool Search 的失效條件。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E9%96%8B%E7%99%BC%E8%80%85%E5%B7%A5%E5%85%B7" class="day-catalog">開發者工具</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E9%96%8B%E7%99%BC%E8%80%85%E5%B7%A5%E5%85%B7">開發者工具</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>工具成本：MCP 貴在定義與結果，模型只是其次</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：OpenRouter 部落格〈MCP vs CLI vs Skills: What Each Costs in Context〉——自家產品實測，用一道 GitHub 題目比較三種接法的 token 與帳單</p>
+    <p class="g-meta">
+      <span>OpenRouter Blog</span>·<span>2026-11-11 發布</span>·<span>2026-11-12 收錄</span>·
+      <a href="https://openrouter.ai/blog/insights/mcp-vs-cli-vs-skills/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>3 輪取中位數</b><span>2026-10-20 測；題目是 cli/cli 最新 release 加三個標 bug 的 issue</span></div>
+    <div class="g-stat"><b>$7.50 對 $127</b><span>每千次任務成本（Sonnet 5.5，CLI 對 46 工具 MCP）；單次為 $0.0075 對 $0.1274</span></div>
+    <div class="g-stat"><b>42,182 字元</b><span>一次 get_latest_release 的回傳量，87% 是 22 個下載檔；約 20,400 個 token</span></div>
+    <div class="g-stat"><b>578 / 144 / 130</b><span>46 個工具全延後載入、搜尋前的成本：Claude 模型／GPT-6 Luna／Gemini 3.8 Flash</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">三種接法在同一道 GitHub 題上都答對，input token 差 42 倍、成本差 17 倍：錢主要不在模型，在每次請求都得先讀完的工具定義，與回得太多太雜的工具結果。</p>
+
+    <p class="g-p">三種做法給模型的是同一種東西：一個能動手的工具。差別在動手之前，它先讀到什麼。</p>
+    <p class="g-p">MCP 把每個工具的名稱、描述與 JSON schema 塞進每一次請求。CLI 只給一個 shell 工具，加一句「gh 已安裝並登入」。</p>
+    <p class="g-p">技能走中間路線：平時只有一行索引，等任務真的需要，才把那份 1,492 字元的 gh 食譜讀進來。</p>
+    <p class="g-p">也所以技能比純 CLI 貴：食譜讀進來就留在對話裡。模型熟的 CLI 不必配技能，自家 CLI 才需要。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>三種接法，差在模型動手前先讀什麼</b> — 三者並列，無先後順序（本站整理）</figcaption>
+      <div class="x-scroll">
+        <table class="x-tbl">
+          <thead><tr><th>接法</th><th>動手前讀到</th><th>動手時看到</th></tr></thead>
+          <tbody>
+            <tr><td data-l="接法"><b>MCP 伺服器</b></td><td data-l="動手前">每個工具的名稱、描述與 JSON schema，而且每次請求都重送</td><td data-l="動手時">工具結果，形狀由伺服器決定</td></tr>
+            <tr><td data-l="接法"><b>CLI</b></td><td data-l="動手前">一個 shell 工具，加一句「這支 CLI 存在、已登入」</td><td data-l="動手時">指令輸出，可用 --json 之類的旗標自己塑形</td></tr>
+            <tr><td data-l="接法"><b>技能</b></td><td data-l="動手前">每個技能一行描述</td><td data-l="動手時">先讀一次 SKILL.md，之後是指令輸出</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="x-src">本站整理自原文的並列對照表；三列互不替代，也不代表先後順序。</p>
+    </figure>
+
+    <p class="g-p">所以第一個問題不是哪個比較強，而是這個模型認不認識這支工具：認識就只付一句話。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一道題，六種接法的帳單</h2>
+    <p class="g-p">題目固定：cli/cli 的最新 release 是哪一版，以及標記 bug 的三個近期 issue。六種接法各跑三次，取中位數。</p>
+    <p class="g-p">Sonnet 5.5 上六種全部答對，但整段任務的 input token 從 1,421 到 101,351 都有。</p>
+    <p class="g-p">CLI 1,421、技能 3,315、載入 46 個預設工具的 MCP 59,417。成本只差 17 倍而非 42 倍。</p>
+    <p class="g-p">因為輸出 token 單價是輸入的五倍：CLI 那 463 個輸出 token 就吃掉 $0.0046，佔它整筆帳單約六成。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>六種接法 × 三個模型的整段任務 token</b> — 同一題、同一天、各三輪中位數</figcaption>
+      <div class="x-scroll">
+        <table class="x-tbl">
+          <thead><tr><th>接法</th><th>Sonnet 5.5 token</th><th>Sonnet 5.5 成本／任務</th><th>GPT-6 Luna token</th><th>Gemini 3.8 Flash token</th></tr></thead>
+          <tbody>
+            <tr><td data-l="接法"><b>CLI</b></td><td class="n win" data-l="Sonnet">1,421</td><td class="n" data-l="成本">$0.0075</td><td class="n" data-l="Luna">627</td><td class="n" data-l="Gemini">5,292</td></tr>
+            <tr><td data-l="接法"><b>技能</b></td><td class="n" data-l="Sonnet">3,315</td><td class="n" data-l="成本">$0.0118</td><td class="n" data-l="Luna">1,542</td><td class="n" data-l="Gemini">6,107</td></tr>
+            <tr><td data-l="接法"><b>MCP，2 工具</b></td><td class="n" data-l="Sonnet">23,228</td><td class="n" data-l="成本">$0.0552</td><td class="n" data-l="Luna">14,479</td><td class="n" data-l="Gemini">17,267</td></tr>
+            <tr><td data-l="接法"><b>MCP，46 預設</b></td><td class="n" data-l="Sonnet">59,417</td><td class="n" data-l="成本">$0.1274</td><td class="n" data-l="Luna">116,282</td><td class="n" data-l="Gemini">35,409</td></tr>
+            <tr><td data-l="接法"><b>MCP，91 全部</b></td><td class="n" data-l="Sonnet">101,351</td><td class="n" data-l="成本">$0.2113</td><td class="n" data-l="Luna">135,238</td><td class="n" data-l="Gemini">53,289</td></tr>
+            <tr><td data-l="接法"><b>MCP，2 工具，截斷</b></td><td class="n" data-l="Sonnet">5,357</td><td class="n" data-l="成本">$0.0191</td><td class="n" data-l="Luna">2,726</td><td class="n" data-l="Gemini">2,943</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="x-hint">→ 可橫向滑動</p>
+      <p class="x-src">樣本：cli/cli 單一題目、GitHub MCP server v2.0.2、gh CLI 與一份 1,492 字元的 gh 技能；2026-10-20 各跑三輪取中位數，token 為跨請求累加的 input token。Haiku 5.5 未列（原文指它多跑幾輪，改採 Sonnet 的 token 與計費）。OpenRouter 自家量測，無第三方驗證。</p>
+    </figure>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/mcp-vs-cli-vs-skills/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/mcp-vs-cli-vs-skills/01.webp" alt="原文長條圖：整段任務 input token 拆成工具定義與指示、任務與工具結果兩塊；CLI 1,421、技能 3,315、MCP 2 工具＋結果上限 5,357、MCP 2 工具 23,228、MCP 46 工具 59,417、MCP 91 工具 101,351" width="1200" height="600" loading="lazy" decoding="async"></a>
+      <figcaption>同一批 token 分兩個來源：紫是工具定義與指示，綠是任務、工具結果與回覆。只留 2 個工具時紫色仍約四成、綠色約六成；載到 46 個時紫色升到約三分之二，91 個更接近八成，兩邊一起漲。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／OpenRouter Blog，<a href="https://openrouter.ai/blog/insights/mcp-vs-cli-vs-skills/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">兩個來源會分頭長大：工具清單隨每一次請求重送，工具結果則留在視窗裡被後面每一輪重讀。</p>
+    <p class="g-p">原文的估算很具體：一次 get_latest_release 回傳 42,182 字元，其中 87% 在描述 22 個下載檔。</p>
+    <p class="g-p">模型只要 tag 與日期，那是 gh release view 兩個欄位的量；這一筆就約 20,400 個 token，比 46 個定義加起來還多。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三個旋鈕，與它們各自的失效條件</h2>
+    <p class="g-p">先確認一件事：同一組 46 個工具，每次請求的 token 數跟著模型與供應商跑，Claude 的兩款都是 19,436 個 token。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>同一組 46 個工具定義，每次請求的 token 因模型與供應商而異</b> — 條愈長＝每次請求的 token 愈多（通常也愈貴）（本站重繪）</figcaption>
+      <div class="x-bars">
+        <div class="x-bar hot"><b>Claude 兩款</b><span class="t"><span style="--p:100"></span></span><i>19,436</i></div>
+        <div class="x-bar"><b>Gemini·Studio</b><span class="t"><span style="--p:67"></span></span><i>13,010</i></div>
+        <div class="x-bar"><b>GPT-6 Luna</b><span class="t"><span style="--p:46"></span></span><i>8,903</i></div>
+        <div class="x-bar"><b>Gemini·Vertex</b><span class="t"><span style="--p:44"></span></span><i>8,525</i></div>
+      </div>
+      <p class="x-src">基準＝GitHub MCP server v2.0.2 的 46 個預設工具，單次請求的 prompt token 增量；Claude 指 Haiku 5.5 與 Sonnet 5.5（同值），Studio／Vertex 指 Google AI Studio 與 Google Vertex。原文未給這組的測量日期（任務表為 2026-10-20）。本站重繪，原文以文字敘述。</p>
+    </figure>
+
+    <p class="g-p">旋鈕一是縮範圍。只留任務要用的 2 個工具，第一個請求從 19,487 掉到 1,406，但整段任務還是 23,228。</p>
+    <p class="g-p">範圍的單位是工具集：Haiku 5.5 上 issues 那組 10 個工具加 5,801 個 token，只有一個工具的 users 加 619。</p>
+    <p class="g-p">因為定義只付開頭那一次，工具結果卻會留在對話裡，跟著後面每一次請求重送。真正的大戶是結果。</p>
+    <p class="g-p">旋鈕二是裁結果。把回傳截到 4,000 字元，整段任務降到 5,357，三輪全對——只因 tag 與日期剛好排在前面。</p>
+    <p class="g-p">這一招很脆：同一招再疊上 Tool Search，Gemini 3.8 Flash 與 Haiku 5.5 三輪各只對一輪，Gemini 還撞到 12 次請求上限。</p>
+    <p class="g-p">穩一點的做法是砍欄位：list_issues 只要編號、標題與建立日期，回傳就從 8,336 字元縮到 714。</p>
+    <p class="g-p">不指定大小，模型自己決定：46 或 91 個工具載入的六輪裡，有四輪 GPT-6 Luna 要了 100 個 issue 全文，回傳 281,963 字元。</p>
+    <p class="g-p">旋鈕三是延後載入。工具標上 defer_loading、再加一個 tool_search，46 個工具在搜尋前的成本只剩 578 個 token（Claude 模型）。</p>
+    <p class="g-p">整段任務：Sonnet 5.5 從 59,417 降到 30,334；91 個延後工具只比 46 個多 1,281，而全部載入 91 個要多約 42,000。</p>
+    <p class="g-p">但它不砍結果，也可能更貴。Haiku 5.5 的 46 個延後反而升到 154,623：它向 list_issues 要了不存在的欄位，重試三四次。</p>
+    <p class="g-p">Gemini 3.8 Flash 也從 35,409 微升到 37,568。原文建議最常用的三到五個工具留著別延後，其餘才 defer。</p>
+    <p class="g-p">原文的門檻寫得清楚：工具定義超過約 10,000 個 token、或工具數約 10 個，就該開始考慮延後載入。</p>
+    <p class="g-p">還有一個實務坑：Chat Completions 不接受 tool_search，會直接回 400，得先搬到 Responses 或 Messages API。</p>
+    <p class="g-p">快取也不是解：它只降單價、不縮視窗。原文指 2026 年 10 月起，Haiku 與 Luna 的快取輸入是原價的十分之一。</p>
+    <p class="g-p">原文自己的結論最省字：能用 CLI 就用 CLI；不能，就用 MCP，並把工具範圍與結果大小一起縮。</p>
+    <p class="g-p">它補了判斷條件：agent 跑得動指令就用 CLI；沒有 shell、或需要伺服器本身的認證與權限，才輪到 MCP。</p>
+    <p class="g-p">還有一句免責很重要——這是一個伺服器、一道題的量測，選型前先拿自己的 MCP 伺服器跑一次那支腳本。</p>
+    <p class="g-p">（編輯觀點：這是 OpenRouter 賣自家 Tool Search 的實測，變數控得不錯，但只有一個伺服器、一道題，別直接外推。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>能用 CLI 就用 CLI。</b>模型已認識的工具最便宜，1,421 對 59,417。</p>
+      <p><b>MCP 要同時縮範圍與結果。</b>只砍工具數，第一個請求變小，結果那塊照樣計費。</p>
+      <p><b>Tool Search 先量再開。</b>Haiku 與 Gemini 實測變貴，同一招不通用。</p>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；實測資料為 OpenRouter 自家量測（Tool Search 亦為其產品），單一伺服器、單一任務，無第三方驗證。圖解 A／B 為本站整理自原文表格，圖解 C 為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-12 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

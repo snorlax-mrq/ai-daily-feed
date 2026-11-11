@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 生成式 UI 定案：協定只管描述，畫面歸 App 自己畫 · AI 每日動態檔案</title>
+<meta name="description" content="Google A2UI 1.0 導讀：生成式 UI 開放協定首個穩定版，新增雙向函式呼叫；agent 只交「要畫什麼」的描述，由 App 用原生元件繪製，資料綁在伺服器不進模型。Gemini 與 Android Compose renderer 仍停在 0.9.1。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>生成式 UI 定案：協定只管描述，畫面歸 App 自己畫</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Google 發布 A2UI 1.0，生成式 UI 開放協定的首個穩定版，同篇附上 Atlassian、Alation、Bloomberg、ByteDance 與 Gemini Notebook 的採用實況——官方產品公告</p>
+    <p class="g-meta">
+      <span>Google Developers Blog</span>·<span>2026-11-11 發布</span>·<span>2026-11-12 收錄</span>·
+      <a href="https://developers.googleblog.com/a2ui-10-build-delightful-fast-reliable-agentic-experiences/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>1.0</b><span>首個穩定版；新增雙向函式呼叫、無障礙支援與 extensions 欄位</span></div>
+    <div class="g-stat"><b>6 套 renderer</b><span>React／Angular／Lit、Flutter、SwiftUI、Compose，全開源</span></div>
+    <div class="g-stat"><b>0.9.1</b><span>Gemini 與 Android Compose renderer 目前支援的版本，不是 1.0</span></div>
+    <div class="g-stat"><b>4 家先行者</b><span>Atlassian、Alation、Bloomberg、ByteDance，原文稱「已在開發」</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">A2UI 不生成畫面，只生成「要畫什麼」的描述；像素由每個 App 用自己的原生元件畫，所以同一份輸出在自家 App 或 Claude、Gemini 裡都一樣快。</p>
+
+    <p class="g-p">原文把今天的 agent 互動比作終端機時代：能力已經很強，但幾乎所有回答都是文字。</p>
+    <p class="g-p">比價三樣商品、改一份詳細計畫再核可，一整面文字都不是好介面。</p>
+    <p class="g-p">A2UI 的作法是讓 agent 描述「該顯示什麼」，由 App 用自己的原生元件畫出來。</p>
+    <p class="g-p">原文承諾三件事不變：延遲一樣低、信任一樣高、原生還原度一樣完整。</p>
+    <p class="g-p">另一個例子是一句「把跟 Priya 的晚餐改到週五」：回來的是一張對齊行事曆、餐廳空位與叫車價格的畫面。</p>
+    <p class="g-p">開發者只建一次，手機與筆電各自原生渲染。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一份描述，四段接力</b> — 誰寫、誰畫、誰接手（本站重繪）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>Agent</b><small>用 A2UI Express 一行一元件寫描述，或由「system one」決策模型直接挑現成元件</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>A2UI 訊息</b><small>只講要顯示什麼，不含像素，也不含敏感值</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>Renderer</b><small>六套 renderer 各自接手</small></div>
+        <span class="ar">→</span>
+        <div class="fn hot"><b>原生畫面</b><small>用 App 的設計系統與元件畫，速度即原生</small></div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回程</b>：1.0 的雙向函式呼叫，讓畫面在使用者操作時能回頭問 agent，不只單向顯示。</span></div>
+      <p class="x-src">本站重繪，非原文圖；原文以文字描述這條鏈路，未給此圖與節點順序。</p>
+    </figure>
+
+    <p class="g-p">描述裡沒有值：資料與子元件在伺服器端綁定，敏感值從頭到尾不進模型。</p>
+    <p class="g-p">App 也只會用到你註冊的元件與你的設計系統；agent 能配置什麼，被元件庫限死。</p>
+    <p class="g-p">描述的最小單位是元件而不是畫面，一份畫面因此能混用不同 App 的元件——跨 App 拼一張是設計前提，不是副作用（編輯判斷）。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/a2ui-1-0/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/a2ui-1-0/01.webp" alt="A2UI Playground 截圖：左側 prompt 寫著 Q3 sales by region as a dashboard，右側是 Gemini Flash 產生的 13 行 A2UI Express 描述（root = Column(head, kpi_grid, chart_section, perf_table…），中間是用原生元件畫出的區域營收儀表板，含四張指標卡與長條圖" width="1200" height="700" loading="lazy" decoding="async"></a>
+      <figcaption>一句 prompt 換 13 行描述：右邊是 Gemini Flash 寫的 Express 元件清單，左邊是 renderer 用原生元件畫出的儀表板。畫面上沒有一個像素由模型決定。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／Google Developers Blog，<a href="https://developers.googleblog.com/a2ui-10-build-delightful-fast-reliable-agentic-experiences/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">原文的例子很日常：生病那天要動六個 App——掛號、改會議、通知團隊、設自動回覆、請伴侶接小孩、訂湯。</p>
+    <p class="g-p">純文字 agent 回你一面編號清單，然後你來回追問「哪一個」。</p>
+    <p class="g-p">A2UI 版是六個 App 收成一張畫面；改計畫是幾下點擊，按下確認前什麼都不會送出。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">穩定版補的三層：協定、renderer、SDK</h2>
+    <p class="g-p">協定這層補了雙向函式呼叫：畫面能回頭問 agent，不再只是被動顯示結論。</p>
+    <p class="g-p">同時加上無障礙支援與 extensions，後者讓協定夾帶任意額外 metadata。</p>
+    <p class="g-p">生成畫面的路徑有兩條：需要設計的由 LLM 用 A2UI Express 寫，形狀固定的交給「system one」決策模型挑元件。</p>
+    <p class="g-p">renderer 覆蓋六套，橫跨 web、行動與桌面；web 與 Flutter 版還能跑進 MCP Apps，A2UI 畫面就出現在 Claude、Gemini 裡。</p>
+    <p class="g-p">agent SDK 新增 TypeScript 與 Dart，加上既有的 Python，負責產生 skills、轉譯訊息、修正錯誤。</p>
+    <p class="g-p">推論格式可替換是省延遲的手段；Python 另有 Macros，做程式化的元件展開與資料綁定。</p>
+    <p class="g-p">整合的難處通常在邊界：agent 框架要什麼、各平台 renderer 吃什麼，SDK 得兩邊都補。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>層</th><th>1.0 的內容</th><th>原文說明／缺口</th></tr></thead>
+        <tbody>
+          <tr><td data-l="層"><b>協定</b></td><td data-l="內容">雙向函式呼叫</td><td data-l="限定語">例：航班、訂位的選擇器當場查可用性</td></tr>
+          <tr><td data-l="層"><b>協定</b></td><td data-l="內容">無障礙支援、extensions</td><td data-l="限定語">原文未給無障礙的準則或等級</td></tr>
+          <tr><td data-l="層"><b>Renderer</b></td><td data-l="內容">React／Angular／Lit、Flutter、SwiftUI、Compose</td><td data-l="限定語">Compose「目前 v0.9.1，v1.0 即將推出」</td></tr>
+          <tr><td data-l="層"><b>MCP Apps</b></td><td data-l="內容">web 與 Flutter renderer 可放進助理</td><td data-l="限定語">原文點名 Claude、Gemini</td></tr>
+          <tr><td data-l="層"><b>Agent SDK</b></td><td data-l="內容">Python、TypeScript、Dart</td><td data-l="限定語">產生 skills、轉譯訊息、修正錯誤；Macros 僅 Python</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">三層的共同設計是可替換：換平台換 renderer、換模型換推論格式，協定不動——這也是它敢宣告 1.0 的結構理由（編輯推論）。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">版本時差：協定宣告 1.0，生態仍在 0.9.x</h2>
+    <p class="g-p">Atlassian 把 A2UI 帶進 Jira：工作項目能指派給 agent，agent 缺細節或等決定時，直接在項目裡開卡片問。</p>
+    <p class="g-p">Bloomberg 只在原文的採用名單裡出現一次，沒有說明用途。</p>
+    <p class="g-p">Alation 的 AIOS 用 A2UI 生 feed：指標卡與圖表，每張圖都能顯示背後的 SQL 與資料。</p>
+    <p class="g-p">ByteDance 在 2026 年 6 月為跨平台框架 Lynx 發布 renderer，預設元件建在 lynx-ui 上。</p>
+    <p class="g-p">Gemini Notebook 則用卡片問「要講者版或詳細版、聚焦哪些題目」，生成前還有可改格式與風格的回顧卡。</p>
+    <p class="g-p">企業也能註冊自家 agent 用 A2UI 回應，由 Gemini 的 component gallery 負責畫。</p>
+    <p class="g-p">（編輯推論：這條路徑的樣式主權在 Gemini 手上，跟「只用你的設計系統」是兩套邏輯。）</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/a2ui-1-0/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/a2ui-1-0/02.webp" alt="並排截圖：左邊是 Claude 對話裡的 Office Supplies Profitability Tracker，標示 MCP APP；右邊是 Alation 的 Data Products App，同一份 feed 顯示總利潤 126K、總銷售 732K、利潤率 17.2%、總數量 23.3K 與同樣的長條圖排行，版面配置幾乎一致" width="1200" height="520" loading="lazy" decoding="async"></a>
+      <figcaption>同一份 feed 的兩個出口：左邊在 Claude 對話裡渲染（MCP app），右邊在 Alation 自家 App 內，指標卡數值與圖表排版幾乎相同。一份描述、兩處原生繪製。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／Google Developers Blog，<a href="https://developers.googleblog.com/a2ui-10-build-delightful-fast-reliable-agentic-experiences/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">但原文有給版本的三項都還不是 1.0：Gemini 0.9.1、Compose renderer 0.9.1、Lynx 0.9。前兩項是 Google 自家，Lynx 才是夥伴。</p>
+    <p class="g-p">原文的案例也沒有任何量化成效，只有「已在用」與幾位主管的引述。</p>
+    <p class="g-p">導入成本同樣留白：卡片誰設計、元件庫誰維護、舊版 renderer 怎麼升，三題都沒有答案。</p>
+    <p class="g-p">（編輯觀點：協定穩定與生態可用之間有一段落差，這段落差才決定你該不該現在押。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>畫面主權留在 App。</b>agent 只交描述，像素與樣式由你的元件庫決定。</p>
+      <p><b>導入前先對版本。</b>有公布版本的都停在 0.9.x，功能表好看不等於跑得動 1.0。</p>
+      <p><b>賣點是信任邊界。</b>資料綁在伺服器、值不進模型，這是文字回覆給不了的。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog（Workday 案例）</span><a href="workday-agent-platform.html">Agent 平台：四個人把原型時間砍掉兩個數量級</a><span class="d">2026-11-10</span></div>
+      <div class="g-relrow"><span class="s">Claude（Anthropic）客戶案例</span><a href="curative-provider-agents.html">簽約 agent：50 倍速度靠三個 agent 互相把關</a><span class="d">2026-11-10</span></div>
+      <div class="g-relrow"><span class="s">Google DeepMind</span><a href="alphaproof-signal.html">形式驗證：agent 六百萬行 Lean，把 Signal 加密證到程式碼</a><span class="d">2026-11-10</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述規格與版本出自原文，圖解 A 為本站重繪並已標明。原文未提供任何延遲、採用率或轉換率的量化數據。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-12 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

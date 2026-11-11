@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 銷售文件工廠：上下文比模型更決定品質 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain 自建 GTM Agent 12 週產出 1,540 份銷售文件，337 份實際寄出、折算 337 小時工時；有寄出文件的交易 47% 推進到下一階段（自報）。品質來自業務上下文，不是 prompt 微調。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E4%BC%81%E6%A5%AD%E5%B0%8E%E5%85%A5%E6%A1%88%E4%BE%8B" class="day-catalog">企業導入案例</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E4%BC%81%E6%A5%AD%E5%B0%8E%E5%85%A5%E6%A1%88%E4%BE%8B">企業導入案例</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>銷售文件工廠：上下文比模型更決定品質</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain 說明自家 GTM Agent 如何標準化銷售文件——廠商自家案例（LangChain 部落格）</p>
+    <p class="g-meta">
+      <span>LangChain Blog（LangChain 自家案例）</span>·<span>2026-11-11 發布</span>·<span>2026-11-12 收錄</span>·
+      <a href="https://www.langchain.com/blog/gtm-agent-high-quality-sales-artifacts" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>1,540 份 / 12 週</b><span>產出的銷售文件數，平均每週逾 100 份（LangChain 自報）</span></div>
+    <div class="g-stat"><b>46% / 14 天</b><span>產出的文件中有 46% 在 14 天內接著發生客戶通話（LangChain 自報）</span></div>
+    <div class="g-stat"><b>18 分 → 7 分</b><span>單頁文件一次執行時間，加入「一輪複審無缺陷即出貨」規則後</span></div>
+    <div class="g-stat"><b>337 / 1,540</b><span>實際寄到公司外的文件數，約 22%；折算 337 小時業務工時（LangChain 自報）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">一份銷售文件的好壞，多半不是 prompt 調出來的，而是你把公司怎麼跑交易寫進了 agent 的上下文。</p>
+
+    <p class="g-p">這套 GTM Agent 原本就在 Slack 裡跑：開發潛在客戶、擬個人化開發信給業務員核准、每週推播帳戶訊號。</p>
+    <p class="g-p">業務員每天在用，於是它順勢接下最耗時的一段：做銷售文件。</p>
+    <p class="g-p">痛點不是模型不夠強，而是同一份文件在組織裡有多個版本，每筆交易重做一次，樣子每次不同。</p>
+    <p class="g-p">團隊同時要三件事：客戶看到的東西維持高標準、停掉每個人重複的手工、每筆交易走同一套流程。</p>
+    <p class="g-p">第三件最難。每個階段都有 gate，例如指名經濟買家、談定成功標準；純手工時，漏掉的步驟常要等到 pipeline 檢視會才浮現。</p>
+    <p class="g-p">文件改由 agent 歸檔後，缺件在交易還活著的時候就會被抓到。</p>
+    <p class="g-p">（編輯觀點：把流程稽核從事後補救移到當下，比文件變漂亮更有價值。）</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>餵給 agent 的上下文</th><th>內容</th><th>原文說的作用</th></tr></thead>
+        <tbody>
+          <tr><td data-l="上下文"><b>流程知識</b></td><td data-l="內容">需要哪些文件、何時需要、什麼叫做好</td><td data-l="作用">給 agent 一副骨架</td></tr>
+          <tr><td data-l="上下文"><b>客戶上下文</b></td><td data-l="內容">Salesforce 紀錄、產品使用量、通話逐字稿、風險、決策標準、下一步</td><td data-l="作用">業務員不必自己撈資料，能同時扛更多交易</td></tr>
+          <tr><td data-l="上下文"><b>語氣與品牌</b></td><td data-l="內容">品牌素材與 style guide</td><td data-l="作用">產出看起來一致、有整理過</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">原文的重點句：大部分心力花在給上下文，很少花在補模型的 prompt。</p>
+    <p class="g-p">文件也不是單一格式：客製帳戶計畫、價值驗證（proof-of-value）文件、提案簡報、上手計畫，對應銷售循環五個階段，每階段各有自己的標準文件。</p>
+
+    <h2 class="g-h2">七步生成，一條停損規則</h2>
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/langchain-gtm-agent/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/langchain-gtm-agent/01.webp" alt="原文流程圖：Slack 觸發、讀取 Salesforce 等帳戶資料、取主管範本、sandbox 內用 python-pptx 組檔、LibreOffice 轉 PDF 逐頁轉圖、視覺複審後修版再渲染、最後轉成 Google Slides／Docs／Sheets 歸檔" width="1200" height="675" loading="lazy" decoding="async"></a>
+      <figcaption>4 Build → 5 Render → 6 Review 是一個迴圈，底部「Fix and re-render」把複審發現送回 Build 再渲染；右側寫明出貨條件：版面合格，且一輪複審找不到缺陷。<span class="g-fig-src">圖／LangChain Blog，<a href="https://www.langchain.com/blog/gtm-agent-high-quality-sales-artifacts" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <p class="g-p">一次生成有兩條觸發路徑：業務員在 Slack 開口，或 agent 在會議準備時主動提議要哪一份。</p>
+    <p class="g-p">七步裡真正的核心是流程圖上的第 4 到 6 步（Build／Render／Review）：在 sandbox 用 python-pptx 套版、LibreOffice 轉 PDF、逐頁轉圖，再由 agent 自己看圖找版面毛病。</p>
+    <p class="g-p">品牌規則以「brand as code」烤進 sandbox 映像檔：logo、色票、字體、style guide 都在裡面，改動要走審核過的 PR。</p>
+    <p class="g-p">自我複審會拉高品質，也會拉高延遲：早期版本會對已經沒問題的頁面反覆複審，有時幾十次。</p>
+    <p class="g-p">停損規則很簡單——一輪複審找不到真實缺陷就出貨，單頁文件因此從 18 分鐘降到 7 分鐘。</p>
+    <p class="g-p">成品回到帳戶的 Google Drive：業務員補筆記、改 agent 做過的地方，agent 下一份文件前會全部讀過。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>原語</th><th>在系統裡做什麼</th><th>原文怎麼說</th></tr></thead>
+        <tbody>
+          <tr><td data-l="原語"><b>skills 與 instructions</b></td><td data-l="作用">存放銷售流程、範本與階段規則</td><td data-l="原文">與程式碼分開版控</td></tr>
+          <tr><td data-l="原語"><b>sandbox</b></td><td data-l="作用">裝好 Office 工具，可產檔、轉圖、看結果再修</td><td data-l="原文">品牌套件直接烤進映像檔</td></tr>
+          <tr><td data-l="原語"><b>Slack 介面</b></td><td data-l="作用">業務員下指令與收成品的地方</td><td data-l="原文">業務員原本就在這裡求助</td></tr>
+          <tr><td data-l="原語"><b>排程執行</b></td><td data-l="作用">定時跑，不必等人開口</td><td data-l="原文">支撐會前簡報，讓 agent 主動</td></tr>
+          <tr><td data-l="原語"><b>memory</b></td><td data-l="作用">記住整筆交易的脈絡</td><td data-l="原文">不只涵蓋單一對話</td></tr>
+          <tr><td data-l="原語"><b>LangSmith tracing</b></td><td data-l="作用">看到每次 render、工具呼叫與複審</td><td data-l="原文">用來診斷自我複審造成的延遲</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">原文直言，任何團隊做類似的 agent，這六項一個都不能少；託管版 Managed Deep Agents 直接提供 sandbox、skills、memory 與排程。</p>
+
+    <h2 class="g-h2">主動推送，再用四個指標驗收</h2>
+    <p class="g-p">業務員不會主動要一份自己不知道存在的文件，所以 agent 改成主動：讀行事曆，在會議前送簡報。</p>
+    <p class="g-p">若這場會議所屬階段還缺文件，它會直接講該帶哪一份；主管也能對交易派任務。</p>
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/langchain-gtm-agent/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/langchain-gtm-agent/02.webp" alt="原文 Impact 儀表板截圖：近 90 天、12 個完整週，郵件開發寄出 39,353／90,027、文件 337／1,540、整體 6,896 小時工時與 8.3 倍成本報酬" width="1200" height="549" loading="lazy" decoding="async"></a>
+      <figcaption>原文的 Impact 儀表板（近 90 天、12 個完整週、8 月 17 日至 11 月 8 日）：文件一列是 337／1,540 寄到公司外、22% 使用率、337 小時、6.2 倍報酬——利用率是單獨一欄。<span class="g-fig-src">圖／LangChain Blog，<a href="https://www.langchain.com/blog/gtm-agent-high-quality-sales-artifacts" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <p class="g-p">用量靠一個 artifact hub 介面兜住：每筆交易在哪個階段、有哪些文件、下一份該做什麼。</p>
+    <p class="g-p">成效用四個指標看：產量、利用率（有多少寄到公司外）、槓桿（省下工時對比執行成本）、結果（碰到多少 pipeline）。</p>
+    <p class="g-p">四項互相牽制：只看產量，agent 可以很忙卻幾乎沒人用。</p>
+    <p class="g-p">目前數字：有寄出文件的交易 47% 推進到下一階段，配對的對照組只有 16%（LangChain 自報，無第三方驗證）。</p>
+    <p class="g-p">（編輯觀點：47% 對 16% 是配對比較，不是隨機試驗；願意寄出文件本身就可能代表交易比較健康。）</p>
+    <p class="g-p">品質判斷仍靠人：每份文件有 owner，加上每週主管會議、全業務部門的 office hours 與 Slack 頻道三路回饋。</p>
+    <p class="g-p">與 owner 逐項討論的長逐字稿，會直接交給 coding agent 去開規格。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>品質來自上下文，不是 prompt 微調。</b>流程、範本、品牌要先變成可版控的資產。</p>
+      <p><b>自我複審要有停損。</b>一輪找不到缺陷就出貨，否則延遲會吃掉品質收益。</p>
+      <p><b>產量不等於成效。</b>1,540 份只有 337 份寄出，利用率才是真訊號。</p>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；成效數字與比率皆為 LangChain 自報，無第三方驗證。原文圖為合理引用、自託管存放，未經改作。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-12 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
