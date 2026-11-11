@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — Gemini 4 Carbon：長時程 agent 專用模型，與 /swarm 的分工 · AI 每日動態檔案</title>
+<meta name="description" content="Gemini 4 Carbon 開放給開發者、企業、科學家與消費者：主打資安與長時程 agentic 工作流，在 CursorBench 4.0、Perplexity WANDR、Zapier AutomationBench 排第一，每任務成本比次佳外部模型低兩倍以上；Antigravity 同步預覽 /swarm。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>Gemini 4 Carbon：長時程 agent 專用模型，與 /swarm 的分工</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：〈Gemini 4 Carbon is now available〉——模型發布公告（Google 部落格，DeepMind 同日轉載）</p>
+    <p class="g-meta">
+      <span>Google Blog（AI）</span>·<span>2026-11-10 發布</span>·<span>2026-11-11 收錄</span>·
+      <a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-carbon-now-available/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>3 個榜單第一</b><span>CursorBench 4.0、Perplexity WANDR、Zapier AutomationBench</span></div>
+    <div class="g-stat"><b>低 2 倍以上</b><span>每任務成本相對「次佳外部模型」，Google 自報</span></div>
+    <div class="g-stat"><b>兩週前</b><span>先給 Fairwind Program 的資安防禦者使用，才對外開放</span></div>
+    <div class="g-stat"><b>/swarm</b><span>Antigravity 預覽功能：一個 prompt 展開成可追蹤的 agent 團隊</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">Google 這次不是說「更強」，而是說「換一種用法」：用更多 token 換更深推理與更長驗證迴圈。</p>
+
+    <p class="g-p">Carbon 的定位寫得很明確：資安能力，加上長時程 agentic 工作流。</p>
+    <p class="g-p">它與 Gemini 4 Argon 並存。Google 說 Argon 仍適合大多數軟體工程與知識工作，Carbon 留給會逼近模型極限的任務。</p>
+    <p class="g-p">具體例子：多步驟的複雜 coding 與除錯、開放式的科學研究與探索——共同點是沒有明確終點。</p>
+    <p class="g-p">「長時程」的具體意思：任務會跑很多步、需要來回驗證，中途失敗一次就整段重來。</p>
+    <p class="g-p">代價講得也直白：Carbon 會燒更多 token，換取徹底探索、深度推理與多輪驗證。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>該用哪一顆</b> — 依任務形狀分流（本站整理，原文為敘述未給流程圖）</figcaption>
+      <div class="x-dec">
+        <div class="q">這個任務需要什麼？</div>
+        <div class="brs">
+          <div class="br"><span class="tag">分支 A</span><b>任務明確、要好交付</b><small>多數軟體工程與知識工作 → 留在 Argon</small></div>
+          <div class="br"><span class="tag">分支 B</span><b>多步除錯、開放式研究</b><small>逼近模型極限 → 換 Carbon，接受更高 token 成本</small></div>
+          <div class="br"><span class="tag">分支 C</span><b>要一群角色協作</b><small>Antigravity 的 /swarm：把最燒腦的角色派給 Carbon</small></div>
+        </div>
+      </div>
+      <p class="x-src">本站重繪；原文以文字分述三者用途，未給此決策樹。</p>
+    </figure>
+
+    <h2 class="g-h2">榜單與成本是同一句話的兩半</h2>
+    <p class="g-p">原文強調的不只是排名，而是「排名＋每任務成本」的組合：在三個外部 benchmark 第一，成本是次佳外部模型的二分之一以下。</p>
+    <p class="g-p">這對 agent 特別關鍵：長時程任務本來就會放大單次推論的差距。</p>
+    <p class="g-p">三個榜單分屬不同工具：程式編輯器、搜尋型研究、自動化流程，共同點是測真實工作流而非實驗室題庫。</p>
+    <p class="g-p">取得路徑分成兩條：開發者走付費 API，消費者與訂閱者走 AI Studio 與 Antigravity。</p>
+    <p class="g-p">Fairwind Program 的先導期值得注意：先讓防禦方試用，再全面開放，是 Google 對高風險能力的慣例。</p>
+    <p class="g-p">開發者版本另補了一句：Carbon 有更強的對齊與「任務完成度」，這對跑很久的 agent 比單題正確率更關鍵。</p>
+    <p class="g-p">家族順序也要看清楚：Carbon 接在 Argon 之後推出，不是取代關係，而是按任務難度分層。</p>
+    <p class="g-p">對 agent 開發者來說，這種分層意味著一件事：選型要看任務長度，不是看單題分數。</p>
+    <p class="g-p">公司若已在用 Argon，Carbon 的導入成本主要是重調 prompt 與驗證迴圈，而非重寫流程。</p>
+    <p class="g-p">（編輯觀點：benchmark 第一不等於你的工作流第一；長時程任務的變異大，還是得自己抽樣測。）</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>項目</th><th>原文說法</th><th>限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="項目"><b>榜單</b></td><td data-l="說法">CursorBench 4.0、WANDR、AutomationBench 皆第一</td><td data-l="限定">皆為外部 benchmark，原文未附分數</td></tr>
+          <tr><td data-l="項目"><b>成本</b></td><td data-l="說法">每任務低 2 倍以上</td><td data-l="限定">比較對象為「次佳外部模型」，Google 自報</td></tr>
+          <tr><td data-l="項目"><b>取得方式</b></td><td data-l="說法">AI Studio／Android Studio 付費層級</td><td data-l="限定">Ultra 訂閱者另可在 AI Studio 與 Antigravity 試用</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="g-h2">/swarm 才是這篇最值得看的部分</h2>
+    <p class="g-p">它把單一 prompt 變成一個可即時追蹤的 agent 團隊，並要求開發者主動分配角色。</p>
+    <p class="g-p">原文的建議是：架構設計、協調、稽核這類需要最深推理的位子交給 Carbon，其餘可留給較輕的模型。</p>
+    <p class="g-p">這是把「模型選型」從一次性決策，變成任務內部的動態安排；也是 agent 工程最近一年的共同方向。</p>
+    <p class="g-p">實務上要注意的是可觀測性：一個 prompt 展開成多個 agent 後，出錯時得知道是哪個角色壞的。</p>
+    <p class="g-p">原文只說可在 Antigravity 中即時追蹤，尚未提供團隊規模或成本控制的細節。</p>
+    <p class="g-p">（編輯觀點：模型分工正在變成預設做法——「一顆模型打全部」的時代，廠商自己也不這樣用了。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>別急著全換。</b>Argon 仍覆蓋多數工作，Carbon 是攻堅用。</p>
+      <p><b>成本要按任務算。</b>單價高不等於每任務貴，長任務會放大差距。</p>
+      <p><b>多 agent 已成產品功能。</b>/swarm 把「派角色」變成介面操作。</p>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；榜單與成本數字皆為 Google 自報，未附第三方複核。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-11 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

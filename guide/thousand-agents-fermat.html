@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 千體 agent：拿掉鷹架與指揮，28.7 小時重現費馬證明 · AI 每日動態檔案</title>
+<meta name="description" content="Anthropic 玩具實驗：1,000 個跑早期 Claude Fable 5.2 的 agent，在沒有人類指揮與 Prove2Me 平台的情況下重現費馬最後定理的形式化證明，耗 28.7 小時、輸出 token 為原版三分之一、證明長度七分之一。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>千體 agent：拿掉鷹架與指揮，28.7 小時重現費馬證明</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：〈Safely scaling multi-agent teams with Claude Fable 5.2〉——模型廠商自家實驗報告（claude.dev 部落格），作者自稱 toy experiment</p>
+    <p class="g-meta">
+      <span>claude.dev（Anthropic）</span>·<span>2026-11-09 發布</span>·<span>2026-11-11 收錄</span>·
+      <a href="https://claude.dev/blog/safely-scaling-multi-agent-teams-with-fable-5-2/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>1,000 個 agent</b><span>1 個 lead 帶 999 個 helper，全部跑早期版 Fable 5.2</span></div>
+    <div class="g-stat"><b>28.7 小時</b><span>從開工到重現形式化證明的總時長</span></div>
+    <div class="g-stat"><b>1/3 與 1/7</b><span>輸出 token 為原版三分之一；證明長度為原版七分之一</span></div>
+    <div class="g-stat"><b>無網路沙箱</b><span>每個 agent 一個獨立沙箱，沒有對外網路、沒有 API key</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">這次抽掉的正是上次的兩根拐杖：形式化平台 Prove2Me，以及研究員的方向指導。</p>
+
+    <p class="g-p">今年 9 月，Anthropic 用數十個 agent 完成費馬最後定理的第一個端到端形式化。</p>
+    <p class="g-p">那次跑的是約當 Fable 5.1 的內部研究模型，靠 Prove2Me 平台與一位研究員在旁指路。</p>
+    <p class="g-p">新實驗把兩根拐杖都抽掉，只給 60 條陳述、一句古典路線的摘要、相關定義，以及 47 個先前證好的引理。</p>
+    <p class="g-p">然後指派 lead 與 helper 角色，其餘怎麼分工、怎麼證明、怎麼驗證，全由 agent 自己決定。</p>
+    <p class="g-p">原文作者自己叫它玩具實驗（toy experiment），這個定調對閱讀很重要。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/thousand-agents-fermat/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/thousand-agents-fermat/01.webp" alt="三層安全設計：每個 agent 一個無網路的沙箱、閘道對每次工具呼叫做阻擋式分類、以及沙箱外的離線監控。" width="1200" height="1110" loading="lazy" decoding="async"></a>
+      <figcaption>原圖把安全做成三層：沙箱、即時分類器、離線監控——這是「敢讓一千個 agent 自己跑」的前提。<span class="g-fig-src">圖／claude.dev（Anthropic），<a href="https://claude.dev/blog/safely-scaling-multi-agent-teams-with-fable-5-2/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <h2 class="g-h2">協調靠五張表，不靠開會</h2>
+    <p class="g-p">開工前 10 分鐘，lead 在共用資料庫建了五張表：Announce（公告）、Assign（派工）、Notes（筆記）、Subtasks（子任務）、Landed（完成）。</p>
+    <p class="g-p">helper 從任務表認領工作，先搶先贏；完成的記進 Landed，其他人再自行認領新任務。</p>
+    <p class="g-p">沒有中央排程器，也沒有 agent 之間的即時對話；協調全靠「讀表—認領—寫回」這套極簡約定。</p>
+    <p class="g-p">lead 的工作是拆任務與派工；這也是 999 個 helper 能平行跑的前提。</p>
+    <p class="g-p">安全設計也同樣克制：每個 agent 一個沙箱，無網路、無 API key、無憑證，也碰不到 harness 程式碼。</p>
+    <p class="g-p">對外只有一條路：所有工具呼叫都經過閘道的阻擋式分類器，設計上是「查不到就擋」。</p>
+    <p class="g-p">Git 只准推自己的分支，main 由 merge job 處理；資料庫用共用非特權角色，且有時間與大小限制。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>條件</th><th>9 月版</th><th>這次（toy experiment）</th></tr></thead>
+        <tbody>
+          <tr><td data-l="條件"><b>agent 數量</b></td><td data-l="9月">數十個</td><td data-l="這次">1,000 個</td></tr>
+          <tr><td data-l="條件"><b>外部鷹架</b></td><td data-l="9月">Prove2Me 平台</td><td data-l="這次">無</td></tr>
+          <tr><td data-l="條件"><b>人類指導</b></td><td data-l="9月">研究員帶方向</td><td data-l="這次">無</td></tr>
+          <tr><td data-l="條件"><b>輸出 token</b></td><td data-l="9月">基準</td><td data-l="這次">約三分之一</td></tr>
+          <tr><td data-l="條件"><b>證明長度</b></td><td data-l="9月">基準</td><td data-l="這次">約七分之一</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">更短不代表更好讀。原文沒說這份證明是否更接近人類可讀的寫法，只給了相對倍數。</p>
+    <p class="g-p">也別忘了 1,000 個 agent 的執行成本：每個 agent 一個輕量 VM，跑滿 28.7 小時。</p>
+
+    <h2 class="g-h2">該怎麼讀這個結果</h2>
+    <p class="g-p">作者自稱玩具實驗：單一題目、非標準 benchmark，也沒有與人類團隊或其他方法的效能對照。</p>
+    <p class="g-p">「重現」也意味著目標已知、路線有摘要可循，不是從零找到證明。</p>
+    <p class="g-p">可轉移的訊息因此偏往工程面：怎麼給一千個 agent 一個能協作又不會失控的外殼（harness）。</p>
+    <p class="g-p">沙箱無網路、每次工具呼叫都過分類器、行為另有離線監控——三層各管一種風險。</p>
+    <p class="g-p">離線監控特別值得學：run record 存在沙箱外，發現嚴重問題時回頭通知該次 run 的負責人。</p>
+    <p class="g-p">原文自稱 toy experiment；此外它未給重跑次數與成功率，也未與人類團隊比較（本站補充）。</p>
+    <p class="g-p">讀這類報告時，把「作者自己標的限制」放在數字旁邊，比記住 28.7 小時有用。</p>
+    <p class="g-p">（編輯觀點：這篇的價值在「規模化多 agent 的護欄長怎樣」，不在「AI 會證數學」。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>多 agent 的瓶頸是協調，不是智力。</b>五張表就夠一千個 agent 不撞車。</p>
+      <p><b>拿掉鷹架才是真進展。</b>同樣的題目，靠模型自己組織流程。</p>
+      <p><b>先想護欄再想規模。</b>沙箱＋分類器＋離線監控，缺一不可。</p>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；時長與倍數皆為 Anthropic 自報的單次玩具實驗，無第三方驗證。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-11 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

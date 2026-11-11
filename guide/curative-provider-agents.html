@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 簽約 agent：50 倍速度靠三個 agent 互相把關 · AI 每日動態檔案</title>
+<meta name="description" content="Curative 用 Claude 上的 agent 階層簽醫療提供者合約：Gwen（Opus）一份合約跑到底、Sonnet 審費率、Haiku 當發話前守門，速度約為 2025 年人工作業 50 倍、每週 2,000 多份；每份約 2,000 萬 token，成本約原本十分之一。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>簽約 agent：50 倍速度靠三個 agent 互相把關</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：〈How Curative is building a national provider network with agents on Claude〉——廠商客戶案例（Anthropic 部落格），含 Curative 執行長 Fred Turner 訪談</p>
+    <p class="g-meta">
+      <span>Claude（Anthropic）客戶案例</span>·<span>2026-11-10 發布</span>·<span>2026-11-11 收錄</span>·
+      <a href="https://claude.com/resources/articles/how-curative-is-building-a-national-provider-network-with-agents-on-claude" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>2,100 份</b><span>Curative 2025 全年的提供者合約量，已是前一年的兩倍（原文自述）</span></div>
+    <div class="g-stat"><b>約 50 倍</b><span>導入 agent 後相對 2025 年人工作業的簽約速度，換算每週 2,000 多份</span></div>
+    <div class="g-stat"><b>2,000 萬 token／份</b><span>單一合約的推論量，成本約原本的十分之一（原文自述）</span></div>
+    <div class="g-stat"><b>最快 1 小時</b><span>從官網填表到簽名的時間，非平均值</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">把「一份合約一個人」換成「一份合約一個 agent」，難的不是談判，是讓它不准亂講價。</p>
+
+    <p class="g-p">Curative 賣僱主健康險，完成 Baseline Visit 後網路內就醫零自付額。它原本是實驗室起家，估計做過全美約一成的新冠檢測。</p>
+    <p class="g-p">因為替幾乎所有保險公司做過檢測，它反而看清了醫療支付體系的低效，才決定自己當支付方。</p>
+    <p class="g-p">英國出身的創辦人習慣「病人不付費」的制度，這個背景解釋了它為何執著於預防與零自付額。</p>
+    <p class="g-p">要賣全國就得有全國的醫療提供者網路。以每年 2,000 份的速度，執行長 Fred Turner 說是「三十年的工程」。</p>
+    <p class="g-p">他的觀察很刺：全國性網路沒幾家，而且全都是三十年前建的，因為這件事本來就慢。</p>
+    <p class="g-p">只加人補不上這個缺口，於是把整條流程交給 agent：主力叫 Gwen，一次只跑一家提供者。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/curative-provider-agents/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/curative-provider-agents/01.webp" alt="Gwen 的系統圖：它讀什麼、做什麼動作，以及 Sonnet 費率審查、Haiku 發話前守門與人類核准三個檢查點。" width="1200" height="674" loading="lazy" decoding="async"></a>
+      <figcaption>原圖把「誰檢查誰」畫清楚了：Gwen 讀市場費率資料、寫提案與合約，上面還有兩層自動審查與一個人類出口。<span class="g-fig-src">圖／claude.com，<a href="https://claude.com/resources/articles/how-curative-is-building-a-national-provider-network-with-agents-on-claude" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <h2 class="g-h2">三個 agent 的分工，比直接放寬 Gwen 的費率授權有效</h2>
+    <p class="g-p">Gwen 主要跑在 Claude Opus 上，每次只處理一家提供者，其他合約不會滲進來影響判斷。</p>
+    <p class="g-p">它可以讀買來的理賠資料與各保險公司依法公布的價格透明檔，拿市場行情跟對方談。</p>
+    <p class="g-p">這兩份資料是談判的彈藥：對方看得到行情，就比較難堅持遠高於市場的價格。</p>
+    <p class="g-p">想出價高於自家費率模板時，Gwen 得先寫理由，交給跑 Sonnet 的審查 agent 判斷合不合理。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>角色</th><th>模型／主體</th><th>職責</th><th>原文限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="角色"><b>Gwen</b></td><td data-l="模型">Opus（原文 mostly）</td><td data-l="職責">一份合約從接觸到簽名</td><td data-l="限定">每次只跑一家提供者</td></tr>
+          <tr><td data-l="角色"><b>費率審查</b></td><td data-l="模型">Sonnet</td><td data-l="職責">看 Gwen 的加價理由</td><td data-l="限定">約三分之二的請求被放行</td></tr>
+          <tr><td data-l="角色"><b>發話守門</b></td><td data-l="模型">Haiku</td><td data-l="職責">每則對外訊息送出前先讀</td><td data-l="限定">被擋下的會附理由，讓 Gwen 重寫</td></tr>
+          <tr><td data-l="角色"><b>人</b></td><td data-l="模型">人工（執行長）</td><td data-l="職責">非標準費率最終核准</td><td data-l="限定">原文：換成人工也一樣會到他手上</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">守門 agent 是踩坑後才加的：Gwen 曾把「最高可出到多少」的內部註記一起寄給對方。</p>
+    <p class="g-p">現在每則對外訊息送出前都會被讀過一遍，被擋下的附上原因，讓 Gwen 改寫再試。</p>
+    <p class="g-p">Turner 的結論值得記：讓第二個 agent 審查，比直接給 Gwen 更多權限有效。</p>
+    <p class="g-p">這句話的實務意義是：多一層審查，換來的是可以放寬主 agent 的授權範圍。</p>
+
+    <h2 class="g-h2">為什麼小診所才是這個架構的受益者</h2>
+    <p class="g-p">對外開發更難：有些提供者到第 14 封 email、第 9 次傳真才回。</p>
+    <p class="g-p">這種持久度靠人做會先放棄；agent 不會因為被忽視而降低跟進頻率。</p>
+    <p class="g-p">但 agent 對待大型醫院與單人診所的注意力一樣——因為那一次執行裡，它只有這一家。</p>
+    <p class="g-p">於是 Curative 的策略可以轉向大型網路長期忽略的小型提供者，這是人力模式做不到的取捨。</p>
+    <p class="g-p">協商時 Gwen 會比對對方的修改稿與自家政策，再寫 Python 把兩邊改動併成最終文件。</p>
+    <p class="g-p">整條流程的代價被壓到每份合約約 2,000 萬 token，換算下來是原本成本的十分之一。</p>
+    <p class="g-p">「一小時」是從官網填表到簽名的極端值，不是平均；原文未給典型時長。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>分權比放權有效。</b>把審查拆給第二個 agent，勝過直接給 Gwen 更大的費率授權。</p>
+      <p><b>守門規則來自事故。</b>發話前檢查會存在，是因為先漏了一次內部註記。</p>
+      <p><b>成本要按「每份合約」算。</b>2,000 萬 token 聽起來多，換算下來是原成本十分之一。</p>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；速度與成本皆為 Curative 自報、無第三方驗證。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-11 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

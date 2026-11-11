@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 語音 agent：把 10 秒死寂換成 3.2 秒的停頓 · AI 每日動態檔案</title>
+<meta name="description" content="GPT-Live 讓語音 agent 同時聽與說，但真正的敵人是工具呼叫造成的死寂。Juno 的解法是每輪結束後用一個小模型在背景決定帶入哪些記憶、先回報已完成，把手動交接減 40%、最長靜默從 9.3 秒降到 3.2 秒。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>語音 agent：把 10 秒死寂換成 3.2 秒的停頓</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：〈Pushing voice agents further: inside four GPT-Live builds〉——OpenAI 開發者部落格，本篇導讀聚焦其中的 Juno（慢性病個人健康助理）案例</p>
+    <p class="g-meta">
+      <span>OpenAI Developers Blog</span>·<span>2026-11-10 發布</span>·<span>2026-11-11 收錄</span>·
+      <a href="https://developers.openai.com/blog/pushing-voice-agents-further" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>5 通有 4 通</b><span>第一版 Juno 通話中至少出現一次工具交接造成的停頓</span></div>
+    <div class="g-stat"><b>9.3 秒 → 3.2 秒</b><span>測試通話裡最長靜默，改前與改後（單次測試）</span></div>
+    <div class="g-stat"><b>少 40%</b><span>交接給文字 agent 的次數降幅</span></div>
+    <div class="g-stat"><b>290 ＋ 171 人</b><span>兩輪聲音偏好測試的受試者數，皆為慢性病患者</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">語音的難處不在「回答得好」，在「不要停下來」：每一句都得當場決定要講什麼、同時把工具叫去背景做。</p>
+
+    <p class="g-p">GPT-Live 與串接式語音不同：不是轉錄、推理、合成三段接力，而是邊聽邊說。</p>
+    <p class="g-p">Juno 服務長新冠、POTS、EDS 等慢性病患者。語音的價值很具體：一句話能同時登錄多項身體數據。</p>
+    <p class="g-p">它的對象不是來看病的，是每天要記藥、追症狀、讀研究的人；這些事加起來比症狀本身還耗人。</p>
+    <p class="g-p">手動記錄太累，很多人停用追蹤 app——即使那些工具真的有幫助。這是語音真正要接手的部分。</p>
+    <p class="g-p">但把工作丟給工具就會出現死寂——第一版最常見的畫面是「等我一下」，然後是一片約 10 秒的安靜。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一輪通話的兩條線</b> — 前景繼續講，背景把記憶與工具做完（本站重繪）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">使用者 → GPT-Live</span><span class="tr"><i>「記一下頭痛」</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">GPT-Live → 使用者</span><span class="tr"><i>立刻回「已記錄」，不等待</i></span></span></li>
+        <li class="side"><span class="st">02b</span><span class="body"><span class="hop">背景：小模型 → 上下文</span><span class="tr"><i>分支：挑出此刻相關的病史</i></span></span></li>
+        <li class="side"><span class="st">02c</span><span class="body"><span class="hop">背景：委派 agent → 儲存</span><span class="tr"><i>分支：寫入在下一輪前完成</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">steering agent → 下一輪</span><span class="tr"><i>刷新上下文，第 100 輪仍記得第 1 輪</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重繪，非原文圖；02b、02c 為同一輪內的背景旁支，原文未給此順序。</p>
+    </figure>
+
+    <h2 class="g-h2">代價是「少講一點」：語音模型能吃的上下文遠少於文字模型</h2>
+    <p class="g-p">解法很省：每輪結束後，一個小快模型（Decisions API）在背景回答兩個問題。</p>
+    <p class="g-p">第一題是「你歷史裡的哪些事此刻重要」，答案決定下一輪帶進什麼、不帶什麼。</p>
+    <p class="g-p">第二題讓「已記錄」這種回覆先講出口，真正的寫入在背景完成——使用者問下一句時，資料已經在了。</p>
+    <p class="g-p">原文的比喻很傳神：語音模型像水母，快、反應好，但沒有自己的方向感，會順著你最後一句漂走。</p>
+    <p class="g-p">這個 steering agent 原文講得很清楚：想要長通話就得自己建，OpenAI 沒有現成元件。</p>
+    <p class="g-p">文字模型比較主動，因為它能帶來更大的上下文；語音則得靠你拉方向。</p>
+
+    <div class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>最長靜默</b> — 同一通測試通話的改前／改後，條愈短愈好（2026-11 測試）</figcaption>
+      <div class="x-bars">
+        <div class="x-bar hot"><b>改前</b><span class="t"><span style="--p:100"></span></span><i>9.3s</i></div>
+        <div class="x-bar"><b>改後</b><span class="t"><span style="--p:34"></span></span><i>3.2s</i></div>
+      </div>
+      <p class="x-src">原文自報的單次測試數據，未給樣本數與分布。</p>
+    </div>
+
+    <h2 class="g-h2">聲音也要做實驗，但別把實驗當結論</h2>
+    <p class="g-p">焦點團體說 Juno 的聲音「稍慢、有點居高臨下」。團隊用 prompt-to-voice 重做，做了兩輪偏好測試。</p>
+    <p class="g-p">第一輪 290 人，每人只聽三句；五個小回合刪掉不受歡迎的，留下最好的再改。</p>
+    <p class="g-p">第二輪找 171 位新受試者，把新聲音與現行版本直接對比，新聲音在多數指標上勝出。</p>
+    <p class="g-p">但在「累到不行的時候想聽哪個聲音」這一題，舊聲音仍略勝；兩者差距很小。</p>
+    <p class="g-p">少 40% 交接的意義不是「變快」，而是少一次「等我一下」——使用者的體感差別就在這裡。</p>
+    <p class="g-p">原文最後問得很有意思：我們是不是對「一個完美聲音」太執著？人自己的聲音本來就會變。</p>
+    <p class="g-p">這也是整篇最反直覺的一句：與其找一個人人滿意的聲音，不如讓聲音跟著情境調整。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>項目</th><th>原文數字</th><th>限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="項目"><b>受試者</b></td><td data-l="數字">290 人，後續 171 人</td><td data-l="限定">美國慢性病患者，非一般用戶</td></tr>
+          <tr><td data-l="項目"><b>刺激材料</b></td><td data-l="數字">每人聽 3 句</td><td data-l="限定">原文自承：分數接近，且研究不等於真實通話</td></tr>
+          <tr><td data-l="項目"><b>下一步</b></td><td data-l="數字">真人首次來電測試</td><td data-l="限定">看隔天回訪率，尚未有結果</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>延遲要藏，不要縮。</b>先回「已記錄」，把寫入丟到背景。</p>
+      <p><b>語音 agent 得自己造方向感。</b>小模型每輪篩記憶，長通話才不散掉。</p>
+      <p><b>聲音偏好沒有單一答案。</b>疲累時想聽的聲音，跟平常不是同一個。</p>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；成效與研究數字皆為 OpenAI 與 Juno 自報。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-11 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

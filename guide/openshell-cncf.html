@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — Agent 執行期安全：NVIDIA 把 OpenShell 交給 CNCF · AI 每日動態檔案</title>
+<meta name="description" content="NVIDIA 在 KubeCon 把自主 agent 的安全與治理執行期 OpenShell 捐給 CNCF，成為 Sandbox 專案，同時貢獻 Google 主導的 Agent Substrate；DSX AI Factory 平台另新增 Kubernetes Engine、Recipes 與 Snapshot。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>Agent 執行期安全：NVIDIA 把 OpenShell 交給 CNCF</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：〈NVIDIA Expands Open Source Commitment With OpenShell Donation and New AI Infrastructure〉——廠商公告（NVIDIA 部落格，KubeCon + CloudNativeCon 現場發布）</p>
+    <p class="g-meta">
+      <span>NVIDIA Blog</span>·<span>2026-11-10 發布</span>·<span>2026-11-11 收錄</span>·
+      <a href="https://blogs.nvidia.com/blog/open-source-openshell-infrastructure/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>2 個專案</b><span>OpenShell 與 Agent Substrate 同期進入 CNCF Sandbox</span></div>
+    <div class="g-stat"><b>3 件新工具</b><span>DSX AI Factory 平台新增 Kubernetes Engine、Recipes、Snapshot</span></div>
+    <div class="g-stat"><b>Sandbox 階段</b><span>CNCF 最早期階段，離畢業專案還很遠</span></div>
+    <div class="g-stat"><b>數千座 AI factory</b><span>原文對 Kubernetes 管理規模的描述，未給具體數字來源</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">agent 的問題從來不是「會不會做」，而是「它做的每件事有沒有人管」——OpenShell 就是那層管制的執行期。</p>
+
+    <p class="g-p">NVIDIA 的說法很直接：Kubernetes 已經是 AI 的底座，而自主 agent 正在變成上面最難管的工作負載。</p>
+    <p class="g-p">把 OpenShell 捐出去，等於把「怎麼隔離與治理 agent」交給會實際部署它的人與資安社群一起改。</p>
+    <p class="g-p">原文的措辭是：安全基礎設施要能被社群建、被檢視、被改進；這比一家廠商自己維護快得多。</p>
+    <p class="g-p">CNCF 是 Linux 基金會旗下的非營利組織，也是 KubeCon 的主辦方；Sandbox 是最早期的進入點。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/openshell-cncf/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/openshell-cncf/01.webp" alt="NVIDIA DSX AI Factory 平台軟體堆疊：從 GPU 基礎設施、Kubernetes 管理、工作負載編排到模型服務。" width="1200" height="675" loading="lazy" decoding="async"></a>
+      <figcaption>這張堆疊圖說明 OpenShell 的位置：它不是模型、不是推論服務，而是夾在 Kubernetes 與 agent 工作負載之間的那一層。<span class="g-fig-src">圖／blogs.nvidia.com，<a href="https://blogs.nvidia.com/blog/open-source-openshell-infrastructure/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <h2 class="g-h2">四個位置，各有各的責任</h2>
+    <div class="x-grid">
+      <div class="x-grid-h">NVIDIA 這次交出的東西（並列，無先後）</div>
+      <div class="c"><b><i>1</i>OpenShell</b><small>自主 agent 的安全與治理執行期，進 CNCF Sandbox</small></div>
+      <div class="c"><b><i>2</i>Agent Substrate</b><small>Google 主導、在 K8s 上跑長時間 agent 工作負載的框架</small></div>
+      <div class="c"><b><i>3</i>Kubernetes Engine</b><small>DSX 平台新元件：部署與管理 GPU 基礎設施</small></div>
+      <div class="c"><b><i>4</i>Recipes / Snapshot</b><small>前者給組態範本，後者處理環境快照</small></div>
+    </div>
+    <p class="g-p" style="margin-top:14px">注意第 2 項的歸屬：Agent Substrate 是 Google 主導，NVIDIA 是貢獻者，不是發起者。</p>
+    <p class="g-p">這兩個專案一上一下：OpenShell 管「agent 能做什麼」，Agent Substrate 管「agent 跑很久也不會壞」。</p>
+    <p class="g-p">對平台團隊的實務差別是：前者靠設定守住邊界，後者要處理排程、狀態與回收。</p>
+    <p class="g-p">DSX 那三件工具則是自有的商業產品：Kubernetes Engine 管叢集、Recipes 給現成組態、Snapshot 處理環境快照。</p>
+    <p class="g-p">把它們放在同一篇公告裡，訊號是「開源層與產品層一起賣」：治理用開源，規模化用付費。</p>
+    <p class="g-p">原文用「AI factory」指大規模 AI 資料中心；這個詞的用意是把算力當產線，而不是當研究設備。</p>
+    <p class="g-p">如果是產線，停機與權限失控就是生產事故——這也解釋了為什麼治理層會被拉到這麼前面。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>專案</th><th>解決什麼</th><th>治理歸屬</th><th>原文限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="專案"><b>OpenShell</b></td><td data-l="問題">agent 的隔離與權限治理</td><td data-l="歸屬">CNCF Sandbox</td><td data-l="限定">由把它做進產品的組織共同治理</td></tr>
+          <tr><td data-l="專案"><b>Agent Substrate</b></td><td data-l="問題">長時間 agent 工作負載的營運</td><td data-l="歸屬">Google 主導、CNCF Sandbox</td><td data-l="限定">NVIDIA 為貢獻者</td></tr>
+          <tr><td data-l="專案"><b>DSX 三件工具</b></td><td data-l="問題">GPU 叢集的部署與擴充</td><td data-l="歸屬">NVIDIA 自有產品</td><td data-l="限定">不是開源專案</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="g-h2">為什麼是「執行期」而不是「模型」</h2>
+    <p class="g-p">模型層的競爭已經很擠；真正缺的是 agent 跑起來以後的權限邊界、稽核與隔離。</p>
+    <p class="g-p">捐給基金會的好處是可被檢視：安全基礎設施若只有一家廠商能改，採用方很難放心。</p>
+    <p class="g-p">另一個信號是場合：選在 KubeCon 發布，等於宣告 agent 是雲原生社群的工作，不只屬於 AI 實驗室。</p>
+    <p class="g-p">對企業採用者的實務意義：以後評估 agent 平台，「執行期怎麼隔離」可以直接跟著開源專案問。</p>
+    <p class="g-p">但目前能確定的只有「已進 Sandbox」，治理細則、版本節奏都還沒公開。</p>
+    <p class="g-p">agent 工作負載的麻煩之處在於：它會長時間跑、狀態散在很多服務、還會呼叫外部工具。</p>
+    <p class="g-p">這跟傳統無狀態服務完全不同，也是為什麼需要專門的執行期，而不是把 agent 當一般容器丟上去。</p>
+    <p class="g-p">（編輯觀點：Sandbox 是最早期階段，距離「業界標準」還有孵化與畢業兩關，別把今天的新聞讀成定局。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>戰場移到執行期。</b>agent 能不能上生產，卡在隔離與治理，不在模型分數。</p>
+      <p><b>治理權要外放。</b>安全層交給基金會，採用方才敢押注。</p>
+      <p><b>看階段，不看標題。</b>Sandbox 只是入口，離標準化還早。</p>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；專案歸屬與階段依原文敘述。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-11 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

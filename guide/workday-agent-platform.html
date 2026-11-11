@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — Agent 平台：四個人把原型時間砍掉兩個數量級 · AI 每日動態檔案</title>
+<meta name="description" content="Workday 以 4 人小組、LangGraph 與 LangSmith 建內部 agent 平台，原型從 4–5 個月壓到不到一天，A2A／MCP 隨 agent server 內建；一般 agent 團隊只剩「這個 agent 做什麼」要回答。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>Agent 平台：四個人把原型時間砍掉兩個數量級</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Workday 資深機器學習工程師 Alex Gatto 受訪，談內部 agent 平台如何用 LangGraph 與 LangSmith 建成——廠商客戶案例（LangChain 部落格）</p>
+    <p class="g-meta">
+      <span>LangChain Blog（Workday 案例）</span>·<span>2026-11-10 發布</span>·<span>2026-11-11 收錄</span>·
+      <a href="https://www.langchain.com/blog/how-workday-built-an-enterprise-scale-ai-agent-platform-with-langgraph-and-langsmith" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>4 → 約 30 人</b><span>平台小組起始規模與現況，原文引述團隊規模「已超過三倍」</span></div>
+    <div class="g-stat"><b>4–5 個月 → 不到 1 天</b><span>單一 agent 從零到 staging 環境的時間，含認證與安全需求</span></div>
+    <div class="g-stat"><b>A2A ＋ MCP</b><span>兩個 agent 互通協定隨 agent server 內建，原文稱「已在生產」</span></div>
+    <div class="g-stat"><b>一半以上 Fortune 500</b><span>Workday 客戶規模（原文自述）；稽核與法遵的要求來自企業軟體本身</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">先把「每個團隊都要重做一次」的重活收成平台，agent 團隊只剩一件事要想：這個 agent 到底做什麼。</p>
+
+    <p class="g-p">Workday 做 HR、財務與 IT 的雲端系統，客戶含過半 Fortune 500。它要在 2026 年底前把 agent 推上生產。</p>
+    <p class="g-p">難處不是模型，是流程：任何內部服務要上線，都得先過稽核、法遵與資料保留政策。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>三層平台，一層治理</b> — 誰管權限、誰管協定、誰管圖（本站重繪）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>1 · Agent System of Record</b><small>治理層：先上線的產品</small><span class="pi">governance</span></div>
+          <div class="ring-inner"><b>它決定每個 agent 能碰哪些 API</b> — 平台小組另建後端伺服器與評測設施撐住它</div>
+        </div>
+        <div class="ring">
+          <div class="ring-lb"><b>2 · Agent Server</b><small>標準化基礎設施</small><span class="pi">runtime</span></div>
+          <div class="ring-inner"><b>A2A 與 MCP 內建</b> — 高層問到協定策略時，團隊直接答「已經在生產」</div>
+        </div>
+        <div class="ring ring--core">
+          <div class="ring-lb"><b>3 · Workday LangChain</b><small>自製 Python SDK</small><span class="pi">SDK</span></div>
+          <div class="ring-inner"><b>LangChain 原語 + 內部服務</b> — 走 LLM gateway、RAG 檢索服務與其他內部工具</div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑</b>：開發者改 graph，server 立刻反映；LangSmith 的追蹤與評測回到下一版 graph</span></div>
+      <p class="x-src">本站重繪，非原文圖；原文以文字描述分層，未給此圖順序與回饋箭頭。</p>
+    </figure>
+
+    <h2 class="g-h2">選擇留下的自由度，與被收走的雜事</h2>
+    <p class="g-p">平台明確不替 agent 造型。原文對比的是把 agent 建模成「一連串對話」或「角色人設」的做法。</p>
+    <p class="g-p">LangGraph 給的是圖：從最簡單的 ReAct 迴圈，到完全決定性的工作流，都同一套。</p>
+    <p class="g-p">決定權留給寫 agent 的人，平台不預判 agent 該長什麼樣——這是原文反覆強調的設計取捨。</p>
+    <p class="g-p">SDK 則把「Workday 版本」的每個 AI 概念重做一遍——閘道與檢索都在裡面。</p>
+    <p class="g-p">工程師 Alex Gatto 的說法是：LangChain 每推出一個 AI 概念，他們就試著在 Workday 做一個同概念的 SDK。</p>
+    <p class="g-p">平台有兩組使用者：內部寫 agent 的工程團隊，以及那些 agent 最終服務的客戶。</p>
+    <p class="g-p">四人要扛的範圍原文列得很清楚：可長跑的 agent server、綁稽核政策的資料存取、協作式評測平台，以及把前三者包起來的 SDK。</p>
+    <p class="g-p">這四件事任何一件單獨做都不難，難的是四個人同時做，還要能通過企業級的稽核。</p>
+    <p class="g-p">時間壓力來自上面的目標：2025 年看到 agent 的市場機會，就訂下 2026 年底前要有 agent 進生產。</p>
+    <p class="g-p">但 Workday 跑的是人資、財務與 IT 資料，任何一個 agent 碰到不該碰的欄位都是事故。</p>
+    <p class="g-p">所以第一個產品不是 agent，而是治理層——先能回答「這個 agent 可以呼叫哪些 API」。</p>
+    <p class="g-p">SDK 的存在理由也類似：所有呼叫都繞進內部 LLM 閘道與 RAG 服務，權限與稽核才收得攏。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>項目</th><th>平台直接給</th><th>原文限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="項目"><b>協定</b></td><td data-l="給">A2A、MCP</td><td data-l="限定">隨 agent server 內建，「已在生產」</td></tr>
+          <tr><td data-l="項目"><b>可觀測性</b></td><td data-l="給">LangSmith 追蹤與評測</td><td data-l="限定">原文未給評測覆蓋率或通過率</td></tr>
+          <tr><td data-l="項目"><b>認證與安全</b></td><td data-l="給">staging 環境就緒</td><td data-l="限定">稽核、法遵、資料保留仍要自己滿足</td></tr>
+          <tr><td data-l="項目"><b>後端維運</b></td><td data-l="給">agent server</td><td data-l="限定">工程師原話：「後端不是問題」</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">「免費拿到」在組織裡的意思是：被問到時不用先做功課，協定策略的答案是既有事實。</p>
+    <p class="g-p">結果是時間尺度的變化：原型 4 到 5 個月，而且不保證能上生產；現在不到一天就有 staging 環境。</p>
+    <p class="g-p">而且那個 staging 環境已夾帶認證與安全需求，不是只會跑的 demo。</p>
+    <p class="g-p">原文沒給「上生產」的數量，只說平台小組的人數與投入都在增加，這是最誠實的成效指標。</p>
+    <p class="g-p">（編輯觀點：這篇真正賣的是「治理先行」的順序，而不是某個 agent 多聰明。）</p>
+    <p class="g-p">節省下來的注意力去了哪裡？原文的答案很直白：只剩下「這個 agent 做什麼、圖長什麼樣」。</p>
+    <p class="g-p">代價是平台小組得持續維護那層抽象並跟上遊改版；原文對擴編的解釋是與 LangChain 合作的成功。</p>
+    <p class="g-p">如果把這篇當採購參考，重點是它示範了「先治理、再擴編」的順序，而不是某個框架比較好。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>平台化的收益是「注意力預算」。</b>小組從 4 人長到約 30 人，替 agent 團隊省下的是注意力。</p>
+      <p><b>治理層要先上線，不是後補。</b>先定義 agent 能碰哪些 API，再談擴編。</p>
+      <p><b>協定要選了才不會卡。</b>A2A／MCP 內建，等於免掉一次架構重工。</p>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；成效數字為 Workday 與 LangChain 自述，無第三方驗證。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-11 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

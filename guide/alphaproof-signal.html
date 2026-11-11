@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 形式驗證：agent 六百萬行 Lean，把 Signal 加密證到程式碼 · AI 每日動態檔案</title>
+<meta name="description" content="Google DeepMind 的 AlphaProof Code 用 Gemini Carbon agent 產出超過 600 萬行 Lean 證明，對實際部署的 Signal 協定程式碼做到深度形式驗證；流程四週，過去專家團隊需數年，最後僅 1% 程式碼需人工複核。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>形式驗證：agent 六百萬行 Lean，把 Signal 加密證到程式碼</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：〈Introducing AlphaProof Code: a breakthrough in verifying complex software at depth〉——Google DeepMind 技術公告，含 Signal 技術長 Ehren Kret 評論</p>
+    <p class="g-meta">
+      <span>Google DeepMind</span>·<span>2026-11-10 發布</span>·<span>2026-11-11 收錄</span>·
+      <a href="https://deepmind.google/blog/introducing-alphaproof-code/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>600 萬行以上</b><span>agent 產出的 Lean 證明量，Lean 會逐行自動檢查</span></div>
+    <div class="g-stat"><b>4 週</b><span>整條驗證流程的時間；原文稱同類工作過去需專家團隊數年</span></div>
+    <div class="g-stat"><b>1%</b><span>agent 自查後仍標給人複核的程式碼比例，其餘交給 Lean</span></div>
+    <div class="g-stat"><b>2 個真實 bug</b><span>回灌舊 bug 測試，系統兩次都證明該版本不安全</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">驗到設計層不算完，要一路驗到裝置上跑的那份編譯後程式碼——漏洞通常就藏在兩者之間的縫。</p>
+
+    <p class="g-p">形式驗證是安全保證的最高標準：用數學證明程式沒有特定缺陷，勝過千次測試。</p>
+    <p class="g-p">代價是人力。過去幾十年，專家的協定分析多半停在設計層，因為跨到實作層的複雜度是另一個量級。</p>
+    <p class="g-p">這個落差有意義：漏洞常出現在設計與實作之間，而那段程式碼過去幾乎沒被數學證過。</p>
+    <p class="g-p">Lean 是這裡的關鍵工具：它是一套程式語言兼證明助理，寫出來的證明會被機器逐行檢查。</p>
+    <p class="g-p">換句話說，agent 不能「說服」任何人，只能交出 Lean 願意接受的證明。</p>
+    <p class="g-p">「多 LLM」的意思是分階段用不同模型：規格階段混用多個模型討論，證明階段交給 Gemini Carbon。</p>
+    <p class="g-p">AlphaProof Code 的做法像研究團隊分工：人與 AI 一起決定「要證什麼」，再由一群 agent 去證。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/alphaproof-signal/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/alphaproof-signal/01.webp" alt="三步流程圖：規格與編譯後程式碼送進不受信任的證明 agent 團隊，再由受信任的閘門以 Lean 驗證，產出定理與證明。" width="1200" height="675" loading="lazy" decoding="async"></a>
+      <figcaption>這張圖是整件事的骨架：左邊人寫規格，中間 agent 產證明，右邊 Lean 當唯一裁判——agent 再怎麼跑，證明不被 Lean 接受就等於沒做。<span class="g-fig-src">圖／deepmind.google，<a href="https://deepmind.google/blog/introducing-alphaproof-code/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <h2 class="g-h2">誰負責什麼：人的位置被縮到規格與抽查</h2>
+    <p class="g-p">第一步，研究員與多個模型合作，把 Signal 的安全目標翻成形式化規格，每一條都由人審過。</p>
+    <p class="g-p">這一步是整件事的天花板：規格沒寫到的性質，後面證得再完美也證明不了。</p>
+    <p class="g-p">第二步，Gemini Carbon 驅動的 agent 做證明；Lean 逐行檢查，擋掉「看起來對」的推導。</p>
+    <p class="g-p">第三步，agent 自己審自己的證明，標出需要人再看的地方，只佔 1%——其餘由機器保證。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>階段</th><th>誰做</th><th>產出</th><th>原文限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="階段"><b>規格</b></td><td data-l="誰">人＋多個模型</td><td data-l="產出">形式化安全目標</td><td data-l="限定">每一條都經人類專家審查</td></tr>
+          <tr><td data-l="階段"><b>證明</b></td><td data-l="誰">Gemini Carbon agent</td><td data-l="產出">600 萬行以上 Lean</td><td data-l="限定">Lean 自動檢查，非人眼</td></tr>
+          <tr><td data-l="階段"><b>抽查</b></td><td data-l="誰">agent 標記＋人</td><td data-l="產出">待複核清單</td><td data-l="限定">約 1% 程式碼</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 class="g-h2">怎麼確認它真的會抓錯</h2>
+    <p class="g-p">DeepMind 在隔離副本裡放回兩個真實、先前已修掉的 bug，測試系統能不能分辨。</p>
+    <p class="g-p">兩次都產出機器可檢的證明：該版本不安全。這是「驗證器沒有只會說好」的證據。</p>
+    <p class="g-p">驗的範圍也值得記：訊息在裝置暫時被攻破前後都保持受保護，這類性質要在實作層才驗得出來。</p>
+    <p class="g-p">四週完成，對照的是「歷史上需專家團隊多年」這個背景，而非某個基準執行。</p>
+    <p class="g-p">Signal 技術長 Ehren Kret 的說法是：過去的形式驗證只能覆蓋較小部分，這次的做法能顯著擴大範圍。</p>
+    <p class="g-p">對實務的意義不是「AI 會寫證明」，而是「驗證成本降到有機會排進產品時程」。</p>
+    <p class="g-p">代價是流程要重配：規格得寫得更正式，團隊也要有能力讀懂 agent 標出的那 1%。</p>
+    <p class="g-p">六百萬行的量級也說明一件事：這種規模的證明不可能靠人複核，Lean 的角色無法替代。</p>
+    <p class="g-p">（編輯觀點：真正的門檻不是生成證明，是「規格寫對」——那一步仍由人負責，也仍可能出錯。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>驗到程式碼才算驗完。</b>設計層與實作層之間的縫，正是漏洞的住處。</p>
+      <p><b>可信的裁判比聰明的 agent 重要。</b>Lean 不收的證明，一律不算數。</p>
+      <p><b>人的工作變少但沒消失。</b>規格與 1% 抽查，仍是成敗關鍵。</p>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；工時與比例為 Google DeepMind 自報，未附第三方複核報告。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-11 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
