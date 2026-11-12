@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 自架 Managed Agents：換的是營運位置，不是安全模型 · AI 每日動態檔案</title>
+<meta name="description" content="Anthropic 自架版 Managed Agents 進 private beta：harness、sandbox、credential、session history 全搬回自家環境，伺服器與資料庫自營；四條安全原則在三種部署姿態下一致，模型請求有四個去向。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>自架 Managed Agents：換的是營運位置，不是安全模型</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Anthropic（Claude）產品公告，宣布自架版 Managed Agents 進入 private beta，並說明貫穿三種部署姿態的四條安全原則；廠商自述，無第三方驗證。</p>
+    <p class="g-meta">
+      <span>Anthropic（Claude）</span>·<span>2026-11-12 發布</span>·<span>2026-11-12 收錄</span>·
+      <a href="https://claude.com/resources/articles/self-hosted-claude-managed-agents" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>4 個部分</b><span>harness、sandboxes、credentials、session history 全在你的雲或地端</span></div>
+    <div class="g-stat"><b>3 種姿態</b><span>Anthropic 全託管／只自架 sandbox／整套自架，原則都適用</span></div>
+    <div class="g-stat"><b>5 個去向</b><span>模型請求可打 Anthropic 直連、Amazon Bedrock、Google's Agent Platform、Microsoft Foundry 或自家 gateway</span></div>
+    <div class="g-stat"><b>private beta</b><span>需向 Anthropic 客戶團隊申請；原文未給名額、價格與 GA 時間</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">自架的賣點不是把 sandbox 圍起來，而是把整個控制平面搬回自家網路——安全設計其實沒有換一套。</p>
+
+    <h2 class="g-h2">搬走的是營運位置</h2>
+    <p class="g-p">Managed Agents 是一組可組合 API，提供 agent harness、sandboxes、credential 處理與 session 歷程，目標是讓長跑型 agent 進生產。</p>
+    <p class="g-p">原文的演進分兩步：先在 Claude Platform 上做託管服務，再補上自架 sandbox，給要把程式碼留在自家環境的團隊。</p>
+    <p class="g-p">這次整包搬進來：Managed Agents server、它的資料庫，以及跑 shell 與檔案工具的 workers 都由你營運。</p>
+    <p class="g-p">推力來自工作量變重。原文列的例子是修壞掉的 build、測 release、分流告警、清 bug backlog，全都無人看管地跑在你的程式碼上。</p>
+    <p class="g-p">（編輯推論：權限給到這種程度，託管與自架的差別就從資料落地變成責任歸屬。）</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一次工具呼叫的路徑</b> — 誰呼叫模型、誰拿 credential、誰跑程式碼</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">harness → 模型</span><span class="tr"><i>agent loop 送請求；去向可選 Anthropic、Bedrock、Google's Agent Platform、Foundry 或自家 gateway</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">模型 → harness</span><span class="tr"><i>回傳工具呼叫；agent loop 與 session 歷程都在 sandbox 外</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">harness → 外部 proxy</span><span class="tr"><i>MCP 工具與支援的 API 呼叫，由 sandbox 外的 proxy 從 vault 取 credential 加進請求</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">→ sandbox</span><span class="tr"><i>工具要用時才啟動，跑 shell 與檔案工具；agent 不依賴同一個 sandbox 撐完整場 run</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">sandbox → session</span><span class="tr"><i>紀錄寫回 sandbox 外的事件日誌，session history 存在你自己的資料庫</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重繪，非原文圖；原文附一張架構圖（Client applications → Managed Agents API → Server → work queue → Sandboxes，另有 PostgreSQL、MCP 內部工具與 Observability，模型推論跨網路邊界），但未給本圖 01–05 的呼叫編號順序。模型去向與 ZDR 屬通則，原文未說明各姿態的實作差異。</p>
+    </figure>
+
+    <p class="g-p">開發者不必改寫法：自架版與託管版用的是同一組 core API。</p>
+    <p class="g-p">（編輯推論：四個部分可分別託管或自架，才讓「只自架 sandbox」這種混搭姿態成立。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三種姿態，四條原則照樣成立</h2>
+    <p class="x-grid-h">並列選項，原文未給排序；括號是「誰的機房」</p>
+    <div class="x-grid">
+      <div class="c"><b><i>A</i>全託管</b><small>基礎設施 Anthropic 跑，你只寫 agent（Claude Platform）</small></div>
+      <div class="c"><b><i>B</i>只自架 sandbox</b><small>程式碼留自家環境，控制平面仍託管</small></div>
+      <div class="c"><b><i>C</i>整套自架</b><small>harness、sandbox、credential、session 全在你家，伺服器與資料庫自營</small></div>
+    </div>
+    <p class="g-p">原文說得很直接：四條原則在 A、B、C 三種情況都適用，包括你自己經營整台服務時。</p>
+    <p class="g-p">自架多出來的是營運責任，不是另一套安全設計——原文只用一句話帶過，這卻是選型的關鍵。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">只自架 sandbox 夠不夠？原文只給動機</h2>
+    <p class="g-p">原文對需求的描述停在動機層：agent 的權限大到會碰內部系統時，有些團隊要的是整個服務在自己環境，而不只是 sandbox。</p>
+    <p class="g-p">它也補了一句現實——在那之前，這條路等於自己把平台造出來。這次公告要解的就是這件事。</p>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>三條路的判斷點</b> — 條件分支，不是主流程</figcaption>
+      <div class="x-dec">
+        <p class="q">你的 agent 碰到哪一層？</p>
+        <div class="brs">
+          <div class="br"><span class="tag">只碰程式碼</span><b>B · 自架 sandbox</b><small>程式碼留自家環境，控制平面仍託管</small></div>
+          <div class="br"><span class="tag">要碰內部系統</span><b>C · 整套自架</b><small>harness 到資料庫全在你家，維運也歸你</small></div>
+          <div class="br"><span class="tag">資料可託管</span><b>A · 留在託管版</b><small>基礎設施 Anthropic 跑，你只寫 agent</small></div>
+        </div>
+      </div>
+      <p class="x-src">本站重繪（編輯推論）：分支依原文兩段動機改寫，原文未給判準、門檻或成本比較，也未建議任何一條路。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">四條原則：限制寫進架構，不靠人盯</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>原則</th><th>機制（原語）</th><th>原文說法與限定</th></tr></thead>
+        <tbody>
+          <tr><td data-l="原則"><b>1 分離</b></td><td data-l="機制">harness 與 sandbox</td><td data-l="限定">harness 是 brain、負責呼叫 Claude；sandbox 是 hands、跑 agent 的程式碼；agent loop、session 歷程、vault 的 secret 都留在 sandbox 外</td></tr>
+          <tr><td data-l="原則"><b>2 credential</b></td><td data-l="機制">vault ＋ sandbox 外的 proxy</td><td data-l="限定">secret 不進 sandbox；MCP 工具與「支援的」API 呼叫由 proxy 代加；自架時也可以把 credential 另存自家 secrets manager</td></tr>
+          <tr><td data-l="原則"><b>3 出口</b></td><td data-l="機制">allowed hosts 清單</td><td data-l="限定">可以為每個 environment 設 allowed hosts 清單，清單外的 host 一律封鎖；自架 sandbox 時改設在自家防火牆</td></tr>
+          <tr><td data-l="原則"><b>4 稽核</b></td><td data-l="機制">OpenTelemetry 匯出</td><td data-l="限定">記錄每一步的工具呼叫與回傳，送到你既有的監控工具，與其他系統的活動並看</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">原文的因果是：agent 無人看管，就不能靠人逐步檢查，所以限制得內建在系統裡。</p>
+    <p class="g-p">分離有實際好處：agent 不依賴同一個 sandbox 撐完整場 run，sandbox 有工具要用才啟動。</p>
+    <p class="g-p">出口限制寫得最具體——修 build 的 agent，清單上可能就只有你的 git host 與 package registry。</p>
+    <p class="g-p">同一條原則有兩個落點：託管時寫在 environment 設定，自架 sandbox 時改設在自家防火牆。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">資料留在誰手上</h2>
+    <p class="g-p">session 歷程存在你自己的資料庫；組織若與 Anthropic 有 ZDR（零資料留存），對送往 Claude 的請求一樣適用，與其他 Messages API 呼叫相同。</p>
+    <p class="g-p">（編輯推論：ZDR 保障的是送往 Claude 的請求，不含你自己的資料庫裡留了什麼。）</p>
+    <p class="g-p">原文未給資源規格、併發上限、價格與 GA 時間，也未給任何效能或成本數字。</p>
+    <p class="g-p">（編輯觀點：自架把成本從 API 帳單換成一個有狀態服務的維運；值不值得，取決於 agent 是否真的碰到內部系統。）</p>
+    <p class="g-p">原文在合規上把兩者拉平：託管與自架在 ZDR 上被寫成同一件事，適用範圍都限於送往 Claude 的請求。</p>
+    <p class="g-p">（編輯觀點：原文沒談升級、備份與失敗復原；這三件事一旦自營，就落回你家的 on-call。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>自架不是自造平台。</b>整套 harness 與 API 一起搬，換的是營運位置。</p>
+      <p><b>安全靠分離，不靠信任。</b>credential 與 session 留在 sandbox 外才成立。</p>
+      <p><b>先算營運帳。</b>伺服器、資料庫、worker 都歸你，原文未給成本。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenRouter Blog</span><a href="openrouter-agent-loop-guard.html">智能代理：四道閘門把無限迴圈擋在第三次重複呼叫</a><span class="d">2026-11-12</span></div>
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="a2ui-1-0.html">生成式 UI 定案：協定只管描述，畫面歸 App 自己畫</a><span class="d">2026-11-11</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog（Workday 案例）</span><a href="workday-agent-platform.html">Agent 平台：四個人把原型時間砍掉兩個數量級</a><span class="d">2026-11-10</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述內容出自原文，圖解與小標為編輯整理。原文僅附一張架構圖；圖解 A（依原文文字另繪，非原圖）、並列選項與表格均為本站整理，原文未給本圖的呼叫編號順序與該對照。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-12 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

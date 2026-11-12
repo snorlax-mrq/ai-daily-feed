@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 無限迴圈的四道閘門 · AI 每日動態檔案</title>
+<meta name="description" content="OpenRouter Agent SDK 導讀：doom-loop 偵測在第 3 次相同呼叫 block、第 6 次 stop，配 loopKey、stepCountIs／maxCost 與 API key 額度；六個模型 18 次跑，工具呼叫 314 降到 64。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>智能代理：四道閘門把無限迴圈擋在第三次重複呼叫</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：OpenRouter Blog〈How to Stop an AI Agent Stuck in an Infinite Loop〉——教學文，用一個只會逾時的帳務 agent 貫穿四道閘門</p>
+    <p class="g-meta">
+      <span>OpenRouter Blog</span>·<span>2026-11-12 發布</span>·<span>2026-11-12 收錄</span>·
+      <a href="https://openrouter.ai/blog/tutorials/ai-agent-infinite-loop/" target="_blank" rel="noopener">閱讀官方原文</a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>3 ／ 6 次</b><span>第 3 次相同呼叫 block、第 6 次 stop（doom-loop 預設階梯）</span></div>
+    <div class="g-stat"><b>6 個模型 × 3 次</b><span>開與不開偵測各一輪，每個條件 18 次、合計 36 次跑</span></div>
+    <div class="g-stat"><b>314 → 64</b><span>開偵測前後各 18 次跑的工具呼叫總數；花費 $0.29 → $0.05</span></div>
+    <div class="g-stat"><b>41 次／$0.0309</b><span>未設偵測的示範 run；擋下它的是 stepCountIs(40)</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">迴圈不是模型笨，是迴圈裡沒有東西在數次數：同一個失敗工具、同樣的參數，再試一次永遠看起來合理。四道閘門才擋得住。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>四道閘門的作用範圍</b> — 誰包住誰：跨 session → 單次 run → 單次呼叫</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>最外層 · API key 的 credit limit</b><small>跨所有 session 的總額</small><span class="pi">OpenRouter 端</span></div>
+          <div class="ring-inner"><b>放在你的程式碼之外</b> — 由 OpenRouter 端強制，agent 程式有 bug 也有效</div>
+        </div>
+        <div class="ring">
+          <div class="ring-lb"><b>中層 · stopWhen</b><small>每一次 run 的封頂</small><span class="pi">stepCountIs／maxCost</span></div>
+          <div class="ring-inner"><b>管步數與成本</b> — 不論迴圈成因為何，run 到這裡就得停</div>
+        </div>
+        <div class="ring ring--core">
+          <div class="ring-lb"><b>核心 · doom-loop 偵測 ＋ loopKey</b><small>單次呼叫的重複判定</small><span class="pi">doomLoop: true</span></div>
+          <div class="ring-inner"><b>observe 2／block 3／stop 6</b> — loopKey 決定哪些呼叫算「同一個」</div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋</b>：被擋下的呼叫跳過 execute，改成回一個工具錯誤，明說再試不會改變結果</span></div>
+      <p class="x-src">本站重繪，非原文圖。原文分「SDK 內三道＋API key 一道」；圖改依作用範圍（跨 session／單次 run／單次呼叫）巢狀排列，原文未給此巢狀順序。</p>
+    </figure>
+
+    <p class="g-p">agent 迴圈的預設結束條件只有一個：模型不再要求呼叫工具（除非你另外設了 stopWhen 上限）。工具一直失敗，模型就沒有理由給出這個答案。</p>
+    <p class="g-p">錯誤訊息原封不動回到對話，系統指令仍寫著完成任務，於是「再試一次」看起來永遠是下一步。</p>
+    <p class="g-p">示範 agent 的指令本身就寫著「工具失敗就重試」「沒拿到總額不要停」——指令照做，迴圈就沒有終點。</p>
+    <p class="g-p">原文的重點很直白——除非你加程式碼，迴圈裡沒有任何東西在數嘗試次數。</p>
+    <p class="g-p">而且每回合都重送整段對話，包含先前的每一次失敗：示範 run 的 input 從 131 個 token 長到 3,262，單回合成本接近四倍。</p>
+    <p class="g-p">（編輯觀點：變貴的是歷史，不是模型；提示層叫它別重試，也擋不住一個一直失敗的工具。）</p>
+    <p class="g-p">一個跑整夜的迴圈，原文說可能燒掉數千美元。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/openrouter-ai-blog-tutorials-ai-agent-in/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/openrouter-ai-blog-tutorials-ai-agent-in/01.webp" alt="原文折線圖：未設偵測的 Mistral Large 4 示範 run，累計成本從第 1 回合的近零一路上升，41 回合後為 0.0309 美元" width="1200" height="676" loading="lazy" decoding="async"></a>
+      <figcaption>成本沿著回合數一路疊上去，41 回合共 $0.0309。這條線不是模型自己收斂的：41 次呼叫全部相同，run 是被 <b>stepCountIs(40)</b> 切斷的。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／OpenRouter Blog，<a href="https://openrouter.ai/blog/tutorials/ai-agent-infinite-loop/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">更刺眼的是最後一則回答：模型自己說，那 41 次嘗試都卡在逾時。它每一回合都知道，還是照樣再試。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">四道閘門的原語，與各自的失效邊界</h2>
+    <p class="g-p">三道在 agent 內，用 <code>@openrouter/agent</code> 0.11.0 就能開；第四道是 API key 的 credit limit，由 OpenRouter 端強制。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>閘門</th><th>原語</th><th>原文限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="閘門"><b>1 偵測</b></td><td data-l="原語"><code>doomLoop: true</code></td><td data-l="原文">預設階梯：streak 到 2 先 observe、3 轉 block、6 才 stop</td></tr>
+          <tr><td data-l="閘門"><b>2 判定</b></td><td data-l="原語"><code>loopKey</code></td><td data-l="原文">有些模型微改參數就繞過偵測；loopKey 把參數正規化後再比對</td></tr>
+          <tr><td data-l="閘門"><b>3 封頂</b></td><td data-l="原語"><code>stopWhen: [stepCountIs(n), maxCost(x)]</code></td><td data-l="原文">不論迴圈成因為何都封頂；上限觸發時，模型已經要求的那次仍會執行</td></tr>
+          <tr><td data-l="閘門"><b>4 額度</b></td><td data-l="原語">API key 的 credit limit</td><td data-l="原文">放不進額度的請求回 402、<code>limit_source: "openrouter_key_limit"</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+
+    <p class="g-p">判定細節值得記：fingerprint 用工具名稱加參數，先正規化，JSON key 順序調換不算新呼叫。</p>
+    <p class="g-p">而且模型要先看過上一次的結果才再問，才算一次重複；同一回合連問 5 次只算 1 次。</p>
+    <p class="g-p">上限那層留了尾巴：示範 run 是 41 次而非 40，多的那次是封頂生效時模型已排隊的呼叫。</p>
+    <p class="g-p">四道閘門預設都不生效：前兩道要自己開 <code>doomLoop</code> 與 <code>loopKey</code>，第三道要自己寫 <code>stopWhen</code>，第四道要自己在 API key 上設額度。</p>
+    <p class="g-p">原文給了建議值：自家常態跑 4–6 回合、花 $0.0018–$0.0053，所以留 15 步與 $0.01 的空間；示範裡的 40 步只是為了讓 run 一定會結束。</p>
+    <p class="g-p">機制要分清：偵測與封頂是 <code>callModel</code> 的選項，<code>loopKey</code> 掛在工具定義上；hooks 只負責觀測與自訂失敗計數，不是閘門本體。</p>
+    <p class="g-p">判成 stop 時，run 直接以 doom_loop 收尾，不會再送出下一次請求。</p>
+    <p class="g-p">四道閘門對應四種失敗：重複、微調參數後的重複、跑太久、跑太多錢；單靠一個數字封頂，只保證「停」。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">六個模型、各 18 次跑：偵測把 314 次呼叫壓到 64</h2>
+    <p class="g-p">示範 agent 只有一個工具 <code>fetch_invoice</code>，永遠以帳務服務逾時收場。</p>
+    <p class="g-p">同一個 agent、同一句輸入，六個模型各跑三次，開與不開偵測各一輪，每輪 18 次、合計 36 次跑。</p>
+    <p class="g-p">（編輯觀點：測試設計把變數壓到只剩「換模型」與「偵測開關」兩個。）</p>
+    <p class="g-p">開偵測，六個模型全部在第 3 次相同呼叫被擋下；不開，18 次裡有 4 次一路重試到 40 步上限。</p>
+    <p class="g-p">開偵測的 16 次，都在兩次真正的工具呼叫後結束；總呼叫 314 降到 64，花費 $0.29 降到 $0.05。</p>
+    <p class="g-p">其中一次 run 的收尾長這樣：2 次真呼叫、$0.0034，verdict 寫著連續 6 回合以相同參數呼叫同一個工具。</p>
+    <p class="g-p">但迴圈本身並不穩定：Grok 4.7 同一輸入跑出 41、12、41 次呼叫，一次乾淨的測試不算證明。</p>
+    <p class="g-p">（編輯觀點：每個模型只有 3 次樣本，這個量級足以指出方向，不足以當成成功率承諾。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>先裝計數器，再談模型好壞。</b>沒有東西在數次數，迴圈就會自己長大。</p>
+      <p><b>偵測要配 loopKey。</b>參數微改是繞過偵測最便宜的一招。</p>
+      <p><b>額度上限是最後一道，不是唯一一道。</b>它在 agent 之外，而且只看總額。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Anthropic（Claude）</span><a href="claude-managed-agents-self-hosted.html">自架 Managed Agents：換的是營運位置，不是安全模型</a><span class="d">2026-11-12</span></div>
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="a2ui-1-0.html">生成式 UI 定案：協定只管描述，畫面歸 App 自己畫</a><span class="d">2026-11-11</span></div>
+      <div class="g-relrow"><span class="s">LangChain Blog（Workday 案例）</span><a href="workday-agent-platform.html">Agent 平台：四個人把原型時間砍掉兩個數量級</a><span class="d">2026-11-10</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。本文數據為 OpenRouter 自家量測（自報，無第三方驗證），圖解 A 為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-12 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

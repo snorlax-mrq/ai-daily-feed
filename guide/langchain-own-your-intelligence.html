@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 擁有智能：模型可以買，會複利的系統要自己管 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain 的 Harrison Chase 主張：通用模型不構成優勢。企業要控制 agent 系統的 model／harness／context 三層，並管好成本、品質、可動範圍與事後追溯；全篇無量化數據，屬廠商立場文。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>擁有智能：模型可以買，會複利的系統要自己管</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain Blog〈Own Your Intelligence: The Key to Lasting AI Advantage〉——Harrison Chase 的立場文（In the Loop 專欄），論證「通用智能不構成優勢」</p>
+    <p class="g-meta">
+      <span>LangChain Blog（Harrison Chase）</span>·<span>2026-07-25 發布</span>·<span>2026-11-12 收錄</span>·
+      <a href="https://www.langchain.com/blog/own-your-intelligence" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>3 層</b><span>model／harness／context 都控制到，原文才算「擁有」agent 系統</span></div>
+    <div class="g-stat"><b>2 種用法</b><span>原文預測：五年內企業只有兩種用法——跑關鍵營運，或當產品賣</span></div>
+    <div class="g-stat"><b>4 項</b><span>上線後要管：成本、品質、可動範圍、事後可追溯</span></div>
+    <div class="g-stat"><b>0 個</b><span>全篇量化數據；唯一具名外部案例（Uber 成本）也未給數字（編輯統計）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">原文的命題很小：通用智能不構成優勢，優勢在你控制得到的那幾層——「擁有」不等於自建每一層。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>擁有範圍</b> — 一個 agent 系統，三層都要控制</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>agent system</b><small>原文：擁有它＝同時控制下面三層</small><span class="pi">原文</span></div>
+          <div class="x-grid">
+            <div class="c"><b><i>1</i>model</b><small>open-weight 或保留可換供應商的 optionality</small></div>
+            <div class="c"><b><i>2</i>harness</b><small>routing、工具、workflow、skills 全長在這</small></div>
+            <div class="c"><b><i>3</i>context</b><small>文件、政策、工具、偏好、組織知識、memory</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑</b>：traces 累積成回饋，每次改動配一個 eval；原文稱這是智能「隨使用而複利」的來源（memory 屬 context 那層）。</span></div>
+      <p class="x-src">本站重繪，非原文圖。原文寫明第一層是 model、第二層是 harness、第三層是 context，層序照原文；圖為本站重排，非原文圖。</p>
+    </figure>
+
+    <p class="g-p">原文的定義句：<em>擁有不是把 AI 堆疊每一層都自己蓋</em>，而是控制決定行為、決定學到什麼、決定成本、決定會不會變好的那幾層。</p>
+    <p class="g-p">界線用供應鏈講：零售商不自己造卡車、船與倉儲機器人，但要擁有決定採購、庫存流動與需求預測的那套系統。</p>
+    <p class="g-p">套回 AI：模型、算力、基礎設施可以買，把這些輸入變成自家智能的那套系統不能外包。</p>
+    <p class="g-p">原文把「擁有」拆成三塊：控制 agent 系統、掌握成本／品質／風險、讓智能隨使用複利；拆完之後，主張就變成三組可檢查的項目。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">通用模型不懂你的業務</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>理賠例子</b> — 「讀得懂」與「做得了」差在哪</figcaption>
+      <div class="x-cmp">
+        <div>
+          <b>通用模型做得到</b>
+          <p>讀懂保單文件、摘要一件理賠、解釋常見的承保概念</p>
+        </div>
+        <div class="after">
+          <b>真的動手處理，還要</b>
+          <p>這家公司的保單語言、各州法規、詐欺訊號、歷史理賠模式、升級規則、客戶分級、風險容忍度</p>
+        </div>
+      </div>
+      <p class="x-src">本站整理，非原文圖；原文為文字敘述的假想情境，未附客戶實測。</p>
+    </figure>
+    <p class="g-p">這些公司特有細節不在通用模型的權重裡；原文的說法很直接——它懂 deductible 這個字，但不懂這張保單、這位客戶、這個州、這批證據該怎麼處理。</p>
+    <p class="g-p">同一邏輯套在垂直 AI 創業：base model 不是你的產品，因為別人叫得到同一支 API。</p>
+    <p class="g-p">產品是模型外面那圈系統——處理的 workflow、檢索的 context、能動用的工具、定義品質的 evals、累積的 memory，以及每次客戶互動都在改進的回饋迴圈。</p>
+    <p class="g-p">原文的結論句：任何公司都能用 AI，但通用智能撐不出有意義的 ROI，也撐不出差異化產品。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三層的「擁有」各是什麼</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>層</th><th>原文怎麼定義「擁有」</th><th>原文的限定語或代價</th></tr></thead>
+        <tbody>
+          <tr><td data-l="層"><b>1 model</b></td><td data-l="定義">主權、可攜、部署控制重要時採 open-weight；或保住 model optionality，必要時換供應商</td><td data-l="限定">只說 optionality 兼具防禦（避鎖定）與進攻（新模型一出現就換），未給切換成本</td></tr>
+          <tr><td data-l="層"><b>2 harness</b></td><td data-l="定義">掌握 orchestration：routing、工具使用、workflow 步驟、skills</td><td data-l="限定">harness 封閉＝接受別人對「你的 agent 該怎麼運作」的假設</td></tr>
+          <tr><td data-l="層"><b>3 context</b></td><td data-l="定義">文件、政策、工具、skills、使用者偏好、組織知識與 memory</td><td data-l="限定">不擁有 context 與 memory，就不擁有系統累積出來的智能</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">三層分工原文寫得清楚：model 提供智能，harness 決定這份智能怎麼被套用，context 決定什麼在當下才算相關。</p>
+    <p class="g-p">（編輯觀點：可換模型是保險，保費是每換一次都要重跑評測、重調 harness；原文把進攻面講滿，沒把這筆成本算進去。）</p>
+    <p class="g-p">context 那層最重的是 memory：它決定系統是每次都從零開始，還是把每次做完的結果留在系統裡。</p>
+    <p class="g-p">原文的複利機制寫得具體：traces 留下每次執行的軌跡，回饋把它變成下次的依據，每改一次就補一個 eval；這些學習成果還要能帶著走，不能被供應商綁住。</p>
+    <p class="g-p">（編輯觀點：同一個模型換一套 harness 就是另一個產品，換掉 context 行為也會跟著變；「擁有」的份量在這一層。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">上線後，當一套作業系統管</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>四項管理面</b> — 並列，原文未規定順序</figcaption>
+      <p class="x-grid-h">四者並列，可各自取用；原文未給優先序</p>
+      <div class="x-grid">
+        <div class="c"><b><i>①</i>成本</b><small>可鎖在使用者、組織、agent 三個層級</small></div>
+        <div class="c"><b><i>②</i>品質</b><small>換模型、改 prompt、加工具，要判得出好壞</small></div>
+        <div class="c"><b><i>③</i>可動範圍</b><small>先定義系統能在哪裡行動</small></div>
+        <div class="c"><b><i>④</i>事後可追溯</b><small>它真的行動時，要知道發生了什麼</small></div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖；原文以四段文字分別陳述，未給這張對照表。</p>
+    </figure>
+    <p class="g-p">原文只把「成本可鎖」直接接到「可靠擴張」；其餘三項是它主張的同一個管理問題，不是四個獨立專案。</p>
+    <p class="g-p">風險那格原文的問法不是「會不會出錯」，而是先界定系統可以在哪裡行動。</p>
+    <p class="g-p">成本那格原文只點名 Uber 的教訓，沒有數字——這是全篇唯一的具名外部例子。</p>
+    <p class="g-p">品質不能假設：升級模型、改 prompt、加一個工具、調一段 workflow，都要答得出系統是變好還是退步。</p>
+    <p class="g-p">原文在這裡給了最硬的一句判準：量不出來，就談不上管。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">廠商立場文：哪幾句能查，哪幾句是主張</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>原文主張（類型）</th><th>可查核的部分</th><th>編輯評註</th></tr></thead>
+        <tbody>
+          <tr><td data-l="主張"><b>通用模型不懂你的業務</b>（機制陳述）</td><td data-l="可查核">模型權重確實不含保單語言、各州法規、詐欺訊號與客戶分級</td><td data-l="評註">理賠例子是假想情境，非客戶實測</td></tr>
+          <tr><td data-l="主張"><b>harness 封閉＝接受別人的假設</b>（立場）</td><td data-l="可查核">harness 確實決定 routing、工具與 workflow，這些是公司特有行為所在</td><td data-l="評註">開放 harness 要自付維運與升級，原文未計</td></tr>
+          <tr><td data-l="主張"><b>擁有就會複利</b>（預測）</td><td data-l="可查核">無數據，原文未給任何成效或對照</td><td data-l="評註">前提是 context 與 memory 的品質可量測</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="g-p">（編輯觀點：原文主張 harness 要開放、context 要自己留，這條結論剛好落在 LangChain 的產品線上；機制描述可查，該向誰買不可查。）</p>
+    <p class="g-p">讀法建議：把「通用模型不懂你的業務」當成可驗證的機制陳述，把「擁有就會複利」當成待驗證的預測。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>擁有＝控制，不是自建。</b>模型可買，harness 與 context 決定行為。</p>
+      <p><b>可換模型是保險，不是策略。</b>保費是每次換都要重跑評測。</p>
+      <p><b>沒有量化，複利只是說法。</b>原文自己要求品質要量、不要假設。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Anthropic（Claude）</span><a href="claude-managed-agents-self-hosted.html">自架 Managed Agents：換的是營運位置，不是安全模型</a><span class="d">2026-11-12</span></div>
+      <div class="g-relrow"><span class="s">OpenRouter Blog</span><a href="openrouter-agent-loop-guard.html">智能代理：四道閘門把無限迴圈擋在第三次重複呼叫</a><span class="d">2026-11-12</span></div>
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="a2ui-1-0.html">生成式 UI 定案：協定只管描述，畫面歸 App 自己畫</a><span class="d">2026-11-11</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）。原文為廠商立場文，全篇無量化數據、無第三方驗證；圖解 A 的層序照原文 first／second／third 排列，B／C 與對照表為本站整理，原文未給該對照。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-12 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 常駐 agent 資安：gateway 算可信，agent 算不可信 · AI 每日動態檔案</title>
+<meta name="description" content="OpenAI 公開全公司部署數百個 OpenClaw 常駐 agent 的控制項：remote harness 執行切開 gateway 與 agent、四道沙箱、模型 auto-review、獨立 agent 身分與全量日誌。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E8%B3%87%E5%AE%89%E8%88%87%E6%BC%8F%E6%B4%9E" class="day-catalog">資安與漏洞</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E8%B3%87%E5%AE%89%E8%88%87%E6%BC%8F%E6%B4%9E">資安與漏洞</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>常駐 agent 資安：gateway 算可信，agent 算不可信</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：OpenAI 官方工程部落格，說明全公司部署 OpenClaw 常駐 agent 時採用的隔離與審查控制——第一方部署經驗，成效敘述無第三方驗證</p>
+    <p class="g-meta">
+      <span>OpenAI Developers Blog（Kevin S Lin）</span>·<span>2026-11-12 發布</span>·<span>2026-11-12 收錄</span>·
+      <a href="https://developers.openai.com/blog/securing-persistent-agents-like-openclaw-at-openai" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>500+</b><span>原文末段稱 pilot 後全公司有超過 500 個 agent 在背景自主執行；前段另稱「數百個」OpenClaw agent</span></div>
+    <div class="g-stat"><b>4 道</b><span>沙箱控制面：network、workspace、process、secrets，全由靜態設定強制</span></div>
+    <div class="g-stat"><b>2 份設定</b><span>requirements.toml 只管「有哪些選項可用」，config.toml 才是實際設定</span></div>
+    <div class="g-stat"><b>1 個 agent 1 個身分</b><span>各綁一個 ChatGPT Service Account，推論憑證與使用者分開，可單獨關掉推論</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">威脅從內部來。OpenAI 的解法是先切信任邊界：gateway 算可信程式碼，agent 一律算不可信，再往外疊沙箱、模型審查與獨立身分。</p>
+
+    <p class="g-p">原文開場把兩種 agent 對比得很清楚：一般 codex session 有固定目標、有人盯；常駐 agent 24/7 在跑、範圍廣，還能未經使用者輸入就主動動手。</p>
+    <p class="g-p">傳統軟體的假設是設定與程式碼具決定性，威脅多半來自外部攻擊者。常駐 agent 會改自己的設定，也會為達目標寫任意程式碼。</p>
+    <p class="g-p">所以攻擊面翻轉成原文那句話：<em>攻擊從內部來</em>——agent 出現 misaligned（不對齊）動作時，沒有外部入侵者可以怪。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>威脅模型對照</b> — 為什麼外牆擋不住常駐 agent</figcaption>
+      <div class="x-cmp">
+        <div>
+          <b>傳統軟體</b>
+          <p>設定與程式碼具決定性；除軟體 bug 外，行為如設定所示。</p>
+          <p>威脅來源：<b>外部攻擊者</b>（原文：多半如此）。</p>
+        </div>
+        <div class="after">
+          <b>常駐 agent</b>
+          <p>會改自己的設定、為達目標寫任意程式碼；行為<b>沒有硬保證</b>。</p>
+          <p>威脅來源：<b>內部</b>——agent 的不對齊動作。</p>
+        </div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖；對照取自原文第三段敘述，原文以段落陳述、未給此左右對照形式。</p>
+    </figure>
+
+    <p class="g-p">這個翻轉決定後面所有設計：要防的主要不是入侵者，而是「會自己寫程式的執行者」。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">切開邊界：把設定者與被設定者分開放</h2>
+
+    <p class="g-p">做法是把可信的決定性邏輯與不可信的 LLM 執行隔開。可信的是 networking、identity、sandboxing 這類靜態程式。</p>
+    <p class="g-p">OpenAI 在開源專案實作 remote harness execution，讓 OpenClaw Gateway 跑在獨立容器，在 OpenAI 的部署裡甚至獨立叢集，與 agent harness 分離。</p>
+    <p class="g-p">分開之後，負責設定 agent 的 gateway 可以當可信程式碼對待，力氣集中在一件事：把 agent 工作負載當不可信程式碼沙箱起來。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>信任邊界切在哪</b> — 誰被當可信程式碼，誰被當不可信</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>1 · 可信控制面</b><small>照設定行為，除 bug 外可預期</small><span class="pi">trusted</span></div>
+          <div class="ring-inner"><b>OpenClaw Gateway ＋ networking／identity／sandboxing</b> — 傳統靜態程式；在 OpenAI 是獨立容器、獨立叢集</div>
+        </div>
+        <div class="ring ring--core">
+          <div class="ring-lb"><b>2 · 不可信執行面</b><small>動態生成程式碼，無硬保證</small><span class="pi">untrusted</span></div>
+          <div class="ring-inner"><b>agent ＋ 執行環境 ＋ 它寫的程式碼</b> — 邊界靠沙箱強制；四道控制見下表</div>
+        </div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖；原文以文字描述這道切分（remote harness execution），未畫層級圖，也未給沙箱四面的優先級。</p>
+    </figure>
+
+    <p class="g-p">沙箱不是一個開關，是四個面：網路、工作區、行程、secret。原文各自的限縮方式與設定證據如下表。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>控制面</th><th>原文做法</th><th>設定檔證據（原文節錄）</th></tr></thead>
+        <tbody>
+          <tr><td data-l="控制面"><b>network</b></td><td data-l="原文做法">組織管理的 allowlist，並對受限端點明示 deny</td><td data-l="設定證據"><code>managed_allowed_domains_only=true</code> 擋使用者自行擴充；allowed 僅 github.com、api.github.com、codeload.github.com（原文註：這是示例，要換成該工作負載實際需要的主機）；denied 含 pastebin.com、webhook.site、169.254.169.254</td></tr>
+          <tr><td data-l="控制面"><b>workspace</b></td><td data-l="原文做法">只允許寫入 agent 工作目錄</td><td data-l="設定證據"><code>:minimal</code> 唯讀、<code>openclaw-workspaces</code> 可寫、<code>read-only</code> 唯讀、<code>.ssh</code> 設 deny</td></tr>
+          <tr><td data-l="控制面"><b>process</b></td><td data-l="原文做法">靠 codex linux sandbox 做行程隔離</td><td data-l="設定證據">原文只給這一句；節錄的 config.toml 未列行程項</td></tr>
+          <tr><td data-l="控制面"><b>secrets</b></td><td data-l="原文做法">由 credential broker 管理，secret 對 agent 不可見</td><td data-l="設定證據">shell 環境排除 GH_TOKEN、GITHUB_TOKEN 等；原文註明<em>不隱藏存在可讀檔案裡的憑證</em></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">細節比原則值得抄：deny 清單含 pastebin、webhook.site 與雲端 metadata 位址。</p>
+    <p class="g-p">（編輯推論：這些都是現成的資料外送與取憑證通道，清單把 agent 當成可能的 exfiltration 管道，而不只是會被騙的受害者；原文未解釋選材依據。）</p>
+    <p class="g-p">兩份設定檔分工也值得學：requirements.toml 限制可用選項，config.toml 才是實際設定；danger-full-access 模式直接從可用範圍移除。</p>
+    <p class="g-p">搜尋只准 cached 模式，走 OpenAI 自家索引；apps 預設關閉，破壞性與 open-world 操作也預設停用。</p>
+    <p class="g-p">原文自己點明這層的性質：全部是靜態控制，靠的是傳統決定性程式碼。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">靜態控制之外：會隨算力變強的防線</h2>
+
+    <p class="g-p">靜態控制的極限是：模型變強，能繞的路徑也變多。原文因此補上「會隨算力擴展」的防線——另一個模型。</p>
+    <p class="g-p">Auto-review 讓第二個 agent 監看並核准主 agent 的動作。理由寫得很直白：凡事都要人核，人會被訓練成照單按同意。</p>
+    <p class="g-p">用 LLM 當過濾器，把人的注意力留給高價值核准。OpenClaw 與 Codex 都原生支援，OpenAI 在其 OpenClaw 部署裡對所有 agent 動作強制啟用。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>三類補強</b> — 各自負責一件事，互不替代（並列，非流程）</figcaption>
+      <p class="x-grid-h">並列三類控制；原文分節敘述，未給順序或優先級</p>
+      <div class="x-grid">
+        <div class="c"><b><i>①</i>誰核准</b><small>Auto-review：第二個 agent 過濾主 agent 的動作，人只看高價值核准</small></div>
+        <div class="c"><b><i>②</i>誰的身分</b><small>agent identity 與使用者分離，才能稽核「是 agent 還是人做的」</small></div>
+        <div class="c"><b><i>③</i>誰在看</b><small>control plane 每次設定變更與所有 agent turn 全量記錄，僅安全團隊少數人可讀</small></div>
+      </div>
+      <p class="x-src">本站整理；三類控制出自原文三個小節，原文未給彼此的順序、優先級或覆蓋率。</p>
+    </figure>
+
+    <p class="g-p">身分的關鍵字是「分開」：agent 有自己的身分，才能回答某個動作是 agent 還是使用者發起，也才能單獨關掉它的推論。</p>
+    <p class="g-p">原文也把兩件常混用的東西分清：agent identity 不同於 service account（給 bot 的獨立 API 存取），兩者要一起用。</p>
+    <p class="g-p">規格仍在成形：WAG 給 agent 自己的資源授權，XAA 走 OAuth 委派，讓 agent 代表使用者行動。</p>
+    <p class="g-p">在 OpenAI，每個 agent 的身分綁一個 ChatGPT Service Account，因此有自己的推論憑證，團隊也能替它接自訂外掛。</p>
+    <p class="g-p">可觀測性那節最絕對：全量記錄，但因為 agent turn 可能含敏感內容，日誌鎖住，只有安全團隊少數人能看。</p>
+    <p class="g-p">（編輯觀點：這幾層裡只有 auto-review 會隨模型變強而變強；沙箱擋的是已知路徑，日誌只能事後追。）</p>
+    <p class="g-p">原文最後把這套控制產品化：dev day 發表的 OpenClaw Enterprise 是開源、廠商中立的 agent control plane，用 standard codex preset 起 agent 就自帶多數防護。</p>
+    <p class="g-p">但仍在 pilot 階段，原文說目標是年底到 1.0；也自承常駐 agent 還在採用曲線開端，缺乏既定最佳實務。</p>
+    <p class="g-p">pilot 的成效是生產力與採用率大幅跳升，技術與非技術團隊都有（OpenAI 自報，原文未給數字）。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>先切信任邊界，再談沙箱。</b>gateway 可信、agent 不可信，隔離才有依據。</p>
+      <p><b>靜態與模型兩層不可互替。</b>沙箱擋已知路徑，審查才隨能力擴展。</p>
+      <p><b>身分與日誌是追責的前提。</b>沒有獨立身分，稽核分不出動作是誰做的。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="agent-anomaly-detection.html">代理異常偵測：看得到的抓得到，藏得深的漏掉</a><span class="d">2026-11-12</span></div>
+      <div class="g-relrow"><span class="s">OpenAI（Cogent Security 案例）</span><a href="cogent-cyber-defense.html">資安修補：脈絡與權限先到位，自動修復才成立</a><span class="d">2026-11-10</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文。原文 images 僅一張封面，圖解 A／B／C 與表格均為本站重繪整理，原文未給該對照與排序。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-12 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
