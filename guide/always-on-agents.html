@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 常駐代理：五個原語，撐起「睡著也在運作」的架構 · AI 每日動態檔案</title>
+<meta name="description" content="Anthropic 拆解常駐代理的五個原語：事件收件匣、計時器、記憶、權限、寄件匣。Opus 5.5 在長流程編碼基準每解一題比 Opus 5 便宜 78%，一般工作負載約 40%。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>常駐代理：五個原語，撐起「睡著也在運作」的架構</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Building always-on agents（Anthropic 官方部落格，架構方法文章，逐項拆解常駐代理的五個原語與失敗模式）</p>
+    <p class="g-meta">
+      <span>Anthropic（Claude）</span>·<span>2026-11-13 發布</span>·<span>2026-11-14 收錄</span>·
+      <a href="https://claude.com/resources/articles/building-always-on-agents" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>5 個</b><span>原語：事件收件匣、計時器、記憶、權限、寄件匣</span></div>
+    <div class="g-stat"><b>78%</b><span>Opus 5.5 在長流程編碼基準每解一題比 Opus 5 少的成本；一般負載為 40%</span></div>
+    <div class="g-stat"><b>1 個</b><span>原文建議每個 inbox 同時只有一個活躍 worker</span></div>
+    <div class="g-stat"><b>3 個元件</b><span>收件匣最簡版本：事件表、HTTP handler、背景 worker</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">常駐代理不是真的永遠在跑：大部分時間睡著，事件一到就醒來跑一輪、把學到的寫回記憶、把話送出去，再回去睡。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一輪的接力順序</b> — 誰把球傳給誰（本站重排，原文以文字加圖逐段說明）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">使用者訊息／webhook → 事件收件匣</span><span class="tr"><i>事件寫成一列、可依來源的唯一識別碼去重</i></span></span></li>
+        <li class="side"><span class="st">01b</span><span class="body"><span class="hop">旁支：計時器 → 排程器 → 收件匣</span><span class="tr"><i>計時器不會自己開跑，要靠排程器輪詢到期者再丟事件</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">收件匣 → worker</span><span class="tr"><i>喚醒後先拉最新待辦、合併連續訊息成同一輪</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">worker → agent loop</span><span class="tr"><i>接續既有 session，或開新 session</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">agent loop ↔ 記憶</span><span class="tr"><i>開跑先讀取基線，收工寫回這一輪學到的東西</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">agent loop → 權限</span><span class="tr"><i>每個工具呼叫決定：自己動手、封鎖、或等人工核准</i></span></span></li>
+        <li><span class="st">06</span><span class="body"><span class="hop">agent loop → 寄件匣 → dispatcher → 使用者</span><span class="tr"><i>使用者回覆又變成收件匣裡的新事件，循環接回 01</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重繪；原文未給此編號順序，01b 為輪詢觸發的旁支而非主線。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">五個原語的分工</h2>
+    <p class="g-p">原文指出直接讓事件來源呼叫代理有若干失敗模式，並舉了兩例：同時到達的兩個事件開啟互相競爭的兩輪，程式一崩就整個事件不見。</p>
+    <p class="g-p">所以把「叫醒代理」拆成收件匣與 worker：事件先落地，worker 永遠從資料庫取最新的待辦，中途死掉換一個 worker 接手即可重試。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>原語</th><th>負責什麼</th><th>原文限定語與陷阱</th></tr></thead>
+        <tbody>
+          <tr><td data-l="原語"><b>事件收件匣</b></td><td data-l="負責">把 webhook、排程、背景工作都變成可重試的事件列</td><td data-l="限定語">建議先做「每個使用者一個 inbox」；handler 要快速回 ACK，只做輕量檢查，prompt injection 這類較深的驗證留到 run 內</td></tr>
+          <tr><td data-l="原語"><b>計時器</b></td><td data-l="負責">讓代理主動：follow-up（自己設的期限）與 schedule（固定節奏）</td><td data-l="限定語">另存一份 durable store，不與收件匣混用；只放已到期該做的事進收件匣</td></tr>
+          <tr><td data-l="原語"><b>記憶</b></td><td data-l="負責">跨多次 disjoint 的 run 維持連續性</td><td data-l="限定語">只存「查不回來」的東西，其他存指標；放資料庫或物件儲存才能活得比 worker 久</td></tr>
+          <tr><td data-l="原語"><b>權限</b></td><td data-l="負責">每個工具呼叫決定：自己動手、封鎖、或等人工核准</td><td data-l="限定語">原文稱這是風險最高的一塊：run 持有使用者權限且設計上無人監督</td></tr>
+          <tr><td data-l="原語"><b>寄件匣</b></td><td data-l="負責">決定訊息何時、以什麼節奏送到使用者手上</td><td data-l="限定語">多數情況一個 send 工具就夠；需要控速與錯誤復原才建正式 outbox</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">收件匣：狀態與單一 worker</h2>
+    <p class="g-p">原文開的規格很樸素：一張關聯式資料表的收件匣，每一筆事件 append 成一列並記錄狀態，再用來源的唯一識別碼去重。</p>
+    <p class="g-p">執行中又來新事件，可選推到下一輪、併進本輪、或中斷重來——三種都行，但要先決定，不能讓兩輪同時跑同一個使用者的工作。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/claude-com-resources-articles-building-a/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/claude-com-resources-articles-building-a/01.webp" alt="Diagram of the event inbox. A handler (an HTTP endpoint) writes each event to the inbox, a database table that tracks status and drops duplicates, and wakes the worker. The worker reads what’s pending, starts the run, waits for it to finish, and marks the events done." width="1200" height="1071" loading="lazy" decoding="async"></a>
+      <figcaption>原圖把「handler 寫入並喚醒 worker、worker 取待辦、跑完標記完成」畫成一條線，去重與狀態欄都落在同一張表。<span class="g-fig-src">圖／Anthropic，<a href="https://claude.com/resources/articles/building-always-on-agents" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">成本曲線換了，長流程先受益</h2>
+    <p class="g-p">原文認為這波復興的主因是模型變便宜、判斷變好；而且是<em>長流程任務</em>省得最多。</p>
+    <p class="g-p">同一項長流程編碼基準，Opus 5.5 每解完一題比 Opus 5 便宜 78%，一般工作負載則為 40%。</p>
+    <p class="g-p">代價是每一輪都得重付固定開銷：system prompt、工具定義與記憶檔在每次 run 都載入，原文建議精簡並用 prompt caching 壓成本。</p>
+    <p class="g-p">session 也不會無限長：可以壓縮舊訊息或直接開新 session，但兩者都會掉細節，所以該留下的東西要邊做邊寫進記憶。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/claude-com-resources-articles-building-a/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/claude-com-resources-articles-building-a/02.webp" alt="Diagram of the outbox. A run ends with nothing to say, a send tool call, or a deferred tool call that asks the user. Messages go to the outbox, a database table, and a dispatcher delivers them to the user. A deferred request can go through the outbox or be shown in your own interface." width="1200" height="589" loading="lazy" decoding="async"></a>
+      <figcaption>原圖區分三種收尾：無話可說、直接送出、或需要問使用者而延後；訊息進寄件匣由 dispatcher 遞送，延後請求也可直接顯示在自家介面（圖中虛線）。<span class="g-fig-src">圖／Anthropic，<a href="https://claude.com/resources/articles/building-always-on-agents" target="_blank" rel="noopener">原文</a></figcaption>
+    </figure>
+
+    <p class="g-p">訊息量是另一個產品決策：發太多會吵，發太少會漏；原文建議用 evals 找平衡，實務上先安靜、再慢慢爭取使用者的注意力。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>先建收件匣，再談自主。</b>沒有可重試的事件落地，代理一崩就漏單。</p>
+      <p><b>記憶只存查不回的。</b>其餘放指標，目錄對應到資料庫而非本機。</p>
+      <p><b>權限是風險上限。</b>無人監督加持有使用者權限，先想清楚誰能核准什麼。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Research</span><a href="antigravity-teamwork.html">多代理做研究：把驗證交給否證者，把脈絡切到最小</a><span class="d">2026-11-13</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="chatgpt-wallet.html">代理代付：卡號不進代理，每筆都要你按一次指紋</a><span class="d">2026-11-13</span></div>
+      <div class="g-relrow"><span class="s">Anthropic（Claude）</span><a href="claude-managed-agents-self-hosted.html">自架 Managed Agents：換的是營運位置，不是安全模型</a><span class="d">2026-11-12</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數字出自原文，圖解與小標為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-14 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 多代理做研究：把驗證交給否證者，把脈絡切到最小 · AI 每日動態檔案</title>
+<meta name="description" content="Google 公布 Antigravity /teamwork 多代理成果：2013 年 Courtade–Kumar 猜想完整證明並以 Lean 4 形式化，原文稱產出 5,000 萬行程式碼；另有 STOC 2024、Tarjan 1985 等開放問題。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>多代理做研究：把驗證交給否證者，把脈絡切到最小</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Advancing science &amp; engineering with Antigravity’s /teamwork（Google Research 部落格，研究成果報告，涵蓋數學、資訊理論、系統軟體與 ML 工程）</p>
+    <p class="g-meta">
+      <span>Google Research</span>·<span>2026-11-13 發布</span>·<span>2026-11-14 收錄</span>·
+      <a href="https://research.google/blog/advancing-science-engineering-with-antigravitys-teamwork-feature/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>5,000 萬行</b><span>Courtade–Kumar 猜想的 Lean 4 形式化規模（原文稱）</span></div>
+    <div class="g-stat"><b>13 年</b><span>該猜想 2013 年提出，這次做到 full generality</span></div>
+    <div class="g-stat"><b>14 變數</b><span>人類把猜想化約後的最佳化問題規模</span></div>
+    <div class="g-stat"><b>3 所大學</b><span>香港中文大學、USC、CMU 與 Google 團隊協作</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">/teamwork 的重點不是讓多個代理一起想，而是讓每個代理只看自己那一段，再用會說「你錯了」的工具淘汰候選答案。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一條研究流水線</b> — 從人類定義問題到人類確認結果（本站重排）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>人類</b><br>框出問題，給定理論或物理限制</div>
+        <span class="ar">→</span>
+        <div class="fn"><b>協調者</b><br>切步驟，每步只給必要的檔案與工具</div>
+        <span class="ar">→</span>
+        <div class="fn"><b>平行探索</b><br>多個代理寫 solver、搜尋、測候選設計</div>
+        <span class="ar">→</span>
+        <div class="fn"><b>否證者</b><br>Lean 4、測試套件、模擬器、硬體計數器判定對錯</div>
+        <span class="ar">→</span>
+        <div class="fn"><b>審查者</b><br>從乾淨脈絡挑戰結果，不帶生產者的推理</div>
+      </div>
+      <p class="x-src">本站重繪；原文未給此五段順序，且答案會退回平行探索重試，圖中未畫回圈。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">設計針對兩個模型限制</h2>
+    <p class="g-p">第一是生成不穩定：單次嘗試與正確答案之間有落差，所以用平行探索拉高命中率，再讓專職否證者自動篩掉錯的。</p>
+    <p class="g-p">第二是長任務會失焦：注意力隨脈絡變長而分散，於是<em>用架構切脈絡</em>——每個子代理只拿這一小步需要的東西，協調者交棒給全新的後繼者。</p>
+
+    <div class="x-cmp">
+      <div><b>原文說的兩個限制</b><p>單次生成與正確答案之間有落差；長任務下注意力分散在變長的脈絡裡，容易漏掉細節。</p></div>
+      <div><b>/teamwork 的對應設計</b><p>平行探索多個候選，由 Lean 4 檢查器、未修改的測試套件、執行模擬器、硬體計數器等否證者判定，再由乾淨脈絡的審查者挑錯。</p></div>
+    </div>
+    <p class="x-src">本站整理；左欄是原文對單一模型限制的敘述，右欄是 /teamwork 對應的架構設計。</p>
+    <p class="g-p">這些工作流寫成宣告式的自然語言「模式」，系統依提示自動路由；其中循序解題加驗證的迴圈獨立成 /boost，已隨 Antigravity 提供。</p>
+    <p class="g-p">開放節奏要看清：原文說許多功能現在已在 Antigravity 可用，但完整功能要未來幾週才會全部開放給外部使用者。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">成果：從猜想證明到整數乘法</h2>
+    <p class="g-p">原文列出的結果跨領域，共同點是都對上學界懸置多年的開放問題；以下五列只是其中一部分，原文另談及 FOCS 2022 遺留的串流問題與隨機線性代數的稀疏界。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>領域</th><th>問題</th><th>這次的結果</th></tr></thead>
+        <tbody>
+          <tr><td data-l="領域"><b>資訊理論</b></td><td data-l="問題">2013 年 Courtade–Kumar 猜想</td><td data-l="結果">在 full generality 下證明，並以 Lean 4 完整形式化（原文稱 5,000 萬行程式碼）</td></tr>
+          <tr><td data-l="領域"><b>自適應資料分析</b></td><td data-l="問題">2014 年以來樣本上界的缺口</td><td data-l="結果">多代理獨立證明近最佳樣本上界並經 Lean 驗證</td></tr>
+          <tr><td data-l="領域"><b>矩陣與圖形</b></td><td data-l="問題">STOC 2024 主開放問題（布林矩陣乘法）</td><td data-l="結果">新的決定性演算法，達到該問題設定的加速目標</td></tr>
+          <tr><td data-l="領域"><b>資料結構</b></td><td data-l="問題">Tarjan 1985 年 Deque 猜想</td><td data-l="結果">新的每操作開銷上界，勝過所有有限次迭代的反 Ackermann 函數，Lean 4 驗證</td></tr>
+          <tr><td data-l="領域"><b>整數乘法</b></td><td data-l="問題">n 位元乘法的理論上界</td><td data-l="結果">單一 2D 網格上的 O(n log n) 演算法，C 實作與 GMP 對齊到十億位元</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">人類的位置沒有消失</h2>
+    <p class="g-p">Courtade–Kumar 那條線最能說明分工：Gemini 先找出廣義猜想的反例，人類團隊提出新的候選函數，把猜想化約成 14 變數的最佳化問題，並補上關鍵下界。</p>
+    <p class="g-p">之後由 Gemini 4 Argon 切分參數空間、推導解析界與區間算術憑證，還自己把證明從平衡函數推廣到非平衡函數。</p>
+    <p class="g-p">最後由團隊把整份證明在 Lean 4 形式化——原文只寫 the team，沒有區分這一步是人或工具完成。</p>
+    <p class="g-p">換句話說，可自動化的是搜尋與驗證的體力活，選對問題與判斷結果重要性的仍然是研究者。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>否證者比生成器值錢。</b>有機器可驗的判準，代理才敢平行試錯。</p>
+      <p><b>脈絡要切，不要餵。</b>交棒給乾淨的子代理，比塞進長上下文可靠。</p>
+      <p><b>看結果也要看人。</b>每項成果都有人類定義問題與確認，不是全自動。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">Anthropic（Claude）</span><a href="always-on-agents.html">常駐代理：五個原語，撐起「睡著也在運作」的架構</a><span class="d">2026-11-13</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="chatgpt-wallet.html">代理代付：卡號不進代理，每筆都要你按一次指紋</a><span class="d">2026-11-13</span></div>
+      <div class="g-relrow"><span class="s">Anthropic（Claude）</span><a href="claude-managed-agents-self-hosted.html">自架 Managed Agents：換的是營運位置，不是安全模型</a><span class="d">2026-11-12</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理，圖解為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-14 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

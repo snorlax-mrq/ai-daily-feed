@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 代理代付：卡號不進代理，每筆都要你按一次指紋 · AI 每日動態檔案</title>
+<meta name="description" content="ChatGPT Wallet 與 Amex、Mastercard、Visa 合作，代理付款只拿 payment token 不碰真實卡號，每筆購買都要使用者通過 Face ID 等安全檢查，首波開放美國 ChatGPT Pro 使用者的 dots。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>代理代付：卡號不進代理，每筆都要你按一次指紋</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Introducing ChatGPT Wallet（OpenAI 產品公告，說明代理付款的授權流程與卡組織合作）</p>
+    <p class="g-meta">
+      <span>OpenAI</span>·<span>2026-11-13 發布</span>·<span>2026-11-14 收錄</span>·
+      <a href="https://openai.com/index/introducing-chatgpt-wallet" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>12 億</b><span>每週使用 ChatGPT 的人數（原文稱）</span></div>
+    <div class="g-stat"><b>3 家</b><span>合作卡組織：American Express、Mastercard、Visa</span></div>
+    <div class="g-stat"><b>每筆 1 次</b><span>購買前都要通過 Face ID 或指紋這類安全檢查</span></div>
+    <div class="g-stat"><b>首波</b><span>美國 ChatGPT Pro 使用者的 dots，之後再擴大</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">代理花錢這件事，OpenAI 的解法是把「授權」留在人身上：真實卡號不分享給商家與代理，代理拿到的是一枚替代卡號的付款憑證。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一筆代理付款的六步</b> — 卡號在哪一步被換掉（本站整理，原文以段落敘述）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">使用者 → ChatGPT Wallet</span><span class="tr"><i>只存一次卡，之後不必重輸卡號</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">代理 → 使用者</span><span class="tr"><i>提出購買，列出品項、總額與要用哪張卡</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">使用者 → 安全檢查</span><span class="tr"><i>以 Face ID 或指紋核准，留下一筆授權紀錄</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">支付網路 → 代理</span><span class="tr"><i>發出 payment token：替代用的卡號、安全碼與到期日</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">支付網路 → 原卡</span><span class="tr"><i>向使用者指定的卡片請款</i></span></span></li>
+        <li><span class="st">06</span><span class="body"><span class="hop">交易完成（結案而非交接）</span><span class="tr"><i>商家與代理從頭到尾都沒拿到真實卡號</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重繪；原文未給此編號順序，04 的 token 由支付網路提供，非 OpenAI 自行代發。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">誰保留什麼</h2>
+    <p class="g-p">需求端很明確：原文稱每週有 12 億人用 ChatGPT 查商品、比選項、決定買什麼，但決策之後的那一步始終沒接上。</p>
+    <p class="g-p">這套設計刻意沿用現有支付軌道，而不是另建一套：網站只要別誤擋代理、風控能認得代理的合法交易就能收單。</p>
+    <p class="g-p">每筆核准都會留下一筆清楚紀錄，說明使用者授權代理買了什麼。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>角色</th><th>保留什麼</th><th>原文限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="角色"><b>使用者</b></td><td data-l="保留">卡片原有的回饋，以及合格爭議（例如商品瑕疵）的保障</td><td data-l="限定語">「合格爭議」才適用，非所有情況</td></tr>
+          <tr><td data-l="角色"><b>商家</b></td><td data-l="保留">與客戶的關係，以及定價、出貨、退貨、客服的主導權</td><td data-l="限定語">交易是使用者與商家直接成立</td></tr>
+          <tr><td data-l="角色"><b>銀行與卡組織</b></td><td data-l="保留">判斷交易風險的專業角色</td><td data-l="限定語">原文稱由它們帶來評估交易的專業</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">先小範圍跑，邊修相容性</h2>
+    <p class="g-p">首波只開給美國 ChatGPT Pro 使用者的 dots，並限 18 歲以上、使用美國發行的合格卡片；原文說法是先從真實使用學習，再與商家、銀行、卡組織一起修相容性與可靠性。</p>
+    <p class="g-p">同步釋出工具與指引，幫商家接待「由代理來買」的客人——這是代理商務最容易被忽略的一半：賣方也得改。</p>
+    <p class="g-p">下一步是整批委派：使用者設定金額上限、品類或期間等參數後，讓代理自行完成採購。安全檢查的密度會不會隨之下滑，將是這條路線的觀察重點（編輯觀點）。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>把授權留在人身上。</b>代理只拿憑證，每筆仍需人臉或指紋。</p>
+      <p><b>不換軌道才推得動。</b>沿用既有卡組織與風控，商家不必重做金流。</p>
+      <p><b>賣方也要改。</b>擋機器人的網站會先擋掉這批代理客人。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">Anthropic（Claude）</span><a href="always-on-agents.html">常駐代理：五個原語，撐起「睡著也在運作」的架構</a><span class="d">2026-11-13</span></div>
+      <div class="g-relrow"><span class="s">Google Research</span><a href="antigravity-teamwork.html">多代理做研究：把驗證交給否證者，把脈絡切到最小</a><span class="d">2026-11-13</span></div>
+      <div class="g-relrow"><span class="s">Anthropic（Claude）</span><a href="claude-managed-agents-self-hosted.html">自架 Managed Agents：換的是營運位置，不是安全模型</a><span class="d">2026-11-12</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理，圖解為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-14 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
