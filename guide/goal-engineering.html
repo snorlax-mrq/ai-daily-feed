@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 目標工程：把代理切成人類好回饋的形狀 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain 的目標工程：代理從執行任務走向開放式目標後，範圍設計的第一約束是「人類好不好給回饋」。以 Actively AI 從每客戶一代理改成每動作一代理為例。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>目標工程：把代理切成人類好回饋的形狀</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Goal Engineering（LangChain 官方部落格，方法論文章；以 Actively AI 的銷售代理改版為例，談代理範圍該怎麼切）</p>
+    <p class="g-meta">
+      <span>LangChain（官方部落格）</span>·<span>2026-11-14 發布</span>·<span>2026-11-15 收錄</span>·
+      <a href="https://www.langchain.com/blog/goal-engineering" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>1 條</b><span>選範圍的判準：切得讓人類容易給高品質回饋</span></div>
+    <div class="g-stat"><b>3 類</b><span>原文舉的「只在人腦裡」的上下文：品味、品牌尺度、要多積極</span></div>
+    <div class="g-stat"><b>每動作 1 代理</b><span>Actively AI 第二版：陌生開發、早期商機推進各一個 motion</span></div>
+    <div class="g-stat"><b>Deep Agents</b><span>motions 的實作底座（原文註明）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">代理的成敗常不在模型，而在工作被切成什麼單位：切到「人類一眼能審、一句話能糾正」，回饋才進得去，長期目標才跑得完。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">目標開放之後，範圍設計變成主要成本</h2>
+    <p class="g-p">原文把代理的演進分成三步：文字生成、工具呼叫與決策、執行完整任務；下一步是接手開放式目標，自己判斷怎麼推進到完成。</p>
+    <p class="g-p">目標一旦開放，範圍怎麼切就是主要成本：方向指錯，換來的是大量白燒的 token。原文以 Hone 的上線為例，說這種形態已經開始出現。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/www-langchain-com-blog-goal-engineering/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/www-langchain-com-blog-goal-engineering/01.webp" alt="原文圖：上下文分兩類，左側是已寫下來的文件與 API，解法是給代理存取權；右側是只存在人腦的品味、品牌尺度、要多積極，解法是人類專家的回饋，兩者都匯入代理。" width="1200" height="588" loading="lazy" decoding="async"></a>
+      <figcaption>原文把上下文分兩堆：左邊的文件與 API 給權限就解決；右邊那三類「只存在人腦」的判斷，只能靠專家回饋餵進去。<span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/goal-engineering" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">所以「容易給回饋」不是介面的加分項，而是範圍設計的第一約束。原文說瓶頸常出在代理「從回饋中學習」，因此要優化回饋收集的容易度與品質。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">Actively AI：從一客戶一代理，改成一動作一代理</h2>
+    <p class="g-p">初版是每個潛在客戶配一個代理，目標是推進該客戶，代理產出動作、由業務核准。直覺上很合理：客戶脈絡最重要，代理就繞著客戶轉。</p>
+    <p class="g-p">上線後才發現另一種關鍵上下文是「怎麼把這份工作做好」——怎麼陌生開發、怎麼回覆、怎麼盤算交易、要多積極、怎麼在大組織裡找人。</p>
+    <p class="g-p">這種知識跨客戶可複用，卻散在各個代理裡；業務還得代理之間來回切換，學到的東西也難移轉。</p>
+    <p class="g-p">原文說得更具體：只推進一個客戶時，任何時點能審的東西只有幾件，業務於是一直在代理之間切換，審閱體驗也差。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/www-langchain-com-blog-goal-engineering/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/www-langchain-com-blog-goal-engineering/02.webp" alt="原文圖：左邊是改版前，業務分別面對客戶 A、B、C 三個代理，各自累積學習；右邊是改版後，業務只面對陌生開發與早期商機推進兩個動作代理，學習在動作內跨客戶共用，帳號脈絡由背景代理提供。" width="1200" height="615" loading="lazy" decoding="async"></a>
+      <figcaption>改版前是業務對三個客戶代理、學習各自為政；改版後學習收斂到「動作」層，帳號脈絡改由背景代理補。<span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/goal-engineering" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">第二版改以「動作（motion）」為單位：一個 motion 是一疊同類任務，業務能一次審完，某筆任務學到的偏好也適用整批。</p>
+    <p class="g-p">帳號脈絡沒有消失，只是多已可文件化，改由背景代理先蒐集，motion 需要時再取用；這批動作代理以 Deep Agents 打造。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">可照抄的設計順序</h2>
+    <p class="g-p">把原文的論述收斂成五步：先定目標與可優化的指標，再切範圍。以下順序為編輯整理，原文並未主張必須照此順序執行。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>目標工程的五個動作</b> — 先後為編輯整理（本站重繪）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">定義目標與指標</span><span class="tr"><i>原文：Hone 的代理有明確要優化的指標</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">切成「一疊同類任務」</span><span class="tr"><i>讓同一句回饋能重複套用到整批工作</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">做順手的審核介面</span><span class="tr"><i>降低每次回饋的成本，換來質與量</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">由專家補上腦中的上下文</span><span class="tr"><i>文件與 API 給權限，偏好與尺度靠回饋</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">代理在範圍內自行推進</span><span class="tr"><i>人只看需要判斷的地方，其餘交給代理</i></span></span></li>
+      </ul>
+      <p class="x-src">本站整理自原文論述，非原文流程圖；原文未主張五步必須依此順序，也未給各步的成本估計。</p>
+    </figure>
+
+    <p class="g-p">原文的兩個實務提醒：motion 的邊界要讓同類回饋可複用，否則審完一次就浪費；審核介面值得投資，因為它直接決定回饋的品質與數量。</p>
+    <p class="g-p">原文也提醒，人審代理成果很花時間，但那正是教它認識你領域的方式；關鍵是把只存在腦中的知識，萃取成容易交給代理的形式。</p>
+    <p class="g-p">（編輯觀點：切動作的前提是回饋能跨同類任務複用；若每個案子都獨一無二，切動作只會多一層協調成本。）</p>
+    <p class="g-p">原文收尾押了一句：提示工程與上下文工程會消失，目標工程會留下。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>先問誰來審、多好審。</b>回饋進不去，代理再強也學不到你的品味。</p>
+      <p><b>能寫成文件的，別留給人回饋。</b>把專家的時間花在無法文件化的判斷上。</p>
+      <p><b>把代理切成一疊同類任務。</b>單次回饋才能複利，跨客戶的學習才會累積。</p>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，前兩張圖為原文圖（LangChain），圖解 C 為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-15 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

@@ -33,10 +33,10 @@
       <h2 class="co-tab">OpenAI</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-13</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-13</span><i class="chip chip--topic">企業導入案例</i><i class="chip chip--topic">智能代理</i></div>
           <h3 class="item-title"><a href="https://openai.com/business/customer-stories/shield" target="_blank" rel="noopener">Shield helps technicians hand off legacy portal work with OpenAI<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Shield uses OpenAI to help IT technicians hand off work in legacy portals. Its Forge agents navigate systems so technicians can focus on issues needing their judgment.</p>
-          
+          <ul class="item-points"><li>IT 服務商 Shield 的客戶案例：痛點是資深技師得花大量時間在客戶端各種老舊入口網站裡手動點擊，替客戶完成跨系統的交接工作。</li><li>Shield 以 OpenAI 模型打造名為 Forge 的代理，讓代理自己進入這些舊系統操作、把原本要人一步步點的流程跑完。</li><li>技師因此能把時間留給真正需要專業判斷的疑難問題，而不是重複的系統操作，是「代理接手企業內部瑣事」的典型導入樣貌。</li><li>（註：openai.com 目前擋 Cloudflare 驗證，本篇全文與配圖未能抓取，重點依官方摘要與標題整理。）</li></ul>
         </article></li>
       </ol>
     </section>
@@ -45,10 +45,10 @@
       <h2 class="co-tab">AMD</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-12</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-12</span><i class="chip chip--topic">硬體與基礎設施</i></div>
           <h3 class="item-title"><a href="https://www.amd.com/en/blogs/2026/exascale-was-the-beginning-amd-instinct--mi430x-gpus.html" target="_blank" rel="noopener">Exascale Was the Beginning: AMD Instinct™ MI430X GPUs<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           
-          
+          <ul class="item-points"><li>AMD 發表 Instinct MI430X，定位為第一款「從設計之初就為 HPC 與 AI for science 融合」而生的 GPU，基於 CDNA 5 架構。</li><li>規格：原生 FP64 尖峰 288 TFLOPS、432GB HBM4、23.3 TB/s 記憶體頻寬、FP4 尖峰 9.2 PF；HBM 容量比 NVIDIA Vera Rubin 多 50%。</li><li>節點設計是一顆第六代 EPYC（Venice）SP7 主機搭配四顆 GPU，用無交換器的 Infinity Fabric 全連接網狀（glue-less mesh），每顆 GPU 與其他三顆各有一條直連，單向 384 GB/s、節點內 scale-up 頻寬達 12.3 Tbps。</li><li>為何堅持原生 FP64：SC26 論文《FP64 Performance and the Limits of Ozaki Emulation on HPC Systems》實測 11 個應用、47 種工作負載，指 HPC 不到 10% 屬於夠稠密的 GEMM 型態（其餘是向量運算、稀疏線代、stencil），且模擬 FP64 需約 3 倍記憶體、對矩陣形狀與縮放敏感。</li><li>承接 Frontier、El Capitan、LUMI 與橡樹嶺國家實驗室的 Genesis Mission 系統 Lux，AMD 主打「重點不是哪顆處理器贏，而是把對的算力放到對的工作負載」，並維持 MI300A 世代的共享記憶體程式模型，程式與經驗可沿用。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -57,10 +57,10 @@
       <h2 class="co-tab">LangChain</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-14</span></div>
-          <h3 class="item-title"><a href="https://www.langchain.com/blog/goal-engineering" target="_blank" rel="noopener">Goal Engineering<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-14</span><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">開發者工具</i></div>
+          <h3 class="item-title"><a href="https://www.langchain.com/blog/goal-engineering" target="_blank" rel="noopener">Goal Engineering<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/goal-engineering.html">導讀</a></h3>
           <p class="item-sum">The future of agents is them taking on open ended goals and driving towards completion of those goals. Learn more.</p>
-          
+          <ul class="item-points"><li>LangChain 提出「目標工程」（goal engineering）：代理能力已從文字生成、工具呼叫進展到能執行完整任務，下一步是接手開放式目標、自己推進到完成，Hone 這類產品被視為預告。</li><li>設計代理範圍的第一原則不是把任務切得多細，而是「切得讓人類容易給回饋」：回饋愈容易給、品質愈高，代理愈能可靠地追求長期目標。</li><li>最難補的上下文不在文件或 API 裡，而是存在專家腦中的品味與經驗，只能靠人在流程中即時回饋；因此值得投資順手的審核介面，回饋收集往往才是真正的瓶頸。</li><li>案例 Actively AI：初版是每個客戶帳號配一個代理，業務得在多個代理間切換、跨客戶學到的經驗也難轉移；改版改以「動作（motion）」為單位（如陌生開發、早期商機推進），一個代理跨多個帳號負責同類任務，業務可集中審閱、把學到的心法一次套用到整批。</li><li>帳號脈絡仍重要、但多已可文件化，改由背景代理預先蒐集；實際推進交給 motions（以 Deep Agents 打造），兼顧上下文完整與回饋效率。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -74,7 +74,7 @@
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">資料來源：OpenAI · Anthropic · Google DeepMind · Google Research · Google Blog · xAI · Meta AI · DeepSeek · Mistral · NVIDIA · AMD · OpenRouter · LangChain · Unsloth — 僅收錄官方第一手公告。</p>
   <p class="foot-md">原始資料：<a href="../md/2026-11-15.md" target="_blank" rel="noopener">2026-11-15.md</a></p>
-  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-15 07:00 (UTC+8)</p>
+  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-15 07:04 (UTC+8)</p>
 </div></footer>
 <script src="../assets/site.js" defer></script>
 </body>
