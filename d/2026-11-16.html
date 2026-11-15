@@ -33,16 +33,16 @@
       <h2 class="co-tab">OpenAI</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-15</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-15</span><i class="chip chip--topic">研究與科學</i><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://openai.com/index/our-new-blog-for-science" target="_blank" rel="noopener">Our new blog for science<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">The OpenAI science blog shares new findings, practical methods, and firsthand accounts from researchers using AI to advance scientific discovery.</p>
-          
+          <ul class="item-points"><li>OpenAI 開設「科學部落格」，提供科學家與學術研究者一個固定園地，分享他們用 AI 發現了什麼、以及實際上怎麼做；官方定調加速科學發現是讓 AGI 造福全人類最具影響力的途徑之一。</li><li>內容分三條主線：研究與發現（OpenAI、合作者與科學社群的新結果）、方法與實用指引（科學計算、資料分析、文獻探索、實驗規劃，並說明怎麼檢查結果、方法何時不管用）、以及科學社群的第一手觀點。</li><li>文中回顧近幾個月的能力進展：9 月內部系統產出納維–斯托克斯方程存在性與光滑性問題的證明；10 月初公布一批數學結果（含強化質數計數估計的 quasi-Riemann hypothesis），月底再發表數學、計算複雜度與量子場論基礎的成果。</li><li>生物學端已有實作案例：PerturbAI 與 Scripps Research 用數千個 GPT-Rosalind 代理，32 分鐘讀完數百萬個小鼠腦細胞的既有實驗資料，把基因擾動效果與文獻串起來找出可驗證機制；César de la Fuente 團隊則用 ChatGPT 與 Codex 寫演算法找抗生素候選分子再到實驗室驗證。</li><li>官方也點出能力帶來的科學實踐難題：自動產生的證明該如何被檢查、解釋與納入領域共識；可探索的假設變多後該挑哪個實驗做；以及訓練、貢獻歸屬與技能要求將如何改變，並強調應由各領域社群參與決定工具的使用方式。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-15</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-15</span><i class="chip chip--topic">研究與科學</i></div>
           <h3 class="item-title"><a href="https://openai.com/index/step-toward-defining-the-standard-model" target="_blank" rel="noopener">A step toward defining the Standard Model on a lattice<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Explore a candidate nonperturbative lattice definition of the Standard Model and how GPT-6 Astra helped turn the idea into a detailed proof.</p>
-          
+          <ul class="item-points"><li>物理學家 Nathaniel Craig 在 10 月 arXiv 預印本中提出「標準模型的非微擾格點定義」候選方案，並自述 GPT-6 Astra 在其中幫他把原本只有策略、證不出來的想法推成完整構造與詳細證明。</li><li>問題背景：標準模型五十年來極成功（氫 21 公分到 LHC 碰撞，跨 18 個數量級的理論與實驗吻合），但一直缺非微擾定義；微擾理論處理不了質子質量這類強耦合現象，而把時空離散成格點的格點場論雖在強作用力大成功，卻卡在標準模型是「手徵理論」。</li><li>手徵的難處：弱作用力對左右手費米子不同調，硬把左手費米子放上格點，最自然的規則會自動生出沒人要的右手夥伴（doubler）。作者用「盒子裡只放左旋圓偏振光」的類比說明：普通鏡子反射會把偏振翻面，得改用「手徵鏡」。</li><li>對應的格點工具是 overlap fermions（Narayanan–Neuberger）與 Lüscher 的相位處方，但完整標準模型的相位對齊已懸置超過 25 年。Craig 的招式是把目標格點的規範場表示到一連串更細的格點上，比較相鄰格點允許的費米子態取得相位修正、逐層加總回原格點。</li><li>Astra 的貢獻是建議了把規範場搬上細格點的正確方式、指出細格點上的比較會收斂到明確答案，並主導詳細證明；格點場論專家 Golterman、Kronfeld、Shamir 審閱並提問驗證。作者強調這只是「原則上的答案」，下一步要確認有限格距下的反射正性，並接上 OpenAI 既有的 Yang–Mills 存在性證明推進到連續時空。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -56,7 +56,7 @@
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">資料來源：OpenAI · Anthropic · Google DeepMind · Google Research · Google Blog · xAI · Meta AI · DeepSeek · Mistral · NVIDIA · AMD · OpenRouter · LangChain · Unsloth — 僅收錄官方第一手公告。</p>
   <p class="foot-md">原始資料：<a href="../md/2026-11-16.md" target="_blank" rel="noopener">2026-11-16.md</a></p>
-  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-16 07:00 (UTC+8)</p>
+  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-16 07:01 (UTC+8)</p>
 </div></footer>
 <script src="../assets/site.js" defer></script>
 </body>
