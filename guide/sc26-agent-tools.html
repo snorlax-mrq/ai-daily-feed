@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 科學代理：工具呼叫靠 CPU，資料留在自己家 · AI 每日動態檔案</title>
+<meta name="description" content="NVIDIA 在芝加哥 SC26 發布 Nemotron for Science 科學代理工具組、Rubin HPC GPU 與 Vera CPU 擴充；GROMACS 代理單台 DGX Spark 徹夜修好 81% 測試案例，Nsight 代理把 WRF 例行程序移植到 GPU 加速逾 5 倍（NVIDIA 自報）。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>科學代理：工具呼叫靠 CPU，資料留在自己家</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：NVIDIA 超大規模與高效能運算副總裁 Ian Buck 在芝加哥 SC26 特別演講的發布整理，模型、晶片、量子三線並進——廠商發布（NVIDIA 部落格）</p>
+    <p class="g-meta">
+      <span>NVIDIA Blog</span>·<span>2026-11-17 發布</span>·<span>2026-11-18 收錄</span>·
+      <a href="https://blogs.nvidia.com/blog/ian-buck-sc26/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>1,000+ CUDA-X 函式庫</b><span>Buck 20 年前在 SC06 教學課第一次公開講 CUDA，當時還沒有這個數字</span></div>
+    <div class="g-stat"><b>逾 50,000 CUDA 核心</b><span>Vera Rubin 平台的新 GPU，約為 Hopper 三倍（NVIDIA 自報）</span></div>
+    <div class="g-stat"><b>約 1.5 億 token</b><span>Nsight AI Porting Agent 移植一條 WRF 例行程序的用量（NVIDIA 自報）</span></div>
+    <div class="g-stat"><b>15 倍</b><span>Photonics 共封裝光學交換器在位元錯誤與鏈路抖動上的可靠度（NVIDIA 自報）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">科學代理的賣點不是會聊天，是它自己規劃實驗、跑模擬、檢查結果——而且模型與資料不必離開你的機器。</p>
+
+    <p class="g-p">原文開場把這批工具定義得很窄：能規劃實驗、跑程式、檢查結果，而且跑在研究員自己的系統上。</p>
+    <p class="g-p">Nemotron for Science 由三件東西組成：Nemotron 3.5 Super VL 開放模型、一份新的開放化學資料集，以及生命科學與化學的後訓練配方。</p>
+    <p class="g-p">模型與化學資料集都標明開放；這是「跑在自家機器」說得通的前提。</p>
+    <p class="g-p">原文沒給模型規模或授權條款，只說它是開放模型、資料集也是開放的。</p>
+    <p class="g-p">阿貢那套代理就是用這個工具組建起來的。</p>
+    <p class="g-p">（編輯推論：研究資料常綁在儀器與授權上搬不動，本地執行解決的正是這件事。）</p>
+    <p class="g-p">執行位置不綁資料中心：DGX Spark、工作站，或研究單位自己的超級電腦都行。</p>
+    <p class="g-p">Buck 對所有權的說法只有一句：「<em>你擁有你的資料，你擁有你的模型</em>。」</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>代理自己跑完的實驗迴圈</b> — 阿貢國家實驗室的示範路徑（本站重繪）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>一行提示</b><small>研究員只給題目，不指定該跑哪一套模擬</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>規劃與假設</b><small>代理自己排出要驗證的假設，並逐一測試</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>挑模擬、跑程式</b><small>由代理決定開哪一套模擬，再檢查回傳結果</small></div>
+        <span class="ar">→</span>
+        <div class="fn hot"><b>兩個新結合位點</b><small>單一提示的產出，原文未說後續是否人工複核</small></div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖；原文以文字敘述阿貢國家實驗室的執行順序，未附流程圖，也未給各步驟耗時或成功率。</p>
+    </figure>
+
+    <p class="g-p">阿貢的示範就是這條迴圈的完整跑法：一個提示進去，兩個新的結合位點出來。</p>
+    <p class="g-p">Buck 對大方向的說法是：新科學堆疊由模擬打底，再加上 AI 與未來的量子。</p>
+    <p class="g-p">模擬「永遠在最上層」，AI、量子與現在的代理是並肩工作，不是取而代之。</p>
+    <p class="g-p">他形容代理改的是介面：我們怎麼跟超級電腦、儀器與研究流程打交道。</p>
+    <p class="g-p">這也解釋了發布清單為何橫跨模型、晶片與量子工具鏈：代理要能跑，三層都得齊。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三個上線案例，三種收尾標準</h2>
+    <p class="g-p">這些不是展示品：原文說其中幾個代理已經在用，不是 roadmap。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>團隊</th><th>代理在做什麼</th><th>結果與限定語</th></tr></thead>
+        <tbody>
+          <tr>
+            <td data-l="團隊"><b>KTH 皇家理工學院</b><br><small>GROMACS</small></td>
+            <td data-l="在做什麼">自行修好壞掉的 GROMACS 設定，不必人指出哪一行出錯</td>
+            <td data-l="結果">單次徹夜、單台 DGX Spark，修好 81% 測試案例（NVIDIA 自報）</td>
+          </tr>
+          <tr>
+            <td data-l="團隊"><b>SETI Institute</b><br><small>艾倫望遠鏡陣列</small></td>
+            <td data-l="在做什麼">一行提示畫出甲醇譜線，接著自行重調都卜勒位移</td>
+            <td data-l="結果">原文只描述這兩個動作，未給成功率或耗時</td>
+          </tr>
+          <tr>
+            <td data-l="團隊"><b>NVIDIA Nsight</b><br><small>AI Porting Agent</small></td>
+            <td data-l="在做什麼">把 WRF 天氣模型的例行程序移植到 GPU</td>
+            <td data-l="結果">加速逾 5 倍；原文未給基準程式與硬體配置</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">加速倍數與 token 用量同樣是廠商自報，原文沒有對照組，讀的時候當成上限而非保證。</p>
+    <p class="g-p">三個案例的共同點是代理會自己檢查結果；但原文沒給一致的驗收標準，KTH 那案也只修好 81% 的測試案例。</p>
+    <p class="g-p">SETI 那一列最短：一行提示、一張譜線，中間沒有人介入調參。</p>
+    <p class="g-p">KTH 修的是壞掉的設定，不是新功能；測試案例就是它的驗收單位。</p>
+    <p class="g-p">Nsight 走的是另一條路：不叫模型重寫程式，而是把既有的例行程序整段搬上 GPU。</p>
+    <p class="g-p">人的角色退到最前面一行字——寫下要做什麼，剩下交給迴圈。</p>
+    <p class="g-p">（編輯觀點：三個案例都只報對自己有利的指標，沒有人給失敗率或重跑次數。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">工具呼叫落在 CPU，量子先解糾錯的帳</h2>
+    <p class="g-p">Buck 的硬體論點很直接：代理在模型步驟之間要執行工具呼叫，那些呼叫落在 CPU 上。</p>
+    <p class="g-p">他的說法是代理需要「<em>一顆能跑、能評估、能執行工具、能收回結果的 CPU</em>」。</p>
+    <p class="g-p">這就是 Vera CPU 那條線的產品說明：德國氣候計算中心與德州先進計算中心選的都是它。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>項目</th><th>原文規格／部署</th><th>限定語</th></tr></thead>
+        <tbody>
+          <tr>
+            <td data-l="項目"><b>Rubin HPC</b></td>
+            <td data-l="規格">Vera Rubin 平台的新 GPU，支援 FP64 到 FP4、加稀疏資料加速、走第七代 NVLink</td>
+            <td data-l="限定">為科學、工程、分析與 AI 設計；2028 年推出</td>
+          </tr>
+          <tr>
+            <td data-l="項目"><b>Vera CPU</b></td>
+            <td data-l="規格">DKRZ 為 HLRE-5 超級電腦選用</td>
+            <td data-l="限定">預計 2028 年初上線；TACC 的 Vera 系統先前已宣布</td>
+          </tr>
+          <tr>
+            <td data-l="項目"><b>魔術態培育</b><br><small>magic state cultivation</small></td>
+            <td data-l="規格">單一邏輯步驟所需操作減為十分之一</td>
+            <td data-l="限定">Jülich 的 JUPITER 超級電腦上模擬得出；技術正併入 CUDA-Q</td>
+          </tr>
+          <tr>
+            <td data-l="項目"><b>量子協同設計平台</b></td>
+            <td data-l="規格">NVIDIA 與 IBM 把 DGX B200 系統與 IBM 量子電腦配對</td>
+            <td data-l="限定">含 IBM Quantum Nighthawk 機型；與費米實驗室三方合作</td>
+          </tr>
+          <tr>
+            <td data-l="項目"><b>解碼與糾錯研究</b></td>
+            <td data-l="規格">解碼延遲目標約 300 微秒降到 10 微秒；新演算法 TCBP-JOBS 把糾錯研究運算從 12 週壓到 45 分鐘</td>
+            <td data-l="限定">延遲是目標值，不是已達成；數字為 NVIDIA 自報</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">量子那條線的順序是「先讓糾錯付得起」，不是先堆量子位元。</p>
+    <p class="g-p">三方平台的定位是支援糾錯與應用研究：把 GPU 系統擺在量子電腦旁邊，不是取代它。</p>
+    <p class="g-p">費米實驗室的角色原文沒細寫，只說三方要共同支撐糾錯與應用研究。</p>
+    <p class="g-p">共封裝光學把光引擎與交換晶片封在一起；這批交換器在 Lambda 首批部署，原文只給可靠度倍數。</p>
+    <p class="g-p">解碼那項的代價對比最清楚：等待的單位從週換成分鐘。</p>
+    <p class="g-p">對研究單位最實用的訊息是硬體門檻：原文唯一指名機器的是 KTH 那案——單台 DGX Spark 徹夜跑完。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>代理的價值在收尾。</b>KTH 那案單次徹夜修好 81% 測試案例，人只下第一行提示。</p>
+      <p><b>本地部署就是賣點。</b>模型與資料都留在自家機器，才進得了資料敏感的科學單位。</p>
+      <p><b>CPU 重新變成瓶頸。</b>工具呼叫落在 CPU，Vera 的擴充正是衝著這件事。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="proactive-agents.html">主動代理：目標取代任務，注意力才是瓶頸</a><span class="d">2026-11-17</span></div>
+      <div class="g-relrow"><span class="s">OpenAI（官方部落格）</span><a href="chatgpt-sales-plugins.html">銷售代理：外掛是接口，價值在同一份客戶脈絡</a><span class="d">2026-11-17</span></div>
+      <div class="g-relrow"><span class="s">Google Blog</span><a href="gemini-tasks.html">任務模式：Gemini 從聊天框走到結帳頁</a><span class="d">2026-11-17</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；成效數字為 NVIDIA 與各機構自述，無第三方驗證；三張圖表均為本站重繪／整理，原文只附演講照片、未給機制圖。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-17 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

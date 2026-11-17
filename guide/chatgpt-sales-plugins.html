@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 銷售代理：外掛是接口，價值在同一份客戶脈絡 · AI 每日動態檔案</title>
+<meta name="description" content="OpenAI 推出 ChatGPT for Sales 與自家 Sales plugin，加 30 多個新增與強化的夥伴外掛，覆蓋六類銷售工作，並可交給常駐 agent dot 在背景準備會議簡報；可用性隨方案、地區與工作區設定而異。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>銷售代理：外掛是接口，價值在同一份客戶脈絡</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Introducing ChatGPT for Sales（OpenAI 官方部落格，產品公告；同篇推出自家 Sales plugin 與 30 多個夥伴外掛，附四段用法與導入步驟）</p>
+    <p class="g-meta">
+      <span>OpenAI（官方部落格）</span>·<span>2026-11-17 發布</span>·<span>2026-11-18 收錄</span>·
+      <a href="https://openai.com/index/introducing-chatgpt-for-sales" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>30 多個</b><span>新增與強化的夥伴外掛，兩者並計（OpenAI 自報）；原文未給逐家總數</span></div>
+    <div class="g-stat"><b>6 類</b><span>外掛按銷售工作分成六個分類：備戰、帳戶、找買家、通話、業績、報價</span></div>
+    <div class="g-stat"><b>dot</b><span>ChatGPT 裡的常駐 agent，可用同一批外掛與客戶脈絡，在背景備會議簡報</span></div>
+    <div class="g-stat"><b>方案／地區／工作區</b><span>三重限定：外掛與功能的可用性逐項不同，原文未列地區清單</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">OpenAI 沒有再造一套 CRM，而是把銷售每天要跑的六段工作接進同一個對話，再讓常駐 agent 在你不在線時接手。</p>
+
+    <p class="g-p">原文把目標寫成三句：讓業務更懂客戶、少花時間在雜事上、成交更多筆。</p>
+    <p class="g-p">開場的問題清單很直白：該追哪些帳戶、買家還需要什麼才能往前走、哪些交易該盯、為什麼。</p>
+    <p class="g-p">答案散在同事、開發名單的工具、客戶通話與 CRM 裡。原文的說法是收在一起，團隊才挪得出時間做判斷。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>三層：權限在外、脈絡在中、外掛在內</b> — 誰開權限、誰存脈絡、誰提供工具（本站重繪）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>1 · 工作區治理</b><small>Admin Console：開放哪些外掛、審查 app 與可用動作</small><span class="pi">前提</span></div>
+          <div class="ring">
+            <div class="ring-lb"><b>2 · ChatGPT 的單一對話</b><small>備通話、改提案、起草跟進都在同一處</small><span class="pi">產品</span></div>
+            <div class="ring-inner"><b>3 · 三件並列</b> — Sales plugin（OpenAI 自製工作流）／30 多個夥伴外掛（六類工具）／dot（常駐 agent，三者互不排序）</div>
+          </div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑</b>：dot 在背景查交易變化、把建議的下一步帶回來給你審（原文未說它會自動改 CRM）。</span></div>
+      <p class="x-src">本站重繪，非原文圖；原文分段描述工作區設定、外掛與 dot，未給此包覆關係與並列順序。</p>
+    </figure>
+
+    <p class="g-p">Sales plugin 是 OpenAI 自己做的那一個，賣的是現成工作流：挑該追的帳戶、準備通話、起草跟進。</p>
+    <p class="g-p">它與夥伴外掛並列安裝，原文要團隊自己挑「符合你銷售流程」的那幾個，不是全部打開。</p>
+    <p class="g-p">原文說它內建給業務用的專門 skill（技能），但沒列名稱，也沒給使用率或成交成效。</p>
+    <p class="g-p">原文稱它是「每位業務的起點」：先給一套每天用得上的現成流程，擴充再說。</p>
+    <p class="g-p">這些工作流跑幾步、哪一步要人核准，原文也沒寫，等於留給各團隊自己定。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">六類工作，30 多個外掛</h2>
+    <p class="g-p">夥伴外掛照銷售工作的段落分成六類，原文逐類點名工具；這批是新增與強化並計的 30 多個。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>工作類別</th><th>原文點名的外掛</th><th>用來做什麼</th></tr></thead>
+        <tbody>
+          <tr><td data-l="類別"><b>內容與備戰</b></td><td data-l="外掛">Confluence、Guru、Seismic；ChatGPT Voice；ChatGPT Slides、Gamma、Figma、Canva；ChatGPT Sites</td><td data-l="用途">熟悉流程與產品更新、練 pitch 與異議、出簡報、做互動 demo 或 ROI 計算器</td></tr>
+          <tr><td data-l="類別"><b>帳戶與推進</b></td><td data-l="外掛">Salesforce、HubSpot、Close CRM、monday CRM</td><td data-l="用途">併出帳戶脈絡：備會、回顧對客戶的承諾、規劃下一步</td></tr>
+          <tr><td data-l="類別"><b>找買家與接觸</b></td><td data-l="外掛">Apollo、Clay、Common Room；Outreach、Salesloft</td><td data-l="用途">帳戶訊號加上網路研究，找該聯絡的理由，再規劃外展</td></tr>
+          <tr><td data-l="類別"><b>通話轉行動</b></td><td data-l="外掛">Meetings plugin、Gong、Otter.ai、Granola</td><td data-l="用途">讀通話筆記、抓已議定的下一步、起草跟進</td></tr>
+          <tr><td data-l="類別"><b>業績與風險</b></td><td data-l="外掛">Backstory；Data plugin、Hex</td><td data-l="用途">找出該關注的交易、解釋 pipeline 哪裡變了</td></tr>
+          <tr><td data-l="類別"><b>報價與合約</b></td><td data-l="外掛">Docusign、Ironclad、PandaDoc、ServiceNow CPQ</td><td data-l="用途">買家願意動的時候，備好報價與合約</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-src">本站整理；六類分組照原文工具圖，原文未給各家外掛數、排序或成熟度。</p>
+
+    <p class="g-p">六類之外沒有第七類，原文也沒說哪一類先裝；先裝哪格由團隊自己排。</p>
+    <p class="g-p">通話那格一次給了四種錄音來源，CRM 那格則從 Salesforce 一路列到 monday CRM，四家都在原文名單裡。</p>
+    <p class="g-p">Clay 在原文出現兩次：找買家那類點名它，建名單的示範也用它，同一個工具跨兩類。</p>
+    <p class="g-p">報價那格最靠流程尾端：買家願意動之後，才是 Docusign、PandaDoc 這些工具上場的時候。</p>
+    <p class="g-p">（編輯觀點：Voice、Slides、Sites、Meetings、Data 五個是 ChatGPT 自帶能力，不是外部夥伴。）</p>
+    <p class="g-p">外掛的邊界也寫清楚了：能用哪些、能不能用，取決於方案、地區與工作區設定三件事。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">四個用法，加一個常駐 agent</h2>
+    <p class="g-p">原文給四個場景，收尾都是草稿、清單或待你審的建議：名單、說帖、跟進、風險。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>原文四個用法</b> — 並列場景，不是流程</figcaption>
+      <p class="x-grid-h">四格互不排序；原文未給各場景的採用率或成效</p>
+      <div class="x-grid">
+        <div class="c"><b><i>①</i>建名單</b><small>用 CRM 資料加上 ZoomInfo、Clay 的研究排出優先名單，逐戶問為何合適、缺哪些資訊</small></div>
+        <div class="c"><b><i>②</i>備會與說帖</b><small>併帳戶歷史、過去通話與買家優先事項，再用 Gamma 或 Canva 出提案</small></div>
+        <div class="c"><b><i>③</i>會後跟進</b><small>起草跟進、抓已議定下一步；接上 Attio，直接把下一步存回 CRM</small></div>
+        <div class="c"><b><i>④</i>看風險</b><small>用 CRM 歷史與通話查卡在哪；接 Rox 後，請 dot 每天早上巡一筆</small></div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖；場景與外掛組合整理自原文四段示範，原文未給先後順序。</p>
+    </figure>
+
+    <p class="g-p">四段場景各自獨立，串起來的是同一份客戶脈絡，不是原文給的先後流程。</p>
+    <p class="g-p">小標寫的是「每個銷售團隊都用得到」，但四段都沒給省下多少時間、也沒給覆核比例。</p>
+    <p class="g-p">第四個場景多了一個角色：dot。它是 ChatGPT 裡的常駐 agent，用同一批外掛與同一份客戶脈絡。</p>
+    <p class="g-p">原文說它可以做三件事：備會議簡報、追交易更新、把變化與建議的下一步帶回來給你審。</p>
+    <p class="g-p">例子是請 dot 每天早上查一筆交易、標出要處理的變化，再備好簡報或跟進序列。</p>
+    <p class="g-p">（編輯推論：前景是 Sales plugin 帶著人跑，背景是 dot 把變化推回來，兩邊靠同一份脈絡接起來。）</p>
+    <p class="g-p">導入走管理員：Business 與 Enterprise 進 Admin Console 選工作區、開 Plugins，開放成員安裝或預設安裝。</p>
+    <p class="g-p">原文另提醒管理員先審查所需 app 與它們能執行的動作；成員再依提示完成帳號連結。</p>
+    <p class="g-p">原文的示範段落提供 Sales 上線示範與 HubSpot 夥伴示範等影片。</p>
+    <p class="g-p">沒給的部分同樣乾脆：價格、上線國家清單與客戶成效數字全無，案例段落也只有畫面與導語。</p>
+    <p class="g-p">原文收尾只承諾會繼續擴充這批外掛生態，把更多銷售工作搬進 ChatGPT；時程與範圍未寫。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>外掛是接口，脈絡才是產品。</b>再多外掛都共用同一份客戶脈絡，這才是賣點。</p>
+      <p><b>先問方案與地區，再看清單。</b>清單再長，工作區沒開、地區沒到就用不了。</p>
+      <p><b>dot 把問答變成待審草稿。</b>它跑背景、你審下一步，責任還在你手上。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="proactive-agents.html">主動代理：目標取代任務，注意力才是瓶頸</a><span class="d">2026-11-17</span></div>
+      <div class="g-relrow"><span class="s">Google Blog</span><a href="gemini-tasks.html">任務模式：Gemini 從聊天框走到結帳頁</a><span class="d">2026-11-17</span></div>
+      <div class="g-relrow"><span class="s">NVIDIA Blog</span><a href="sc26-agent-tools.html">科學代理：工具呼叫靠 CPU，資料留在自己家</a><span class="d">2026-11-17</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；外掛數量與可用範圍均為 OpenAI 自報，無第三方驗證。原文附有一張按六類工作分組的工具圖與示範影片，沒有機制圖或數據圖；圖解 A、B 為本站重繪，外掛表重排自該工具圖，原文未給分層或排序。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-18 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

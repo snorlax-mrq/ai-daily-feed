@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 會計團隊的 Bot 編制：五個職位、三週到職、權限分層 · AI 每日動態檔案</title>
+<meta name="description" content="SpaceXSI 把五段會計流程各交給一個 Grok Bot：三週上線訓練制、Notion 手冊每晚對照且 Bot 唯讀、低風險自主但折讓退款留人核准；開票自報從約 24 小時降到數分鐘。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>會計團隊的 Bot 編制：五個職位、三週到職、權限分層</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：xAI 官方部落格，SpaceXSI 會計團隊把五段流程整段交給 Grok Bot 的第一手紀錄——廠商自述案例，含五個 Team Bot 的分工與治理做法</p>
+    <p class="g-meta">
+      <span>xAI（Grok Bot）</span>·<span>2026-11-16 發布</span>·<span>2026-11-18 收錄</span>·
+      <a href="https://x.ai/news/grok-bot-accounting" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>5 個 Team Bot</b><span>各認領一段端到端會計流程，不是共用一個萬用助手</span></div>
+    <div class="g-stat"><b>約 3 週</b><span>典型上線訓練期；Billing Support Bot 為例花了 4–5 週（自報）</span></div>
+    <div class="g-stat"><b>約 24 小時 → 以分鐘計</b><span>Billing Bot 開立一張發票所需時間（自報）</span></div>
+    <div class="g-stat"><b>約 8 小時／日</b><span>原文估計 Billing Support Bot 替會計團隊省下的工時（自報）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">把「職位」而不是「任務」交給 agent：先有作業手冊與受控流程，Bot 才有資格獨立上線。</p>
+
+    <p class="g-p">原文一開始就排除一種做法：不要叫 Bot「幫忙處理各種任務」。每個 Bot 認領一段原本由人負責的完整流程，獨立做到尾，卡住才找人。</p>
+    <p class="g-p">原文說初期是試錯才定調：把一個既有、範圍明確的流程整段交出去，比讓 Bot 分散幫忙幾件事有效。</p>
+    <p class="g-p">五個 Bot 因此是五個職位，不是五個工具。原文那張組織圖把它們和真人主管排在同一條匯報線上。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/grok-bot-accounting/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/grok-bot-accounting/01.webp" alt="原文組織圖：Paul 之下有三條匯報線——Billing Lead、Collections and Support Lead，以及直接掛在 Paul 下的 Provisioning Bot；Billing Lead 底下是 Billing Bot 與 Billing Support Bot，Collections and Support Lead 底下是 Cash Applications Bot 與 Collections Bot" width="1200" height="675" loading="lazy" decoding="async"></a>
+      <figcaption>Bot 在組織圖上有位置、也有主管：Provisioning Bot 直接掛在 Paul 下，其餘四個分屬 Billing Lead 與 Collections and Support Lead 兩條線。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／xAI，<a href="https://x.ai/news/grok-bot-accounting" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">一條交易，五段接手</h2>
+    <p class="g-p">分工沿一條交易走：簽約後開通、開票、業務問帳、入帳對帳、催收。Bot 之間會互相接手——客戶要退款時，Collections Bot 會拉 Billing Bot 與 Cash Applications Bot 一起備案。</p>
+
+    <p class="g-p">Billing Bot 還會先查稅務編號：缺 VAT／GST 就通知業務並給 24 小時補件，不必等開票後被客戶問。</p>
+
+    <div class="x-scroll" style="margin-top:14px">
+      <table class="x-tbl">
+        <thead><tr><th>Bot 與職能</th><th>端到端做什麼</th><th>原文的數字與限定</th></tr></thead>
+        <tbody>
+          <tr><td data-l="Bot 與職能"><b>Provisioning</b><br><small>開通與關閉帳號</small></td><td data-l="端到端做什麼">比對已簽合約與 Salesforce 紀錄，開通授權、合約到期時收回，完成後在 Slack 通知業務</td><td data-l="數字與限定">在自家 provisioning 應用內操作，動作留稽核軌跡</td></tr>
+          <tr><td data-l="Bot 與職能"><b>Billing</b><br><small>開立發票</small></td><td data-l="端到端做什麼">核對計費紀錄與合約條款才開票；有落差先修計費系統，再通報 CRM 端的紀錄問題</td><td data-l="數字與限定">開票約 24 小時 → 數分鐘（自報）；折讓、重開票需額外權限與核准</td></tr>
+          <tr><td data-l="Bot 與職能"><b>Billing Support</b><br><small>業務的帳務窗口</small></td><td data-l="端到端做什麼">回答 go-to-market 團隊的帳務問題，代改帳單 email、加收件人等例行更新</td><td data-l="數字與限定">原文估計每日省約 8 小時（自報）；首版花 4–5 週才上線</td></tr>
+          <tr><td data-l="Bot 與職能"><b>Cash Applications</b><br><small>入帳對帳</small></td><td data-l="端到端做什麼">每日兩次掃入帳流，套用對得上的付款，追差異、核銷銀行手續費、短付轉催收</td><td data-l="數字與限定">原本會計 3–4 小時的工作，Bot 約 30 分鐘完成（自報）</td></tr>
+          <tr><td data-l="Bot 與職能"><b>Collections</b><br><small>應收與客戶詢問</small></td><td data-l="端到端做什麼">盯應收信箱、回客戶帳務問題，退款案串接其他 Bot 備妥資料再送核准</td><td data-l="數字與限定">約 3 個月訓練（自報）；第一個直接對客戶的 Bot</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">先有流程與手冊，才有 Bot</h2>
+    <p class="g-p">原文點名一個常見誤解：以為把系統權限給 agent，它就會做那個工作。實務上 Bot 需要跟新人一樣的說明文件、到職訓練與持續指導。</p>
+    <p class="g-p">原文的判斷很硬：流程沒定義清楚、靠沒寫下來的知識在跑，交給 Bot 也解決不了。</p>
+    <p class="g-p">所以順序倒過來。先用 Grok Build 把流程做成有介面的內部應用，介面本身就定義流程怎麼走、哪些動作被允許；Provisioning 用的那一支原文寫的是 Cursor。</p>
+    <p class="g-p">Bot 只在這個受控環境裡動手，動作留得下稽核軌跡，人和 Bot 共用同一條流程。</p>
+    <p class="g-p">每個 Bot 另有一份 Notion 作業手冊：開票前怎麼核對合約、哪些帳務調整要人核准，都寫在裡面。</p>
+    <p class="g-p">每晚 Bot 讀一次刷新知識，並回報與現行指示不符之處。手冊對 Bot 唯讀，只有流程負責人有編輯權；政策一改，改文件再教 Bot 新程序。</p>
+
+    <div class="x-scroll" style="margin-top:14px">
+      <table class="x-tbl">
+        <thead><tr><th>動作層級</th><th>Bot 可做到哪</th><th>原文的核准界線</th></tr></thead>
+        <tbody>
+          <tr><td data-l="動作層級"><b>讀取</b></td><td data-l="可做到哪">讀工作所需的資訊；可經 Tailscale 連內網工具，不必把系統開上公網</td><td data-l="核准界線">存取政策綁在授權該連線的人員身分上</td></tr>
+          <tr><td data-l="動作層級"><b>例行寫入</b></td><td data-l="可做到哪">低風險任務獨立執行；改記錄的能力比讀取受限</td><td data-l="核准界線">原文未列出哪些任務算低風險</td></tr>
+          <tr><td data-l="動作層級"><b>敏感動作</b></td><td data-l="可做到哪">開折讓、退款、改帳單紀錄不能自己放行</td><td data-l="核准界線">只有指定人員可授權；其他人只能請 Bot 解釋一張發票</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-src">本站整理；原文分述於權限與核准一段，未以層級表列出，低風險任務的清單也未公開。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三週上線：先看人做，再放手</h2>
+    <p class="g-p">原文把上線當新人到職處理：先教工作怎麼做，再讓 Bot 看人做，最後才放手。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 · <b>三週到職制</b> — 每週交出一部分自主權（本站重繪）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">第 1 週</span><span class="tr"><i>建知識庫，Bot 旁觀人怎麼做這段流程</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">第 2 週</span><span class="tr"><i>Bot 提出動作並說明意圖，人逐次核准</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">第 3 週</span><span class="tr"><i>例行工作獨立執行，例外往上呈報</i></span></span></li>
+        <li class="side"><span class="st">特例</span><span class="body"><span class="hop">Billing Support Bot</span><span class="tr"><i>首版花 4–5 週，比後來的 Bot 久</i></span></span></li>
+        <li class="side"><span class="st">特例</span><span class="body"><span class="hop">Collections Bot</span><span class="tr"><i>約 3 個月：直接面對客戶，多一層身分驗證</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重繪；週次順序出自原文，原文未給每週的通過門檻，也未說明各週投入的人力。</p>
+    </figure>
+
+    <p class="g-p">這三週不是導入期，是風險控制期：知識落差與錯誤在還有人看著的時候修掉。</p>
+    <p class="g-p">Collections Bot 就是例子。它盯應收信箱、直接面對客戶；索取帳務資料的人要用 CRM 與計費系統裡的核准信箱比對，長得像的網域不算，比對不過就轉人工。</p>
+    <p class="g-p">成效全部是 SpaceXSI 自述：開票從約 24 小時縮到以分鐘計，入帳對帳從 3–4 小時變約 30 分鐘，Billing Support Bot 每日省下約 8 小時。</p>
+    <p class="g-p">原文另估計，少了這五個 Bot，這批工作要多一倍以上人力；會計改為管流程、改系統、處理例外。</p>
+    <p class="g-p">（編輯觀點：這篇真正給的是治理順序——誰負責流程、誰核准動作、誰改手冊，三題都指向人。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>別丟任務，交職位。</b>端到端負責才生得出稽核點與例外路線。</p>
+      <p><b>手冊與權限要先寫。</b>Bot 唯讀、敏感動作留人核准，才敢放手。</p>
+      <p><b>三週不是導入期。</b>那是風險控制期，改錯成本最低的一段。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="proactive-agents.html">主動代理：目標取代任務，注意力才是瓶頸</a><span class="d">2026-11-17</span></div>
+      <div class="g-relrow"><span class="s">OpenAI（官方部落格）</span><a href="chatgpt-sales-plugins.html">銷售代理：外掛是接口，價值在同一份客戶脈絡</a><span class="d">2026-11-17</span></div>
+      <div class="g-relrow"><span class="s">Google Blog</span><a href="gemini-tasks.html">任務模式：Gemini 從聊天框走到結帳頁</a><span class="d">2026-11-17</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；成效數字為 SpaceXSI／xAI 自述，無第三方驗證；權限層級表與三週階梯為編輯整理，非原文圖。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-18 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

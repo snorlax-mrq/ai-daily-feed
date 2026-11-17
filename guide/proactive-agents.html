@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 主動代理：目標取代任務，注意力才是瓶頸 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain 內部 GTM Agent 與 Robin 的經驗：主動代理由事件與排程自啟動，逾 70% 的 run 來自排程；記憶的三種訊號與 UX 三原則，決定它被採用還是被靜音。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>主動代理：目標取代任務，注意力才是瓶頸</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain 部落格，檢討自家兩個主動代理（業務 GTM Agent、工程 Robin）的實作，主張記憶與 UX 是關鍵——廠商技術部落格，成效數字皆為自述</p>
+    <p class="g-meta">
+      <span>LangChain Blog</span>·<span>2026-11-17 發布</span>·<span>2026-11-17 收錄</span>·
+      <a href="https://www.langchain.com/blog/what-weve-learned-building-proactive-agents" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>逾 70% 的 run</b><span>來自排程而非人類臨時 prompt，指 LangChain 自家 Managed Deep Agents（自報）</span></div>
+    <div class="g-stat"><b>3 種觸發</b><span>真實世界事件、開發者設的排程、代理自己設的排程</span></div>
+    <div class="g-stat"><b>Seed／Feedback／Outcomes</b><span>記憶的三種訊號，分別綁過去、現在、未來三個時間點</span></div>
+    <div class="g-stat"><b>2 個內部代理</b><span>GTM Agent（業務）與 Robin（原 Open SWE，工程），全文範例出處</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">主動代理的難處不在會不會做事，而在判斷什麼值得打擾你；LangChain 的答案是記憶加上 UX。</p>
+
+    <p class="g-p">原文用帶新人比喻：第一週給小任務，之後給大任務，最後只丟一個目標讓他自己拆。</p>
+    <p class="g-p">代理現在也能這樣帶。差別是被指派的是<em>目標而非任務</em>——原文引 Hone 對自家 Engines 的說法。</p>
+    <p class="g-p">目標讓代理吃得下橫跨數天、數週的難題；代價是它會自己決定何時回報，而每次回報都花掉你的注意力。</p>
+    <p class="g-p">於是瓶頸從模型能力換成人：代理接的目標愈多，你的注意力愈稀缺。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>觸發來源</th><th>原文例子</th><th>誰按下啟動</th></tr></thead>
+        <tbody>
+          <tr><td data-l="觸發來源"><b>真實世界事件</b></td><td data-l="例子">新郵件、新開的 pull request</td><td data-l="誰啟動">環境裡的他人</td></tr>
+          <tr><td data-l="觸發來源"><b>開發者設的排程</b></td><td data-l="例子">每晚更新記憶的工作、每週掃過期 PR</td><td data-l="誰啟動">寫代理的人</td></tr>
+          <tr><td data-l="觸發來源"><b>代理自己設的排程</b></td><td data-l="例子">明天追蹤某個討論串、使用者要求的每日簡報</td><td data-l="誰啟動">代理本身</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-src">本站整理，非原文圖；原文以三類文字陳述觸發，未給「誰按下啟動」這一直行對照。</p>
+
+    <p class="g-p">兩個內部代理三種都用上：Robin 的審查由「有人開 PR」這個事件啟動；GTM Agent 的每日簡報，跑的是它自己在使用者要求後建立的排程。</p>
+    <p class="g-p">兩者都建在 Managed Deep Agents 上，起點不是使用者當場下的指令。</p>
+    <p class="g-p">換句話說，多數時候沒有 prompt、沒有人盯著——代理醒來的那一刻，你不在場。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">記憶：決定它打擾你的品質</h2>
+    <p class="g-p">醒來時沒有你在旁說明要什麼。連接器（信箱、行事曆）只給當下的事實，「你在意什麼」只能從記憶來。</p>
+    <p class="g-p">原文的例子是行政助理代理：老闆講明天上線的那封信要標，電子報不要。要分辨這兩者，靠的就是記憶。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/proactive-agents/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/proactive-agents/01.webp" alt="原文的記憶生命週期圖：seed 寫入記憶檔案，代理提案、使用者回饋、代理行動，產生結果，再由 dreaming 背景工作把回饋與結果寫回記憶" width="1200" height="675" loading="lazy" decoding="async"></a>
+      <figcaption>記憶不是一次寫入：seed 先墊底，之後的回饋與結果全靠 dreaming 這個背景工作寫回 AGENTS.md、contacts.md、voice.md 等檔案。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／LangChain Blog，<a href="https://www.langchain.com/blog/what-weve-learned-building-proactive-agents" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">三種訊號各綁一個時間點。seed 是過去：例如從你的寄件備份起步，先學會你的語氣與往來對象。</p>
+    <p class="g-p">feedback 是現在：你改寫草稿，或附上理由退回，它才知道你的判斷。outcomes 是未來：草稿寄出後有沒有回覆。</p>
+    <p class="g-p">存起來不難——原文說記憶往往就只是一個檔案。難的是它長大之後還有用，因為代理會照它記得的東西行動。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>維護問題</th><th>原文定義</th><th>原文例子</th></tr></thead>
+        <tbody>
+          <tr><td data-l="問題"><b>Salience</b></td><td data-l="定義">什麼值得存、每條資訊多重</td><td data-l="例子">原文未舉例</td></tr>
+          <tr><td data-l="問題"><b>Expiry</b></td><td data-l="定義">資訊何時過期</td><td data-l="例子">已經過去的那個上市日</td></tr>
+          <tr><td data-l="問題"><b>Duplication</b></td><td data-l="定義">新舊合併，不存第二份</td><td data-l="例子">兩份副本日後互相矛盾</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-src">本站整理，非原文圖；原文為三條列點，未給此「定義／例子」對照。</p>
+
+    <p class="g-p">不少主動代理用「dreaming」處理：一個排程背景工作，讀最近的 trace，在下次執行前更新記憶。</p>
+    <p class="g-p">有沒有幫上忙，其中一種方法是挑對指標：助理代理看草稿從送出到被核准多久、寄出的信多常收到回覆。</p>
+    <p class="g-p">通用的一條是「你實際動手的 check-in 佔比」——原文認為任何主動代理都值得盯這個數。</p>
+    <p class="g-p">記憶也是自主權的來源：不再犯同一個錯，才換得到更多授權。例如你不再改它提的會議時間，就可以放手讓它自己訂。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">UX：把注意力花在值得的地方</h2>
+    <p class="g-p">主動代理通常帶著一個問題或一件待核准的事出現。呈現方式決定你回它，還是把它靜音。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/proactive-agents/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/proactive-agents/02.webp" alt="原文的代理行動矩陣：值得處理時動手是有用行動、不值得時不出手是有用沉默、不值得時動手是噪音、值得卻不動手是漏接" width="1200" height="675" loading="lazy" decoding="async"></a>
+      <figcaption>四格的分界不是「做或不做」，而是值不值得：判斷錯一次，不是噪音就是漏接。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／LangChain Blog，<a href="https://www.langchain.com/blog/what-weve-learned-building-proactive-agents" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">第一條是高訊號。新郵件抵達不代表該動作；GTM Agent 的審核介面把對話分成三類：等你回、需要草稿、不需要回。</p>
+    <p class="g-p">Slack 更難。Robin 用 Jev 當決策模型，判斷什麼時候該加入對話，而不是硬插話或等人 tag。</p>
+    <p class="g-p">第二條是為審核而設計。審核是把你的品味寫回記憶的通道，而品味往往是開放式工作裡最重要的脈絡，卻很少有地方把它寫下來。</p>
+    <p class="g-p">GTM Agent 原本靠 Slack 消化待審草稿，太慢，於是團隊替它做了一個專門介面。</p>
+    <p class="g-p">第三條是在你原本工作的地方。代理住在 Slack，可私訊、可 tag，同事也看得見別人怎麼用。</p>
+    <p class="g-p">同一個討論串裡，它能自己排後續追蹤、把報告貼回來；貼文刻意短，Robin 用一兩句標題，細節放回覆。</p>
+    <p class="g-p">開 PR 時它附一行摘要、變更大小與認領按鈕——你掃一眼就知道要不要接手。</p>
+    <p class="g-p">原文的收尾是換對象：過去三年替模型做 context engineering，現在要對人做同一件事——對的時間、對的格式、對的脈絡。</p>
+    <p class="g-p">人的 context window 一樣有限。記憶與 UX 都到位，check-in 才會像帶得起來的新人：愈來愈準，也愈來愈少。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>目標化是分水嶺。</b>代理自排時機後，稀缺資源就是你的注意力。</p>
+      <p><b>記憶是信任的資本。</b>記得回饋的代理，才配拿到更多自主權。</p>
+      <p><b>UX 決定被採用或靜音。</b>高訊號、好審核、在你原本的工作現場。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenAI（官方部落格）</span><a href="chatgpt-sales-plugins.html">銷售代理：外掛是接口，價值在同一份客戶脈絡</a><span class="d">2026-11-17</span></div>
+      <div class="g-relrow"><span class="s">Google Blog</span><a href="gemini-tasks.html">任務模式：Gemini 從聊天框走到結帳頁</a><span class="d">2026-11-17</span></div>
+      <div class="g-relrow"><span class="s">NVIDIA Blog</span><a href="sc26-agent-tools.html">科學代理：工具呼叫靠 CPU，資料留在自己家</a><span class="d">2026-11-17</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；逾 70% 排程佔比等數字為 LangChain 自述，無第三方驗證。原文配圖取自官方部落格，表格為編輯整理並已標註。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-17 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

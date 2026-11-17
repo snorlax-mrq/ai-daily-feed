@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 任務模式：Gemini 從聊天框走到結帳頁 · AI 每日動態檔案</title>
+<meta name="description" content="Gemini app 把 Chat 切成 Task：美、日、韓、加、澳、印六國免費開放，用 Gemini 4 Hydrogen 打電話、判讀帳單、以 AP2 付款；任務跑在硬體隔離 VM，按 Buy 前要你確認。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>任務模式：Gemini 從聊天框走到結帳頁</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">Gemini 推出「任務」功能，由 Labs 暨 Gemini app 副總裁 Josh Woodward 署名的官方產品公告，以自身案例示範打電話、判讀帳單與代客結帳——官方公告，成效均為 Google 自述</p>
+    <p class="g-meta">
+      <span>Google Blog</span>·<span>2026-11-17 發布</span>·<span>2026-11-17 收錄</span>·
+      <a href="https://blog.google/innovation-and-ai/products/gemini-app/tasks-in-gemini-free-new-features/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>6 國免費開放</b><span>美國、日本、韓國、加拿大、澳洲、印度，原文稱涵蓋「數億人」（Google 自報）</span></div>
+    <div class="g-stat"><b>Gemini 4 Hydrogen</b><span>本次任務功能所用的新模型；原文未附任何 benchmark 或延遲數據</span></div>
+    <div class="g-stat"><b>60+ app</b><span>已連接的第三方 app 數；開發者可申請加入 Connected Apps Platform</span></div>
+    <div class="g-stat"><b>AP2 ＋ 3 家卡組織</b><span>付款走 Agent Payments Protocol，Visa、Mastercard 在列，American Express 標「即將推出」</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">Gemini 這次賣的不是更會聊，而是能收尾：把一則口語指令變成日曆上的一筆行程、購物車裡的東西與 Wallet 裡的一張收據。</p>
+
+    <p class="g-p">入口不只一個。原文列了三條：app 首頁把 Chat 切到 Task、用 RCS 傳簡訊、把信轉寄到 gemini@google.com。</p>
+    <p class="g-p">免費開放的是美國、日本、韓國、加拿大、澳洲、印度六國，原文說這覆蓋「數億人」；進階功能則從美國先行。</p>
+    <p class="g-p">另兩條通道另有條件：原文寫「從美國開始」，轉寄 email 與傳簡訊都先在美國開放。</p>
+    <p class="g-p">對象設得很日常：被課表、會議與接送小孩塞滿，事情一直堆著的那種人。目標是一句「省時也省錢」。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一則任務的五段</b> — 誰在下指令、誰在跑、哪一段會停下來問你（本站重繪）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>1 下指令</b><small>Task 切換鈕／RCS 簡訊／轉寄 email</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>2 取上下文</b><small>Personal Intelligence 讀車款、住處、日曆空檔</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>3 跨 app 執行</b><small>Maps 找店、直接撥號、改 Instacart 清單</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>4 停下來問</b><small>按 Buy 前要確認；指令模糊就反問</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>5 交付</b><small>日曆事件、購物車、Wallet 收據與物流</small></div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖；原文以案例文字敘述過程，未給此五段切分與順序，節點由編輯整理。</p>
+    </figure>
+
+    <p class="g-p">第三段之所以成立，是因為資料本來就在 Google：車是 2019 年的 Odyssey、家住哪、哪些時段有空，都無須另外輸入。</p>
+    <p class="g-p">聊天你本來就有；這次換的是它能不能替你按到別人的按鈕——經銷商的預約系統、公用事業入口、結帳頁。</p>
+    <p class="g-p">並行是它與人不同的地方：兩家經銷商同時撥、等候音樂由它聽，選的是接受預約而非只能現場候位的那家。</p>
+    <p class="g-p">第四段是設計上的煞車。原文寫得明確，Gemini 會在關鍵步驟前暫停，要求你確認或預先核准，不會自己按下「購買」。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/gemini-tasks/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/gemini-tasks/01.webp" alt="原文截圖：左為 Gemini app 設定頁，Channels 一項被選取；右為 Text with Gemini 與 Email with Gemini 兩個通道，前者顯示已驗證的手機號碼與 Reset／Send text，後者顯示 gemini@google.com 與 Turn off。" width="1200" height="743" loading="lazy" decoding="async"></a>
+      <figcaption>任務不只在 app 裡：設定 → Channels 開通簡訊與 email 兩條通道，這就是「傳簡訊給 Gemini」與「轉寄到 gemini@google.com」的實際位置。截圖自註簡訊非端到端加密。<span class="g-fig-src">圖／Google，原文</span></figcaption>
+    </figure>
+
+    <p class="g-p">那行警語只出現在截圖：Text with Gemini 的訊息不是端到端加密，內容可能經電信商處理，正文並未重述。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">四個案例，四條不同的整合</h2>
+    <p class="g-p">把原文的示範拆開看，撐住的不是同一個模型，而是四組不同的資料源與支付管道。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>任務</th><th>動用的整合</th><th>原文限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="任務"><b>預約保養</b></td><td data-l="整合">Personal Intelligence、Google Maps、電話</td><td data-l="限定">同時打兩家、含等候音樂，5 分鐘內排進日曆；先表明是 AI，商家可隨時退出</td></tr>
+          <tr><td data-l="任務"><b>判讀 $389 電費</b></td><td data-l="整合">Google Password Manager 登入公用事業入口、掃 email 舊帳單</td><td data-l="限定">找出熱泵在下午 4 點尖峰電價啟動；原文未給省下的金額</td></tr>
+          <tr><td data-l="任務"><b>買 USB-C 充電器</b></td><td data-l="整合">Google Shopping Graph、Google Pay</td><td data-l="限定">追問瓦數與顏色、找到折扣碼再省 $10；可先設硬性消費上限</td></tr>
+          <tr><td data-l="任務"><b>加菜到 Instacart</b></td><td data-l="整合">RCS、Instacart</td><td data-l="限定">拍空麥片盒補品項後「交接」給 Instacart 完成結帳；目前接 60+ app</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">共同點是不另建資料。原文的說法是：這些敏感資料本來就安全地放在 Google，你不必再把它送到別的地方。</p>
+    <p class="g-p">四條裡有三條牽涉錢或帳號權限，這是原文用整節篇幅解釋防護的原因。</p>
+    <p class="g-p">還有一個沒進表格的案例：把一整批學校信件轉寄到 gemini@google.com，不到一分鐘每個日期都進了日曆，連太太一起被邀請。</p>
+    <p class="g-p">它還多走一步：發現籃球練習撞期，主動問要不要傳訊給別的家長換共乘。</p>
+    <p class="g-p">付款那段給的限制最硬：卡片以數位權杖代替卡號，但你原有的點數、現金回饋與購物保障照算。</p>
+    <p class="g-p">收據與追蹤進 Google Wallet，Wallet 即日起擴到 iOS；下一步是把 UCP 接進來，原文沒給時程。</p>
+    <p class="g-p">雜貨那段的動詞值得記：清單加完是「交接」給 Instacart 結帳。最後那一下不是 Gemini 按的。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">防線鋪在 VM 與確認鍵之間</h2>
+    <p class="g-p">安全架構的起點是隔離而非審查：每個任務跑在自己帳號專屬的硬體隔離 VM，原文強調不與其他使用者共用。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>四層防線</b> — 從 VM 到確認鍵，每一層擋的是什麼（本站重繪）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>1 · 硬體隔離 VM</b><small>任務的執行邊界</small><span class="pi">Agent Compute Engine</span></div>
+          <div class="ring-inner"><b>每帳號一台、互不共用</b> — 跑在 Google Cloud 的 Agent Compute Engine 上</div>
+        </div>
+        <div class="ring">
+          <div class="ring-lb"><b>2 · 沙盒與紅隊</b><small>邊界本身要被攻擊測試</small><span class="pi">red team</span></div>
+          <div class="ring-inner"><b>沙盒定期由安全紅隊測試</b> — 原文稱這是多層防禦中的一層</div>
+        </div>
+        <div class="ring">
+          <div class="ring-lb"><b>3 · 輸入過濾</b><small>它讀到的東西先篩</small><span class="pi">prompt injection</span></div>
+          <div class="ring-inner"><b>過濾器掃搜尋結果與網頁</b> — 配 Safe Browsing 決定哪些連結可以開</div>
+        </div>
+        <div class="ring ring--core">
+          <div class="ring-lb"><b>4 · 你的確認鍵</b><small>最後一道，也是唯一可關的</small><span class="pi">human in the loop</span></div>
+          <div class="ring-inner"><b>按 Buy 前要確認或預先核准</b> — 常規動作可設 Always allow，跳過反覆詢問</div>
+        </div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖；原文並列為「多層防禦」，未給此四層排序，順序為編輯依敘述整理。</p>
+    </figure>
+
+    <p class="g-p">第四層不是單點，而是全程可介入：任務跑到一半你隨時能插話補指令，不必等它做完再重下一次。</p>
+    <p class="g-p">Always allow 的方向要讀清楚：它省掉的是反覆詢問，不是把 Buy 前的確認整組關掉。</p>
+    <p class="g-p">前三層你改不了，第四層可以。可調 task 設定、斷開 Google 或第三方 app、隨時刪對話紀錄，另外有 AI VRP 懸賞計畫。</p>
+    <p class="g-p">原文也自己承認上限：測得再多，任務仍可能失敗或沒打到點，遇到就按 thumbs down 回報。</p>
+    <p class="g-p">更結構性的限制在網站端。有些站 Gemini 能走完大半流程，然後把畫面交回你按最後一顆按鈕。</p>
+    <p class="g-p">原文把安全寫成邀請題：除紅隊外還開放 AI VRP 懸賞，等於讓外部研究者一起打 agent 的攻擊面。</p>
+    <p class="g-p">它對 bot 的判斷值得抄下來：過去十年 bot 預設被封鎖，因為多數是惡意；個人助理要的是更細緻的做法與可驗證的開放標準。</p>
+    <p class="g-p">（編輯觀點：這篇的技術含量在整合清單與權限設計，不在模型名稱；Gemini 4 Hydrogen 全文只出現一次，沒有任何數字。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>門檻是整合，不是模型。</b>六國免費、60+ app 與四個資料源才是真本事。</p>
+      <p><b>確認鍵是設計，不是免責。</b>能預先核准也能設上限，權限要自己收。</p>
+      <p><b>最後一哩還沒自動化。</b>網站未適配時，畫面仍會交回你手上按。</p>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；案例成效（5 分鐘、$389、省 $10）皆為 Google 自述，無第三方驗證；圖解 A、B 為本站重繪，原文未給該切分與排序。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-17 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

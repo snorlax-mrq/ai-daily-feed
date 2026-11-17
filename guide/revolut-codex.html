@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 委派實作，不委派問責：Revolut 的代理分工 · AI 每日動態檔案</title>
+<meta name="description" content="Revolut 讓 FinCrime 代理接手篩選與調查、把 Codex 當實作團隊，編碼時間縮短 30–60%（Revolut 自報）；分界線畫在問責，核准與背書仍屬人。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>委派實作，不委派問責：Revolut 的代理分工</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：OpenAI 客戶案例〈How Revolut raises ambition without lowering the bar〉——Revolut 五位主管與工程師受訪，談金融犯罪代理與 Codex 如何改變分工；人物訪談型（原文未標發布日）</p>
+    <p class="g-meta">
+      <span>OpenAI（客戶案例）</span>·<span>原文未標日期</span>·<span>2026-11-18 收錄</span>·
+      <a href="https://openai.com/business/customer-stories/revolut" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>30–60%</b><span>Codex 縮短的編碼時間，基準是「任務開始到功能合併」（Revolut 自報）</span></div>
+    <div class="g-stat"><b>1 天</b><span>把約 7 年累積的設計系統文件轉成 AI 可讀脈絡（Revolut 自報）</span></div>
+    <div class="g-stat"><b>1–2 天</b><span>省在一件規模不小的資安程式碼審查任務上；原文未給樣本數（Revolut 自報）</span></div>
+    <div class="g-stat"><b>80 萬家企業</b><span>企業客戶數；營運橫跨 40 多個市場，消費者基數近 12 個月成長 23%（Revolut 自報）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">把「動手做」交給代理，把「敢不敢背」留在人身上——Revolut 換回來的是設計與複核的時間。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>同一條分界線，兩條委派線</b> — 交出去的是實作，留下來的是判斷（本站重繪）</figcaption>
+      <div class="x-cmp">
+        <div><b>Codex · 寫程式</b>
+          <p><b>交出</b>：把功能拆成任務，分派給多個代理各自實作</p>
+          <p><b>留下</b>：系統設計、工作規劃、複核代理交回的程式碼</p>
+        </div>
+        <div><b>FinCrime agent · 調查</b>
+          <p><b>交出</b>：檢視資料、套用 Revolut 自訂規則、走完既定流程</p>
+          <p><b>留下</b>：複核原始紀錄、判斷解釋是否成立、核准行動</p>
+        </div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖；原文分三段描述這兩條線，未做此對照，也未給兩者的先後或規模比較。</p>
+    </figure>
+
+    <h2 class="g-h2">先挑需求追不上人力的地方</h2>
+    <p class="g-p">原文把 ChatGPT 與 Codex 的合用說成文化問題：Revolut 本來就要求精簡小團隊快速推進。</p>
+    <p class="g-p">規模最大的 AI 應用之一是金融犯罪（FinCrime）代理，跑在 OpenAI 模型上。</p>
+    <p class="g-p">它做的事很具體：檢視資料、套用 Revolut 自己的規則、把既定流程走完；調查員不必逐案手動處理。</p>
+    <p class="g-p">AI 主管 David Abitbol 把問題講得很直白：人力規模追不上湧進來的需求量。</p>
+    <p class="g-p">背景數字來自原文引用的第三方報告：2025 年全球過半成年人回報遇過詐騙。</p>
+    <p class="g-p">GPT‑5.5 上線是轉折點。原文的說法是，模型的能力與成本效益到那時才夠，才敢把篩選與調查整段交出去。</p>
+    <p class="g-p">換來的是量能：監控的交易變多，調查員人數不必同比例增加——原文沒給比例。</p>
+    <p class="g-p">原文沒說這個代理處理多少案件、攔下多少詐騙，也沒有誤判或申訴的數字。</p>
+    <p class="g-p">資訊安全工程師 Mo Amiri 補了一句：這「直接變成更強的保護」，以及客戶能信任的系統。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">Codex 變成實作團隊</h2>
+    <p class="g-p">資深平台工程師 Dmitry Pitik 的案子最能說明分工。他要做一個內部程式碼審查服務，設計好系統、拆成功能。</p>
+    <p class="g-p">他一開始以為得靠一組開發團隊，後來改口：「我不需要一整組開發者」。</p>
+    <p class="g-p">做法是開幾個代理、各派一個任務；Codex 成了他的實作團隊。</p>
+    <p class="g-p">他自己留在設計、規劃與複核：看代理交回什麼，再決定下一步。</p>
+    <p class="g-p">Abitbol 說這是通例：省下的時間拿去討論設計與最佳解，也就是「花更多時間設計，而不是實作」。</p>
+    <p class="g-p">但責任沒有跟著外包。任何人用 AI 做東西，都得走同一套框架：開發、A/B 測試、業務指標預測。</p>
+    <p class="g-p">每位工程師被同一套品質標準要求；Pitik 補上「我們不盲目信任 AI」，開發者要為產出的程式碼負責。</p>
+    <p class="g-p">另一種效益是平行：Codex 跑一件時，他可以推進另一件。原文說 Revolut 平均員工「有三份不同的工作」。</p>
+    <p class="g-p">全球業務行銷主管 Kim Maniovich 把它說成飛輪：目標每月更積極，卻也更可達成，標準因此一直往上。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">信任要寫進流程</h2>
+    <p class="g-p">Amiri 的角色是讓速度被安全接住。他審一個新的 AI 應用時，會把整條鏈走一遍。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>導入前的五個追問</b> — 系統看到什麼、能動什麼、壞了會怎樣（本站重繪）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>看到什麼</b><small>系統讀得到哪些資訊</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>資訊去哪</b><small>流向何處、誰能取用</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>碰到什麼工具</b><small>可觸及的系統與權限</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>能做什麼</b><small>拿這些權限能做哪些事</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>失敗會怎樣</b><small>出錯時的處理與界線</small></div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖；原文以一句長句依序列出這五問，未畫圖、未給各問的權重。</p>
+    </figure>
+
+    <p class="g-p">他還多做一件事：檢查看起來有說服力的結論，背後有沒有證據。</p>
+    <p class="g-p">釣魚調查是例子。以前分析師要自己收信、看連結與附件、追寄件者、拼出證據。</p>
+    <p class="g-p">現在 AI 做這些粗活，交出一份結構化案件；人仍要複核原始紀錄、判斷解釋合不合理，再決定核准什麼行動。</p>
+    <p class="g-p">Amiri 的判準只有一個：最關鍵的決定永遠是問責。AI 建議改一段程式碼，工程師就得懂到能替它背書。</p>
+    <p class="g-p">原文把這寫成設計原則：審查流程要給開發者足夠脈絡，又不要把日常流程塞滿。</p>
+    <p class="g-p">其他成果還有做工具自動產生內外部產品的網頁介面，以及讓設計知識變得可被機器讀取。</p>
+    <p class="g-p">資深設計師 Dmytro Pavlov 的說法是：焦點可以從「重要但沒有 AI 很難做」的事，移到對客戶真正重要的事。</p>
+    <p class="g-p">下一步在原文是願景：Abitbol 想像更對話式的介面，客戶直接請 Revolut 封卡、管訂閱、找存錢的方法。</p>
+    <p class="g-p">Pavlov 看到的是底下的設計題：把複雜包成一致、熟悉、好用的東西。</p>
+    <p class="g-p">（編輯觀點：原文沒有失敗案例，也沒說導入範圍多大；成效全是自報，讀成情境而不是基準。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>分界線畫在問責，不在工作量。</b>代理接走實作與調查，核准與背書留在人身上。</p>
+      <p><b>統一標準要先有。</b>開發、A/B 測試、指標預測同一套，才敢整段委派。</p>
+      <p><b>數字要打折看。</b>30–60% 與省下的一兩天都是 Revolut 自報，原文未給樣本。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain Blog</span><a href="proactive-agents.html">主動代理：目標取代任務，注意力才是瓶頸</a><span class="d">2026-11-17</span></div>
+      <div class="g-relrow"><span class="s">OpenAI（官方部落格）</span><a href="chatgpt-sales-plugins.html">銷售代理：外掛是接口，價值在同一份客戶脈絡</a><span class="d">2026-11-17</span></div>
+      <div class="g-relrow"><span class="s">Google Blog</span><a href="gemini-tasks.html">任務模式：Gemini 從聊天框走到結帳頁</a><span class="d">2026-11-17</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；成效數字為 Revolut 在 OpenAI 客戶案例中自述，無第三方驗證。原文全篇無圖，圖解 A、B 均為本站重繪，非原文圖。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-17 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
