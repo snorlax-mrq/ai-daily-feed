@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 醫療後台代理：安全要量到動作，不只答案 · AI 每日動態檔案</title>
+<meta name="description" content="經醫師參與設計的 325 項病歷任務，99% 判為臨床安全；646 次醫師評估 93% 認為有幫助。行政流程另用史丹佛獨立基準：Astra 94.3%、Luna 91.8%，每項 8.5 美分（OpenAI 自報）。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>醫療後台代理：安全要量到動作，不只答案</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Advancing computer-use agents for healthcare teams（OpenAI 官方部落格，公布電子病歷收件匣與行政流程的代理評測，並說明 Abridge、Ambience、Cigna Healthcare、CVS Health 的導入進度）</p>
+    <p class="g-meta">
+      <span>OpenAI（官方部落格）</span>·<span>2026-11-16 發布</span>·<span>2026-11-17 收錄</span>·
+      <a href="https://openai.com/index/advancing-computer-use-for-healthcare-teams" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>325 項</b><span>經醫師參與設計的電子病歷收件匣任務，是安全評測的樣本</span></div>
+    <div class="g-stat"><b>646 次</b><span>醫師評估次數，其中 93% 選「非常有幫助」或「極度有幫助」（OpenAI 自報，無第三方驗證）</span></div>
+    <div class="g-stat"><b>8.5 美分</b><span>GPT-6 Luna 每項行政任務成本，比 Astra 低 98%（OpenAI 自報）</span></div>
+    <div class="g-stat"><b>4 家</b><span>原文點名的合作機構，場景涵蓋事前授權、轉診、出院規劃與兩次看診之間的聯繫</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">醫療後台的代理，門檻不是能力而是可審查性：OpenAI 把評測拆成安全、幫助度、成本三條線，判準是「是否可能導致病人傷害」。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">代理動的是別人的系統，不是自己的答案</h2>
+    <p class="g-p">醫療資訊散在各系統之間。醫師建議做 MRI，保險公司要的資料在病歷裡，但得有人撈出來、填進另一個入口網站。</p>
+    <p class="g-p">原文稱這種能力為 computer-use：靠點擊、打字、在應用程式之間移動，完成多步驟流程。</p>
+    <p class="g-p">原文說，夥伴的軟體用在數百家健康系統、服務全球數億病人；代理要補的，正是 API 沒覆蓋的那幾步。</p>
+    <p class="g-p">難處在兩層：一是跨多次就診的病歷推理，二是把介面操作走完而不誤觸；任務設計就是要同時測這兩者。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一張 MRI 單的兩次人工覆核</b> — 誰把球傳給誰（本站重排）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">病人 → 收件匣</span><span class="tr"><i>下背痛訊息進來</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">代理 → 病歷</span><span class="tr"><i>讀就診紀錄、物理治療紀錄、舊影像</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">代理 → 臨床醫師</span><span class="tr"><i>草擬 MRI 醫囑、就診紀錄、病人回覆</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">代理 → 保險入口網站</span><span class="tr"><i>用同一批紀錄備妥事前授權申請</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">代理 → 授權專員</span><span class="tr"><i>授權單待專員審核</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重排，原文只有文字敘述、未附流程圖；示範以合成病歷資料進行，兩次覆核由真人執行。</p>
+    </figure>
+
+    <p class="g-p">原文用這個示範定位代理：檢索與填表交給它，判斷留在兩個真人身上。下文評測量的，就是它有沒有把這兩件事做對。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">量什麼：三把尺，不能互推</h2>
+    <p class="g-p">臨床任務集由醫師參與設計，要同時測跨長期病歷的臨床推理，以及在複雜介面裡操作。</p>
+    <p class="g-p">審查者不是只看答案，而是把模型的動作，和它產出的紀錄、醫囑、病人訊息擺在一起看。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>三把尺：安全、幫助度、成本</b> — 任務集與評分方式（本站整理）</figcaption>
+      <div class="x-scroll">
+        <table class="x-tbl">
+          <thead><tr><th>任務集</th><th>規模</th><th>評分方式</th><th>結果</th></tr></thead>
+          <tbody>
+            <tr><td data-l="任務集"><b>收件匣工作</b>：臨床推理＋介面操作</td><td data-l="規模">325 項，醫師參與設計</td><td data-l="評分方式">審查者比對模型動作與其產出的紀錄、醫囑、病人訊息，判是否可能導致病人傷害</td><td data-l="結果"><b>99%</b> 判為臨床安全</td></tr>
+            <tr><td data-l="任務集"><b>收件匣工作</b>：幫助程度</td><td data-l="規模">646 次醫師評估</td><td data-l="評分方式">醫師五分制，需選「非常有幫助」或「極度有幫助」才計入</td><td data-l="結果"><b>93%</b> 選最高兩級</td></tr>
+            <tr><td data-l="任務集"><b>行政流程</b>：事前授權、申訴、醫材醫囑</td><td data-l="規模">兩款模型同基準受測（原文未給題數）</td><td data-l="評分方式">HealthAdminBench（史丹佛研究團隊的獨立基準）中取得可用評分點的比例，皆為最大推理強度</td><td data-l="結果">Astra <b>94.3%</b>、Luna <b>91.8%</b>；Luna 每項 8.5 美分、成本低 98%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="x-src">安全與幫助度由審查者與醫師評分（OpenAI 自報，無第三方驗證）；HealthAdminBench 是史丹佛研究團隊的獨立基準，但受測與設定由 OpenAI 執行。</p>
+    </figure>
+
+    <p class="g-p">安全判準很窄也很硬：不準確、遺漏或某個動作，是否「有可能」導致病人傷害。所以 99% 不是沒有風險：325 項裡仍有約 1% 未判為安全，只是絕大多數過了這道窄門。</p>
+    <p class="g-p">325 與 646 的單位不同：前者是任務數，後者是評分次數，原文未說明一項任務平均被評幾次；兩把尺都靠人判，也未公開評分規準。</p>
+    <p class="g-p">93% 只算五分制的最高兩級，中間的「有幫助」不算；也就是仍有 7% 的評估沒站上這條線。</p>
+    <p class="g-p">把「安全」與「有幫助」分開評，是因為兩者會分道：安全的回覆可能沒用，有用的草稿可能漏掉關鍵欄位。</p>
+    <p class="g-p">行政那條線換了尺：量的是取得評分點的比例，不是任務完成率，也不是授權單實際通過的比例。原文沒給醫療任務的成功率與單價。</p>
+    <p class="g-p">兩款模型都以最大推理強度受測；原文未給調低推理後的分數，8.5 美分是這個設定下的數字。</p>
+    <p class="g-p">還要記得場景差別：示範用合成病歷、任務集是設計出來的，真實機構的資料治理另有一套。</p>
+    <p class="g-p">（編輯觀點：兩組數字回答的是不同問題——能不能做對、值不值得做；把 94.3% 當成「授權單會過」的機率是誤讀。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">能跑不等於能上線：三個控制點</h2>
+    <p class="g-p">原文把上線責任放在組織設定：核准關卡、代理能碰哪些應用、以及事後能不能重建當時的畫面。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>部署時可設定的三個位置</b> — 並列選項，非流程（本站整理）</figcaption>
+      <div class="x-grid">
+        <div class="c"><b><i>1</i>核准關卡</b><small>哪些步驟必須真人按下才算完成；原文示範把醫囑與授權單都留在人手上</small></div>
+        <div class="c"><b><i>2</i>代理存取範圍</b><small>哪些應用與資料給代理開；能力邊界由組織設定，不是模型自己決定</small></div>
+        <div class="c"><b><i>3</i>稽核紀錄</b><small>留下動作與截圖，事後可核對動作與應用程式狀態</small></div>
+      </div>
+      <p class="x-src">本站整理自原文敘述，原文未給這三者的優先順序或設定範例。</p>
+    </figure>
+
+    <p class="g-p">能力已可從 OpenAI API、ChatGPT for Healthcare 與 ChatGPT for Clinicians 取用；合規邊界要機構自己拉。</p>
+    <p class="g-p">CVS Health 的實作可以對照：驗證檢查加人工監督，用截圖與動作紀錄核對動作和系統狀態；這套做法正開源為 Agent Kit（OpenAI Agents SDK）。</p>
+    <p class="g-p">原文也聲明，CVS 的生產資料留在自家企業基礎設施、不用於訓練基礎模型；其他三家是否同此設定，原文未說明。</p>
+    <p class="g-p">Abridge 的院內情境還在規劃階段：代理將同時處理藥物取得與居家照護協調，電腦操作與電話、訊息並用，醫師留在病人身上。</p>
+    <p class="g-p">成效目前只有自報：一個代理在週末清掉積壓數月的寄件量，另一個每天處理數萬件會診的系統步驟（CVS Health 自報）。</p>
+    <p class="g-p">（編輯觀點：合作段落是進度報告，不是成效驗證；這兩個數字證明流程跑得動，不證明品質，原文未給退件率。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>安全要連動作一起審。</b>只看最後的答案，會漏掉在系統裡按錯的那一步。</p>
+      <p><b>99% 不是上線門檻。</b>醫療場景得先講清楚，那 1% 由誰承擔。</p>
+      <p><b>成本已不是障礙。</b>91.8% 的評分點只要 8.5 美分，剩下的是責任。</p>
+    </div>
+  </section>
+
+    <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="agent-anomaly-detection.html">代理異常偵測：看的是職責越界，不是系統當機</a><span class="d">2026-11-16</span></div>
+      <div class="g-relrow"><span class="s">LangChain（官方部落格）</span><a href="langsmith-agent-record.html">代理紀錄：治理的單位從專案換成代理</a><span class="d">2026-11-16</span></div>
+      <div class="g-relrow"><span class="s">LangChain（官方部落格）</span><a href="tasks-to-goals.html">任務到目標：交出的是決策權，不只是提示</a><span class="d">2026-11-16</span></div>
+    </div>
+  </section>
+
+<p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，OpenAI 自報項目已標注，無第三方驗證；原文未附機制圖，圖解 A、B、C 皆為本站重繪與整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-17 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

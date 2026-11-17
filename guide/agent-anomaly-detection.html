@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>導讀 — 代理異常偵測：看得到的抓得到，藏得深的漏掉 · AI 每日動態檔案</title>
-<meta name="description" content="Google 用五份非自家撰寫的公開 agent 安全基準測 Agent Anomaly Detection：已執行的有害指令標記 87%（357/411），正常 session 誤報 2%–16%，長期記憶下毒只抓到 4/18（Google 自報）。">
+<title>導讀 — 代理異常偵測：看的是職責越界，不是系統當機 · AI 每日動態檔案</title>
+<meta name="description" content="Google Cloud 的 Agent Anomaly Detection 讀代理既有的 trace 與對話，逐次評分挑出職責越界的 session：示範場次判 Tool misuse High，但僅支援 US／EU、只能事後告警。">
 <script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
 <link rel="stylesheet" href="../assets/archive.css">
 <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -12,7 +12,7 @@
 <body>
 <header class="bar"><div class="bar-in">
   <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
-  <nav class="bar-nav"><a href="../topics.html?t=%E8%B3%87%E5%AE%89%E8%88%87%E6%BC%8F%E6%B4%9E" class="day-catalog">資安與漏洞</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
   <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
   <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
     <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
@@ -21,114 +21,125 @@
 </div></header>
 <main class="wrap">
 
-  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E8%B3%87%E5%AE%89%E8%88%87%E6%BC%8F%E6%B4%9E">資安與漏洞</a> › 導讀</p>
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
   <header class="g-head">
     <div class="day-title-row">
-      <h1>代理異常偵測：看得到的抓得到，藏得深的漏掉</h1>
+      <h1>代理異常偵測：看的是職責越界，不是系統當機</h1>
       <span class="stamp">導讀</span>
     </div>
-    <p class="g-orig">原文：Google Developers Blog 技術研究文章——用五份「不是 Google 寫的」公開 agent 安全基準，測 Private Preview 中的 Agent Anomaly Detection；全部數字為 Google 自報，無第三方驗證</p>
+    <p class="g-orig">原文：Securing Your Agents: A Hands-On Guide to Agent Anomaly Detection（Google Cloud 官方實作教學；用一支讀得到薪資表的客服代理，走完啟用、送測、讀 finding、設告警）</p>
     <p class="g-meta">
-      <span>Google Developers Blog</span>·<span>2026-11-12 發布</span>·<span>2026-11-12 收錄</span>·
-      <a href="https://developers.googleblog.com/how-agent-anomaly-detection-scores-on-benchmarks-we-didnt-write/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+      <span>Google Developers Blog</span>·<span>2026-11-16 發布</span>·<span>2026-11-17 收錄</span>·
+      <a href="https://developers.googleblog.com/securing-your-agents-a-hands-on-guide-to-agent-anomaly-detection/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
     </p>
   </header>
 
   <div class="g-stats">
-    <div class="g-stat"><b>87%</b><span>已執行的有害指令被標記送審（357/411，Google 自報）</span></div>
-    <div class="g-stat"><b>5 份</b><span>非 Google 撰寫的公開基準，合計 1,774 場 session</span></div>
-    <div class="g-stat"><b>2%–16%</b><span>正常 session 的誤報率，視 agent 日常使用哪些工具而定</span></div>
-    <div class="g-stat"><b>4/18</b><span>長期記憶被植入指令且真的執行時，Agent Anomaly Detection（AAD）只抓到這個比例</span></div>
+    <div class="g-stat"><b>95% 機率</b><span>示範場次最高一條 finding：Tool misuse、High；原文註明重跑會不同</span></div>
+    <div class="g-stat"><b>5 分鐘</b><span>session 送進後的掃描時間；主控台啟用本身約 30 分鐘</span></div>
+    <div class="g-stat"><b>US／EU 限定</b><span>Logging bucket 與 Observability dataset 須同區，目前只這兩個 multi-region</span></div>
+    <div class="g-stat"><b>2 個指標</b><span>Cloud Monitoring 只曝 Detected events 與 Monitored agents（覆蓋率）</span></div>
   </div>
 
   <section class="g-sec">
-    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600"><strong>Google 拿五份不是自己寫的基準測 Agent Anomaly Detection：已執行的有害動作抓得到 87%，但越靠近模型外圍、藏得越深的，越抓不到。</strong></p>
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">代理的失敗多半不留錯誤日誌：這套偵測改讀既有的 trace 與對話內容，逐次判斷有沒有做出職責外的事，代價是只能事後告警。</p>
 
-    <p class="g-p">OWASP 把這類風險稱作 agent goal hijack，在 2026 版 Agentic Applications Top 10 排第一。</p>
-    <p class="g-p">原文的因果很簡單：agent 讀信、訂票、搬錢，每次工具呼叫都帶進別人寫的文字，誰控制那段文字就能試著轉向 agent。</p>
-    <p class="g-p">Agent Anomaly Detection（下稱 AAD）是 Gemini Enterprise Agent Platform 上的功能，九月以 Private Preview 發布。</p>
-    <p class="g-p">它非同步讀 agent 的 trace 與 log，原文強調不加延遲；判的是整個 session，不是單一工具呼叫。</p>
-    <p class="g-p">五份基準有共同結構：四份把有害指令藏在工具回傳的資料裡，第五份 AgentHarm 則是使用者直接要求傷害。</p>
-    <p class="g-p">測試用 Agent Development Kit（ADK）與 gemini-2.5-flash 建 agent，跑在各基準自己的模擬 App 上，trace 與 log 照客戶的方式送進 AAD。</p>
-    <p class="g-p">標籤不由模型給：基準自己的 Python 檢查讀 App 最終狀態（例如錢有沒有被匯出）再判定，所以注入指令騙不到評分者，AAD 也無法作弊。</p>
-    <p class="g-p">每個 agent 先跑至少 300 場正常 session，因為這功能要先學會每個 agent 平常長什麼樣子。</p>
+    <h2 class="g-h2">判準換了：從「有沒有壞」到「有沒有越界」</h2>
+    <p class="g-p">原文開場舉了兩個已發生的例子：助理代理把使用者的住家地址交給陌生人；研究代理繞過網站的存取控制去抓資料。</p>
+    <p class="g-p">兩件事都沒有當機、也沒有錯誤日誌，團隊直到損害發生才知道。傳統監控問「系統有沒有壞」，這裡的失敗是系統好好地做了不該做的事。</p>
+    <p class="g-p">判準於是換成一句：這個 session 有沒有做出它被造來做的那件事以外的事。原文只給這一句定義，其餘交給模型判斷。</p>
+    <p class="g-p">示範代理刻意留了洞：<em>fetch_records</em> 工具不檢查表名，任何表都讀得到，包含放員工薪資的 <em>payroll</em> 表。</p>
+    <p class="g-p">原文用 lethal trifecta 說明危險在哪：能讀私密資料、輸入來自無法審核的人、又把讀到的東西寫進回覆。三件事同時成立，越界只是時間問題。</p>
+    <p class="g-p">最容易被忽略的是第三件：把讀到的東西寫回回覆，等於把內部資料轉成對外輸出，而這一步沒有任何權限檢查會亮燈。</p>
+    <p class="g-p">原文對 guardrail 的評價很節制：工具權限與護欄擋得住大部分，但只擋得住「有人想到要寫下來」的規則。偵測補的正是沒被寫下來的那一半。</p>
+    <p class="g-p">（編輯觀點：這句話同時是它的定位與天花板——判斷標準來自你怎麼描述代理的職責；職責寫得寬，越界就不叫越界。）</p>
 
-    <figure class="g-fig">
-      <a class="fig-zoom" href="../assets/guide/developers-googleblog-com-how-agent-anom/03.webp" target="_blank" rel="noopener"><img src="../assets/guide/developers-googleblog-com-how-agent-anom/03.webp" alt="四份注入基準的有害 session 分佈橫條圖：灰為從未讀到、藍為抵抗、綠為執行且有 finding、橘為執行但漏掉；AgentDojo 126/148、InjecAgent 71/82、AgentDyn 72/73、AgentHarm 88/108，四份合計 357/411 標記 87%" width="1200" height="569" loading="lazy" decoding="async"></a>
-      <figcaption>分母才是重點：害處的來源有三種結局，只有綠色那一段進 87%。四份合計已執行 411 場、標記 357 場；AgentDyn 99% 最高、AgentHarm 81% 最低。圖中部分 App 的場次很少（如 Slack 54 場），比率要搭配分母讀。第五份 ASB 不在圖上，它測的是記憶下毒。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／Google Developers Blog，<a href="https://developers.googleblog.com/how-agent-anomaly-detection-scores-on-benchmarks-we-didnt-write/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>從執行到告警的四段</b> — 訊號在哪裡變成判斷（本站重繪）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>代理執行並落地內容</b><small>prompt 與回覆以 EVENT_ONLY 寫進 Cloud Logging</small></div>
+        <span class="ar">→</span>
+        <div class="fn hot"><b>逐次評分</b><small>每個 invocation 給 detector、severity、probability</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>session 彙總</b><small>多次 Medium 可合成 High（Cascading failures）</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>finding 與告警</b><small>監控指標、SCC 的 AGENT_SESSION_ANOMALY</small></div>
+      </div>
+      <p class="x-src">本站依原文敘述重繪，原文只有主控台截圖、未給此管線圖；節點順序取自原文各步驟的描述，非原文編號。</p>
     </figure>
 
-    <p class="g-p">模型自己擋掉約一半：直接要求傷害的拒絕了四分之三，藏在工具輸出裡的忽略或失敗約 30%。</p>
-    <p class="g-p">所以分母放大到全部有害 session（含沒讀到、讀了抵抗），標記率只有 45%–62%。</p>
-    <p class="g-p">原文另註：約 6% 的 session 沒有產生結果；若把這些也算成漏抓，整體比率會再低 1–2 個百分點。</p>
+    <p class="g-p">鏈條的重點在第二段：內容要先落地，模型才看得到語意。只留工具呼叫與時序，等於只知道它摸了幾次資料庫。</p>
+    <p class="g-p">而且這是事後偵測。finding 在五分鐘內出來時，那段對話早就結束了；原文只描述事後標記，未提到攔阻動作。原文的承諾也很窄：補行為層的洞，不是取代權限設計。</p>
   </section>
 
   <section class="g-sec">
-    <h2 class="g-h2">強項與缺口，差在訊號離得多遠</h2>
+    <h2 class="g-h2">一張成績單：看的是每一次呼叫，不是整段對話</h2>
+    <p class="g-p">finding 的粒度是 invocation：每一次呼叫都有自己的 severity 與 probability，session 再把這些分數彙總成一個總等級。</p>
+    <p class="g-p">原文示範的最高一條是 Tool misuse、High、95% 機率，建議修法是把 <em>fetch_records</em> 限制在特定表。
+    <p class="g-p">同一張圖右欄還有一條 Rogue agent、Medium、80%，講的是代理做了超出職責的事。</p>
+    <p class="g-p">單次呼叫只是 Medium，湊在一起才變 High。左欄那個 Cascading failures 講的就是這件事：不是哪一句話特別壞，是一串各自普通的動作連起來壞。</p>
+    <p class="g-p">原文明確限定：detector 與 severity 可能每次不同，因為分析背後的模型不是確定性的。把它當線索，不要當判決。</p>
+    <p class="g-p">示範同時送了一段正常對話，原文特別點出它正確地沒被標記。對這種偵測來說，不誤報和抓得到一樣重要，否則告警很快被靜音。</p>
 
-    <p class="x-src">五份基準與全部有害 session 的限定語整理（本站整理；數字皆出自原文）</p>
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/developers-googleblog-com-securing-your-/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/developers-googleblog-com-securing-your-/01.webp" alt="原文截圖：Agent Anomaly Detection 的 session 詳情頁，左欄列出 session 總等級 High 與各次 invocation 的 Medium，中欄是完整對話，右欄是觸發的 detector：Tool misuse High 95% 機率、Rogue agent Medium 80% 機率，並附建議修法。" width="1200" height="617" loading="lazy" decoding="async"></a>
+      <figcaption>三欄各答一個問題：左欄有多嚴重、中欄它實際講了什麼、右欄為什麼被標與怎麼修。示範場次的建議修法是「把工具限縮到 orders 表」；finding 指向的是工具設定（編輯觀點：原文未與「換模型」對照）。<span class="g-fig-src">圖／Google Developers，<a href="https://developers.googleblog.com/securing-your-agents-a-hands-on-guide-to-agent-anomaly-detection/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>finding 出現後，你要回答哪個問題</b> — 五個去處（本站整理）</figcaption>
+      <div class="x-dec">
+        <p class="q">手上有一條 finding，下一個問題是什麼？</p>
+        <div class="brs">
+          <div class="br"><span class="tag">多嚴重</span><b>Session 欄</b><small>session 總等級，底下逐次 invocation 的等級</small></div>
+          <div class="br"><span class="tag">它講了什麼</span><b>Conversation 欄</b><small>使用者與代理的完整對話逐字</small></div>
+          <div class="br"><span class="tag">為什麼、怎麼修</span><b>Details 欄</b><small>觸發的 detector、機率、理由與建議</small></div>
+          <div class="br"><span class="tag">覆蓋率掉了沒</span><b>Cloud Monitoring</b><small>Detected events 與 Monitored agents 兩個指標</small></div>
+          <div class="br"><span class="tag">要併案處理</span><b>Security Command Center</b><small>與其他威脅一起 triage，可加標記追蹤</small></div>
+        </div>
+      </div>
+      <p class="x-src">本站整理，原文未給此對照；原文只分散描述三個窗格與兩個外部入口。前三個在同一頁面，後兩個是外部系統。</p>
+    </figure>
+
+    <p class="g-p">這個設計把「為什麼」放在第一層：不給理由的異常分數沒人敢用，給了理由才能變成一次修設定。</p>
+    <p class="g-p">原文的告警建議是先收全部事件：滾動視窗五分鐘、delta 大於 0 就通知；摸清常態後再加 severity 篩選，另設一條指標消失的政策防監控默默停掉。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">會漏的地方，幾乎都寫在前提裡</h2>
+    <p class="g-p">原文沒有一節講限制，但四個前提各自對應一種漏接；把它們並排看，才知道這套偵測的邊界在哪。</p>
+
     <div class="x-scroll">
       <table class="x-tbl">
-        <thead><tr><th>情境</th><th>標記率</th><th>原文說法（含編輯註記）</th></tr></thead>
+        <thead><tr><th>前提</th><th>會漏掉什麼</th><th>原文限定語</th></tr></thead>
         <tbody>
-          <tr><td data-l="情境"><b>全部有害 session</b></td><td data-l="標記率">45%–62%</td><td data-l="原文">含 agent 從未讀到與讀了抵抗的場次；不是只看已執行的 87%</td></tr>
-          <tr><td data-l="情境"><b>被抵抗的指令</b></td><td data-l="標記率">11%–25%</td><td data-l="原文">抵抗的指令幾乎沒改變 agent 行為，訊號本就淡（編輯註：原文未給此解釋，為本站推論）</td></tr>
-          <tr><td data-l="情境"><b>從未讀到（141 場）</b></td><td data-l="標記率">只標 1 場</td><td data-l="原文">什麼都沒發生，本來就不該有事（編輯註：此列屬本站說明）</td></tr>
-          <tr><td data-l="情境"><b>長期記憶下毒（ASB）</b></td><td data-l="標記率">4/18</td><td data-l="原文">原文直稱 poisoned memory 是明顯的缺口</td></tr>
-          <tr><td data-l="情境"><b>正常 session 誤報</b></td><td data-l="標記率">2%–4%；AgentHarm 16%</td><td data-l="原文">三個注入基準的正常題是辦公任務，AgentHarm 的正常題是有害題的孿生版</td></tr>
+          <tr><td data-l="前提"><b>沒擷取對話內容</b></td><td data-l="會漏掉什麼">只看得到工具呼叫與時序，語意越界無從判斷</td><td data-l="原文限定語">需設 <em>EVENT_ONLY</em> 把 prompt 與回覆寫進 Cloud Logging</td></tr>
+          <tr><td data-l="前提"><b>session 在啟用前就開始</b></td><td data-l="會漏掉什麼">不回補；未服務過請求的代理也不進監控名單</td><td data-l="原文限定語">「較早開始的 session 不分析」；靠 telemetry 發現代理</td></tr>
+          <tr><td data-l="前提"><b>不在 US 或 EU multi-region</b></td><td data-l="會漏掉什麼">根本無法啟用</td><td data-l="原文限定語">bucket 與 Observability dataset 須同一 multi-region</td></tr>
+          <tr><td data-l="前提"><b>資料已經外流</b></td><td data-l="會漏掉什麼">不會阻止，只會事後給 finding 與建議</td><td data-l="原文限定語">「通常在幾分鐘內」標記，非即時攔阻</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="x-hint">→ 可橫向滑動</p>
 
-    <p class="g-p">模式比類別清楚：指令要 agent 做的動作越大，越容易被抓到；只要求小動作、或藏在工具深處的，仍會漏。</p>
-    <p class="g-p">AgentHarm 的請求寫在使用者自己的訊息裡，所以即使 agent 拒絕，仍有 55% 的 session 被標記。</p>
-    <p class="g-p">它標的是「有人提出要求」，不是「agent 真的做了」——這個差別在資安營運上很實際。</p>
-    <p class="g-p">五份基準分別是 AgentDojo（NeurIPS 2024）、InjecAgent（ACL 2024 Findings）、Agent Security Bench（ASB，ICLR 2025）、AgentDyn（2026）、AgentHarm（ICLR 2025）。</p>
-    <p class="g-p">（編輯觀點：讀這篇要把「標記率」當事後稽核的覆蓋率，不是防線；真正擋下攻擊的仍是模型自身的拒絕。）</p>
-  </section>
-
-  <section class="g-sec">
-    <h2 class="g-h2">誤報率由 agent 平常的工具決定</h2>
-
-    <figure class="g-fig">
-      <a class="fig-zoom" href="../assets/guide/developers-googleblog-com-how-agent-anom/04.webp" target="_blank" rel="noopener"><img src="../assets/guide/developers-googleblog-com-how-agent-anom/04.webp" alt="各模擬 App 已執行有害指令的標記比例橫條圖：Workspace 19/19、Travel 50/51、Banking 23/24、Slack 34/54；InjecAgent 的 Banking 14/14、Travel 4/4、Workspace 27/32、Slack 26/32；AgentDyn 的 GitHub 20/20、Shopping 11/11、Daily life 41/42" width="1200" height="880" loading="lazy" decoding="async"></a>
-      <figcaption>11 個模擬 App 有 8 個標記率 ≥95%；最弱是 AgentDojo 的 Slack（34 of 54，63%），因為那裡很多指令只要求開一個網頁。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／Google Developers Blog，<a href="https://developers.googleblog.com/how-agent-anomaly-detection-scores-on-benchmarks-we-didnt-write/" target="_blank" rel="noopener">原文</a></span></figcaption>
-    </figure>
-
-    <p class="g-p">低於 95% 的三個案例都落在 Slack 與 Workspace；原文歸因於許多指令只要求一個小動作，例如開一個網頁。</p>
-    <p class="g-p">誤報同理。正常題是辦公任務時，三個注入基準的誤報只有 2%–4%。</p>
-    <p class="g-p">AgentHarm 的正常題是有害題的孿生版，會發社群貼文、跑終端指令、下載檔案，誤報就跳到 16%。</p>
-    <p class="g-p">原文的說法很直白：高影響力的工具在正常使用時，看起來就接近濫用。</p>
-    <p class="g-p">建議也務實：日常就用這類工具的 agent，初期預期會多出一批 finding，按嚴重度與威脅類別分流。</p>
-    <p class="g-p">邊界寫得誠實：五個威脅類別有四個對得上 OWASP Top 10 for Agentic Applications，但每類只按「這次研究證明了什麼」評級。</p>
-    <p class="g-p">公開基準集中在 goal hijack 與 tool misuse，證據最強在那；cascading failure 與身分權限濫用找不到帶標籤 trace 的公開基準。</p>
-    <p class="g-p">另外兩個弱點是原文自承的：新上線的 agent，以及被下毒的長期記憶。</p>
-    <p class="g-p">ASB 那 18 場裡只抓到 4 場，包含要靠觸發語句才會啟動的後門。</p>
+    <p class="g-p">最關鍵是第一列：不落地內容就沒有語意可看；而落地本身是隱私與存取的新決定，等於為了偵測多開一個資料面。</p>
+    <p class="g-p">（編輯推論：把代理職責描述得寬，等於把異常的門檻推高。finding 的密度會隨你怎麼寫職責而變，這是設定題不是模型題。）</p>
+    <p class="g-p">原文的上線順序只有三步：先把 telemetry 備好，讓它自動接手新 session，最後照建議修一輪、再上第二支代理。</p>
   </section>
 
   <section class="g-sec">
     <h2 class="g-h2">帶走三件事</h2>
     <div class="x-take">
-      <p><b>抓到不等於攔到。</b>87% 是事後審查率，不是阻擋率。</p>
-      <p><b>看訊號位置，不看攻擊名稱。</b>使用者訊息勝過工具輸出，記憶最弱。</p>
-      <p><b>誤報由工具決定。</b>跑高影響力工具的 agent 要預留分流人力。</p>
+      <p><b>判準是職責，不是錯誤。</b>沒有當機的越界最難查，也最貴。</p>
+      <p><b>先確認內容有沒有落地。</b>沒開擷取，只剩工具呼叫的空殼。</p>
+      <p><b>當線索，別當判決。</b>模型非確定性，分數會變，要人工複核。</p>
     </div>
   </section>
 
-  <section class="g-sec">
-    <h2 class="g-h2">同一主題的其他館藏</h2>
-    <div class="g-rel">
-      <div class="g-relrow"><span class="s">OpenAI Developers Blog（Kevin S Lin）</span><a href="openclaw-persistent-agent-security.html">常駐 agent 資安：gateway 算可信，agent 算不可信</a><span class="d">2026-11-12</span></div>
-      <div class="g-relrow"><span class="s">OpenAI（Cogent Security 案例）</span><a href="cogent-cyber-defense.html">資安修補：脈絡與權限先到位，自動修復才成立</a><span class="d">2026-11-10</span></div>
-    </div>
-  </section>
-
-  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；所有偵測率與誤報率均出自 Google 自報的單次研究，無第三方驗證。圖為原文圖，未經改作；表格與小標為編輯整理，原文未給該表格形式。內容經對照原文的獨立事實審查後發布。</p>
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；數據出自原文，截圖為原文圖（Google Developers），圖解 A、B 與表格為編輯整理、本站重繪。原文為 Private Preview 實作教學，成效數字為示範場次、非第三方驗證。內容經對照原文的獨立事實審查後發布。</p>
 </main>
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
-  <p class="foot-gen">館藏導讀 · 建置於 2026-11-12 (UTC+8)</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-17 (UTC+8)</p>
 </div></footer>
 <script src="../assets/site.js" defer></script>
 </body>

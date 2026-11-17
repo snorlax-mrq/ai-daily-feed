@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 醫療代理：跨系統跑完流程，關鍵步驟留人覆核 · AI 每日動態檔案</title>
+<meta name="description" content="OpenAI 為 ChatGPT for Healthcare 加上電腦操作代理、強化臨床搜尋與 20 多個醫療外掛：讀螢幕、點擊、跨系統搬文件，關鍵步驟仍由組織指定人工覆核。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>醫療代理：跨系統跑完流程，關鍵步驟留人覆核</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：More ways to move care forward with ChatGPT for Healthcare（OpenAI 官方部落格，產品公告；同日上線三項能力，並附 21 家外掛與五個工作流示範）</p>
+    <p class="g-meta">
+      <span>OpenAI（官方部落格）</span>·<span>2026-11-16 發布</span>·<span>2026-11-17 收錄</span>·
+      <a href="https://openai.com/index/more-ways-to-move-care-forward-with-chatgpt-for-healthcare" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>20+ 個</b><span>新增醫療外掛（原文列 21 家，含 UpToDate Expert AI、Redox、TriZetto）（OpenAI 自報）</span></div>
+    <div class="g-stat"><b>4 家</b><span>已部署代理的機構：Abridge、Ambience、Cigna Healthcare、CVS Health</span></div>
+    <div class="g-stat"><b>逾 1,300 次</b><span>醫師盲測評分；八個維度全數較優（OpenAI 自報）</span></div>
+    <div class="g-stat"><b>3 處</b><span>電腦操作代理的可用位置：ChatGPT Work、Codex、OpenAI API</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">這一輪把代理從「回答」推進到「動手」：讀螢幕、點擊、跨系統搬文件。能接手多遠，取決於組織設了幾個人審關卡。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>ChatGPT for Healthcare 的三層</b> — 治理包住工作區，工作區裡並列三項能力</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>1 · 治理工作區</b><small>BAA、必要的安全與保留設定、稽核紀錄、人工覆核關卡</small><span class="pi">前提</span></div>
+          <div class="ring">
+            <div class="ring-lb"><b>2 · ChatGPT for Healthcare</b><small>臨床、研究、行政團隊共用的單一對話</small><span class="pi">產品</span></div>
+            <div class="ring-inner"><b>3 · 三項能力並列</b> — 強化臨床搜尋、20 多個醫療外掛、電腦操作代理（三者互不排序）</div>
+          </div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑</b>：代理產出醫囑、處方、病人回覆的草稿，交回臨床人員覆核或放行。</span></div>
+      <p class="x-src">本站重繪，非原文圖；原文未給此包覆關係，三項能力原文為並列陳述、無先後。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">代理的範圍：跨系統的搬移與準備</h2>
+    <p class="g-p">原文開場的場景很具體：團隊要從電子病歷、院內政策、排班系統與保險入口網站四處拼資訊，才拼得出一份照護決定。</p>
+    <p class="g-p">電腦操作代理接的就是這段拼湊。它讀螢幕、點擊、輸入、在應用程式間切換，把多步驟工作跑在團隊原本就在用的軟體上。</p>
+    <p class="g-p">原文示範：臨床人員用 ChatGPT App 的 Voice 追蹤一件 MRI 申請，代理翻病歷、起草醫囑與回覆病人，兩份草稿都留給人核。</p>
+    <p class="g-p">已部署的機構列了四家：Abridge、Ambience、Cigna Healthcare、CVS Health，用途是處理轉診、跨系統搬文件、彙整照護資訊。</p>
+    <p class="g-p">導入方式寫得很細：先挑一條橫跨現有應用的工作流，指定代理能存取哪些應用，再逐項設定哪些步驟必須人工覆核。</p>
+    <p class="g-p">原文形容這批代理用的模型更強、更安全也更便宜，另以存取控制與稽核紀錄支撐安全部署。
+     模型名稱與單價導向同日另一篇公告，本篇未給。</p>
+    <p class="g-p">HIPAA 流程另有硬條件：須用 OpenAI 的 BAA 涵蓋的合格服務、套用規定的安全與保留設定，並把保護延伸到相連系統。</p>
+    <p class="g-p">原文另給一句保證：分享給 ChatGPT for Healthcare 的內容不用於訓練模型。各項設定的預設值與保留期，原文未說明。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">臨床搜尋與外掛：能力有成長，位置照舊</h2>
+    <p class="g-p">第二項是可信臨床搜尋，改的是「怎麼找、怎麼評、怎麼引用」醫學證據，Healthcare 與 Clinicians 兩版同步更新。</p>
+    <p class="g-p">目標是引用可被檢視：臨床人員能點回原始出處，把證據接到問題再翻成下一步，而不是只拿到一段結論。</p>
+    <p class="g-p">成效用盲測量：醫師對真實臨床問題的回答評分，橫跨多專科、含多輪對話，逾 1,300 次評分中八個維度全數較優。</p>
+    <p class="g-p">原文點名的維度有四項：事實正確性、安全性、可執行性、來源權威性；其餘四項原文未列。</p>
+    <p class="g-p">第三項是外掛：20 多個新的醫療外掛，分臨床照護、照護協調、業務營運三類，原文說<em>全部今日可用</em>。</p>
+    <p class="g-p">清單 21 家，從 UpToDate Expert AI、IMO Health、Redox 到 TriZetto、Stedi、Turquoise，也可經 ChartGPT 進電子病歷工作流。</p>
+
+    <p class="g-p">外掛來自臨床照護、照護協調與業務營運的廠商，原文說會持續投資這個生態，並邀請更多醫療業者加入。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>能力</th><th>可用位置</th><th>原文限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="能力"><b>電腦操作代理</b></td><td data-l="可用位置">ChatGPT Work、Codex、OpenAI API</td><td data-l="原文">今日可用；Healthcare 客戶受工作區設定限制</td></tr>
+          <tr><td data-l="能力"><b>強化臨床搜尋</b></td><td data-l="可用位置">ChatGPT for Healthcare、ChatGPT for Clinicians</td><td data-l="原文">今日可用；同樣受工作區設定限制</td></tr>
+          <tr><td data-l="能力"><b>20 多個醫療外掛</b></td><td data-l="可用位置">ChatGPT for Healthcare（含 ChartGPT）</td><td data-l="原文">今日可用；須請工作區管理員啟用；個別臨床人員帳號另可選用部分外掛（Select plugins）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">外掛處理的事集中在五類：查病歷與院內政策、備藥待醫師核、安排病人聯繫、查保險資格、分析費用與營運表現。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">五個工作流示範，都停在草稿與清單</h2>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>原文五個示範角色</b> — 並列，非流程</figcaption>
+      <p class="x-grid-h">五格互不排序，原文未給先後或難度</p>
+      <div class="x-grid">
+        <div class="c"><b><i>①</i>照護協調員</b><small>Luma Health 撈明日未確認門診、TriZetto 查保險資格 → 產出一份術前電話清單</small></div>
+        <div class="c"><b><i>②</i>基層醫師</b><small>Metriport 取外院出院摘要、UpToDate 對藥囑 → 指出藥物變更與追蹤監測</small></div>
+        <div class="c"><b><i>③</i>住院護理師</b><small>AIVA 查院內胰島素幫浦政策、Amion 找值班內分泌醫師與聯絡方式</small></div>
+        <div class="c"><b><i>④</i>照護導航員</b><small>IMO Health 對碼、Stedi 查給付、Turquoise 查議價 → 比較兩院自費落差</small></div>
+        <div class="c"><b><i>⑤</i>轉診管理員</b><small>Assort Health 彙整轉診量與來源、Ferry Health 列待追蹤排程 → 週會簡報</small></div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖；角色與外掛組合整理自原文五則示範指令，原文未給排序或成效數字。</p>
+    </figure>
+
+    <p class="g-p">五個場景的共同形狀很清楚：代理把散在各系統的資料收斂成一份待辦或草稿，人再決定下一步。</p>
+    <p class="g-p">沒有一個場景是代理自己送出醫囑或處方。處方是「準備給臨床人員覆核」，回覆病人也是「供覆核」。</p>
+    <p class="g-p">（編輯觀點：能力擴到操作層的同時，責任邊界反而寫得比上一版清楚。）</p>
+    <p class="g-p">條件分兩層：處理 PHI 的流程要有 BAA 與規定的安全、保留設定；外掛另須工作區管理員啟用。</p>
+    <p class="g-p">ChatGPT for Clinicians 對美國合格且已驗證的臨床人員免費；台灣與其他市場的可用性、費用，原文未說明。</p>
+    <p class="g-p">原文也沒給上線後的錯誤率、覆核比例或責任歸屬。要評估風險，目前只有廠商自報的醫師評分。</p>
+    <p class="g-p">評測方法、客戶案例與示範影片，原文都指向同日另一篇公告；本篇交代的是能力範圍與治理條件。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>先問覆核點在哪，再問代理能跑多遠。</b>沒有指定關卡，等於沒有部署條件。</p>
+      <p><b>20 多個外掛不等於 20 多種能力。</b>多數是把既有系統接進同一個對話框。</p>
+      <p><b>能示範不等於能上線。</b>沒有 BAA 與安全設定，PHI 流程就跑不了。</p>
+    </div>
+  </section>
+
+    <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="agent-anomaly-detection.html">代理異常偵測：看的是職責越界，不是系統當機</a><span class="d">2026-11-16</span></div>
+      <div class="g-relrow"><span class="s">LangChain（官方部落格）</span><a href="langsmith-agent-record.html">代理紀錄：治理的單位從專案換成代理</a><span class="d">2026-11-16</span></div>
+      <div class="g-relrow"><span class="s">LangChain（官方部落格）</span><a href="tasks-to-goals.html">任務到目標：交出的是決策權，不只是提示</a><span class="d">2026-11-16</span></div>
+    </div>
+  </section>
+
+<p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，盲測評分與外掛數量均為 OpenAI 自報，無第三方驗證。原文另有醫師評分長條圖（previous 與 new experience 八維度對照）與外掛 logo、示範影片；本頁未採原圖，圖解 A、B 皆為本站重繪（非原文圖）。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-17 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

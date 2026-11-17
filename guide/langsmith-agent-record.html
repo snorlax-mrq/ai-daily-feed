@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 代理紀錄：治理的單位從專案換成代理 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain 把 LangSmith 重組成以 agent record 為核心：一支代理一筆紀錄，帶 Owner、不可變 ID 與 Type，環境與 trace 收在同一 ID 下；支援 OTLP 的平台接入即登記。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>代理紀錄：治理的單位從專案換成代理</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Why we rebuilt LangSmith around the agent（LangChain 官方部落格，產品架構說明；交代 LangSmith 為何改以 agent record 為核心，以及 agent type 如何決定評測與治理）</p>
+    <p class="g-meta">
+      <span>LangChain（官方部落格）</span>·<span>2026-11-16 發布</span>·<span>2026-11-17 收錄</span>·
+      <a href="https://www.langchain.com/blog/we-rebuilt-langsmith-around-the-agent" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>3 項屬性</b><span>每筆 agent record 固定帶 Owner、ID、Type；ID 全域唯一且不可變</span></div>
+    <div class="g-stat"><b>4 個環境</b><span>local、dev、staging、production 收在同一個 agent ID 下</span></div>
+    <div class="g-stat"><b>2 種 agent type</b><span>general purpose 與 coding 已上線；voice 只在規劃中</span></div>
+    <div class="g-stat"><b>OTLP</b><span>OpenTelemetry Protocol：支援它的平台接入即登記，含模型實驗室與超大規模雲端業者</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">LangSmith 把治理單位從「專案」換成「代理」：一支代理一筆 record，帶負責人、不可變 ID 與類型，環境與 trace 全掛在它下面。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">重組的起因：碎片化壓在兩種角色身上</h2>
+    <p class="g-p">原文開頭回指上週的 C 輪與新 LangSmith Agent Platform 發布，並宣告代理成為 LangSmith 各產品共同的核心物件。</p>
+    <p class="g-p">原文把 2026 年定調為轉折點：新的 harness、模型與工程方法，讓代理開始能穩定做高價值的複雜工作。</p>
+    <p class="g-p">結果是同一家公司裡並存多種代理：工程用 coding agent、產品做面向客戶的 agent、各團隊另有內部生產力 agent。</p>
+    <p class="g-p">這些代理框架不同、跑在不同 runtime、工具與模型各異；原文的診斷是，流程因此被切碎。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>碎片化的兩個受害者</b> — 並列角色，非先後階段（本站重繪）</figcaption>
+      <div class="x-cmp">
+        <div><b>工程師</b><p>tracing、monitoring、部署分居不同介面，一路切換；原文說實務上就<b>跳過 evals</b> 這類難但重要的步驟。</p></div>
+        <div><b>AI 平台團隊</b><p>答不出有哪些代理、誰擁有、花多少、表現如何；<b>成本飆高時找不到人問</b>。</p></div>
+      </div>
+      <p class="x-src">本站整理原文兩段敘述；原文分述而未以對照表呈現，兩者是並列角色，不是流程前後。</p>
+    </figure>
+
+    <p class="g-p">原文把目標寫得很直白：生命週期要能從一個地方管完，可用任何技術棧，所有權與治理要涵蓋全部。</p>
+    <p class="g-p">所以重組的目標不是再加一個功能，而是讓四段生命週期共用一個入口。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">agent record：把 trace 從「專案」移到「代理」底下</h2>
+    <p class="g-p">舊模型是扁平專案層級：送進 LangSmith 的 trace 不屬於任何一支代理，同一支代理在 local 與 production 的 trace 也彼此無關。</p>
+
+
+    <p class="g-p">原文把三項屬性講成治理前提：Owner 是具名負責人，ID 全域唯一且不可變，Type 決定資訊露出、資料連接與評測標準。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>誰掛在誰底下</b> — record 是主體，環境與 trace 並列其下（本站重繪）</figcaption>
+      <div class="x-stack">
+        <div class="ring ring--core">
+          <div class="ring-lb"><b>1 · agent record</b><small>Owner、ID、Type 三項固定屬性</small><span class="pi">身分</span></div>
+          <div class="ring-inner"><b>2 · 掛在 record 底下（並列）</b> — environments（local／dev／staging／production 共用一個 agent ID）與 traces 並列收在這一層；evals、datasets、annotation、Engine 則是對任何送 trace 進來的代理都能用，原文未說按環境分層</div>
+        </div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖；原文只以文字說「一個 agent record，環境與 trace 收在它下面」，未給層級圖。</p>
+    </figure>
+    <p class="g-p">四段的分工：Build 用 Studio 的自然語言建置器、開源 harness，或任何其他框架。</p>
+    <p class="g-p">Run 可部署到 Agent Server，也可留在原本的 runtime；Improve 的 tracing、evals、datasets、annotation 與 Engine，只要代理送 trace 就能用。</p>
+    <p class="g-p">Govern 交給 agent registry 與 LLM Gateway，做組織層的能見度與管制。</p>
+    <p class="g-p">原文說 LangSmith 可組合：代理已在別的平台上跑，接進來只做 improve 與 govern；但只接部分功能拿到的是單一入口，建與跑都在 LangSmith 才有產品加乘。</p>
+    <p class="g-p">每個 trace、環境與部署都釘在同一支代理上，治理才有依附對象；原文用「每個環境與產出物都掛在同一個 agent id」收束這一段。</p>
+    <p class="g-p">若建與跑都在 LangSmith，還有連鎖效果：Engine 可先用 Agent Server 的 preview 驗證修正，再合併進 production。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">type 決定看什麼，OTLP 決定收得到誰</h2>
+    <p class="g-p">不同代理要用不同尺規：原文舉例，coding agent 看程式碼有沒有被 merge，客服 agent 則要求低延遲。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>agent type</th><th>儀表板預設指標</th><th>資料連接</th><th>狀態</th></tr></thead>
+        <tbody>
+          <tr><td data-l="type"><b>general purpose</b></td><td data-l="指標">代理說明、近期活動、線上監控、常用模型與工具、Engine 抓到的失敗</td><td data-l="連接">原文未提</td><td data-l="狀態">已上線</td></tr>
+          <tr><td data-l="type"><b>coding</b></td><td data-l="指標">merged PRs、token 成本、代理完成的工作類型</td><td data-l="連接">可接 GitHub repo，追代理使用的下游結果</td><td data-l="狀態">已上線</td></tr>
+          <tr><td data-l="type"><b>voice</b></td><td data-l="指標">低延遲與音質（原文舉為需專屬評測的例子）</td><td data-l="連接">原文未提</td><td data-l="狀態">規劃中</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-src">本站整理原文對三種類型的描述；原文未給這張對照表，狀態欄依原文「已提供」與「只在規劃中」的直述。</p>
+
+    <p class="g-p">儀表板刻意帶立場：指派類型後就緒，不必先建自訂檢視；同類型量法一致，三個人跑 coding agent 也能互比。</p>
+    <p class="g-p">類型是寫進架構的，不是報表上的標籤；每種代理因此自帶該看的指標與該接的資料源。</p>
+    <p class="g-p">這份清單會繼續長：原文說每多一種需要專屬評測的代理，就補上對應的整合與分析。</p>
+    <p class="g-p">治理那頭，原文說代理蔓延有三個來源：工程自建、事業單位採購（IT 的 ServiceNow、企業搜尋的 Glean）、員工自己撿工具。</p>
+    <p class="g-p">要求全公司統一一個平台並不現實，所以改成接入即登記：支援 OTLP 的代理接上後，與自建代理同尺規量測。</p>
+    <p class="g-p">成本與品質指標按環境匯總到各代理；Glean 代理成本飆高時，有名有姓的 owner 加 trace 細節可查。</p>
+    <p class="g-p">原文勾勒的方向：Engine 對代理做 red team、找出失敗，並在修正上線後盯回歸；審過的案例自動流進 eval datasets。</p>
+    <p class="g-p">表現最好的執行軌跡則成為微調資料，用來壓成本、拉高效能；這些零件今天都在，差的是把它們接起來。</p>
+    <p class="g-p">新版已在 cloud、BYOC 與自架環境上線；最快起手是用 Studio 建第一支代理，或接上你已經在跑的代理。</p>
+    <p class="g-p">路線圖上還有 org 級儀表板（目前只到 workspace 層）、把代理註冊進 IdP 供安全團隊稽核，以及 voice 類型。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>治理先問誰擁有，再問有幾支。</b>沒有具名 owner，成本一飆高就沒人能答。</p>
+      <p><b>用類型固定量法，跨團隊才比得動。</b>自訂儀表板只會讓數字失去可比性。</p>
+      <p><b>別逼全公司換平台，改成接入即登記。</b>OTLP 是可執行治理的最小公約數。</p>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解 A、B 與 agent type 對照表皆為本站整理重繪（原文配圖為人物照與產品卡片，無機制圖）。產品能力敘述為 LangChain 自報，無第三方驗證。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-17 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

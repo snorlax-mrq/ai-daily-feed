@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 任務到目標：交出的是決策權，不只是提示 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain 的 Harrison Chase 談代理從接任務改成接目標：換掉的是「做什麼、何時做」的決策權，原文列六項配套——任務清單、工具權限、提問通道、進度判準、觸發與停止、跨次記憶。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>任務到目標：交出的是決策權，不只是提示</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：From tasks to goals（LangChain 官方部落格「In the Loop」專欄，Harrison Chase 的觀點文章；談代理從接任務改成接目標後，產品與提示要補哪六件事）</p>
+    <p class="g-meta">
+      <span>LangChain（官方部落格）</span>·<span>2026-11-16 發布</span>·<span>2026-11-17 收錄</span>·
+      <a href="https://www.langchain.com/blog/from-tasks-to-goals" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>2 個轉向</b><span>原文定義：指定動作→指定結果，有限指派→持續責任</span></div>
+    <div class="g-stat"><b>6 項配套</b><span>任務清單、工具權限、提問通道、進度判準、觸發與停止、跨次記憶</span></div>
+    <div class="g-stat"><b>3 段權限</b><span>原文圖的工具控管：Allowed／Needs approval／Blocked</span></div>
+    <div class="g-stat"><b>30 分鐘</b><span>原文舉的壞例子：每半小時醒來、問你同一個問題</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">給目標不是把提示寫長，而是把「做什麼、何時做」的判斷交出去；代價是六項配套得先補齊，否則交出的是失控。</p>
+
+    <p class="g-p">這是 Harrison Chase 的專欄觀點文，不是產品公告：沒有數據、沒有客戶案例。</p>
+    <p class="g-p">文中六項配套是他對代理實作的歸納，屬可受挑戰的主張，以下逐項標示。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">兩個轉向：交出結果，而不是交出動作</h2>
+    <p class="g-p">原文把這一步拆成兩個更實際的位移：從指定動作改成指定結果，從有限指派改成持續責任。</p>
+    <p class="g-p">差別一句話看得出來：任務是「寫這封信」，目標是「維持一個部落格」。</p>
+    <p class="g-p">目標交出去，拆解權也交出去了：代理把目標拆成任務、做掉幾項、更新清單，再決定下一步。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/tasks-to-goals/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/tasks-to-goals/01.webp" alt="原文圖：左側 Task 是「寫這封信」做完打勾即完成；右側 Goal 是「維持一個部落格」，繞著挑題目、寫草稿、回覆讀者的圈循環；下方兩個位移是 Action→Outcome、Bounded→Ongoing。" width="1200" height="616" loading="lazy" decoding="async"></a>
+      <figcaption>任務是一條線走到 Done；目標是一個圈，圈外再標上「動作→結果、有限→持續」兩個位移。這張圖就是原文對任務與目標的定義。<span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/from-tasks-to-goals" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">這對上下文工程是新工作。原文要求代理擅長發想與挑選任務，而且要想得不一樣——重複提同一批任務，原文的說法是「那就不太好了」。</p>
+    <p class="g-p">也要看得到：原文要求有任務清單一類的介面，讓你知道代理正在做什麼。</p>
+    <p class="g-p">原文的說法是「迭代」：拆解、執行、更新清單再重來，不是一次規劃到底。</p>
+    <p class="g-p">原文收尾把角色講明白：你的工作從「指定每個任務」變成「設定方向、定義邊界、檢視進度」。</p>
+    <p class="g-p">所以給目標真正交出去的是兩個判斷，不是一段文字。</p>
+    <p class="g-p">（編輯觀點：清單移轉後若人還逐項指定任務，等於兩套流程並行，協調成本反而更高。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">工具面：從猜得到的兩支，變成未知的一疊</h2>
+    <p class="g-p">給任務時，你大致猜得到它會呼叫哪些工具：寄一封信就是 Gmail，也許再加行事曆。</p>
+    <p class="g-p">給目標時猜不到。原文的例子是「降低我的協調負擔，同時盯住重要承諾」——可能用到 email、簡訊、搜尋、瀏覽器。</p>
+    <p class="g-p">原文甚至說，你可能不知道它需要哪些工具，清單是執行中才長出來的。</p>
+    <p class="g-p">原因很直接：目標模式把「要不要用這個工具」的判斷也一起交出去了。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/tasks-to-goals/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/tasks-to-goals/02.webp" alt="原文圖：上方 Task 送一封信只接得上 Gmail 與 Calendar 兩支工具；下方 Goal 降低協調負擔接出一疊工具，包含 Email、Calendar、Search、Text、Browser 與未知一項，並以 Allowed、Needs approval、Blocked 三段標示權限。" width="1200" height="650" loading="lazy" decoding="async"></a>
+      <figcaption>同一張圖裡，任務只接得上兩支工具；目標接出一疊，還有一項未知，靠 Allowed／Needs approval／Blocked 收斂。這是工具治理要跟著放大的原因。<span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/from-tasks-to-goals" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">那三段權限在任務模式幾乎用不到，因為工具面小、人也在旁邊看（本站推論）。</p>
+    <p class="g-p">目標模式卻得有審核流程兜著，否則代理自己長出來的那一疊工具沒人管。</p>
+    <p class="g-p">原文的配套因此很直白：需要更強的工具控管，決定代理能呼叫什麼、不能呼叫什麼。</p>
+    <p class="g-p">工具治理在這裡不是精細度問題，而是有沒有「擋得住」那一層。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">背景執行要補的四件事</h2>
+    <p class="g-p">任務模式裡你自然在場，資訊沒給齊，代理在對話裡追問一句就好。</p>
+    <p class="g-p">目標模式換成背景執行，這個預設消失：它多半在你離開之後才卡住。</p>
+    <p class="g-p">原文的要求是給它一個問人的通道，Slack 或專屬介面都行。以下四項由本站整理成表。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>面向</th><th>目標模式的變化</th><th>原文要求的配套</th></tr></thead>
+        <tbody>
+          <tr><td data-l="面向"><b>人在不在圈內</b></td><td data-l="變化">代理在背景跑，卡住時身邊沒人可問</td><td data-l="配套">提問通道：Slack 或專屬介面</td></tr>
+          <tr><td data-l="面向"><b>進度判準</b></td><td data-l="變化">要自己判斷有沒有靠近目標</td><td data-l="配套">指標＋人類回饋，並讓人能糾正它對「成功」的解釋</td></tr>
+          <tr><td data-l="面向"><b>觸發與停止</b></td><td data-l="變化">不是跑到底，是被叫醒、做完再睡</td><td data-l="配套">cron 與事件觸發，加上「該不該動」的提示，並能暫停或忽略</td></tr>
+          <tr><td data-l="面向"><b>跨次記憶</b></td><td data-l="變化">上下文不再由使用者每次補</td><td data-l="配套">保留決策與回饋並跨次沿用；否掉的題目要影響下次選題</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+
+    <p class="g-p">觸發同理：目標模式不是常駐，而是被 cron 或事件叫醒，醒來後還要判斷這回該不該動手。</p>
+    <p class="g-p">進度判準的取捨原文自己也講了：指標能自動追蹤，代價是可以被鑽。</p>
+    <p class="g-p">原文的壞例子很具體：每三十分鐘一個心跳、每次都問你同一個問題，體驗會爛掉。</p>
+    <p class="g-p">它補了一句常被忽略的：持續責任不代表永遠找得到事做，「什麼都不做」有時才是正確動作。</p>
+    <p class="g-p">記憶是同一條線。原文認為任務世界其實不太需要記憶——除非同一個任務反覆做。</p>
+    <p class="g-p">四件事其實是同一個問題：沒人守在旁邊時，代理怎麼取得它缺的資訊、又怎麼知道該停。</p>
+    <p class="g-p">（編輯觀點：原文說「越貼近指標越好」，同段又補「別盲目最佳化指標」；這句該讀成提醒，不是設計原則。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>先確認任務清單歸誰。</b>清單還捏在人手裡，就不算真的給目標。</p>
+      <p><b>工具權限要先有「擋」。</b>目標模式的呼叫面未知，只能靠邊界收斂。</p>
+      <p><b>沒人看著才叫目標模式。</b>提問通道與停止規則沒做，等於沒交出去。</p>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，前兩張圖為原文圖（LangChain），第三節表格為本站整理、原文未給此表格。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-17 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

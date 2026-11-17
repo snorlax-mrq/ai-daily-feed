@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 無人交辦的工作：代理要夠好用，得先拿到鑰匙 · AI 每日動態檔案</title>
+<meta name="description" content="Holiday Extras 兩位主管的 dot 會在沒人交辦時先動手：自己抓 BigQuery 出報告、翻信箱列出受影響名單。好用換來的是四個系統的存取權，成效全屬客戶自報。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>無人交辦的工作：代理要夠好用，得先拿到鑰匙</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：OpenAI 客戶案例〈At Holiday Extras, dots get to work before anyone asks〉——英國旅遊科技公司的兩位主管談自己的 dot 怎麼在沒人開口時先動手；敘述型訪談，通篇沒有導入數字</p>
+    <p class="g-meta">
+      <span>OpenAI（客戶案例）</span>·<span>2026-11-16 發布</span>·<span>2026-11-17 收錄</span>·
+      <a href="https://openai.com/business/customer-stories/holiday-extras-dots" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>至少 2 小時／天</b><span>Liam 與他的 dot 做雙向語音對話的時長（原文引述為 at least）；早晚各一次簡報（Holiday Extras 自報，無第三方驗證）</span></div>
+    <div class="g-stat"><b>數個工作天 → 約 10 分鐘</b><span>3D 角色動畫：他估自己做要數個工作天，Beast 約十分鐘完成（自報估算，無第三方驗證）</span></div>
+    <div class="g-stat"><b>三者分工</b><span>ChatGPT Enterprise 打底、Codex 把專業變成軟體、dots 補中間的活（原文一句並列，未分層）</span></div>
+    <div class="g-stat"><b>2 位</b><span>受訪者：VP of AI Innovation、Director of Innovation &amp; Growth</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">兩位主管的 dot 會在沒人交辦時先動手：先發現、先查、先做完；代價是把日常工作的存取權交出去，而成效全屬客戶自報。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">先動手：一份沒人要求的報告</h2>
+    <p class="g-p">Holiday Extras 做的是機場停車、飯店、貴賓室與接送，對旅客的承諾是「少點麻煩、多點假期」；原文說同一套也套在員工身上。</p>
+    <p class="g-p">原文開場就是一件沒人交辦的事：App 上線新功能，隔天 Liam Thompson 收到成效報告。他沒開口要，是他的 dot 自己注意到上線，透過 ChatGPT 外掛從 Google BigQuery 拉資料。</p>
+    <p class="g-p">他把這顆 dot 取名 Beast，講成「我一切的 orchestrator」：追他沒回的訊息、從舊對話裡翻出當時的答案；他最愛雙向語音，說那才像自然對話。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>三個產品、三種角色</b> — 並列，原文未分層也未排序</figcaption>
+      <div class="x-grid">
+        <div class="c"><b>ChatGPT Enterprise</b><small>全公司使用 AI 的地基（原語 foundation）</small></div>
+        <div class="c"><b>dots</b><small>個人代理：補中間的日常雜活（原語 the work in between）</small></div>
+        <div class="c"><b>Codex</b><small>把員工的專業變成可跑的軟體與更好的客戶體驗</small></div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖；原文只用一句話並列三者，未畫圖、未分層、未給先後順序。三格順序為本站排列，原文未指定順序。</p>
+    </figure>
+
+    <p class="g-p">（編輯觀點：原文那句並列讀起來像三張產品清單，實際運作卻有依賴順序——沒有 Enterprise 的資料底盤，dot 拿到的鑰匙也開不了門；此排序為編輯判斷，原文未說。）</p>
+    <p class="g-p">另一位受訪者 David Lee 的 dot 叫 Brian。他趁通勤講電話，先過一遍當天會議，再要它用公司資料跑報告；進辦公室坐下時，報告已經好了。</p>
+    <p class="g-p">這兩段都沒有神奇的自主決策：Beast 做的是「發現上線、拉資料、整理成報告」，Brian 做的是「接單、跑數、準時交付」。差別在 Beast 那次沒人下單，Brian 則是把交付提前到人到辦公室之前。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">主動的半徑，等於你給的權限</h2>
+    <p class="g-p">原文沒把「主動」寫成能力，而是寫成一連串授權。它自己舉手的那幾次，全靠先拿到對應系統的鑰匙。</p>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>原文事件</th><th>dot 自己先做的</th><th>這件事需要的授權</th></tr></thead>
+        <tbody>
+          <tr><td data-l="原文事件"><b>新功能上線</b></td><td data-l="dot 自己先做的">注意到上線、抓 BigQuery、把成效端到 Liam 面前</td><td data-l="需要的授權">BigQuery 連線（經 ChatGPT 外掛）</td></tr>
+          <tr><td data-l="原文事件"><b>通勤時的交辦</b></td><td data-l="dot 自己先做的">David 先用語音交辦；dot 在他到辦公桌前跑完報告</td><td data-l="需要的授權">語音通話＋公司資料連接</td></tr>
+          <tr><td data-l="原文事件"><b>API key 汰換</b></td><td data-l="dot 自己先做的">標記問題、回頭翻信箱、列出可能受影響的人</td><td data-l="需要的授權">信箱讀取（原文只描述行為，未說授予何種權限）</td></tr>
+          <tr><td data-l="原文事件"><b>日常雜活</b></td><td data-l="dot 自己先做的">提醒沒回覆的訊息、找回過去對話的答案</td><td data-l="需要的授權">Slack、信箱、Drive、筆電</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="x-src">本站整理自原文敘述，非原文表格；原文未逐一說明授權切到多細，也未談撤銷方式。</p>
+    <p class="g-p">原文自己把因果講明白了：正是因為把那幾個系統交給它，Beast 才變得更有用。權限不是副作用，是它好用的來源。</p>
+    <p class="g-p">他也用過 OpenClaw 與 Hermes 兩個助理，說不敢給它們太多資訊；換到公司環境裡的 OpenAI 才覺得能信任。信任是拿來換權限的籌碼，不是評語。</p>
+    <p class="g-p">（編輯觀點：主動性與存取是同一筆帳。權限給到哪裡，代理就只能主動到哪裡；給得越深，「沒人交辦」越像一份先整理好的答案，而不是新的決策。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">數字讀到哪裡為止</h2>
+    <p class="g-p">整篇最像成效的一段是設計工作：他把筆電上的 After Effects 與 Rive 也交給 Beast，讓它替 App 做 3D 角色動畫並直接放進產品。</p>
+    <p class="g-p">他的評語是「做得比我好」，還補一句自己念了三年設計。但他是一邊看它做、一邊比對自己，沒有測試方法，也沒有第二個人重跑。</p>
+    <p class="g-p">剩下的全是體驗描述：報告先到、名單先列、少漏一件事就比較放鬆。這種描述有說服力，但不構成可比較的證據。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>原文給了什麼、少了什麼</b> — 本站整理的落差對照</figcaption>
+      <div class="x-cmp">
+        <div><b>原文有說</b><p>個人層級的體驗：報告在他開口前就到了、受影響名單先列好、動畫由它自己做完、語音像在講話。</p></div>
+        <div class="after"><b>原文沒說</b><p>公司規模與導入人數、成本與 ROI；dot 的模型與部署方式、其他員工的使用狀況、資料留在哪、員工離開後這些 dot 歸誰。</p></div>
+      </div>
+      <p class="x-src">本站整理；原文為敘述型客戶案例，未附任何導入數字，圖片區亦為空。</p>
+    </figure>
+
+    <p class="g-p">下一步不是買更多，而是讓已經在試的人互相分享；David 說下一個好主意可以來自任何人。Liam 的建議更短：先建一個 dot、開始對話。</p>
+    <p class="g-p">原文結尾沒有任何成效承諾，只有一句「先建一個 dot」的鼓勵；文體本身就是它的立場——這是採用故事，不是 benchmark 報告。</p>
+    <p class="g-p">（編輯推論：這篇證明的是單人層級的說服力，不是組織層級的採購依據；它值得讀的是「主動」長什麼樣，以及那份權限清單。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>「沒人交辦」是授權的副產品。</b>它先做的每件事，都是既有資料的重組，不是新決策。</p>
+      <p><b>要好用就得先交鑰匙。</b>他換過兩個助理不敢給權限；信任才是那筆真正的成本。</p>
+      <p><b>別拿它算 ROI。</b>沒有公司規模、導入人數與成本，只有兩個人的主觀體驗。</p>
+    </div>
+  </section>
+
+    <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="agent-anomaly-detection.html">代理異常偵測：看的是職責越界，不是系統當機</a><span class="d">2026-11-16</span></div>
+      <div class="g-relrow"><span class="s">LangChain（官方部落格）</span><a href="langsmith-agent-record.html">代理紀錄：治理的單位從專案換成代理</a><span class="d">2026-11-16</span></div>
+      <div class="g-relrow"><span class="s">LangChain（官方部落格）</span><a href="tasks-to-goals.html">任務到目標：交出的是決策權，不只是提示</a><span class="d">2026-11-16</span></div>
+    </div>
+  </section>
+
+<p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；原文無配圖，圖解 A、B 與表格均為本站重繪／整理；客戶自報成效無第三方驗證。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-17 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

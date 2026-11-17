@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 自有代理：韓國買的是掌控權 · AI 每日動態檔案</title>
+<meta name="description" content="NVIDIA AI Day Seoul 兩天逾 2,000 人（NVIDIA 自報）：兩場全會分別賣機器人平台與「企業自己擁有的代理」，分場台上七家全是韓國業者，開發者那條線用韓語認證與 OpenShell runtime 收人。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>自有代理：韓國買的是掌控權</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：NVIDIA 官方部落格的活動總結（AI Day Seoul，兩天議程與會後名單；分全會、分場、開發者、新創四條線敘述，未給單場題目）</p>
+    <p class="g-meta">
+      <span>NVIDIA（官方部落格）</span>·<span>2026-11-16 發布</span>·<span>2026-11-17 收錄</span>·
+      <a href="https://blogs.nvidia.com/blog/ai-day-seoul-wrapup/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>2,000+ 人</b><span>兩天、首爾 COEX 會場的與會人數（NVIDIA 自報）</span></div>
+    <div class="g-stat"><b>7 家</b><span>分場台上的企業，從零售、電信到在地雲，全為韓國業者</span></div>
+    <div class="g-stat"><b>500+ 名</b><span>上全天 DLI 工作坊與韓語認證考的開發者（NVIDIA 自報）</span></div>
+    <div class="g-stat"><b>10 家</b><span>Inception 新創在 Physical AI Startup Connect 上台 pitch</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">這是把代理當基礎設施賣的一場會：硬體在最內、runtime 居中、人才認證在最外；韓國出場景與語言，NVIDIA 出地基。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>NVIDIA 在首爾賣的三層</b> — 由內到外（本站重繪）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>3 · 人才與認證</b><small>最外層：認證與訓練（編輯歸納）</small><span class="pi">DLI 工作坊 · 韓語認證考</span></div>
+          <div class="ring">
+            <div class="ring-lb"><b>2 · 代理開發與執行</b><small>中層：代理跑在哪裡</small><span class="pi">OpenShell（hackathon runtime）</span></div>
+            <div class="ring ring--core">
+              <div class="ring-lb"><b>1 · 算力與平台</b><small>核心：硬體與機器人平台</small><span class="pi">企業與新創使用 NVIDIA 平台（原文未列型號）</span></div>
+              <div class="ring-inner"><b>代理與機器人實際跑起來的地方</b><br>DGX Spark 是 hackathon 冠軍獎品、Isaac 是 DLI 工作坊課目，原文未說企業採用它們</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑</b>：拿到認證的開發者回企業寫自有代理，再拉動下一輪平台需求（編輯推論，原文未敘述）</span></div>
+      <p class="x-src">本站重繪，非原文圖。原文沒有把會場內容分層；這三層是編輯依原文出現的投入歸納，內外關係指「外層訓練的內容就是中層與內核」，不是時間順序。</p>
+    </figure>
+
+    <p class="g-p">分層的好處是看得懂它在賣什麼：算力賣硬體，代理開發賣工具與 runtime，最外層賣認證與訓練。</p>
+    <p class="g-p">三層一起賣，買家就很難只挑一層走（編輯判斷）。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">兩場全會，替兩種買家定價</h2>
+    <p class="g-p">原文寫到的全會是兩場，剛好對上兩種買家。機器人與邊緣 AI 副總 Deepu Talla 講的是誰在用平台：斗山機器人、現代汽車集團、LG 電子、SK 集團。</p>
+    <p class="g-p">他的說法是韓國「以小搏大」；名單上另有 Real World、Luda Robotics 兩家新創，做的事是把通用機器人帶進現實場景。</p>
+    <p class="g-p">原文只點名這四家大廠與兩家新創，沒說各自的應用場景、導入階段，也沒有任何上線數字。</p>
+    <p class="g-p">應用研究副總 Jonathan Cohen 換了題目：企業如何打造「自己擁有、自己控制」的代理。</p>
+    <p class="g-p">這是整場最值得抄下來的一句。「自有」與「可控」不是功能清單，而是採購條件：模型可以外購，代理的決策權不行（編輯判斷）。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>場合</th><th>台上是誰</th><th>講的東西（原文）</th></tr></thead>
+        <tbody>
+          <tr><td data-l="場合"><b>全會 1</b></td><td data-l="台上">Deepu Talla（機器人與邊緣 AI 副總）</td><td data-l="內容">四家大廠與兩家新創用 NVIDIA 平台把通用機器人帶進現實；韓國「以小搏大」</td></tr>
+          <tr><td data-l="場合"><b>全會 2</b></td><td data-l="台上">Jonathan Cohen（應用研究副總）</td><td data-l="內容">企業如何打造自己擁有、自己控制的代理；原文未給架構或客戶案例</td></tr>
+          <tr><td data-l="場合"><b>分場</b></td><td data-l="台上">Coupang Intelligent Cloud、斗山機器人、LG AI Research、LG 電子、NAVER Cloud、SK Telecom、Upstage</td><td data-l="內容">七家全為韓國業者；原文未列各場題目</td></tr>
+          <tr><td data-l="場合"><b>研究論壇</b></td><td data-l="台上">KISTI、韓國大學、NVIDIA Research</td><td data-l="內容">AI for Science Forum；原文未給議程細節</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">分場台上七家全是韓國業者：零售、電信、在地雲、家電、機器人各有人來。原文沒給題目，但買家的分布已經說明採購單位是誰。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">開發者那條線：社群、hackathon、認證、新創</h2>
+    <p class="g-p">社群日（Agentic AI 10x Bootcamp Community Day）像點名：原文列了八個社群，從 PyTorch 使用者、Python 社群到女性程式社群都有。</p>
+    <p class="g-p">現場留下一句感想：SK Telecom 的 omnimodal 基礎模型研究員 Hyunho Yang 說，能跟同業坦白對話很難得，看到大家的熱情很受鼓舞。</p>
+    <p class="g-p">hackathon 的主題更具體：與 Fastcampus 合辦，代理要以韓語與韓國文化訓練，執行時用 OpenShell runtime。</p>
+    <p class="g-p">原文只給名字，沒有各社群的人數或規模；這八個名字就是目前全部可查的線索。</p>
+    <p class="g-p">「懂韓語與韓國文化」是原文裡最具體的需求描述：語言不是介面翻譯，而是訓練資料的來源。</p>
+    <p class="g-p">冠軍隊 FlyGate 拿到一台 DGX Spark；原文只寫領到這台系統，未提獎金或其他獎品。發硬體等於把入場券發出去（編輯觀察）。</p>
+    <p class="g-p">新創那場收 10 家 Inception 公司上台 pitch，名單從 AIM Intelligence 排到 XYZ，各自主題原文沒寫。</p>
+    <p class="g-p">另一頭是全天工作坊與認證考：推論規模化、Isaac 機器人流程、安全代理開發，考卷以韓語出題，並新增 AI Model and Application Development 一科。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>開發者與新創的四條參與線</b> — 並列，無先後順序（本站重繪）</figcaption>
+      <p class="x-grid-h">四者互不排序，可各自報名；原文分節敘述，未給優先級或人數分布。冠軍隊屬 ② 的結果，不另列</p>
+      <div class="x-grid">
+        <div class="c"><b><i>①</i>社群日</b><small>Pseudo Lab、Python Korea、PyTorchKR、HAERAE、Hugging Face KREW、Graph User Group、Womxn Who Code Korea、Dnol（Datayanolja）點名八個</small></div>
+        <div class="c"><b><i>②</i>Hangul Day hackathon</b><small>與 Fastcampus 合辦；5 強以韓語與韓國文化訓練代理，runtime 用 OpenShell；冠軍隊 FlyGate 獲一台 DGX Spark（原文未提獎金）</small></div>
+        <div class="c"><b><i>③</i>工作坊與認證考</b><small>全天課程（推論、材料科學、機器人、語音 agent、AI 基礎）與認證考試，原文記三级</small></div>
+        <div class="c"><b><i>④</i>新創場</b><small>Physical AI Startup Connect；10 家 Inception 公司上台 pitch，名單含 AIM Intelligence、Avikus、TESOLLO、TwelveLabs 等</small></div>
+      </div>
+      <p class="x-src">本站整理，非原文圖；原文未給四者的先後、規模或彼此關係，四格只是原文提到的四種參與方式。</p>
+    </figure>
+
+    <p class="g-p">四條線的門檻不同：社群日最寬、hackathon 要交作品、認證要考試、新創場得先進 Inception（編輯整理）。</p>
+    <p class="g-p">門檻一層層加上去，能走到最裡面的人最少，也就最難被別家挖走。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">數字都是自報，規模不等於採用</h2>
+    <p class="g-p">整篇的數字都出自 NVIDIA 自己，沒有第三方名單、通過率或會後採用調查。</p>
+    <p class="g-p">規模證明動員力，不證明深度：進場人數，和把代理放進產線的人數，是兩組不同的數字（編輯判斷）。</p>
+    <p class="g-p">原文也留了一條後續：議程之後會放上 NVIDIA On-Demand。等於現在能複核的只有名單，內容要等影片。</p>
+    <p class="g-p">這也解釋了為何整篇讀起來像名單：原文是活動總結，不是產品公告，沒有可驗證的客戶數字。</p>
+    <p class="g-p">所以這篇的用法是拿來認人名、對關係，不是拿來判斷技術成熟度。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>原文可數出的數字</th><th>指什麼</th><th>原文沒給</th></tr></thead>
+        <tbody>
+          <tr><td data-l="數字" class="n"><b>2 場</b></td><td data-l="指什麼">全會場次（原文只寫 plenary sessions 複數、兩位講者，場次為推計）</td><td data-l="沒給">各場長度、問答內容、是否有對外直播</td></tr>
+          <tr><td data-l="數字" class="n"><b>5 強</b></td><td data-l="指什麼">Hangul Day hackathon 決選隊數</td><td data-l="沒給">參賽總隊數、評分標準、題目範圍</td></tr>
+          <tr><td data-l="數字" class="n"><b>8 個</b></td><td data-l="指什麼">社群日點名的社群數，原文另稱「其他社群」</td><td data-l="沒給">未列名者、各社群人數</td></tr>
+          <tr><td data-l="數字"><b>1 台</b></td><td data-l="指什麼">冠軍隊拿到的 DGX Spark 數量</td><td data-l="沒給">規格、是否附軟體或雲端額度</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">（編輯觀點：判斷這場會值不值得追，要看分場題目與會後採用名單，而原文兩者都沒給。）</p>
+    <p class="g-p">（編輯推論：今年先用人數與獎品建立關係；明年同一批公司若講得出上線數字，才算真的落地。）</p>
+    <p class="g-p">原文能確認的是：NVIDIA 用平台、runtime、認證三層同時下注韓國市場；是否把它當示範市場經營，原文未表態。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>兩場全會等於兩份價目表。</b>機器人賣平台，代理賣「自己擁有、自己控制」。</p>
+      <p><b>韓語是採購條件。</b>認證考以韓語出題、hackathon 要求以韓語與韓國文化訓練代理。</p>
+      <p><b>自報數字只證明動員力。</b>沒有分場題目與會後名單，深度無法複核。</p>
+    </div>
+  </section>
+
+    <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="agent-anomaly-detection.html">代理異常偵測：看的是職責越界，不是系統當機</a><span class="d">2026-11-16</span></div>
+      <div class="g-relrow"><span class="s">LangChain（官方部落格）</span><a href="langsmith-agent-record.html">代理紀錄：治理的單位從專案換成代理</a><span class="d">2026-11-16</span></div>
+      <div class="g-relrow"><span class="s">LangChain（官方部落格）</span><a href="tasks-to-goals.html">任務到目標：交出的是決策權，不只是提示</a><span class="d">2026-11-16</span></div>
+    </div>
+  </section>
+
+<p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，與會人數與開發者數皆為 NVIDIA 自報、未經第三方驗證。原文僅有會場照與社群照兩張、資訊量不足，故本頁兩張圖解皆為本站重繪（非原文圖），原文未給分層、排序或對照。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-17 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

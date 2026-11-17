@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 工作階段計價：代理的等待時間也要付錢 · AI 每日動態檔案</title>
+<meta name="description" content="GKE 上 100 個 coding agent：一階段一 Pod 需 34 節點、約 1,288 美元／月；Agent Substrate 閒置快照後降到 15 節點，每小時 2 次 prompt 時省 40%；逾 4.5 次就翻盤。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>工作階段計價：代理的等待時間也要付錢</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Agents are sessions, not requests: size GKE node pools for AI agent sessions（Google Developers Blog，容量規劃方法文；以自家成本模型比較 GKE 上三種跑 coding agent 的方式，並交代 Agent Substrate 與 AX 的分工）</p>
+    <p class="g-meta">
+      <span>Google Developers Blog</span>·<span>2026-11-16 發布</span>·<span>2026-11-17 收錄</span>·
+      <a href="https://developers.googleblog.com/agents-are-sessions-not-requests-size-gke-node-pools-for-ai-agent-sessions/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>約 80%</b><span>典型工作階段中代理等使用者的時間占比（原文引 GitHub Copilot agent trace 研究）</span></div>
+    <div class="g-stat"><b>396.3 秒</b><span>一個 turn 的平均代理工作時間：一個 prompt 加它引發的完整回應</span></div>
+    <div class="g-stat"><b>省 40%</b><span>100 個 coding agent、每小時 2 次 prompt、2 分鐘閒置逾時下的節點帳單降幅（原文成本模型）</span></div>
+    <div class="g-stat"><b>約 4.5 次／小時</b><span>prompt 密度交叉點；過了就回到一工作階段一 Pod</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">代理的工作階段整天空著等 prompt，按流量擴充等於替等待買機器；Agent Substrate 把閒置沙箱快照進物件儲存，但只在 prompt 不密時划算。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">一整個工作日開著，卻只工作兩成</h2>
+    <p class="g-p">原文是容量規劃方法文，前提是讀者懂 Pod 與節點池；整篇的帳單都出自同一份成本模型，不是實測。</p>
+    <p class="g-p">原文先把兩種負載並排。web request 毫秒結束，伺服器什麼都不留，於是 Kubernetes 按流量擴充：請求變多，Pod 就變多。</p>
+    <p class="g-p">coding agent 的工作區不同。它開一整個工作日，prompt 之間留著記憶與檔案，而且只有 prompt 到了才動。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/developers-googleblog-com-agents-are-ses/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/developers-googleblog-com-agents-are-ses/01.webp" alt="原文圖：上半是 web request，每次請求只有毫秒級的工作片段；下半是一個 agent 工作階段，綠色是工作、灰色是等待，工作階段從 09:00 開到 18:00，中間有一段長時間在等使用者。" width="1200" height="401" loading="lazy" decoding="async"></a>
+      <figcaption>同一條 09:00–18:00 的時間軸：request 是密集的毫秒短跑、彼此不留狀態；工作階段整段開著，綠色工作只佔零碎幾段（原文此圖按每小時 2 次 prompt 的比例繪製），中間一大塊灰是等 prompt。這張圖證明：按流量擴充量不到這種負載的帳單。<span class="g-fig-src">圖／Google Developers，<a href="https://developers.googleblog.com/agents-are-sessions-not-requests-size-gke-node-pools-for-ai-agent-sessions/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">原文引 GitHub Copilot agent trace 研究（Banruo Liu 等人）：典型工作階段裡，代理約 80% 時間在等使用者的下一個 prompt。</p>
+    <p class="g-p">一個 turn，也就是一個 prompt 加上代理對它的完整回應，平均要 396.3 秒的代理工作時間。</p>
+    <p class="g-p">把數字攤到一個工作日：每小時 2 次 prompt、8 小時（原文的假設），代理實際只工作 22%，等待佔 78%。</p>
+    <p class="g-p">這兩組數字合起來只說明一件事：工作階段的成本主體是閒置，不是運算。</p>
+    <p class="g-p">若每個工作階段獨佔一台機器，那 78% 就是你付的錢。這是全文的計價前提，不是形容詞。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">兩種常見答案，都留不住「狀態加機器」</h2>
+    <p class="g-p">原文說團隊通常二選一，而這兩個選項在 web app 都很好用。第一個是每工作階段一個 Pod：狀態留住了，但 1 vCPU、1 GiB 整天佔著。</p>
+    <p class="g-p">換算下來，c3-standard-4 節點扣掉 GKE 的保留可放 3 個這種 Pod；100 個 coding agent 需要 34 個節點、約每月 1,288 美元。</p>
+    <p class="g-p">第二個是 prompt 之間把 Pod 縮到零：節點空出來，持久磁碟區上的檔案還在，但行程與記憶體不留，下一個 prompt 起一個新的代理行程。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>三種跑法：留下什麼、丟掉什麼</b> — 數字取自原文成本模型（本站整理成表）</figcaption>
+      <div class="x-scroll">
+        <table class="x-tbl">
+          <thead><tr><th>跑法</th><th>工作階段狀態</th><th>行程與記憶體</th><th>100 個 agent 的節點／月費</th></tr></thead>
+          <tbody>
+            <tr><td data-l="跑法"><b>一階段一 Pod</b></td><td data-l="狀態">全留，醒著也佔著</td><td data-l="行程">整天佔 1 vCPU／1 GiB</td><td data-l="節點／月費" class="n">34 個，約 USD 1,288／月</td></tr>
+            <tr><td data-l="跑法">prompt 間縮到零</td><td data-l="狀態">只留持久磁碟區的檔案</td><td data-l="行程">每次重起新行程</td><td data-l="節點／月費" class="n">工作時才佔（原文未計價）</td></tr>
+            <tr><td data-l="跑法"><b>parking</b><br>（Agent Substrate）</td><td data-l="狀態">工作階段不關，動的是沙箱</td><td data-l="行程">快照後在暖池還原</td><td data-l="節點／月費" class="n win">15 個，另加 1 個控制面節點</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="x-hint">→ 可橫向滑動</p>
+      <p class="x-src">本站整理自原文成本模型：100 個 coding agent、Google Cloud us-central1 牌價、2 分鐘閒置逾時；不是實測帳單。</p>
+    </figure>
+
+    <p class="g-p">原文要的是第三條路：保留工作階段，趁它等待時把機器還回去。parking 動的是沙箱，不是交談。</p>
+    <p class="g-p">機制是 SuspendActor：把閒置 actor 快照進物件儲存、釋放 worker，下一個請求在任何暖池 worker 上把它還原。</p>
+    <p class="g-p">worker 是可重用的沙箱，來自暖池的 Kubernetes Pod，一個 worker 可同時放多個 actor；密度就是這樣拉起來的。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/developers-googleblog-com-agents-are-ses/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/developers-googleblog-com-agents-are-ses/02.webp" alt="原文圖：代理平台分成五層，由上而下是 Interfaces、Control plane、Harnesses、Runtime 與 Sandbox、可觀測性與安全；右側標示 AX 負責控制面，Agent Substrate 負責 runtime 與 sandbox。" width="1200" height="459" loading="lazy" decoding="async"></a>
+      <figcaption>圖上把代理平台拆成五層，兩側再掛互通性與資料接地。右邊的標示才是重點：AX 只管控制面那層，runtime 與 sandbox 歸 Agent Substrate，所以 parking 與還原發生在下面兩層，交談與記憶不受影響。<span class="g-fig-src">圖／Google Developers，<a href="https://developers.googleblog.com/agents-are-sessions-not-requests-size-gke-node-pools-for-ai-agent-sessions/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">AX 回答的是「代理是什麼、知道什麼」：Task 說跑什麼（image、command、limits），Workspace 說知道什麼（repos、檔案）。</p>
+    <p class="g-p">今天 ax suspend 只用磁碟區快照保住 /workspace：檔案回來，行程重起；Agent Substrate 還原的是整個 actor。</p>
+    <p class="g-p">安全順帶一提：gateway 依 actor 身分加憑證、管進出流量，代理本身不持有 API key。</p>
+    <p class="g-p">原文另註：Agent Substrate 1.0 已在 GKE 正式可用；gVisor、Agent Substrate 與 OpenRL 三項也在 2026 年 11 月捐入 CNCF（AX 不在其中）。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">什麼時候別 park：prompt 很密，或已經 overcommit</h2>
+    <p class="g-p">原文最反直覺的一段：parking 的效益取決於等待佔比。到了每小時 4 次 prompt，代理工作 44%，暖池要 27 個節點，只省 4%。</p>
+    <p class="g-p">交叉點約在每小時 4.5 次 prompt。原文建議先從 gateway log 撈一週的 prompt 率，用最忙的那一小時來比。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>該不該 park：三個互斥條件</b> — 判準取自原文，本站重排成決策圖</figcaption>
+      <div class="x-dec">
+        <div class="q">先量最忙那一小時的 prompt 率，再看落在哪一格</div>
+        <div class="brs">
+          <div class="br"><span class="tag">少於約 4 次</span><b>值得 park</b><small>每小時 2 次時省 40%；暖池按 99 百分位加 15% headroom 開 15 個節點。</small></div>
+          <div class="br"><span class="tag">約 4.5 次以上</span><b>留一階段一 Pod</b><small>每小時 4 次時 parking 只省 4%，再上去就翻盤；原文未給更高密度下的節點數。</small></div>
+          <div class="br"><span class="tag">Pod 已 overcommit</span><b>先拉到同基準再比</b><small>request 0.25 vCPU、limit 1 vCPU 可一節點塞 12 個，100 個 agent 只要 9 個節點。</small></div>
+        </div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖；節點數出自原文成本模型（100 個 coding agent、us-central1 牌價）。原文未主張這三格窮盡所有情況。</p>
+    </figure>
+
+    <p class="g-p">parking 還有兩個變數是你自己決定的。第一，誰呼叫 suspend：Agent Substrate 不會自己暫停閒置 actor（issue #424）。</p>
+    <p class="g-p">得靠 harness 或前面那層服務，在逾時後打 suspend API。</p>
+    <p class="g-p">忘了打，閒置 actor 就一直佔著 worker；worker 全被佔滿時，新請求預設等 5 秒後回 HTTP 503。</p>
+    <p class="g-p">原文的池子大約每 3,500 個 turn 才滿一次；換成每小時 2.5 次 prompt，同樣 15 個節點就有 3% 的 turn 撞上。</p>
+    <p class="g-p">第二，宣告多少容量：actor 按 CPU 與記憶體上限計價，成本模型把池子容量設成節點實有值，所以每個 actor 都拿得到完整上限。</p>
+    <p class="g-p">overcommit 會直接反轉結論。Pod 若 request 0.25 vCPU、limit 1 vCPU，一節點可塞 12 個。</p>
+    <p class="g-p">同樣 100 個 agent 只要 9 個節點，比 parked pool 還少。</p>
+    <p class="g-p">代價兩邊一樣：鄰居在 build、test 時，代理一起變慢。原文說要比就比同樣的 CPU 保證，否則比的是兩件事。</p>
+    <p class="g-p">原文把 4.5 次當對照點，不是當門檻：真正的輸入是你自己的 prompt 率，這也是作者說最沒把握的參數。</p>
+    <p class="g-p">最後是規模。控制面成本對 10 個或 1,000 個工作階段相同，parking 約從 37 個 coding 工作階段開始划算，聊天助理則是 13 個。</p>
+    <p class="g-p">自動擴充跟的是 worker Pod，不是已暫停的 actor，下班後要用排程工作把池子縮到零；跑滿 730 小時的池子，帳單約是一階段一 Pod 的兩倍。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>按工作階段算容量，別按流量算。</b>等待時間不會自己變成零。</p>
+      <p><b>先量最忙一小時的 prompt 率。</b>超過約 4.5 次，parking 就不划算。</p>
+      <p><b>比成本要同基準。</b>CPU 保證不同，parking 的優勢會消失。</p>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文成本模型（100 個 coding agent、Google Cloud us-central1 牌價），非實測帳單；前兩張為原文圖（Google Developers），圖解 A、B 為本站整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-17 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
