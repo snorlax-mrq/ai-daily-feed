@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 桌機常駐代理：讓代理有自己的機器</title>
+<meta name="description" content="RTX Spark 小桌機導讀：ASUS、Dell、MSI 開賣，6,144 CUDA 核心 Blackwell RTX、最高 128GB 統一記憶體、最高 1 petaflop、10GbE，讓代理與排程任務常駐；Adobe 原生 WoA、Blender DLSS RR、ComfyUI 同步到位。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>桌機常駐代理：讓代理有自己的機器</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：NVIDIA Blog〈NVIDIA RTX Spark Compact Desktops Out Now〉——產品發布文，同時公告硬體、軟體生態與本地 AI 工具更新</p>
+    <p class="g-meta">
+      <span>NVIDIA</span>·<span>2026-11-18 發布</span>·<span>2026-11-19 收錄</span>·
+      <a href="https://blogs.nvidia.com/blog/rtx-spark-desktop-local-ai-available-now/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>最高 128GB</b><span>統一記憶體（up to）；同機搭 20 核 NVIDIA Grace CPU</span></div>
+    <div class="g-stat"><b>最高 1 petaflop</b><span>AI 算力（up to，NVIDIA 自報）；同機的 Blackwell RTX GPU 具 6,144 CUDA 核心</span></div>
+    <div class="g-stat"><b>1,200 億參數</b><span>原文列為可在本地執行的大型語言模型規模</span></div>
+    <div class="g-stat"><b>3 家開賣</b><span>ASUS、Dell、MSI 即日起售；Acer、GIGABYTE、HP 與 Surface Dev Box 待上</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">一台專用 Windows 小桌機，把代理與排程任務留在桌上跑：程式碼與檔案不出機器，也不為這些任務付逐 token 的雲端費。</p>
+
+    <p class="g-p">原文的場景很具體：筆電帶出門，桌機上的代理與排程任務照跑。專用機補的是「一直開著」這件事。</p>
+    <p class="g-p">工作也不再被一次編輯 session 框住：產生素材、跑長算圖、排程任務，關掉視窗後仍能繼續。</p>
+    <p class="g-p">在地端跑支援的模型，處理中的程式碼與檔案留在這台 PC；原文點名的省項，是這些任務的逐 token API 費用。</p>
+    <p class="g-p">原文寫的是「支援的模型」：能留在機上跑的是清單內那些，不是任意模型。</p>
+    <p class="g-p">原文的定位是「給開發者、創作者與 AI 愛好者的專用 Windows PC」——一台機器服務三種工作，不是只做一件事。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>常駐代理的三層分工</b> — 誰撐住誰：硬體 → 開發底座 → 任務分流</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>最外層 · 桌機硬體</b><small>Grace CPU ＋ Blackwell RTX、最高 128GB 統一記憶體</small><span class="pi">10GbE</span></div>
+          <div class="ring-inner"><b>決定模型上限</b> — 1,200 億參數模型與 90GB+ 3D 場景都靠這層</div>
+        </div>
+        <div class="ring">
+          <div class="ring-lb"><b>中層 · 開發底座</b><small>原生 CUDA 走 Windows，Linux 工具走 WSL</small><span class="pi">Windows</span></div>
+          <div class="ring-inner"><b>代理與微調的入口</b> — Hermes Agent 或 NemoClaw 藍圖搭代理，Unsloth 微調模型</div>
+        </div>
+        <div class="ring ring--core">
+          <div class="ring-lb"><b>核心 · Switchyard 分流</b><small>逐任務判斷跑本機還是雲端</small><span class="pi">已在 Hermes 提供</span></div>
+          <div class="ring-inner"><b>日常在裝置上跑</b> — 進階推理才叫雲端模型，原文稱此舉用來控制雲端成本</div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋</b>：常駐任務不出門，雲端費用只花在非它不可的推理上。</span></div>
+      <p class="x-src">本站重繪，非原文圖。原文依「硬體 → 開發工具 → 代理」分段敘述，未給此三層巢狀圖。</p>
+    </figure>
+
+    <p class="g-p">（編輯觀點：成本沒有消失，只是換計價方式——硬體一次付清，電費與維運自己扛。）</p>
+    <p class="g-p">原文未給價格、功耗與噪音；對一台要 24 小時開機的機器，這三項與算力同等關鍵（編輯觀點）。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">規格表：每個「最高」都要留著</h2>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>項目</th><th>原文數據</th><th>原文怎麼寫</th></tr></thead>
+        <tbody>
+          <tr><td data-l="項目"><b>CPU</b></td><td data-l="數據">NVIDIA Grace，20 核</td><td data-l="限定語">原文只給核心數，未分機型</td></tr>
+          <tr><td data-l="項目"><b>GPU</b></td><td data-l="數據">Blackwell RTX，6,144 CUDA 核心</td><td data-l="限定語">未給顯示記憶體容量與功耗</td></tr>
+          <tr><td data-l="項目"><b>記憶體</b></td><td data-l="數據">最高 128GB 統一記憶體</td><td data-l="限定語">up to，非每台標配</td></tr>
+          <tr><td data-l="項目"><b>AI 算力</b></td><td data-l="數據">最高 1 petaflop</td><td data-l="限定語">up to，未附測試條件</td></tr>
+          <tr><td data-l="項目"><b>網路</b></td><td data-l="數據">10GbE（十吉位元乙太網路）</td><td data-l="限定語">原文只寫用途：大檔往返網路儲存</td></tr>
+          <tr><td data-l="項目"><b>機型</b></td><td data-l="數據">ASUS、Dell、MSI 已開賣</td><td data-l="限定語">Acer、GIGABYTE、HP 與 Surface Dev Box「即將推出」</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+
+    <p class="g-p">原文對大模型的說法是「留出空間」：記憶體夠大，才放得下更大的本地模型。</p>
+    <p class="g-p">（編輯說明：統一記憶體指 CPU 與 GPU 共用同一池，模型與素材不必在兩塊記憶體之間搬。）</p>
+    <p class="g-p">10GbE 對應的是大檔搬運：資料集、模型檔與創作素材，在機器與網路儲存之間來回。</p>
+    <p class="g-p">三項賣點分別是 1,200 億參數模型、90GB+ 3D 場景與 4:2:2 影片即時編輯；原文沒給專案規模或對照機種。</p>
+    <p class="g-p">少了基準，這些數字只能當上限宣告；夠不夠用，要看自己的工作負載（編輯觀點）。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">生態：先讓工具搬家，代理才搬得進來</h2>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>同時到位的三塊生態</b> — 並列，無先後</figcaption>
+      <p class="x-grid-h">三塊各自獨立，不代表順序；原文未給排序</p>
+      <div class="x-grid">
+        <div class="c"><b><i>①</i>Adobe 原生 WoA</b><small>Illustrator、InDesign 原生上 Windows on Arm；Camera Raw 原生、Substance 3D Painter 12.2 公開測試；Premiere 走 TensorRT-RTX 加速</small></div>
+        <div class="c"><b><i>②</i>創作管線</b><small>Blender 5.3 把 DLSS 4.5 Ray Reconstruction 接進 Cycles 視窗；ComfyUI 已有 Frame Generation 與 HDR</small></div>
+        <div class="c"><b><i>③</i>代理與微調</b><small>Hermes Agent、NemoClaw 藍圖、Unsloth 微調</small></div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖；三類內容在原文分屬不同小節，未給此排序。</p>
+    </figure>
+
+    <p class="g-p">Premiere 這輪加速的是幾個常用 AI 功能：Enhance Speech、Object Mask、Scene Edit Detection 與 Auto Reframe，改走 TensorRT-RTX。</p>
+    <p class="g-p">格式支援同步補齊：Canon RAW、Red RAW、ARRI RAW、ARRICORE、ARRI HDE、MXF 內的 H.264 與 HEVC，以及 ProRes RAW 與 long-GOP。</p>
+    <p class="g-p">Photoshop 的 Remove Tool 走 TensorRT-RTX，Camera Raw 改原生上 Arm；原文強調的重點是不必再靠模擬。</p>
+    <p class="g-p">創作代理是另一條線：把 Photoshop 這類既有應用與本地 AI 工具接起來，用自然語言指令從想法走到成品。</p>
+    <p class="g-p">Blender 這條有硬條件——要 Blender 5.3 加最新的 Game Ready 或 Studio 驅動，換來視窗內接近成品的即時預覽。</p>
+    <p class="g-p">在 Adobe MAX，與會者用自然語言指令把草稿變成算圖與動畫，合做一個共用的數位邁阿密景觀。</p>
+    <p class="g-p">同一條思路在影片上收尾：Photoshop 與 ComfyUI 由 Hermes Agent 串起來，從隔離主體到生成影片都在裝置上完成。</p>
+    <p class="g-p">生成片段還能用 RTX Video Frame Generation 補到 60 fps，再轉 HDR 進調色，整條管線留在一個 ComfyUI 工作流裡。</p>
+    <p class="g-p">（編輯推論：真正的分野是代理有沒有自己的機器——共用筆電的代理，壽命等於一次闔蓋。）</p>
+    <p class="g-p">（編輯觀點：三塊合起來才是「桌機取代工作站」的實際論證，硬體規格只是前提。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一篇裡的幾個平台訊號</h2>
+    <p class="g-p">Windows ML 這輪開放兩件事：任何 Hugging Face 的 GGUF 模型都能用 llama.cpp 後端在 Windows ML 裡跑。</p>
+    <p class="g-p">DxCGC 後端以實驗版釋出，讓遊戲開發者透過 DirectX 12 編譯與執行模型，AI 與繪圖共用同一顆 GPU。</p>
+    <p class="g-p">企業端是 DGX Station for Windows 將支援 Windows Server 2028，由 GB300 Grace Blackwell Ultra 桌面超級晶片驅動。</p>
+    <p class="g-p">補充清單另點名其中兩項：llama.cpp 推出 v1.0.0；Runway 的 Praxis-1 是 270 億參數的 world action model。</p>
+    <p class="g-p">Praxis-1 可在 RTX 5090、RTX PRO 6000 Blackwell、DGX Spark 與 DGX Station 本地跑，並能用 LoRA 微調到自家機器人與相機。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>常駐才是賣點。</b>代理要 24/7 在線，就不該寄生在會被帶走的筆電上。</p>
+      <p><b>地端只省「支援的模型」。</b>原文說的是跑本地模型可免逐 token 費用，不是任何任務都免費。</p>
+      <p><b>分流比全本地實際。</b>Switchyard 把日常留機上，難題仍回雲端付費。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="codex-sandbox.html">代理沙箱：預設保守，邊界交給作業系統</a><span class="d">2026-11-18</span></div>
+      <div class="g-relrow"><span class="s">Meta Engineering</span><a href="meta-rea-propagation.html">技術擴散：代理接手六成擴散工作</a><span class="d">2026-11-18</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="langsmith-outcome.html">代理花費：合併 PR 才是計價單位</a><span class="d">2026-11-18</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。原文為 NVIDIA 產品發布文，規格與效能數字皆為原廠敘述，無第三方驗證；圖解 A、B 為本站重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-19 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

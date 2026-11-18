@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 技術擴散：代理接手六成擴散工作</title>
+<meta name="description" content="Meta 廣告排序模型艦隊的技術擴散：2026 年 3 月起代理接手後，超過 60% 擴散工作由 AI 代理完成；同工作量生產力 3 倍、部分組合訓練算力中位數降 4 倍、估計年底省 4,500 萬美元以上（皆 Meta 自報）。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>技術擴散：代理接手六成擴散工作</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Meta Engineering〈How Meta Uses AI Agents to Scale ML Innovations Across Ads Ranking Models〉——工程部落格技術文，REA（Ranking Engineer Agent）系列第二篇，主題不是代理本身，而是「技術如何擴散到整個模型艦隊」</p>
+    <p class="g-meta">
+      <span>Meta Engineering</span>·<span>2026-11-18 發布</span>·<span>2026-11-19 收錄</span>·
+      <a href="https://engineering.fb.com/2026/11/18/ml-applications/ai-agents-to-scale-ml-innovations-across-ads-ranking-models/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>超過 60%</b><span>2026 年 3 月代理開始驅動執行後，技術擴散工作由 AI 代理處理的占比（Meta 估計）</span></div>
+    <div class="g-stat"><b>3 倍</b><span>同等工作量下的工程生產力；原文換算為每位工程師可多做 3 倍適配（Meta 自報）</span></div>
+    <div class="g-stat"><b>中位數 4 倍</b><span>「部分」technique-model 組合的訓練算力降幅，不是全艦隊平均（Meta 自報）</span></div>
+    <div class="g-stat"><b>4,500 萬美元以上</b><span>估計到 2026 年底省下的算力（estimated；Meta 自報、無第三方驗證）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">技術的價值不在被發明，而在被複製到每一個模型：Meta 讓代理接手「技術擴散」，把瓶頸從工程頻寬移到判斷品質。</p>
+
+    <p class="g-p">原文的 technique 定義很寬：Wukong 分解層、Interformer 互動網路、更豐富的資料表徵、訓練與推論效率，凡是讓排序模型變好的都算。</p>
+    <p class="g-p">但艦隊沒有共同規格——每個模型服務不同版位與廣告主目標，架構、訓練資料、服務限制各自不同。</p>
+    <p class="g-p">原文說得直白：在一個模型上驗過的技巧，<em>幾乎不能直接複製到下一個</em>。核心想法可轉移，實作幾乎不行。</p>
+    <p class="g-p">技巧還有保鮮期：今天的增益可能在幾個模型開發週期內被下一代取代。擴散得慢，價值就折舊。</p>
+    <p class="g-p">技巧清單在長、模型又在增加，兩者相乘就是一個不斷膨脹的組合空間：要試的技巧-model 配對，遠比人能試的多。</p>
+    <p class="g-p">兩個限制同時收緊。工程頻寬：每次適配都要人同時熟悉技巧與目標模型。算力：每次嘗試都要一次訓練跑。</p>
+    <p class="g-p">2 年標準化與自動化（SMT 模板）已交付 5,000+ 個 technique-model 組合、單模型工程時間降 92%（Meta 自報）。</p>
+    <p class="g-p">但模板只吃掉確定性的步驟。剩下的都是判斷題：哪個技巧值得給哪個模型、搜尋要多寬、為何沒增益、失敗怎麼修。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/engineering-fb-com-2026-11-18-ml-applica/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/engineering-fb-com-2026-11-18-ml-applica/01.webp" alt="Meta 三段流程圖：Discovery、Generalization、Adoption" width="1200" height="670" loading="lazy" decoding="async"></a>
+      <figcaption>原文圖：一個已證實的技巧要過三關才到得了艦隊——Discovery 找與估可轉移性、Generalization 適配與調參、Adoption 開實驗訓練並上線。<span class="g-fig-src">圖／Meta Engineering，<a href="https://engineering.fb.com/2026/11/18/ml-applications/ai-agents-to-scale-ml-innovations-across-ads-ranking-models/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">三段交接的核心差別在產出物：候選清單、可用的適配、可上線的模型。產出物不同，驗法就不能同一套。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三條適配路線，代價各不相同</h2>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>路線</th><th>誰執行</th><th>代價／限制</th></tr></thead>
+        <tbody>
+          <tr><td data-l="路線"><b>專家手工適配</b></td><td data-l="誰執行">領域專家工程師</td><td data-l="代價／限制">結果最強，仍用於最高營收模型；每人要同時熟悉技巧與目標模型，吞吐被工程頻寬鎖死</td></tr>
+          <tr><td data-l="路線"><b>模板泛化</b></td><td data-l="誰執行">代理協助建、評、改模板</td><td data-l="代價／限制">驗一次即覆蓋所有同模板模型，算力只佔逐模型適配的一小部分；覆蓋不到模板外的模型</td></tr>
+          <tr><td data-l="路線"><b>逐模型客製</b></td><td data-l="誰執行">代理提案，工程師覆核</td><td data-l="代價／限制">工程師得先帶做少量模型；覆蓋品質取決於代理從那幾次決策裡學到多少</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/engineering-fb-com-2026-11-18-ml-applica/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/engineering-fb-com-2026-11-18-ml-applica/02.webp" alt="Meta 三個代理與共用知識庫的流程圖" width="1200" height="670" loading="lazy" decoding="async"></a>
+      <figcaption>原文圖：三個代理各有職責——Discovery 排候選、Generalization 做模板與 HP 搜尋、Adoption 編排上線與除錯；三者共用同一個模型／技巧知識庫。<span class="g-fig-src">圖／Meta Engineering，<a href="https://engineering.fb.com/2026/11/18/ml-applications/ai-agents-to-scale-ml-innovations-across-ads-ranking-models/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">三條路線不是替代關係，而是分工：模板吃掉可複用的大多數，客製留給最高營收模型，代理在中間接手判斷。</p>
+    <p class="g-p">代理吃的是非確定性的部分：決定試哪些適配、診斷失敗並自動緩解、有效率地走訪超參數空間、管理數百個並行工作。</p>
+    <p class="g-p">它們共用一個知識庫：過去訓練跑、模型架構與技巧結果的累積紀錄。所以每輪從「最可能成功」的設定起步，而不是從零。</p>
+    <p class="g-p">這也是算力降幅的機制：用上一輪結果收窄下一輪搜尋，並提早停掉不值得續跑的實驗。部分組合訓練算力中位數降 4 倍（Meta 自報）。</p>
+    <p class="g-p">換算成人力：每位工程師能處理 3 倍多的適配——這是原文的粗算，不是另有獨立量測。</p>
+    <p class="g-p">人的位置因此改變：從盯每一次訓練跑、逐一手動 triage 失敗，變成在決策點覆核、設優先序。</p>
+    <p class="g-p">數百個工作並行時誰先跑也是演算法問題：代理依營收重要性、技巧潛力、時限排序，並把卡住或低價值的跑程回收。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">先量代理，再談擴產</h2>
+
+    <p class="g-p">代理擴散的技巧，驗法與工程師相同：離線 NE 要進步、訓練與推論成本等 guardrail 不能退，最後要線上 A/B 顯著勝出。</p>
+    <p class="g-p">只驗終點太晚。代理跨階段跑好幾天，每階段產出物不同，所以每段各有指標。</p>
+    <p class="g-p">Discovery 量候選的 precision 與 recall。recall 更重要——這階段漏掉的模型沒有第二次機會。</p>
+    <p class="g-p">precision 則當護欄：別讓算力花在不會成功的技巧上。</p>
+    <p class="g-p">Generalization 先在縮小版模型上篩，過關才進全尺寸模型，須改善 NE 並守住每個 guardrail。</p>
+    <p class="g-p">Adoption 另外量代理的生產力：完成一個實驗要幾次人工介入，以及多少比例的問題由代理自行診斷並緩解。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>全艦隊擴散時間：現況對目標</b> — 條愈短愈好（本站重繪）</figcaption>
+      <div class="x-bars">
+        <div class="x-bar hot"><b>現況（2026-11）</b><span class="t"><span style="--p:100"></span></span><i>&gt;12 個月</i></div>
+        <div class="x-bar"><b>目標</b><span class="t"><span style="--p:25"></span></span><i>3 個月</i></div>
+      </div>
+      <p class="x-src">單位：一個已證實技巧到達所有適用模型的時間；愈短愈好。現況取原文字面「超過一年」，目標為原文 aiming to reduce、非已達成。原文未給實測月數，長條比例為本站示意。</p>
+    </figure>
+
+    <p class="g-p">差距就寫在原文裡：一條技巧走完全艦隊現在要一年多，目標壓到三個月，端到端吞吐還要再推高 5 倍。</p>
+    <p class="g-p">超過 60% 是 Meta 的估計值，原文未交代分母——哪些工作算一單位「擴散」，讀者只能接受其口徑（編輯觀點）。</p>
+    <p class="g-p">下一步押在代理自己變強：以累積結果調整策略的 self-evolving learning，而不是等人餵規則。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>擴散的瓶頸是判斷，不是流程。</b>標準化只吃掉確定性的那一段。</p>
+      <p><b>代理的產能來自共享知識庫。</b>累積的訓練紀錄本身就是資產。</p>
+      <p><b>一年變三個月是目標。</b>看成效先看限定語與分母。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="codex-sandbox.html">代理沙箱：預設保守，邊界交給作業系統</a><span class="d">2026-11-18</span></div>
+      <div class="g-relrow"><span class="s">NVIDIA</span><a href="rtx-spark.html">桌機常駐代理：讓代理有自己的機器</a><span class="d">2026-11-18</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="langsmith-outcome.html">代理花費：合併 PR 才是計價單位</a><span class="d">2026-11-18</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理；兩張原圖出自 Meta Engineering，圖 B 的數據條為本站重繪。所有成效數字為 Meta 自報、無第三方驗證。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-19 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

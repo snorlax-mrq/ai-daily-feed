@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 混沌迴圈：20 億次請求只 60 次錯誤 · AI 每日動態檔案</title>
+<meta name="description" content="Claude Docs 上線前 3 週仍是單節點 PoC；團隊讓 Claude 在 staging 連跑兩週混沌迴圈壓測並修復。9/22 前超過 460 萬份文件、20 億次請求僅 60 次伺服器錯誤；九月對 production 部署 629 次、零回滾；整服務約 50 個記憶體優化 pod（原團隊自報）。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>混沌迴圈：20 億次請求只 60 次錯誤</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Anthropic 工程部落格（作者 Vivek Nair，Docs 團隊），記述如何在 staging 上架「混沌迴圈」，讓 Claude 連跑兩週壓測並修掉倒下的地方，把單節點 PoC 撐到上線規模。</p>
+    <p class="g-meta">
+      <span>Claude（claude.dev Blog）</span>·<span>2026-11-17 發布</span>·<span>2026-11-19 收錄</span>·
+      <a href="https://claude.dev/blog/chaos-loop-claude-docs-launch/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>超過 460 萬份</b><span>9 月 22 日止建立的 Docs 文件數；9 月 16 日上線，首批 100 萬份約 30 小時出現</span></div>
+    <div class="g-stat"><b>20 億次請求</b><span>上線到 9 月 22 日之間的請求總量</span></div>
+    <div class="g-stat"><b>60 次伺服器錯誤</b><span>20 億次請求中的伺服器錯誤數；同期間未發生需要回滾的故障</span></div>
+    <div class="g-stat"><b>約 50 個 pod</b><span>整個 Docs 服務的記憶體優化 pod 數；壓測前的上線估計超過 500 個</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">上線前 3 週，Docs 還只是單節點上的 PoC；團隊讓 Claude 在 staging 連跑兩週混沌迴圈，把會倒的地方逐一修掉，換來一個沒回滾過的上線。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三週前，它只是單機上的一個 PoC</h2>
+    <p class="g-p">Claude Docs 是編輯器：你、同事與 Claude 可以同時在同一份文件裡讀寫與留言，任何一個 Claude session 都能直接開進來。</p>
+    <p class="g-p">上線前 3 週，整個服務跑在單一節點，幾千名 Anthropic 內部人員在用；團隊自己估，上線頭幾天就會出現數百萬份文件。</p>
+    <p class="g-p">這種規模測不出上線風險，也沒有真實流量可測。9 月 4 日，作者讓 Claude 開一個常駐 session，驅動鏡像 production 的 staging 叢集，每天灌超過 100 萬份合成文件。</p>
+    <p class="g-p">迴圈本身很樸素：選情境、跑 harness、讀遙測、提修法、部署到 staging、再跑一次。session 當協調者，把工作丟給 sub-agents，最忙一週同時約 11 個、峰值 30 個。</p>
+    <p class="g-p">協調者還會透過 Slack MCP 去問 Anthropic 內部的 Claude Tag（beta），讓別隊跑過的代理先替這套擴充方案挑坑。</p>
+    <p class="g-p">情境刻意偏執：單日新增 1,000 萬份文件；22,000 條連線同時重連；熱門文件湧入數百名檢視者時伺服器被殺、資料庫同時停頓。</p>
+    <p class="g-p">開跑前先劃紅線：改資料庫 schema、key 布局、文件如何儲存與 materialize 算難回復，必須停下問人。Claude 通常附建議，作者多半照准。</p>
+    <p class="g-p">兩個不變量全程有效，且跨多次 compaction 沒被忘記：文件要幾乎瞬間開啟，伺服器 ack 過的編輯必須還在。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">讓服務對模型可讀，迴圈才收斂</h2>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>可測性的三層</b> — 誰包住誰（由外而內；包覆關係為編輯歸納）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>1 · staging harness</b><small>鏡像 production 的叢集，每天超過 100 萬份合成文件</small><span class="pi">加壓</span></div>
+          <div class="ring-inner">把單一功能推到飽和，並刻意弄倒元件：殺實例、停資料庫、尖峰中部署</div>
+        </div>
+        <div class="ring">
+          <div class="ring-lb"><b>2 · 遙測</b><small>每次操作都上報，由 Claude 經 Datadog MCP 讀取</small><span class="pi">訊號</span></div>
+          <div class="ring-inner">查詢名稱、掃描列數對比回傳列數；發現還缺什麼，Claude 自己補上</div>
+        </div>
+        <div class="ring ring--core">
+          <div class="ring-lb"><b>3 · 服務本體</b><small>Rust、無 GC、依賴極少且自行 vendored</small><span class="pi">被測物</span></div>
+          <div class="ring-inner">記憶體全落在團隊自己定義的結構裡，任何數字都能指回某段程式碼</div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑</b>：訊號一吵就無法歸因，修法退回猜測——這是團隊刻意避開 GC 的理由。</span></div>
+      <p class="x-src">本站重繪，非原文圖；原文 FIG 1–3 畫的是迴圈與取捨，未給這張分層圖。</p>
+    </figure>
+
+    <p class="g-p">遙測細到每條資料庫查詢都報名稱、掃描列數與回傳列數，Claude 才看得出查詢壞在哪並改寫。人手寫遙測很瑣碎，多半等出事才補；這回是邊跑邊補。</p>
+    <p class="g-p">原文叫它「診斷迴圈」：Claude 每輪讀遙測，順手補上它認為缺的訊號，不只被動看既有儀表板。</p>
+    <p class="g-p">同一輪 harness 也判斷改動好不好回復；好回復就讓 Claude 自己上 staging 重跑，不好的才回到人手上。</p>
+    <p class="g-p">記憶體是最好的例子：一份大文件在 pod 上吃掉約 3 GB；Claude 先縮小自家快取，下一輪卻顯示記憶體其實在依賴套件裡，它把改動撤回。</p>
+    <p class="g-p">再細切 profiling，發現每次按鍵都把文件複製進好幾個結構、各多幾 MB；改成 copy-on-write 共用一份參照，三天內壓到約 180 MB。</p>
+    <p class="g-p">容量估計跟著變：上線所需 pod 從超過 500 個降到約 50 個。選 Rust、砍依賴是同一思路——數字要能追回自己寫的程式碼。</p>
+    <p class="g-p">團隊刻意避開 GC：GC 的記憶體與延遲按它自己的時程漂移，訊號變吵就難歸因到某段程式碼；Rust 讓記憶體全在自家結構裡。</p>
+    <p class="g-p">作者也承認取捨：Rust 不好寫，幾年前這會是決定性缺點，現在 Claude 寫得動；但這是他從 Go 轉來的體感，原文沒做兩語言對照。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">上線週、時機與這筆帳</h2>
+    <p class="g-p">九月對 production 部署 629 次，一次都沒回滾。上線週的體感是「熟悉」：十個演練情境有七個真的在 prod 發生。</p>
+    <p class="g-p">修補早在 runtime flag 後面，壓力一來多半只是翻 flag，而不是臨場改程式。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>項目</th><th>數字</th><th>限定語與基準</th></tr></thead>
+        <tbody>
+          <tr><td data-l="項目">文件數</td><td data-l="數字"><b>超過 460 萬份</b></td><td data-l="限定語">9 月 22 日止；上線日 9 月 16 日</td></tr>
+          <tr><td data-l="項目">請求與錯誤</td><td data-l="數字"><b>20 億次／60 次</b></td><td data-l="限定語">同期間請求量與伺服器錯誤數，未給錯誤率</td></tr>
+          <tr><td data-l="項目">部署</td><td data-l="數字"><b>629 次</b></td><td data-l="限定語">9 月對 production 的部署次數，零回滾</td></tr>
+          <tr><td data-l="項目">規模</td><td data-l="數字"><b>約 50 個 pod</b></td><td data-l="限定語">記憶體優化 pod；原估超過 500 個</td></tr>
+          <tr><td data-l="項目">推論成本</td><td data-l="數字"><b>約 12.5 萬美元</b></td><td data-l="限定語">8 月底到上線日，Fable 5.2 牌價（2026-11）</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">以上皆為原團隊自報，無第三方驗證。</p>
+    <p class="g-p">作者說幾個月前這招行不通：舊模型讀遙測沒問題，但跑到一、二十輪就忘記在優化什麼，他得一再重述目標——內部稱之為 goal drift。</p>
+    <p class="g-p">新模型能長時間守著同一目標，是迴圈成立的前提，不只是附帶好處。他用的是內部研究模型，約等同 Claude Fable 5.2。</p>
+    <p class="g-p">成本約 12.5 萬美元，多數花在讀遙測、寫提案、生成修補與審查程式。其中一部分是規模稅：只有這個量級才需要的基礎設施，本身也要推論才想得清楚。</p>
+    <p class="g-p">他估重來一次可只花一半；小服務兩週推估 3,000–10,000 美元，兩年前同等工作量則是他「猜」約需一組工程師半年——後者原文明說沒實跑。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>先修訊號，再修程式。</b>遙測吵，迴圈就只是猜；避開 GC 是為了可歸因。</p>
+      <p><b>把不可回復的決策留給人。</b>schema、key 布局、儲存格式，其餘放給模型連跑。</p>
+      <p><b>零回滾是自報成果，不是保證。</b>換服務前先問自己的遙測夠不夠細。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="codex-sandbox.html">代理沙箱：預設保守，邊界交給作業系統</a><span class="d">2026-11-18</span></div>
+      <div class="g-relrow"><span class="s">NVIDIA</span><a href="rtx-spark.html">桌機常駐代理：讓代理有自己的機器</a><span class="d">2026-11-18</span></div>
+      <div class="g-relrow"><span class="s">Meta Engineering</span><a href="meta-rea-propagation.html">技術擴散：代理接手六成擴散工作</a><span class="d">2026-11-18</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，成效為原團隊自報、無第三方驗證。圖解與表格為本站重繪整理，非原文圖；原文 FIG 1–3 見官方連結。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-19 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

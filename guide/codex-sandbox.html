@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 代理沙箱：預設保守，邊界交給作業系統 · AI 每日動態檔案</title>
+<meta name="description" content="OpenAI 拆解 Codex 沙箱：內建 :workspace 讓工作區可寫、.git 與 .codex 唯讀、全機可讀、網路預設全關；三平台分別以 Seatbelt、bubblewrap 加 seccomp-bpf、MXC 強制。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>代理沙箱：預設保守，邊界交給作業系統</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：OpenAI 技術部落格〈Inside the Codex sandbox〉——機制文，從預設邊界一路講到三個平台如何執法</p>
+    <p class="g-meta">
+      <span>OpenAI</span>·<span>2026-11-18 發布</span>·<span>2026-11-19 收錄</span>·
+      <a href="https://openai.com/index/inside-the-codex-sandbox" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>:workspace 內建</b><span>工作區可寫，<code>.git</code> 與 <code>.codex</code> 保持唯讀</span></div>
+    <div class="g-stat"><b>3 種網路模式</b><span>全關（<code>:workspace</code> 預設）／全開（<code>:danger-full-access</code> 預設）／走代理</span></div>
+    <div class="g-stat"><b>3 平台 1 組 API</b><span>macOS Seatbelt、Linux bubblewrap＋seccomp-bpf、Windows MXC</span></div>
+    <div class="g-stat"><b>子程序全繼承</b><span>限制沿 process tree 傳下去，含活過原程序的後代</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">Codex 沙箱不是 VM，也不是容器：它用各平台原生的沙箱機制，把代理在你電腦上執行的指令，關進你指定的檔案與網路邊界。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>縱深防禦的三層</b> — 誰管意圖、誰發權限、誰真的攔下</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>外層 · 訓練與對齊</b><small>模型願不願意照你的意圖用權限</small><span class="pi">defense in depth</span></div>
+          <div class="ring-inner"><b>沙箱管「碰得到什麼」</b> — 對齊管「拿它做什麼」，兩者互補而非取代</div>
+        </div>
+        <div class="ring">
+          <div class="ring-lb"><b>中層 · harness（Codex 沙箱）</b><small>permission profile ＋ 網路代理</small><span class="pi">:workspace</span></div>
+          <div class="ring-inner"><b>指令＋profile 進 <code>spawn_command_under_sandbox()</code></b> — 模型越權要求由 harness 裁決</div>
+        </div>
+        <div class="ring ring--core">
+          <div class="ring-lb"><b>核心 · 作業系統沙箱</b><small>Seatbelt／bubblewrap＋seccomp／MXC</small><span class="pi">三平台同一 API</span></div>
+          <div class="ring-inner"><b>真正拒絕檔案與連線的那一層</b> — 子程序全樹繼承</div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋</b>：沙箱只收窄「可及範圍」，管不到意圖——這正是原文主張縱深防禦、不單靠沙箱的理由</span></div>
+      <p class="x-src">本站重繪，非原文圖。原文只說採 defense in depth 並分述三者，未給巢狀順序；此處編輯依「管意圖／發權限／執行攔阻」重排。</p>
+    </figure>
+
+    <p class="g-p">原文把它歸在 defense in depth：訓練與對齊、harness、作業系統三層各管一段，沙箱只負責「指令執行時碰得到什麼」。</p>
+    <p class="g-p">定義很樸素：限制程式執行時能存取的東西。照片整理只開 <code>~/Pictures</code> 並斷網，避免檔案被上傳。</p>
+    <p class="g-p">程式碼審查反過來：線上文件可查、原始碼唯讀。邊界是按任務配的，不是一套打天下。</p>
+    <p class="g-p">不搬進容器的理由寫得很具體：筆電是客製環境，Docker 裡跑不了 iOS 的原生建置鏈，也開不了模擬器。</p>
+    <p class="g-p">若把建置與模擬器丟回主機執行，那些動作又跑到沙箱外，得另外再圍一次。</p>
+    <p class="g-p">（編輯觀點：這是拿隔離完整度換工具鏈可用，界線得靠 profile 一條條補，而不是靠一層牆。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">:workspace 的三條預設，與各自的代價</h2>
+    <p class="g-p">permission profile 就是一個 session 的檔案與網路界線；內建的 <code>:workspace</code> 以 Git repo 當工作區根。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>邊界</th><th>可寫</th><th>唯讀</th><th>可讀</th><th>網路</th></tr></thead>
+        <tbody>
+          <tr><td data-l="邊界"><b>:workspace</b>（內建）</td><td data-l="可寫">工作區內，<code>.git</code> 與 <code>.codex</code> 除外</td><td data-l="唯讀"><code>.git</code>（含 hooks）、<code>.codex/config.toml</code></td><td data-l="可讀">全機，但受使用者原有的 OS 權限限制</td><td data-l="網路">全關（預設）</td></tr>
+          <tr><td data-l="邊界"><b>dev</b>（延伸 :workspace）</td><td data-l="可寫">多一個 <code>~/build-cache</code></td><td data-l="唯讀"><code>.vscode</code>（在每個 workspace root）</td><td data-l="可讀">繼承 :workspace 的廣泛讀取</td><td data-l="網路">走代理，只放行 <code>*.openai.com</code>，<code>evil.example</code> 明示拒絕</td></tr>
+          <tr><td data-l="邊界"><b>stdio MCP</b>（未包沙箱）</td><td data-l="可寫">全機，與執行 Codex 的使用者同權限</td><td data-l="唯讀">無，不套用任何 profile</td><td data-l="可讀">全機</td><td data-l="網路">無限制</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+
+    <p class="g-p">工作區可寫，換來代理改檔案不必每次問人；<code>.git/hooks</code> 與 <code>.codex/config.toml</code> 唯讀，是為了不讓它改到自己或改到掛鉤。</p>
+    <p class="g-p">讀取放寬到整台機器，因為編譯器、runtime、建置工具都要讀 workspace 以外的程式庫與設定；代價是含 API key 的設定檔也讀得到。</p>
+    <p class="g-p">網路預設全關：擋掉上傳與外洩，也擋掉下載依賴，要開得另外授權。</p>
+    <p class="g-p">profile 的檔案規則只有三態：<code>read</code> 唯讀、<code>write</code> 可讀寫、<code>deny</code> 直接封鎖。</p>
+    <p class="g-p"><code>:workspace_roots</code> 讓同一條規則套到每個 root；CLI 以工作目錄當唯一 root，ChatGPT 桌面版用專案的來源資料夾。</p>
+    <p class="g-p">沙箱擋不住的部分，原文直接示範：模型可把惡意程式碼寫進被 Git 忽略的 <code>node_modules</code>，<code>git status</code> 看不到。</p>
+    <p class="g-p">之後你按存檔，編輯器跑起那個套件，程式就在沙箱外執行了。這是原文主張分層、而非單靠沙箱的理由。</p>
+    <p class="g-p">（編輯觀點：這裡防的是「你沒同意的動作」，不是「所有壞事」；誤讀成後者最容易鬆懈。）</p>
+    <p class="g-p">企業那層另備 <code>requirements.toml</code>，例如用 <code>allowed_permission_profiles</code> 把 <code>:danger-full-access</code> 鎖掉。</p>
+    <p class="g-p">分層靠合併：多份 <code>config.toml</code> 疊起來，表遞迴合併、陣列整段取代。權限用表存路徑與網域，團隊才只覆寫一條。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">一組 API，三種作業系統的執法方式</h2>
+    <p class="g-p">harness 用同一個 API 啟動指令：指令加 profile，需要限流量時再附一個網路代理，回傳 <code>Child</code> 讓它等結束。</p>
+    <p class="g-p">沙箱不只給 shell 工具：讀寫本機檔案也走同一套，<code>codex sandbox</code> 則把它從 session 裡拆出來給你的工具。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>平台</th><th>原生機制</th><th>檔案規則怎麼下</th><th>網路怎麼斷</th></tr></thead>
+        <tbody>
+          <tr><td data-l="平台"><b>macOS</b></td><td data-l="原生機制">Seatbelt，走 <code>/usr/bin/sandbox-exec</code>，政策寫在 SBPL</td><td data-l="檔案規則">從 base policy 疊出 profile，起點是 <code>(deny default)</code></td><td data-l="網路">只放行代理所在的本機埠</td></tr>
+          <tr><td data-l="平台"><b>Linux</b></td><td data-l="原生機制">bubblewrap 加 seccomp-bpf，由 <code>codex-linux-sandbox</code> 統籌</td><td data-l="檔案規則"><code>--bind</code> 可寫、<code>--ro-bind</code> 唯讀、<code>--perms 000 --tmpfs</code> 拒絕</td><td data-l="網路"><code>--unshare-net</code>；seccomp 封 <code>connect(2)</code>、<code>bind(2)</code></td></tr>
+          <tr><td data-l="平台"><b>Windows</b></td><td data-l="原生機制">MXC（Microsoft eXecution Container）；原文限定：在相容的 Windows 裝置上正替換舊沙箱</td><td data-l="檔案規則">預設拒絕，再給磁碟根唯讀；deny glob 先展開成實際路徑</td><td data-l="網路">共用代理，只准連主機 loopback</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+
+    <p class="g-p">限制沿 process tree 繼承，連活過原程序的後代也在界內；管的是整棵樹，不是那一行指令。</p>
+    <p class="g-p">代理只放行 profile 允許的網域；未知網域會暫停請求，交給你或 auto-review 裁決。</p>
+    <p class="g-p">判斷順序也有講究：先決定放行才解析 DNS，因為光是查詢就會洩漏網域。</p>
+    <p class="g-p">代理預設同時開 HTTP 與 SOCKS5，用 <code>*_PROXY</code> 環境變數注入；但並非每個程式都吃這套，直連仍由平台層擋。</p>
+    <p class="g-p">Apple 已在 man page 把 <code>sandbox-exec</code> 標成 deprecated，但 Chrome 等仍在用；原文說在「可預見的未來」仍會沿用。</p>
+    <p class="g-p">Linux 那層另設 <code>no_new_privs</code>，避免子程序靠 setuid 提權；<code>bwrap</code> 自帶副本，使用者沒安裝也能跑。</p>
+    <p class="g-p">Windows 換掉舊沙箱的理由很務實：舊版要管理員權限、ACL 檢查慢、還會在主機留下使用者與防火牆規則。</p>
+    <p class="g-p">MXC 的檔案政策預設拒絕；可寫的磁碟根授權不遞迴，要把根目錄既有子目錄展開，同一路徑取最嚴規則。</p>
+    <p class="g-p">模型可以對單一指令要求更大權限，但裁決權在 harness：<code>use_default</code>、<code>with_additional_permissions</code>、<code>require_escalated</code> 三種，可能問你，也可能轉 auto-review。</p>
+    <p class="g-p"><code>codex sandbox</code> 也常用來驗證 profile：把 <code>.vscode</code> 改成存檔即跑惡意 formatter，dev profile 會因該目錄唯讀而失敗。</p>
+    <p class="g-p">自己要用，<code>codex sandbox --permission-profile X &lt;cmd&gt;</code> 能把同樣限制套到別的程式；stdio MCP server 預設不被包進沙箱，值得自己補一圈。</p>
+    <p class="g-p">MCP 的補法是先把套件灌進 npm 快取，再用 <code>npx --offline</code> 在斷網 profile 下啟動。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>預設保守是設計，不是保守心態。</b>先畫小邊界，再逐項放行。</p>
+      <p><b>斷網同時擋外傳與依賴下載。</b>要開就指明網域，別整片打開。</p>
+      <p><b>沙箱管可及範圍，管不到用途。</b>存檔觸發的惡意碼得靠對齊與人。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">NVIDIA</span><a href="rtx-spark.html">桌機常駐代理：讓代理有自己的機器</a><span class="d">2026-11-18</span></div>
+      <div class="g-relrow"><span class="s">Meta Engineering</span><a href="meta-rea-propagation.html">技術擴散：代理接手六成擴散工作</a><span class="d">2026-11-18</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="langsmith-outcome.html">代理花費：合併 PR 才是計價單位</a><span class="d">2026-11-18</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理（圖解 A 為本站重繪，原文未給該巢狀順序）。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-19 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

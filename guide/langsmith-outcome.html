@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 代理花費：合併 PR 才是計價單位 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain outcomes 把 coding agent 花費綁到產出：連結 GitHub PR／GitLab MR 與 thread，看得到每個合併 PR 的成本，以及完全沒開出 PR 的花費。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>代理花費：合併 PR 才是計價單位</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain 官方部落格〈LangSmith for Coding Agents: Now track spend by outcome〉——產品公告，說明把 coding agent 花費綁到 PR 的歸因機制、儀表板與四種用法</p>
+    <p class="g-meta">
+      <span>LangChain</span>·<span>2026-11-18 發布</span>·<span>2026-11-19 收錄</span>·
+      <a href="https://www.langchain.com/blog/langsmith-coding-agents-roi" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>340 億美元</b><span>2026 年企業 AI 應用支出中「寫程式」類別的規模（原文以連結引用 Menlo Ventures〈2026: The State of Enterprise AI〉）</span></div>
+    <div class="g-stat"><b>5 種代理</b><span>Claude Code、OpenAI Codex、Cursor、VS Code 的 GitHub Copilot、Deep Agents</span></div>
+    <div class="g-stat"><b>3 種 PR 狀態</b><span>open／closed／merged 分開計價，沒開出 PR 的花費另歸 unattributed</span></div>
+    <div class="g-stat"><b>public beta</b><span>LangSmith Cloud 公測；coding agent 的 trace 照一般用量計費</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">outcomes 把 GitHub PR／GitLab MR 連回產生它的 thread：一個合併 PR 花多少、多少錢完全沒產出，第一次變成可查的數字。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>花費歸因的方向</b> — 從一次對話走到可計價的產出（本站重繪）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>thread</b><small>一個對話；每個新 turn 都重送整段上下文，錢在這裡累積</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>PR／MR</b><small>一個 thread 可開多個 PR；一個 PR 也可能要好幾個 thread</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>outcome 狀態</b><small>open／closed／merged；沒開出 PR 的花費歸 unattributed</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>單位成本</b><small>每個合併 PR 多少錢；可反查背後的 thread、模型與使用者</small></div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回查路徑</b>：從最貴的 PR 往回點，一路開到當初的對話——花費因此有名字、有原因。</span></div>
+      <p class="x-src">本站重繪，原文無此圖；四格依原文「spend 歸因到 PR、PR 反查 thread」的敘述整理，工作→產出→結果→單位成本的順序為編輯重排。</p>
+    </figure>
+
+    <p class="g-p">原文給的理由很直白：寫程式是企業 AI 應用支出的最大類別，2026 年達 340 億美元（原文以連結引用 Menlo Ventures〈2026: The State of Enterprise AI〉），但多數工程主管說不出這筆錢買到什麼。</p>
+    <p class="g-p">過去團隊只能看用量分析與 AI 消耗量，看不到 token 到底產出了什麼；要回答 ROI，得同時有跨人跨隊的花費視角，加上一條把花費接到成果的線。</p>
+    <p class="g-p">LangChain 自己先撞到這面牆：內部 coding agent「Robin」的花費開始上升，這也是他們去做 model router 的原因之一。</p>
+    <p class="g-p">歸因規則要吃得下兩種現實，否則數字會失真：一個 thread 開出多個 PR，或一個 PR 要好幾個 thread 才完成，都要算得進去。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">新儀表板：以代理為中心，coding agent 是第一種型別</h2>
+    <p class="g-p">LangSmith Agent Platform 改成繞著代理轉：每個代理有自己的紀錄，並屬於某個 agent type，型別決定它的儀表板顯示什麼、接哪些資料、怎麼被評估。</p>
+    <p class="g-p">coding agent 是第一種專用型別，它用 PR 呈現成果——原文稱這只是「工作有用」的訊號之一，不是唯一判準。</p>
+    <p class="g-p">舊版只有逐條 trace 的單價，適合手動除錯，看不到全隊趨勢；新頁面把成本彙總、綁到 PR，任一 KPI 都能點開成時間趨勢。</p>
+    <p class="g-p">團隊不會只跑一種代理：有人用 Claude Code，有人用 Cursor 或 Copilot，平台團隊用 Deep Agents 自建。LangSmith 全部收進同一頁，不必在各家後台拼數字。</p>
+    <p class="g-p">上線方式是三步：為每個代理裝外掛、連上 GitHub、打開 overview 頁；Claude Code 是在 session 裡跑三個指令。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">舊指標答不了的四個問題</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>問題</th><th>舊指標（用量／消耗）</th><th>outcomes 之後</th><th>原文承認的盲點</th></tr></thead>
+        <tbody>
+          <tr><td data-l="問題"><b>錢花在哪</b></td><td data-l="舊指標">每人、每隊的 token 與消費總額</td><td data-l="outcomes">花費落到 PR，可依歸因成本排序出最貴的 PR</td><td data-l="盲點">單一 PR 可能包含多個 thread 與多輪對話，長 thread 會把成本集中在同一個 PR</td></tr>
+          <tr><td data-l="問題"><b>買到什麼</b></td><td data-l="舊指標">答不出 token 產出什麼</td><td data-l="outcomes">合併 PR 的數量與單位成本</td><td data-l="盲點">合併 PR 是有用訊號，卻不是唯一的有用工作</td></tr>
+          <tr><td data-l="問題"><b>沒產出的花費</b></td><td data-l="舊指標">混在總量裡，看不出比例</td><td data-l="outcomes">依 PR 狀態分帳；沒開出 PR 的歸 unattributed</td><td data-l="盲點">unattributed 可能仍是探索、審查這類有價值的工作</td></tr>
+          <tr><td data-l="問題"><b>為什麼貴</b></td><td data-l="舊指標">只有單條 trace 的價格</td><td data-l="outcomes">反查 thread、用到的模型、GitHub 使用者與工作類型</td><td data-l="盲點">值不值得，還是得人進去看那一串對話</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">三個 PR 狀態分開計價，是這頁最實在的地方：關閉與未合併的花費，不會被合併 PR 的平均值藏起來。</p>
+    <p class="g-p">unattributed 不是垃圾桶。原文說審查程式、追查問題本來就不一定開 PR，點進去能看到那些 thread 究竟做了什麼。</p>
+    <p class="g-p">work type view 替每個 thread 貼工作類型（feature、bug fix、investigation、code review），列出各類的 thread 佔比與花費佔比。</p>
+    <p class="g-p">它同時解釋了 unattributed 從哪來：審查與調查類的 thread，通常不會各自開一個 PR。離題的定義則由各組織自訂，例如只做後端的團隊可把「寫行銷文案」標成 off topic。</p>
+    <p class="g-p">頁面還列出代理呼叫了哪些 skill、最貴的 PR 是哪幾個、成本如何隨對話長度放大。每個指標都能點回背後的 thread 與 session，這是它與一般花費報表最大的差別。</p>
+    <p class="g-p">打開那些貴的 thread，原文舉例兩種常見原因：對話越拉越長，或在小修補上用了最貴的前沿模型。原文建議把這類差異找出來，變成團隊共用的做法。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">這些數字怎麼用：四種判斷</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>用途</th><th>看哪個數字</th><th>換到什麼判斷</th></tr></thead>
+        <tbody>
+          <tr><td data-l="用途"><b>教練</b></td><td data-l="數字">依歸因成本排序的 PR，往回開到 thread、模型與 GitHub 使用者</td><td data-l="判斷">同類工作有人便宜很多，差異出在哪個習慣</td></tr>
+          <tr><td data-l="用途"><b>換模型</b></td><td data-l="數字">改動前後的「每個合併 PR 成本」，或新舊供應商並跑對比</td><td data-l="判斷">新模型的成果值不值它的價；子代理換小模型省多少</td></tr>
+          <tr><td data-l="用途"><b>治理 skill</b></td><td data-l="數字">skill 呼叫與 thread 長度、是否導向合併</td><td data-l="判斷">常出現在長而貴的 thread，可能是指令害代理多繞幾輪</td></tr>
+          <tr><td data-l="用途"><b>財務對帳</b></td><td data-l="數字">每個合併 PR 成本，並排 unattributed</td><td data-l="判斷">工程與財務終於看同一組數字，而不是兩套說法</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">長 thread 是花費集中地：每個新 turn 都重送整段上下文，成本隨長度累加。原文建議一個任務開一個新 thread，並引用 Anthropic 的 Claude Code 成本指南——任務之間清掉上下文。</p>
+    <p class="g-p">推廣之後，同一個檢視就能驗收習慣有沒有改：長 thread 佔的花費比例，有沒有真的降下來。</p>
+    <p class="g-p">換模型要看的是「每個合併 PR 成本」，不是單價：單價降了、合併變少，等於沒省。</p>
+    <p class="g-p">skill 也一樣：先給幾位工程師試，再拿用了與沒用的 thread 比成本與合併數，而不是憑感覺全面推。</p>
+    <p class="g-p">原文的提醒值得記住：每個合併 PR 成本偏高，不代表做法有問題——unattributed 裡可能裝著探索與審查，那是有價值但開不出 PR 的工作。</p>
+    <p class="g-p">（編輯觀點：這是廠商自家產品的公測公告，「能回答什麼」由 LangChain 定義；單位成本能不能比，還取決於團隊開 PR、合 PR 的紀律是否一致。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>沒開出 PR 的花費不是零。</b>先看 unattributed 裡裝的是什麼。</p>
+      <p><b>合併 PR 是可計價單位，不是唯一價值。</b>審查與探索本來就不開 PR。</p>
+      <p><b>換模型先看每個合併 PR 的成本。</b>單價降、合併少，等於沒省。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="codex-sandbox.html">代理沙箱：預設保守，邊界交給作業系統</a><span class="d">2026-11-18</span></div>
+      <div class="g-relrow"><span class="s">NVIDIA</span><a href="rtx-spark.html">桌機常駐代理：讓代理有自己的機器</a><span class="d">2026-11-18</span></div>
+      <div class="g-relrow"><span class="s">Meta Engineering</span><a href="meta-rea-propagation.html">技術擴散：代理接手六成擴散工作</a><span class="d">2026-11-18</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文（LangChain 官方部落格敘述，產品成效無第三方驗證），340 億美元為原文以連結引用的 Menlo Ventures 市場報告數字。圖解 A 與兩份表格皆為本站重繪整理，原文未給該圖與該對照。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-19 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

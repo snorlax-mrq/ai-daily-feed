@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 驗證迴圈：能並行幾個代理，取決於證據 · AI 每日動態檔案</title>
+<meta name="description" content="Claude Code 團隊約 90% 程式碼由 Claude 撰寫與審查。有驗證迴圈可並行數十至數百個代理，沒有只剩一兩個；內測另請評分者依 rubric 檢查，最多提升 10 個百分點，難題收益最大。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>驗證迴圈：能並行幾個代理，取決於證據</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Claude（claude.dev Blog）〈How the Claude Code team thinks about verification〉——工程方法文，拆解三類值得投資的測試，並公開團隊自家的驗證與關卡流程</p>
+    <p class="g-meta">
+      <span>Claude（claude.dev Blog）</span>·<span>2026-11-16 發布</span>·<span>2026-11-19 收錄</span>·
+      <a href="https://claude.dev/blog/how-the-claude-code-team-thinks-about-verification/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>約 90%</b><span>Claude Code 團隊自報：程式碼由 Claude 撰寫，也由 Claude 審查</span></div>
+    <div class="g-stat"><b>最多 +10 百分點</b><span>團隊內測自報（結構化檔案生成）：另請評分者依 rubric 對照標準提示迴圈</span></div>
+    <div class="g-stat"><b>1–2 個 → 數十至數百個</b><span>沒有／有驗證迴圈時，能同時跑的 Claude 數量</span></div>
+    <div class="g-stat"><b>39 項</b><span>可靠性檢查清單，每項都有可從 diff 讀出的觸發條件</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">驗證迴圈不是品質加分項，而是能不能大量委派的開關：有了它，審查從逐份讀 diff 變成看證據。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>驗證迴圈的閉合</b> — 從委派到把教訓寫成規則（本站重繪）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>委派</b><small>任務交給代理；有迴圈才敢同時開數十至數百個</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>產出</b><small>代理寫碼，也順手寫測試、benchmark、規格</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>獨立評分（內測做法）</b><small>另請評分者依 rubric 檢查，不是同一迴圈自評；非團隊每次委派的固定步驟</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>回饋成規則</b><small>反覆失敗的檢查寫進 CLAUDE.md 或掛 hook</small></div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑</b>：規則寫回 CLAUDE.md／hook，下一輪委派就帶著它——原文說這「大致上」讓問題不再發生。</span></div>
+      <p class="x-src">本站重繪，原文未給此圖；四格依原文「verification loops」與「close the loop」兩段整理，箭頭順序為編輯重排。</p>
+    </figure>
+
+    <p class="g-p">沒有迴圈，你得一一看過產出，同時只敢開一、兩個 Claude；有迴圈，原文說可跑到數十甚至數百個。</p>
+    <p class="g-p">驗證成本也反轉了：測試、benchmark、規格、端到端實跑，過去貴，現在可請代理生成；生成後它們是軟體，重跑不太燒 token。</p>
+    <p class="g-p">值不值？內測針對結構化檔案生成：另找評分者依 rubric 檢查，比標準提示迴圈最多提升 10 個百分點，難題收益最大。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三種測試：能被騙過的檢查沒有價值</h2>
+    <p class="g-p">只能投資一種，原文選端到端：要嘛功能整個能用，要嘛不能用，有明確完成判準，也講得出壞在哪一步。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>類型</th><th>查什麼</th><th>抓什麼錯</th><th>代價</th></tr></thead>
+        <tbody>
+          <tr><td data-l="類型"><b>端到端</b></td><td data-l="查什麼">真實使用者流程：加入購物車→結帳→確認頁</td><td data-l="抓什麼錯">功能整個壞掉；並能指出哪一步壞</td><td data-l="代價">慢、較易 flaky；重的測試放提交前跑</td></tr>
+          <tr><td data-l="類型"><b>性質</b></td><td data-l="查什麼">你認為不可能失敗的敘述：往返編碼、不變量、冪等、等價</td><td data-l="抓什麼錯">人與代理都想不到的邊界輸入</td><td data-l="代價">要自寫性質與挑套件（fast-check／Hypothesis／proptest），每次生成數千筆輸入</td></tr>
+          <tr><td data-l="類型"><b>差分</b></td><td data-l="查什麼">新舊系統餵同一批輸入，比對結果</td><td data-l="抓什麼錯">遷移造成的行為漂移或破壞性變更</td><td data-l="代價">舊系統得跑得動；要正規化空白等雜訊，並維護核可差異清單</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">端到端難騙，是因為它不接受「看起來對」：整條流程跑得完才叫過，跑不完就一定有東西壞了。</p>
+    <p class="g-p">單元測試快、不易 flaky，卻可能全過而功能仍壞——因為代理與那份測試都沒掌握完整任務。</p>
+    <p class="g-p">端到端的關鍵是給代理手和眼：用 skill 啟動、操作、檢視真實系統，工具可以是 CDP、模擬器或 API harness。</p>
+    <p class="g-p">feature map 也能當指南兼評分 rubric：它通常已用使用者視角列出路徑、快捷鍵、selector 與預期結果。</p>
+    <p class="g-p">性質套件會在背後生成數千筆輸入試著推翻你的敘述，且那些邊界輸入不帶寫碼代理的偏誤。</p>
+    <p class="g-p">差分特別適合大規模遷移：功能預期不變，舊系統就是現成的判準（原文稱 oracle）。</p>
+    <p class="g-p">性質測試贏在偏誤不同：邊界輸入不是寫那份碼的同一個代理想出來的。改寫時尤其好用，因為規格早已漂離實際行為。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">先修失敗模式，再談關卡</h2>
+    <p class="g-p">兩個失敗模式要先修：flaky 測試會訓練代理重跑，而不是去修壞掉的程式；測試太慢，代理就少跑幾批，事後也難定位。</p>
+    <p class="g-p">團隊的規矩很硬：不准跳過測試、加 sleep 或重試到過；找不到根因，就刪掉它並寫下原因。</p>
+    <p class="g-p">團隊講的驗證是「把改動跑起來」：repo 裡放 verify skill，Claude 提交前自己開 app 或模擬器；檢查連三輪沒過才停下來找人。</p>
+    <p class="g-p">verify skill 放在 .claude/skills/，越靠近相關程式越好；原文建議它要是可靠的 smoke test harness，請 Claude 自己迭代、壓測。</p>
+    <p class="g-p">檢查按 diff 觸發：清單每項都有可從 diff 讀出的條件，Claude 只跑命中那幾項，通常 3 到 10 項，不必背下所有事故。</p>
+    <p class="g-p">便宜的先跑：Claude 開 PR 前自己跑測試、build、linter；先推再測，等於花掉共用的審查與 CI 時間。</p>
+    <p class="g-p">最關鍵是問責：改動不能修改自己的裁判。Code Review 只從 base 分支讀 REVIEW.md；過期 commit 上通過的審查不算數。</p>
+    <p class="g-p">新關卡先開 observe，只記錄「本來會被擋」的提交；確認誤擋再轉 enforce。同一 session 被擋兩次後放行一次，免得卡死。</p>
+    <p class="g-p">原文也不靠疊評審：在主要評審上再加一個更貴的，通常不如把主要那個調好，並用 REVIEW.md 寫明這次該看什麼。</p>
+    <p class="g-p">規則的門檻是：至少在兩個 PR 出現、且能從 diff 看出；三個代理先試著反駁，再由人核准。規則是會腐壞的，得定期清。</p>
+    <p class="g-p">評分者本身也要被評分：repo 還原到當時狀態、只給一句答案，正確描述該 bug 的發現才得分；召回率分三段量：原始發現、驗證後、最終審查。</p>
+    <p class="g-p">評分也有分級：Important、Nit、Pre-existing；pre-existing 表示 bug 原本就在，不該算在這次改動頭上。</p>
+    <p class="g-p" style="margin-top:14px"><b>迴圈成熟後，重心從讀每一份 diff，移到定義什麼叫完成、然後看證據。</b></p>
+    <p class="g-p">（編輯觀點：這套的固定成本在維護——39 項清單、規則與 verify skill 都得有人養；不養，迴圈只剩形式。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>先有迴圈，再談並行。</b>沒有證據可看，一兩個就是上限。</p>
+      <p><b>測試要難騙、要快、要穩。</b>flaky 教代理重跑，慢測試教它少跑。</p>
+      <p><b>裁判不能被改動改。</b>規則鎖在 base 分支；漏掉的 bug 寫成新規則。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="codex-sandbox.html">代理沙箱：預設保守，邊界交給作業系統</a><span class="d">2026-11-18</span></div>
+      <div class="g-relrow"><span class="s">NVIDIA</span><a href="rtx-spark.html">桌機常駐代理：讓代理有自己的機器</a><span class="d">2026-11-18</span></div>
+      <div class="g-relrow"><span class="s">Meta Engineering</span><a href="meta-rea-propagation.html">技術擴散：代理接手六成擴散工作</a><span class="d">2026-11-18</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文（團隊內測與自述，無第三方驗證），圖解與小標為編輯整理（圖解 A 與三類測試表皆為本站重繪整理，原文未給該圖與該對照）。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-19 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

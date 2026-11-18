@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 代理沙箱選型：把致命三合一收窄到可管 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain 選型指南：沙箱如何收窄 Simon Willison 的致命三合一；五項規格（隔離檔案系統、網路白名單、資源上限、可控重用、microVM 核心隔離）與兩種接入模式的取捨。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>代理沙箱選型：把致命三合一收窄到可管</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain 部落格〈How to Choose the Right Sandbox for Your Agent〉——選型指南，先講風險模型，再列五項規格與兩種接入模式</p>
+    <p class="g-meta">
+      <span>LangChain</span>·<span>2026-10-01 發布</span>·<span>2026-11-19 收錄</span>·
+      <a href="https://www.langchain.com/blog/how-to-choose-the-right-sandbox-for-your-agent" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>3 個條件</b><span>致命三合一：私密資料、不可信內容、對外通訊同時成立，一次注入就可能外洩</span></div>
+    <div class="g-stat"><b>OWASP LLM01</b><span>原文引此風險條目：目前沒有萬無一失的方法阻止 prompt injection</span></div>
+    <div class="g-stat"><b>microVM</b><span>隔離層級：沙箱跑自己的核心，不必為每個沙箱開一台完整 VM</span></div>
+    <div class="g-stat"><b>2 種接入</b><span>agent 住沙箱內，或把沙箱當工具呼叫；後者代價是每次執行跨網路</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">沙箱不是防火牆，而是<strong>你借給代理的一台可丟棄電腦</strong>：它不消除三合一，只把三邊收窄到你管得動的大小。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>致命三合一</b> — 三項同時成立，才構成外洩條件</figcaption>
+      <p class="x-grid-h">三項並列，無先後順序；原文引 Simon Willison 的 lethal trifecta，未給圖示</p>
+      <div class="x-grid">
+        <div class="c"><b><i>①</i>私密資料</b><small>代理讀得到不該外流的內容，例如私人信箱、內部系統</small></div>
+        <div class="c"><b><i>②</i>不可信內容</b><small>終端使用者輸入、外部 MCP server 回應、第三方寫的 skill，都會進到 context</small></div>
+        <div class="c"><b><i>③</i>對外通訊</b><small>能把資料送到任意端點，例如代你寄出回信、呼叫外部 API</small></div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖。原文以清單列出三項，未給並列圖或權重。</p>
+    </figure>
+
+    <p class="g-p">原文對沙箱的定義很樸素：代理能在裡面執行程式、安裝套件、處理檔案，碰不到你的主機與其他基礎設施。</p>
+    <p class="g-p">原文開場就講明：讓代理寫並執行程式，是它能創造價值的主要方式之一，風險也正好集中在那裡。</p>
+    <p class="g-p">Simon Willison 是 Django 的共同作者，也是「prompt injection」一詞的提出者；三合一就是上面那三格。</p>
+    <p class="g-p">重點在那個「同時」：單獨一項都是正常功能，三項湊在一起才變成外洩通道。</p>
+    <p class="g-p">原文說得很直接：目前<em>沒有萬無一失的方法</em>阻止注入，不可信內容進到 context 的路徑又很多。</p>
+    <p class="g-p">既然擋不住，策略就從「不讓它被騙」換成「被騙了也拿不走東西」。</p>
+    <p class="g-p">提供工具通常同時給了私密資料與連外能力；模型越能吃 context、第三方擴充越多，注入入口就越多（編輯推論）。</p>
+    <p class="g-p">Meta 把三合一延伸成「Agents Rule of Two」：三項同時成立的 session，不該讓代理全自主。</p>
+    <p class="g-p">原文轉述 Meta 的建議是加上人工核准，或另一種可靠的驗證方式。</p>
+    <p class="g-p">電子郵件助理是最好的例子：讀陌生來信、開私人信箱、又能寄信，三項一次到位。</p>
+    <p class="g-p">原文的結論很克制：沙箱不會消除三合一的任何一角，只把存取與出口收到團隊能掌握的程度。</p>
+    <p class="g-p">（編輯觀點：沙箱管的是「碰得到什麼」，不是「會不會被騙」。注入照樣成功，只是拿不到東西。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">四個維度，加一個隔離層級</h2>
+    <p class="g-p">原文列五項規格：隔離檔案系統、限制網路、資源上限、可控重用、核心層隔離。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>維度</th><th>原文要求</th><th>可用性代價（本站推論）</th></tr></thead>
+        <tbody>
+          <tr><td data-l="維度"><b>隔離檔案系統</b></td><td data-l="原文要求">只放代理做事需要的資料，其餘封鎖，才好稽核</td><td data-l="可用性代價">工具鏈、套件快取、設定檔要另外準備或掛載</td></tr>
+          <tr><td data-l="維度"><b>限制網路</b></td><td data-l="原文要求">由你指定可連的對外端點，洩漏也只能送去你信的地方</td><td data-l="可用性代價">新依賴與新 API 要先進白名單，否則任務直接失敗</td></tr>
+          <tr><td data-l="維度"><b>資源上限</b></td><td data-l="原文要求">限 compute、記憶體與執行時長，被攻破也不能吃垮系統</td><td data-l="可用性代價">長任務會被砍，得拆段或調高上限</td></tr>
+          <tr><td data-l="維度"><b>可控重用</b></td><td data-l="原文要求">重用能延續狀態，但要不要承擔此風險，原文交回使用者自己決定</td><td data-l="可用性代價">每次開新的最安全也最慢；重用換速度也換風險</td></tr>
+          <tr><td data-l="維度"><b>核心層隔離</b></td><td data-l="原文要求">沙箱跑自己的核心（microVM），擋住靠核心漏洞提權</td><td data-l="可用性代價">每沙箱一個核心，啟動與記憶體成本高於共用核心的容器</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+
+    <p class="g-p">第五項不是勾選項，而是前四項能否生效的前提：容器共用主機核心，核心一破，隔離就等於沒有。</p>
+    <p class="g-p">原文點名 Kubernetes Agent Sandbox 這類方案：只有叢集真的做了容器間核心隔離才安全，而多數叢集沒有。</p>
+    <p class="g-p">原文還提醒：市面上有自稱沙箱、卻沒內建這些控制的產品，挑之前要逐項驗。</p>
+    <p class="g-p">microVM 的價值在這裡——拿到獨立核心，卻不必付整台 VM 的啟動成本。</p>
+    <p class="g-p">資源上限不只是防浪費，也讓一次失控的迴圈在燒完預算前停下來。</p>
+    <p class="g-p">四道控制都會吃掉可用性；原文要的是收窄到「團隊管得動」，不是全鎖。</p>
+    <p class="g-p">重用與否被原文寫成明確的風險決定題：它把判斷交回你手上，不給預設答案。</p>
+    <p class="g-p">（編輯推論：白名單與重用這兩項最痛，它們直接決定代理能不能自己跑完長任務。）</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>選哪一層隔離</b> — 看這個 session 碰到哪幾項</figcaption>
+      <div class="x-dec">
+        <p class="q">這個 session 內，代理會碰到哪幾項？</p>
+        <div class="brs">
+          <div class="br"><span class="tag">分支 A</span><b>只寫程式</b><small>不碰私密資料、不連外 → 容器級隔離加資源上限；前提是叢集真的做了核心隔離，否則仍需 microVM</small></div>
+          <div class="br"><span class="tag">分支 B</span><b>讀私密資料，不連外</b><small>microVM 加斷網執行：外洩沒有出口</small></div>
+          <div class="br"><span class="tag">分支 C</span><b>會連外，資料不敏感</b><small>出口端點白名單；被騙也只能送去你認可的地方</small></div>
+          <div class="br"><span class="tag">分支 D</span><b>三項全成立</b><small>microVM、白名單，再加人工核准或第二層驗證</small></div>
+        </div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖。原文未給此決策樹；四格是編輯依其五項規格與 Meta 的 Rule of Two 併成，條件互斥，但原文未主張窮盡所有情況。</p>
+    </figure>
+
+    <p class="g-p">決策其實只剩兩個問題：代理要不要讀私密資料、要不要連外。</p>
+    <p class="g-p">兩者都要，就不是再加一道牆能解決的事，得在流程裡插人。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">代理住進沙箱，還是把沙箱當工具</h2>
+    <p class="g-p">接入方式有兩種，原文引 LangChain 執行長 Harrison Chase 的區分。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>兩種接入模式</b> — 左右並比，不是流程</figcaption>
+      <div class="x-cmp">
+        <div><b>Agent 在沙箱內</b><p>把代理預先裝進映像一起跑。接近本機開發，但<strong>每次更新代理都要重建、重新部署映像</strong>。</p></div>
+        <div class="after"><b>沙箱當工具</b><p>代理跑自己的伺服器，需要執行程式時才呼叫沙箱 API。<strong>改邏輯不必重建映像</strong>，API key 留在沙箱外，狀態與執行分開；代價是每次呼叫都跨網路。</p></div>
+      </div>
+      <p class="x-src">本站整理，非原文圖；原文以條列對比，未給左右並比。</p>
+    </figure>
+
+    <p class="g-p">工具模式多出來的那一段網路，換到的是代理邏輯與執行環境解耦。</p>
+    <p class="g-p">代價寫得也直白：每次執行呼叫都跨網路，延遲換彈性。</p>
+    <p class="g-p">原文說 Deep Agents 兩種都支援，沒有替你選；判準是代理多久改一次（編輯推論）。</p>
+    <p class="g-p">（編輯推論：金鑰不進沙箱比延遲更該優先考慮——金鑰在裡面，一次注入就等於交出鑰匙。）</p>
+    <p class="g-p">原文後段介紹自家 LangSmith Sandboxes：每個沙箱一個專屬 microVM、授權代理在流量離開沙箱後才注入憑證。</p>
+    <p class="g-p">這兩點正好對上前面幾項要求；其餘成效原文未給數字（編輯觀點：末段屬產品介紹，選型仍應逐項核規格）。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>先確認三合一是否成立。</b>成立就別讓它全自主，插人工核准。</p>
+      <p><b>容器不等於沙箱。</b>共用核心的隔離，核心一破就全破。</p>
+      <p><b>白名單與重用是取捨核心。</b>收窄到管得動，不是收到不能用。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="codex-sandbox.html">代理沙箱：預設保守，邊界交給作業系統</a><span class="d">2026-11-18</span></div>
+      <div class="g-relrow"><span class="s">NVIDIA</span><a href="rtx-spark.html">桌機常駐代理：讓代理有自己的機器</a><span class="d">2026-11-18</span></div>
+      <div class="g-relrow"><span class="s">Meta Engineering</span><a href="meta-rea-propagation.html">技術擴散：代理接手六成擴散工作</a><span class="d">2026-11-18</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理（圖解 A、B、C 皆為本站重繪，原文未給該並列、決策樹與對照）。表格「可用性代價」欄為本站推論，原文只列要求。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-19 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

@@ -33,34 +33,34 @@
       <h2 class="co-tab">OpenAI</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-18</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-18</span><i class="chip chip--topic">治理與政策</i></div>
           <h3 class="item-title"><a href="https://openai.com/index/the-silent-consensus" target="_blank" rel="noopener">The Silent Consensus<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Dean Ball, Head of Strategic Futures at OpenAI, examines how more capable AI could reshape society and how people can retain control of their institutions.</p>
-          
+          <ul class="item-points"><li>作者是 OpenAI 策略未來部門主管 Dean Ball，文章改寫自他在哈佛 Vik-Bailey 講座的演講，並註明內容只代表個人、不代表 OpenAI。</li><li>他指出軟體漏洞挖掘已是 AI 的雙用途能力：所謂「Black October」是前沿 AI 找出網際網路核心基礎設施漏洞後的大規模揭露行動。</li><li>核心論點：科技業不缺對「技術未來」的正向願景（飛天車、機器人、核融合、AGI），缺的是對「制度未來」的正向願景——這套運作方式要怎麼安排。</li><li>他稱最常見卻檯面下不說的悲觀想像為「沉默共識」：一種幾乎不需人力、由 AI 系統自行研究與運作的組織與社會安排。</li><li>文章呼籲先講清楚想要與不想要的長期未來，否則即使每一步決策都明智，宏觀結果仍可能走向不樂見的方向。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-18</span></div>
-          <h3 class="item-title"><a href="https://openai.com/index/inside-the-codex-sandbox" target="_blank" rel="noopener">Inside the Codex sandbox<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-18</span><i class="chip chip--topic">資安與漏洞</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://openai.com/index/inside-the-codex-sandbox" target="_blank" rel="noopener">Inside the Codex sandbox<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/codex-sandbox.html">導讀</a></h3>
           <p class="item-sum">See how Codex runs commands on your machine while enforcing the filesystem and network limits you control across macOS, Linux, and Windows.</p>
-          
+          <ul class="item-points"><li>Codex 沙箱是 OpenAI 縱深防禦的一環：因為代理最常做、風險也最高的事就是在你的電腦上執行指令，沙箱把這些指令限制在使用者自訂的檔案系統與網路邊界內。</li><li>使用者透過 permission profile 設定邊界；內建的 :workspace 設定允許在專案內寫入、但把 .git 與 .codex 目錄設唯讀，避免代理改動 Git hooks 或自身設定。</li><li>預設允許廣泛讀取檔案系統（受限於 OS 權限），因為編譯器與建置工具需要專案外的 SDK 與設定；代價是機器上含 API key 的設定檔也可能被讀到。</li><li>預設關閉網路，擋掉直接上傳與資料外洩，但也會擋掉正常的套件安裝等操作——這是可用性與安全之間的明確取捨。</li><li>文章也說明 macOS、Linux、Windows 上如何落實這些限制，以及企業與工具開發者如何重複使用同一套沙箱設計。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-18</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-18</span><i class="chip chip--topic">治理與政策</i><i class="chip chip--topic">資安與漏洞</i></div>
           <h3 class="item-title"><a href="https://openai.com/index/managing-frontier-ai-risk" target="_blank" rel="noopener">Managing frontier AI risk: From training to deployment<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">OpenAI explains how it manages frontier AI risk from training through deployment with model alignment, sandboxing, blocking safeguards, and monitoring.</p>
-          
+          <ul class="item-points"><li>OpenAI 強調會依安全標準調整節奏，必要時暫停內部訓練或延後發布（例如 GPT-6.1 Astra），並以 safety case 與更強的對齊證據作為放行條件。</li><li>防護採縱深防禦四層：對齊（依 Model Spec 訓練並做評估稽核）、可監控性（能否從思考鏈與行動看出意圖）、沙箱／存取控制、以及針對濫用的阻擋與偵測。</li><li>七月 Hugging Face 事件後，OpenAI 明確表示不能只靠沙箱圍住高能力模型，現在對多數內外部部署（含所有使用工具的內部部署）都加上監控。</li><li>風險管理貫穿三個階段：研究（高度沙箱化訓練與測試）、內部部署（員工實際使用）、外部部署（Codex 等產品到使用者電腦），每階段都要通過安全審查才能進到下一階段。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-18</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-18</span><i class="chip chip--topic">合作與收購</i><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://openai.com/index/le-groupe-figaro-and-openai-announce-partnership" target="_blank" rel="noopener">Le Groupe Figaro and OpenAI partner to bring Le Figaro journalism to ChatGPT<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Le Groupe Figaro and OpenAI partner to bring Le Figaro’s journalism to ChatGPT through summaries and excerpts, with links to original stories.</p>
-          
+          <ul class="item-points"><li>Le Groupe Figaro 與 OpenAI 簽策略合作，涵蓋《費加洛報》及關係刊物的即時報導與歷史archive，主題包含新聞、商業、文化與生活。</li><li>內容在 ChatGPT 中以摘要與節錄形式呈現，並附回原文的連結；Figaro 保留完整編輯獨立性與對自身新聞的控制權。</li><li>Figaro 執行長 Marc Feuillée 強調旗下 600 多位記者提供可靠資訊，結合 OpenAI 的技術與全球觸及可為讀者創造長期價值。</li><li>Figaro 也計畫在多個團隊導入 ChatGPT Enterprise，並在其 AI 章程與編輯準則下探索更多工作流程與讀者服務的應用。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-18</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-18</span><i class="chip chip--topic">硬體與基礎設施</i><i class="chip chip--topic">研究與科學</i></div>
           <h3 class="item-title"><a href="https://openai.com/index/advancing-chip-design-with-our-models" target="_blank" rel="noopener">Advancing chip design with OpenAI models<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">OpenAI models optimized circuits used in Jalapeño silicon and improved RISC‑V core designs, showing progress in AI-assisted chip design with GPT‑6 Astra.</p>
-          
+          <ul class="item-points"><li>OpenAI 公開自家模型協助設計首顆自研推論晶片 Jalapeño 的細節：從 2025 年初的 GPT-4o 就已在 PPA（效能／功耗／面積）上找出非顯著改善點。</li><li>向量單元靠重新設計浮點加法器、乘法器、轉換函式與管線切分，讓標準元件面積減少約 13%；矩陣單元約減 10%，且都在晶片 bring-up 時獲得矽驗證。</li><li>具體例子：一顆乘法器改版在合成時少用約 15% 面積、延遲從 2 個時脈降到 1 個；另一顆加法器也減約 15% 面積並維持兩週期延遲。</li><li>與 AMD 合作在旗艦 GPU IP 上相對已高度最佳化的基線最多再改善 14%，官方形容這相當於把約一年的進展壓縮到不到 5 個月。</li><li>OpenAI 也在兩個開源處理器設計上評估世代模型能力，並與 Synopsys 合作把前沿模型接進工程師既有的 EDA 工具鏈。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -69,16 +69,16 @@
       <h2 class="co-tab">Claude (Resources)</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-17</span></div>
-          <h3 class="item-title"><a href="https://claude.dev/blog/chaos-loop-claude-docs-launch/" target="_blank" rel="noopener">Using a &quot;chaos loop&quot; to harden the Claude Docs launch: 60 server errors across billions of requests<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-17</span><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://claude.dev/blog/chaos-loop-claude-docs-launch/" target="_blank" rel="noopener">Using a &quot;chaos loop&quot; to harden the Claude Docs launch: 60 server errors across billions of requests<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/chaos-loop.html">導讀</a></h3>
           <p class="item-sum">How Claude spent two weeks load testing a staging cluster, breaking the Claude Docs service on purpose and fixing what fell over before launch, and what made the service legible enough for Claude to close the loop.</p>
-          
+          <ul class="item-points"><li>Claude Docs 於 2026 年 9 月 16 日上線，是可讓使用者、隊友與 Claude 共同編輯的文件服務；上線前 3 週它還只是跑在單一節點上的概念驗證。</li><li>團隊在 staging 架了「混沌迴圈」測試 harness，讓 Claude 連續兩週不斷嘗試弄壞服務、壓測每個環節，再把倒下的地方一一修好。</li><li>成果：9 月 22 日前使用者已建立超過 460 萬份文件，20 億次請求中只出現 60 次伺服器錯誤、全程沒有回滾，服務只用了約 50 個記憶體優化 pod。</li><li>為了讓 Claude 能有效收斂問題，團隊刻意避開 GC 等「記憶體／CPU 行為難以掌握」的執行環境，確保遥測訊號都能追溯到具體 bug 或設計決策。</li><li>作者坦言這套做法能成立，關鍵是前沿模型已能連續數週盯著同一個目標跑（他用的是接近 Claude Fable 5.2 的內部研究模型）。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-16</span></div>
-          <h3 class="item-title"><a href="https://claude.dev/blog/how-the-claude-code-team-thinks-about-verification/" target="_blank" rel="noopener">How the Claude Code team thinks about verification<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-16</span><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://claude.dev/blog/how-the-claude-code-team-thinks-about-verification/" target="_blank" rel="noopener">How the Claude Code team thinks about verification<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/cc-verification.html">導讀</a></h3>
           <p class="item-sum">How end-to-end, property and differential tests let coding agents verify their work with evidence, and what the Claude Code team does to keep its verifiers honest.</p>
-          
+          <ul class="item-points"><li>Claude Code 團隊約 90% 程式碼由 Claude 撰寫與審查；沒有驗證迴圈時你只能同時跑一兩個 Claude，有了它就能平行開數十甚至數百個。</li><li>內部測試顯示，另外找一個評分者依 rubric 檢查 Claude 的產出，比標準提示迴圈最多可提升 10 個百分點的成功率，難題上收益最大。</li><li>驗證的成本結構變了：過去昂貴的測試、benchmark、規格與端到端執行，現在可以請代理快速產出，而且產出後就是可重複執行的軟體。</li><li>驗證結果要能回頭改進行為：例如代理老是踩到「日誌含使用者資料」的測試，就在 CLAUDE.md 加規則或掛 hook，讓問題不再發生。</li><li>文章提醒幾種要避開的失敗模式：測試不穩定會訓練代理「重跑」而不是修程式碼，測試太慢則代理會乾脆少跑測試。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -87,16 +87,16 @@
       <h2 class="co-tab">Google DeepMind</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-18</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-18</span><i class="chip chip--topic">模型發布</i><i class="chip chip--topic">資安與漏洞</i></div>
           <h3 class="item-title"><a href="https://deepmind.google/blog/introducing-gemini-4-neon/" target="_blank" rel="noopener">Introducing Gemini 4 Neon<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           
-          
+          <ul class="item-points"><li>Gemini 4 Neon 定位在 Carbon（最強、最慢）與 Hydrogen（最快、日常）之間，主打「前沿級推理＋更快端到端完成」，適合高頻的複雜工程、分析與科學流程。</li><li>定價每百萬輸入 3 美元、輸出 15 美元，快取輸入再打 95 折（0.15 美元），脈絡視窗 100 萬 token；預設 high 思考等級下每任務成本比 Carbon 低約 32%。</li><li>在 Artificial Analysis Intelligence Index 拿下 61 分（xhigh 等級）排第 3、Vals Index 第 2，並在 Zapier AutomationBench、Vending-Bench 2 拿下第一。</li><li>程式能力：Artificial Analysis Coding Agent Index 第一（58.6）、Terminal-Bench 4.1 為 65.2%；在 Google Antigravity 環境下 SWE-sweep 從 12.8% 拉到 39.0%。</li><li>同步推出「網路防禦版」Neon for cyber：AutoBaxBench 困難題達 76%、SEC-bench Pro 90.5% 找漏洞、WebExploitBench 51.26%，先給 Fairwind Program 的受信任防禦者。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-18</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-18</span><i class="chip chip--topic">模型發布</i><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://deepmind.google/blog/genie-4-is-now-available/" target="_blank" rel="noopener">Genie 4 is now available<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           
-          
+          <ul class="item-points"><li>Project Genie 新版對 Google AI Ultra 訂閱者開放，首次導入 Genie 4 世界模型，可在探索途中直接下提示即時改變場景（換天氣、放角色、改劇情）。</li><li>Genie 4 首度把即時原生音訊與畫面綁在一起，環境音與角色對話會隨場景演變；Genie 3 仍保留在選單中，適合長時段或全景起頭的場景。</li><li>Genie 3 同步升級：單次生成從 60 秒延長到 3 分鐘、可用世界串接延長旅程、支援 360 度全景圖起頭、探索中可用自然語言觸發事件。</li><li>新增 Project Genie agent：用自然語言描述想像，代理會調度 Google 多模態模型產出視覺與配樂，Gemini 也能在旁邊看畫面給建議或自動觸發事件。</li><li>新增社群畫廊可探索與 remix 他人世界；所有生成的影音都帶 SynthID 浮水印並過安全篩檢，官方也坦言相機延遲、物理互動、場景持久性仍是待解問題。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -105,16 +105,16 @@
       <h2 class="co-tab">Google Blog (AI)</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-18</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-18</span><i class="chip chip--topic">模型發布</i></div>
           <h3 class="item-title"><a href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-neon/" target="_blank" rel="noopener">Introducing Gemini 4 Neon<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Today, we’re introducing Gemini 4 Neon</p>
-          
+          <ul class="item-points"><li>這是 Google 官方部落格對 Gemini 4 Neon 的同步發布文，與 DeepMind 部落格的公告為同一件事（兩個網址、同一模型）。</li><li>主軸是把前沿等級的推理帶進軟體工程、知識工作與科學研究，強調「更快完成端到端任務」而非單純堆疊 benchmark 分數。</li><li>文中列出的重點與 DeepMind 版一致：100 萬 token 脈絡、四段思考等級、以及對代理式長時任務（長 session、脈絡壓縮、平行子代理）的支援。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-18</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-18</span><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://blog.google/innovation-and-ai/products/gemini-app/gemini-lower-memory-devices/" target="_blank" rel="noopener">The Gemini app is now available on lower-memory Android devices.<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">The Google Gemini app now supports lower-memory Android devices. Access Gemini Live and custom image creation on your phone. Download the app today.</p>
-          
+          <ul class="item-points"><li>Gemini App 開始支援符合條件的 Android（Go edition）低記憶體裝置，官方稱這批手機代表全球數億人的日常上網與學習工具。</li><li>團隊重新架構 App，讓核心 Gemini 體驗能在記憶體更少的硬體上順跑，而不只是降級成基本語音指令。</li><li>可用功能包含 45 種以上語言的 Gemini Live 對話與面試練習、用相機拍筆記或表單來學習與翻譯、以及用 Nano Banana 生成自訂圖片。</li><li>取得方式：到 Google Play 下載、在支援機型長按電源鍵，或購買 Transsion 等夥伴預載的新機。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -123,16 +123,16 @@
       <h2 class="co-tab">Meta Engineering</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-18</span></div>
-          <h3 class="item-title"><a href="https://engineering.fb.com/2026/11/18/ml-applications/ai-agents-to-scale-ml-innovations-across-ads-ranking-models/" target="_blank" rel="noopener">How Meta Uses AI Agents to Scale ML Innovations Across Ads Ranking Models<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-18</span><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">企業導入案例</i></div>
+          <h3 class="item-title"><a href="https://engineering.fb.com/2026/11/18/ml-applications/ai-agents-to-scale-ml-innovations-across-ads-ranking-models/" target="_blank" rel="noopener">How Meta Uses AI Agents to Scale ML Innovations Across Ads Ranking Models<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/meta-rea-propagation.html">導讀</a></h3>
           <p class="item-sum">Our previous post in this series introduced the Ranking Engineer Agent (REA), an autonomous system that generates hypotheses, designs experiments, and proves new machine learning (ML) techniques on ads ranking models. No</p>
-          
+          <ul class="item-points"><li>延續先前介紹的 Ranking Engineer Agent（REA），這篇談「技術擴散」（technique propagation）：把已驗證的架構或訓練優化搬到整個廣告排序模型艦隊。</li><li>痛點是每個模型有自己的架構、資料與服務限制，在一個模型上有效的技巧幾乎無法直接複製到下一個，而技術又有保鮮期，擴散太慢價值就流失。</li><li>自 2026 年 3 月由代理接手執行後，官方估計超過 60% 的技術擴散工作由 AI 代理完成。</li><li>Early 結果：相同工作量下工程生產力提升 3 倍、部分組合的訓練算力中位數降低 4 倍，估計到年底省下 4,500 萬美元以上的算力成本。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-18</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-18</span><i class="chip chip--topic">企業導入案例</i><i class="chip chip--topic">開發者工具</i></div>
           <h3 class="item-title"><a href="https://engineering.fb.com/2026/11/18/ml-applications/design-once-deploy-at-scale-template-driven-ml-ecosystem/" target="_blank" rel="noopener">Design Once, Deploy at Scale: Building a Template-Driven ML Ecosystem<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">As ML ecosystems grow to a large number of production models, the bottleneck is no longer inventing new techniques to improve these models, but rather shipping them reliably and efficiently across a fragmented model spac</p>
-          
+          <ul class="item-points"><li>Meta 指出 ML 生態長到大量生產模型後，瓶頸已不是發明新技術，而是可靠又有效率地把技術送到碎片化的各模型上。</li><li>解法是把模型設計標準化成少量可重用、可組合的樣板（template），讓模型迭代從「每個模型各自解决」變成「共用系統問題」。</li><li>兩年成果：每個模型的工程時間減少 92%、累計交付 5,000 組以上的「技術×模型」組合。</li><li>品質面在中性服務容量下平均提升 0.63% 離線模型品質，並帶來 0.86% 的累積線上提升，涵蓋 70% 的模型數量。</li><li>完整方法寫成論文《Design Once, Deploy at Scale: Template-Driven ML Development for Large Model Ecosystems》。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -141,10 +141,10 @@
       <h2 class="co-tab">NVIDIA</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-18</span></div>
-          <h3 class="item-title"><a href="https://blogs.nvidia.com/blog/rtx-spark-desktop-local-ai-available-now/" target="_blank" rel="noopener">NVIDIA RTX Spark Compact Desktops Out Now<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-18</span><i class="chip chip--topic">硬體與基礎設施</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://blogs.nvidia.com/blog/rtx-spark-desktop-local-ai-available-now/" target="_blank" rel="noopener">NVIDIA RTX Spark Compact Desktops Out Now<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/rtx-spark.html">導讀</a></h3>
           <p class="item-sum">New NVIDIA RTX Spark compact desktops from ASUS, Dell and MSI are available today, bringing local AI agents, image and video generation, and model fine-tuning to a dedicated Windows PC. With up to 128GB of unified memory</p>
-          
+          <ul class="item-points"><li>ASUS、Dell、MSI 的 RTX Spark 小型桌機開賣，主打在專屬 Windows PC 上跑地端 AI 代理、圖像與影片生成與模型微調。</li><li>硬體為 20 核心 NVIDIA Grace CPU＋Blackwell RTX GPU（6,144 CUDA 核心）＋最高 128GB 統一記憶體，AI 效能可達 1 petaflop，並有 10GbE。</li><li>官方稱可在地端跑 120B 參數等級的大型語言模型；專屬桌機的價值在於代理與排程任務可長時間常駐，不必跟著筆電移動。</li><li>生態同步擴充：Adobe 的 Windows on Arm 原生應用、Blender 的 DLSS Ray Reconstruction、ComfyUI 的地端生成流程，開發者可用 Hermes Agent 或 NemoClaw 藍圖架代理、用 Unsloth 微調。</li><li>地端執行可讓程式碼與檔案留在本機，也省下雲端 API 的逐 token 費用；Acer、GIGABYTE、HP 的 mini PC 與 Surface RTX Spark Dev Box 之後推出。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -153,16 +153,16 @@
       <h2 class="co-tab">LangChain</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-18</span></div>
-          <h3 class="item-title"><a href="https://www.langchain.com/blog/langsmith-coding-agents-roi" target="_blank" rel="noopener">LangSmith for Coding Agents: Now track spend by outcome<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-18</span><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://www.langchain.com/blog/langsmith-coding-agents-roi" target="_blank" rel="noopener">LangSmith for Coding Agents: Now track spend by outcome<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/langsmith-outcome.html">導讀</a></h3>
           <p class="item-sum">LangSmith now offers reporting built for coding agents, along with new capabilities that tie their spend to the pull requests they produce.</p>
-          
+          <ul class="item-points"><li>LangSmith 推出「outcomes」概念：把 GitHub PR 或 GitLab MR 跟代理的 thread 綁在一起，可看出一個合併的 PR 花了多少錢、以及有多少花費最後沒產出任何 PR。</li><li>每個 PR 都能反查背後的 thread，方便追查成本來源，以及調整模型或政策後對成本的影響。</li><li>背景是寫程式已是企業 AI 應用的最大花費類別，2026 年規模達 340 億美元，但多數工程主管仍說不出這筆錢換到什麼。</li><li>新 Agent Platform 以代理為中心，每個代理有自身紀錄與 agent type；coding agent 是第一種專用型別，儀表板直接呈現 PR 相關數據。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-18</span></div>
-          <h3 class="item-title"><a href="https://www.langchain.com/blog/how-to-choose-the-right-sandbox-for-your-agent" target="_blank" rel="noopener">How to Choose the Right Sandbox for AI Agents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-18</span><i class="chip chip--topic">資安與漏洞</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://www.langchain.com/blog/how-to-choose-the-right-sandbox-for-your-agent" target="_blank" rel="noopener">How to Choose the Right Sandbox for AI Agents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/agent-sandbox.html">導讀</a></h3>
           <p class="item-sum">Learn how to choose a secure sandbox for AI agents, with guidance on filesystem isolation, network access, resource limits, and microVMs.</p>
-          
+          <ul class="item-points"><li>讓代理寫程式並執行程式是最高價值的授權之一，但代理產生的程式碼會帶來資料與系統風險，沙箱就是「代理可以安全使用的電腦」。</li><li>沙箱隔離 AI 產生的程式碼、限制其權限，即使代理被提示注入劫持，能造成的傷害也被框在沙箱內。</li><li>文章引用 Simon Willison 的「致命三合一」（私密資料、不可信內容、對外通訊）說明為何需要沙箱；提示注入目前沒有萬無一失的防法。</li><li>選型要看四件事：檔案系統隔離、網路存取、資源上限與 microVM 等隔離層級，並在安全性與代理可用性之間取捨。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -176,7 +176,7 @@
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">資料來源：OpenAI · Anthropic · Google DeepMind · Google Research · Google Blog · xAI · Meta AI · DeepSeek · Mistral · NVIDIA · AMD · OpenRouter · LangChain · Unsloth — 僅收錄官方第一手公告。</p>
   <p class="foot-md">原始資料：<a href="../md/2026-11-19.md" target="_blank" rel="noopener">2026-11-19.md</a></p>
-  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-19 07:00 (UTC+8)</p>
+  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-19 07:12 (UTC+8)</p>
 </div></footer>
 <script src="../assets/site.js" defer></script>
 </body>
