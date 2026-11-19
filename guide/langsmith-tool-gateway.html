@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 代理工具治理：一個 URL 收下憑證、身分與政策 · AI 每日動態檔案</title>
+<meta name="description" content="LangSmith Tool Gateway 進入 Public Beta：MCP server 用 URL 加入、kit 收斂工具清單、Okta／Entra ID 解身分、deny 與核准政策，每次呼叫留 trace。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>代理工具治理：一個 URL 收下憑證、身分與政策</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain 產品公告，宣布 LangSmith Tool Gateway 以 Public Beta 登上 LangSmith Agent Platform。</p>
+    <p class="g-meta">
+      <span>LangChain</span>·<span>2026-11-19 發布</span>·<span>2026-11-19 收錄</span>·
+      <a href="https://www.langchain.com/blog/langsmith-tool-gateway" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>Public Beta</b><span>LangSmith Agent Platform 上的託管工具層，與 LLM Gateway 並列，尚未宣布 GA</span></div>
+    <div class="g-stat"><b>50+ MCP servers</b><span>原文舉的美國大型零售商案例：該團隊自建，合計上千個工具（原文敘述，無第三方驗證）</span></div>
+    <div class="g-stat"><b>2 種身分</b><span>acting as the user（Okta、Entra ID）與 acting as the agent（agent auth 或 profile）</span></div>
+    <div class="g-stat"><b>Enterprise</b><span>跨組織 audit log 的適用方案；原文請讀者洽業務取得 deny policies 與 audit log</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">Tool Gateway 把工具清單、憑證與政策收到一個 kit URL 後面：agent 只看得到被核准的工具，每次呼叫都留下一筆帶身分的 trace。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">工具治理為何變成代理治理的核心</h2>
+    <p class="g-p">Agent 從等 prompt 變成按排程或事件自己跑，團隊就得先回答三件事：它能碰哪些工具、用誰的身分、事後查不查得到紀錄。</p>
+    <p class="g-p">LangSmith 原本用 LLM Gateway 管模型呼叫：花費上限、模型 fallback、rate limit、遮蔽個資與金鑰。Tool Gateway 與它並列，管的是工具那一半。</p>
+    <p class="g-p">難題在規模：上線後的 agent 要服務數百到數千名使用者，每人一套權限，等於持續管理並刷新大量 token，還要留下可供稽核的存取紀錄。原文說這比本地開發難上幾個數量級。</p>
+    <p class="g-p">每個 agent 各自接線，不只拖慢交付，也把暴露面放大、變得更零散。</p>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>需求</th><th>原文定義</th><th>Tool Gateway 的對應機制</th></tr></thead>
+        <tbody>
+          <tr><td data-l="需求"><b>Access</b></td><td data-l="原文定義">這個 agent 能呼叫哪些工具、用哪組憑證</td><td data-l="對應機制">kit：發佈在單一 URL 的精選工具集，agent 只看得到 kit 內的工具</td></tr>
+          <tr><td data-l="需求"><b>Control</b></td><td data-l="原文定義">每位使用者能做什麼，必要時加上審核</td><td data-l="對應機制">deny policies（組織／workspace 層）＋ approval policies（敏感呼叫經人工確認）</td></tr>
+          <tr><td data-l="需求"><b>Visibility</b></td><td data-l="原文定義">追蹤哪些工具被呼叫，確認 agent 用了正確憑證</td><td data-l="對應機制">tool call traces（工具、server、user、結果、耗時）＋ Enterprise audit log</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">原文舉一家美國大型零售商：店務助理 agent 用店員個人憑證查庫存、排班與信箱；庫存 agent 每天凌晨 3 點用自己的 service credentials 對帳。</p>
+    <p class="g-p">該團隊已建 50 多個 MCP server、合計上千個工具，但每個 agent 只該用其中一小塊經核准的子集，並在對的情境拿對的憑證。</p>
+    <p class="g-p">硬編碼的作法——每家供應商自己寫 OAuth、把 token 存在 agent 旁邊——小規模可行，工具與使用者一多就崩，也讓安全團隊無從稽核。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">一個 kit URL 之後：工具、身分與內建 server</h2>
+    <p class="g-p">Tool Gateway 做的事很單純：呼叫者把工具請求打進同一個 kit 的 URL，Gateway 解析身分、管理存取、記下 trace，再轉送到真正的 MCP server。</p>
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/langsmith-tool-gateway/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/langsmith-tool-gateway/01.webp" alt="Tool Gateway 架構圖：agent、coding agent 與後端都呼叫同一個 kit URL，Gateway 依序辨識身分、掛上 token、套用政策、轉送並記錄，右側接內建工具、遠端與私有 MCP server" width="1200" height="591" loading="lazy" decoding="async"></a>
+      <figcaption>原文架構圖：左側 agent、coding agent 與呼叫終端使用者的後端共用一個 kit URL，Gateway 依序辨識身分、掛上存在 LangSmith 的 token、套用 deny 或人工核准、轉送並記錄；右側工具分內建、遠端（任何 MCP server，以 URL 接入）與私有（走 Tunnel）三類。<span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/langsmith-tool-gateway" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <p class="g-p">註冊工具只做一次。任何 MCP server 用 URL 加入；Google、Salesforce、GitHub 這類常用服務直接開內建 server，工具不必每個 agent 重設一遍。</p>
+    <p class="g-p">工具集中在一處被發現與取用，新 agent 上線更快，安全團隊也看得到每個 agent 能碰到什麼。</p>
+    <p class="g-p">內建的好處是常見工具幾分鐘就能接上：不必自己跑 server，也不必註冊 OAuth app。</p>
+    <p class="g-p">kit 可開放給整個 workspace 或只給個人；接上 kit 的 agent 只看得到打包進去的工具。工具上千個時，一次全載會拉高延遲、也更難選對工具。</p>
+    <p class="g-p">search mode 讓 agent 先查自己的 kit，只載入當前任務相關的那幾個工具，而不是把整份清單塞進 context。</p>
+    <p class="g-p">接入是五步：開 Tools、加 server（MCP URL 或內建）、連帳號或存 API key、挑工具組成 kit 拿一個 MCP URL、把 client 指向它。</p>
+    <p class="g-p">原文說任何 MCP client 都能接，點名 LangChain、Deep Agents、Managed Deep Agents、Claude Code 與 Cursor。</p>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>接入方式</th><th>由誰維護</th><th>原文列出的服務</th></tr></thead>
+        <tbody>
+          <tr><td data-l="接入方式"><b>內建（按 Connect 登入）</b></td><td data-l="由誰維護">LangSmith 跑 OAuth app，不必自己註冊</td><td data-l="服務">Google、Microsoft、Salesforce、GitHub、Linear、LinkedIn</td></tr>
+          <tr><td data-l="接入方式"><b>API key 或公開</b></td><td data-l="由誰維護">開啟後填入 API key</td><td data-l="服務">Parallel search、Exa、Tavily、Apollo、Ashby、Pylon、網頁讀取</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">每次呼叫只對應兩種身分之一。acting as the user 走使用者自己的憑證，由 Okta、Entra ID 辨識，連一次帳號後每次沿用。</p>
+    <p class="g-p">使用者還沒連帳號時，呼叫回傳登入連結，等他完成驗證再自動續行，工程團隊不必為 on-behalf-of-user 多寫程式。</p>
+    <p class="g-p">acting as the agent 用綁在 agent 上的憑證：LangSmith 的 agent auth，或管理者一次接好共用憑證的 profile，供背景自主執行的 agent 重用。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">政策、核准、稽核：留下可查的紀錄</h2>
+    <p class="g-p">deny policies 可在組織或 workspace 層級擋工具，細緻度到使用者、service key 或兩者組合，也能設成對所有人生效、只列例外。</p>
+    <p class="g-p">approval policies 在 MCP client 跳出確認。原文的例子是寫入資料倉儲前必須有人審，agent 每次嘗試寫入都會被人看過一遍。</p>
+    <p class="g-p">開啟 tool call trace 後，每次呼叫記錄工具、server、使用者、結果與耗時；送給工具與工具回傳的資料不進紀錄。</p>
+    <p class="g-p">tool call 本來就會出現在 LangSmith trace；Tool Gateway 再加的是「用了誰的憑證、哪個 server、延遲與結果」。原文說除錯因此更快，安全審查也有紀錄可依。</p>
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/langsmith-tool-gateway/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/langsmith-tool-gateway/02.webp" alt="LangSmith trace 介面：issues-triage-agent 底下每次工具呼叫（langsmith_base_read_url_content、excel_search_workbooks、gmail_list_labels 等）各掛一個 Tool Gateway: Base／Excel／Gmail 子節點，右側顯示 outcome 為 success、acting_as 為 demo:alice" width="1200" height="804" loading="lazy" decoding="async"></a>
+      <figcaption>同一筆 agent trace 底下，每次工具呼叫都長出一個 Tool Gateway 子節點；右側可見 outcome 為 success、acting_as 為 demo:alice，稽核時不必再到別的系統拼 log。<span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/langsmith-tool-gateway" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <p class="g-p">Enterprise 方案的 audit log 跨組織記下哪個工具、以誰的身分執行，原文說「昨晚 3 點這個 agent 用了哪些工具、用了誰的憑證」因此變得可回答。</p>
+    <p class="g-p">限定要留住：原文最後請讀者聯繫業務以取得 deny policies 與 audit log（編輯推論：兩者並非所有方案預設開放）。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>工具治理遲早要集中。</b>每個 agent 各自寫 OAuth，規模一大就沒有確定性檢查可擋。</p>
+      <p><b>先定身分模型，再挑工具層。</b>代使用者執行與背景自主執行，是兩條憑證路徑。</p>
+      <p><b>trace 是稽核的入場券。</b>沒有逐筆記錄，安全團隊只能相信 agent 的自述。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Blog</span><a href="gemini-computer-use-mac.html">Mac 代操：螢幕留給你，確認鍵留在你手上</a><span class="d">2026-11-19</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="performance-factory.html">效能工廠：任務帶狀態接力，人守合併與取捨</a><span class="d">2026-11-19</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="codex-sandbox.html">代理沙箱：預設保守，邊界交給作業系統</a><span class="d">2026-11-18</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。原圖為 LangChain 官方架構圖與產品截圖，依著作權法第 52 條合理引用、未改作。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-19 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

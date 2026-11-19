@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 效能工廠 · AI 每日動態檔案</title>
+<meta name="description" content="OpenAI Performance Factory 導讀：四元件架構（任務服務、派送迴圈、雲端 Codex、訂閱）、Regression Workflow 三個多月 1,700+ 次調查、600+ 件根因、每天 17 次，以及 100 件根因建議 70% 準確的人工複核。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>效能工廠：任務帶狀態接力，人守合併與取捨</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：How OpenAI’s Performance Factory keeps ChatGPT fast（OpenAI 官方部落格，工程方法記述，作者 Okay Zed 與 Cyrus Forbes，Members of Technical Staff）</p>
+    <p class="g-meta">
+      <span>OpenAI</span>·<span>2026-11-19 發布</span>·<span>2026-11-19 收錄</span>·
+      <a href="https://openai.com/index/how-openai-performance-factory-keeps-chatgpt-fast" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>1,700+ 次</b><span>Regression Workflow 三個多月累計的自動調查數</span></div>
+    <div class="g-stat"><b>600+ 件</b><span>同期已定位根因（root caused）的案件數</span></div>
+    <div class="g-stat"><b>17 次／天</b><span>上列調查換算成的每日平均節奏</span></div>
+    <div class="g-stat"><b>70%</b><span>人工複核 100 件根因建議的準確率</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">Performance Factory 是 OpenAI 在雲端跑的自動化效能工程系統：警示一響，任務帶著狀態在代理與工程師之間流動；哪一步要人，寫在 Markdown 設定裡。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">演進：調查先寫成 skill，才搬得上雲端</h2>
+    <p class="g-p">Codex 之前，工程師手動看指標與日誌、比對 trace、進機器除錯、讀程式碼，長期累積出 30 多個效能工具。</p>
+    <p class="g-p">原文開場就說：代理式開發的速度，讓傳統效能工程作法撐不下去。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/performance-factory/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/performance-factory/01.webp" alt="OpenAI 原圖：軟體工作從人力手工、可重用工具、工程師加 Codex、工程師派工、系統派工，演進到代理工廠" width="1200" height="480" loading="lazy" decoding="async"></a>
+      <figcaption>原文用這張圖交代位移的方向：軟體工作從手工、與機器協作，走到代理工廠；效能調查正是在這條線上被交出去的。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／OpenAI，<a href="https://openai.com/index/how-openai-performance-factory-keeps-chatgpt-fast" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">把 Codex 當夥伴後，工程師可以直接問「這裡為什麼變慢」，連不熟的系統也能一起查。</p>
+    <p class="g-p">關鍵一步是把查法寫成共用 skill：<code>perf-forensics</code> 講明有哪些工具、何時該用、一次調查怎麼走完。</p>
+    <p class="g-p">它要求先答三題：退化何時開始、哪些請求受影響、部署或設定變更能否解釋。</p>
+    <p class="g-p">skill 不是一次寫定。團隊用過去的退化案例做 evals，反覆測、反覆修。</p>
+    <p class="g-p">再下一步是把調查搬上雲端，讓警示自己開一個 Codex session。</p>
+    <p class="g-p">但警示一多，連「哪幾件該看」都得翻 Slack 討論串；工廠就是為了收掉這段人工分診。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">四個零件：存狀態、派工、執行、喚醒</h2>
+    <p class="g-p">工程師用 Markdown 寫工作流：任務有哪些狀態、允許哪些轉移、哪幾步必須由人做，再附上給代理的指示。</p>
+    
+    <p class="g-p">派送迴圈定期檢查哪些任務已就緒，用正確的指示啟動一次 Codex turn。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/performance-factory/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/performance-factory/02.webp" alt="OpenAI 原圖：工作來自警示、工程師與其他代理，經任務服務、派送迴圈到雲端執行；虛線是 PR 留言與部署這類喚醒事件經訂閱送回任務" width="1200" height="606" loading="lazy" decoding="async"></a>
+      <figcaption>原文的 Orchestrator 架構圖：任務服務存任務與進度，派送迴圈挑就緒的派工，雲端執行跑 Codex turn；虛線才是喚醒（PR 留言、部署完成）。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／OpenAI，<a href="https://openai.com/index/how-openai-performance-factory-keeps-chatgpt-fast" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">雲端那層是內部 API：Codex 跑在 OpenAI 網路內的環境，碰得到 repo，也碰得到觀測工具。</p>
+    <p class="g-p">工具清單是 metrics、logs、trace、CPU profile 與記憶體快照；代理以 service identity 執行，權限可縮限。</p>
+    <p class="g-p">訂閱則在外部事件發生時喚醒任務，例如 GitHub 上出現審查留言，或某次部署完成。</p>
+    
+    <p class="g-p">（編輯觀點：service identity 這條最容易被略過，但它決定代理的動作在觀測系統裡能不能被歸屬。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">接力與把關：代理跑四步，人守合併</h2>
+    <p class="g-p">第一個工作流 Regression Workflow 只有四種狀態：待調查、已定位根因、已提修補、已解決。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一張任務的旅程</b> — 誰把球傳給誰，與部署後的兩條分支</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">警示 → 任務服務</span><span class="tr"><i>指標跨過門檻，開一張待調查任務</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">派送迴圈 → 代理</span><span class="tr"><i>任務就緒，帶指示啟動 Codex turn</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">代理 → 任務</span><span class="tr"><i>查出根因、記下發現，提出修補</i></span></span></li>
+        <li class="side"><span class="st">03b</span><span class="body"><span class="hop">旁支：對抗式審查</span><span class="tr"><i>另一個 Codex session 試著推翻這份診斷</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">代理 → PR</span><span class="tr"><i>實作修補並開 pull request，修補同樣要過對抗審查</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">工程師 → 合併</span><span class="tr"><i>人決定是否合併、部署</i></span></span></li>
+        <li><span class="st">06</span><span class="body"><span class="hop">代理 → 任務</span><span class="tr"><i>部署後驗收：是否回到基準</i></span></span></li>
+        <li class="side"><span class="st">06b</span><span class="body"><span class="hop">分支：僅部分恢復</span><span class="tr"><i>剩下的變慢另開新任務</i></span></span></li>
+        <li class="side"><span class="st">06c</span><span class="body"><span class="hop">分支：沒有改善</span><span class="tr"><i>送回重新調查</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重繪，非原文圖；順序與分支取自原文 Regression Workflow 說明（原文圖為 1–6：Detected／Find root cause／Propose fix／Review &amp; deploy／Verify recovery／Resolved；本圖把派工與對抗式審查畫成旁支，編號為本站所加）。</p>
+    </figure>
+
+    <p class="g-p">找根因先問三件事：哪些指標變差、何時開始變、哪些請求受影響。</p>
+    <p class="g-p">警示只在指標跨門檻時響，退化可能早就開始，所以代理會往回找，並比對不同的請求群。</p>
+    <p class="g-p">再去看部署與功能變更，最後讀程式碼，才寫下診斷。</p>
+    <p class="g-p">代理有時停在第一個看似合理的解釋，於是另一個 Codex session 專門來推翻它：重檢假設、測反事實。</p>
+    <p class="g-p">原文的例子：審查者發現負責找檔案的服務早已恢復，圖片請求卻還在失敗，調查因此重開。</p>
+    
+    <p class="g-p">修補比找病因更難。代理的改動有時比需要的複雜，或引進新問題，所以修補也過一輪對抗審查。</p>
+    <p class="g-p">有些取捨仍要架構判斷：加一層快取可能變快，卻可能帶來過期資料。</p>
+    <p class="g-p">每張任務都附自動產生的報告：退化摘要、影響、根因、建議修補，外加指標時間序列、CPU 火焰圖與 trace。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>部署後的結果</th><th>代理的處置</th></tr></thead>
+        <tbody>
+          <tr><td data-l="結果"><b>回到基準</b></td><td data-l="處置">任務標為已解決</td></tr>
+          <tr><td data-l="結果"><b>只有部分恢復</b></td><td data-l="處置">原案收掉，剩下的變慢另開一張任務</td></tr>
+          <tr><td data-l="結果"><b>完全沒改善</b></td><td data-l="處置">送回重新調查</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">→ 可橫向滑動</p>
+    <p class="x-src">人工複核 100 件根因建議：70% 判為準確，30% 需再修正或未完全建立因果（OpenAI 自報，無第三方驗證）。</p>
+
+    <p class="g-p">原文自陳三個教訓。第一，保護工程師的注意力：原始輸出是一整片文字牆，得把相關事件連結、按指標分組、依估計影響排序。</p>
+    <p class="g-p">第二，代理的改動要評：調查與摘要分開測，用抽掉答案的過去事件回測，摘要另派一個 grader 打分。</p>
+    <p class="g-p">第三，把反覆失敗變成自修：每天一支代理掃近期 run 的工具失敗與權限錯誤，替卡點開任務。</p>
+    <p class="g-p">下一步是從一個工作流變多個，讓一個工作流的代理替另一個開任務。</p>
+    <p class="g-p">原文只給調查量與根因準確率，沒有成本、延遲或省下多少人力的數字，讀者不宜自行換算。</p>
+    <p class="g-p">（編輯推論：門檻不在模型多強，而在任務狀態與權限能否先立起來。）</p>
+    <p class="g-p">還有規劃中的主動監控：用更細的效能數據抓警示漏掉的退化，例如某種請求 CPU 悄悄上升就開任務追。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>狀態要活在代理之外。</b>任務自己帶狀態與發現，換 session、換人都接得上。</p>
+      <p><b>診斷要有人反對。</b>同一個 session 不會推翻自己，100 件裡 30 件要修。</p>
+      <p><b>人的位置在取捨。</b>合併、快取這類代價，原文仍留給工程師。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Blog</span><a href="gemini-computer-use-mac.html">Mac 代操：螢幕留給你，確認鍵留在你手上</a><span class="d">2026-11-19</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="langsmith-tool-gateway.html">代理工具治理：一個 URL 收下憑證、身分與政策</a><span class="d">2026-11-19</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="codex-sandbox.html">代理沙箱：預設保守，邊界交給作業系統</a><span class="d">2026-11-18</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。文中 1,700+ 次、600+ 件、17 次／天、70% 皆為 OpenAI 自報、無第三方驗證；圖解 A 為本站重繪。數據與敘述已對照原文查核，若有出入以官方原文為準。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-19 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

@@ -33,22 +33,22 @@
       <h2 class="co-tab">OpenAI</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
-          <h3 class="item-title"><a href="https://openai.com/index/how-openai-performance-factory-keeps-chatgpt-fast" target="_blank" rel="noopener">How OpenAI’s Performance Factory keeps ChatGPT fast<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://openai.com/index/how-openai-performance-factory-keeps-chatgpt-fast" target="_blank" rel="noopener">How OpenAI’s Performance Factory keeps ChatGPT fast<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/performance-factory.html">導讀</a></h3>
           <p class="item-sum">Learn how OpenAI built the Performance Factory, a system of Codex-powered workflows that finds and fixes performance issues to help keep ChatGPT fast.</p>
-          
+          <ul class="item-points"><li>Codex 驅動的 Performance Factory 是雲端自主系統，自動調查並修復效能退化。工程師以 Markdown 撰寫工作流程與提示詞，定義任務狀態、允許的狀態轉移，以及哪些步驟必須由人工審核與核准。</li><li>Regression Workflow 三個多月內追蹤超過 1,700 件調查、找出 600 多件根因，相當於每天 17 次自動調查；修補部署後再由另一個代理回到同一任務，確認效能是否回復到基準線。</li><li>團隊先把調查流程寫成共用技能 perf-forensics，說明有哪些工具、何時使用，並要求先找出退化起點與受影響請求；技能以過去退化案例建立 evals 反覆測試，之後搬到雲端讓警示自動開啟 Codex 工作階段。</li><li>系統由任務服務、派送迴圈、內部 API 與訂閱機制組成；內部 API 在 OpenAI 網路內的環境執行 Codex，可存取 repo、指標、日誌、trace、CPU profile 與記憶體快照，並以服務身分限定權限。</li><li>代理常停在第一個看似合理的解釋，因此加入對抗式審查，由另一個 Codex 工作階段嘗試推翻假設、測試反事實；人工抽查 100 件根因建議，70% 判定準確，30% 需修正或未確立因果。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-18</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-18</span><i class="chip chip--topic">企業導入案例</i></div>
           <h3 class="item-title"><a href="https://openai.com/business/customer-stories/sumitomo-life" target="_blank" rel="noopener">How Sumitomo Life’s leaders helped teams adopt ChatGPT Enterprise<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Sumitomo Life uses ChatGPT Enterprise to research insurers, prepare proposals, and draft code for investment analysis. Early use by executives helped drive adoption.</p>
-          
+          <ul class="item-points"><li>日本住友生命的 ChatGPT Enterprise 每週使用率超過 80%；每月使用超過 101 次的員工，依自述節省時間估算的 ROI 平均達 524%，16 至 30 次約 231%、8 至 15 次約 55%，全體平均 203%。</li><li>公司 2023 年開始在工作中使用生成式 AI，起初多在對話中提問；2025 年由約 100 至 150 位主管與企劃人員試用 ChatGPT Business，2026 年 6 月正式轉為 ChatGPT Enterprise。</li><li>投資團隊以統計分析預測報酬、評估價格波動等風險，ChatGPT 協助撰寫分析程式碼，減少自行撰寫的份量；企劃團隊彙整同業動態與海外案例，並用工作區統整對話、檔案與自訂指令。</li><li>導入前評估輸出品質、對各類工作的適配度與金融機構的資安要求，並確認 OpenAI 預設不把企業資料用於模型訓練；社長自試用期即開始使用，在管理會議與內部網站帶動員工跟進。</li><li>公司計畫 2026 財年下半年擴大到更多員工，依職務區分哪些任務交給 AI、哪些人機協作、哪些仍由人負責；長期考慮用於核保與理賠給付，並與 OpenAI 探索新技術、重新設計工作流程。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-18</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-18</span><i class="chip chip--topic">研究與科學</i></div>
           <h3 class="item-title"><a href="https://openai.com/index/research-acceleration-jagged-frontier" target="_blank" rel="noopener">Research acceleration: The jagged frontier<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">OpenAI measures how coding agents are accelerating AI research, where their performance remains uneven, and what this signals about recursive self-improvement.</p>
-          
+          <ul class="item-points"><li>OpenAI 內部量測顯示，3 月到 10 月，估算需人工 2 至 4 小時的研究任務，代理自主完成成功率由 23% 升到 46%；需 4 至 8 小時的任務則由 13% 升到 35%。</li><li>任務類型差異極大：無人工介入成功率為溝通類 69%、分析類 58%、建置類 43%；任務層級以監控訓練跑 79%、回答技術問題 72% 最高，撰寫推論與服務堆疊程式碼僅 25%、建置評估與 RL 環境 29%。</li><li>以 API 牌價計算，研究員每日使用量中位數 10 月達 2,400 美元，較 9 月成長 62%；第 90 百分位達 23,000 美元、成長 105%，而內部部署僅占整體研究算力 2%。</li><li>每位研究員的代理工作日由 0.5 增至 5.7，等於 11 倍；到 10 月中，超過三分之二的研究員每日尖峰同時執行至少 4 個代理，逾一成平均至少同時跑 16 個。</li><li>報告主張實驗室應追蹤並公開自我改進（RSI）的指標；安全與對齊領域有紀錄的研究工作量 1 月到 9 月成長 77%，並在 2026 年 7 月 Hugging Face 事件後加速。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -57,10 +57,10 @@
       <h2 class="co-tab">Anthropic</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-18</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-18</span><i class="chip chip--topic">治理與政策</i></div>
           <h3 class="item-title"><a href="https://www.anthropic.com/news/anthropic-prices-initial-public-offering" target="_blank" rel="noopener">Anthropic prices initial public offering<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           
-          
+          <ul class="item-points"><li>Anthropic, PBC 在 11 月 18 日為初次公開發行定價，Class A 普通股每股 83.00 美元，本次發行總量為 9.8 億股，是近年最受矚目的 AI 公司上市案之一。</li><li>這批股份中，956,351,354 股由 Anthropic 自行出售，另外 23,648,646 股由部分既有股東出售，公司明確表示不會從股東出售的股份中取得任何收益。</li><li>股票預計在 11 月 19 日於 Nasdaq Global Select Market 以代號「ANT」開始掛牌交易，並在 11 月 20 日完成交割，但仍須滿足慣例的交割條件，時程也可能因市場狀況調整。</li><li>Anthropic 另外授予承銷商為期 30 天的超額配售選擇權，最多可再加購 1 億 4,700 萬股 Class A 普通股，用來因應市場超額認購的需求。</li><li>美國證券交易委員會已於 11 月 18 日宣告註冊聲明生效，本次發行僅透過公開說明書進行，承銷商包括 Goldman Sachs 與 Morgan Stanley。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -69,10 +69,10 @@
       <h2 class="co-tab">Google Research</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">研究與科學</i><i class="chip chip--topic">硬體與基礎設施</i></div>
           <h3 class="item-title"><a href="https://research.google/blog/a-game-you-cannot-win-unless-you-have-a-quantum-computer/" target="_blank" rel="noopener">A game you cannot win unless you have a quantum computer<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Quantum</p>
-          
+          <ul class="item-points"><li>Google Quantum AI 團隊在 Willow 超導處理器上執行「魔方陣遊戲」，量子位元勝率達 98.30%（誤差 ±0.0001），遠高於任何事先寫好表格的古典策略最多 88.89% 的上限。</li><li>研究團隊把九種版本的遊戲各玩 10 萬次，硬體大約每 60 次才輸一次，主因是雜訊；古典的最佳策略則至少每九回合就會輸掉一回合，差距在統計上相當顯著。</li><li>團隊以 Bell–Kochen–Specker 不等式量測 contextuality 指標 χ，古典宇宙必須滿足 χ ≤ 4，量子力學允許到 6；此測試與量子位元製備方式無關，等於直接檢驗機器本身。</li><li>量測時用一顆輔助量子位元（ancilla）逐次讀取結果，讓每一列與每一欄都在同一組兩個量子位元上連續量測而不被擾動，總共執行了 540 次量測。</li><li>同一類任務擴展到 105 個量子位元的 hidden linear function 問題，成功率仍高於 0.5 的古典界線，並能抓出隨機電路測試漏掉的細微錯誤，論文已刊登於《Science》。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -81,34 +81,34 @@
       <h2 class="co-tab">Google Blog (AI)</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://blog.google/innovation-and-ai/products/gemini-app/switch-ai-assistants-transfer-history/" target="_blank" rel="noopener">ICYMI: Transfer your history from other AI apps into Gemini.<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Transfer your chat history into Gemini. Import your ZIP files and AI summaries to continue conversations seamlessly. Get the details.</p>
-          
+          <ul class="item-points"><li>Gemini 內建匯入設定，讓使用者從其他 AI 助理搬家時不必從零開始，可把原有的脈絡、偏好設定與對話紀錄一併帶進 Gemini，接續原本的使用習慣。</li><li>官方流程第一步是打開 Gemini 的匯入設定並複製一段提示詞，貼到原本使用的 AI 工具裡，請它產出一份個人偏好摘要，再把摘要內容帶回 Gemini。</li><li>對話紀錄要回到原本供應商的帳號設定匯出成 ZIP 壓縮檔，再回到 Gemini 設定頁上傳該檔案，就能從上次中斷的對話繼續使用。</li><li>這則貼文以 ICYMI 形式補發既有功能，內容聚焦在跨助理轉換的四個步驟，未提到匯入的對話數量上限或支援的供應商清單。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
-          <h3 class="item-title"><a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemini-api-tool-retrieval/" target="_blank" rel="noopener">Introducing Tool Retrieval in the Gemini API<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemini-api-tool-retrieval/" target="_blank" rel="noopener">Introducing Tool Retrieval in the Gemini API<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/gemini-tool-retrieval.html">導讀</a></h3>
           <p class="item-sum">Give your agents access to hundreds of tools while using fewer tokens with Tool Retrieval, now in preview in the Gemini API.</p>
-          
+          <ul class="item-points"><li>Tool Retrieval 已在 Gemini Interactions API 開放預覽，核心是把工具的參數結構改成需要時才載入，不必每次提示都送出整份工具庫，以降低輸入 token 與延遲。</li><li>啟用方式是在請求中加入 tool_search 工具，並對想延後載入的工具設定 defer_loading 為 true；模型仍看得到每個工具的名稱與說明，但參數結構不會進入上下文。</li><li>模型需要某個工具時會在同一次請求內按名稱索取，API 載入完整結構後再發出 function_call，這三個步驟都會出現在 interaction.steps，方便除錯時檢視。</li><li>目前支援 Gemini 3.6 以上模型；搜尋由伺服器端執行，開發者不必自建索引，也能對遠端 MCP 伺服器設定 defer_loading，讓整台伺服器提供的工具按需載入。</li><li>Tool Retrieval 不另外收費，依所用模型的標準費率計價；tool_search 會固定增加一小段輸入 token，載入過的結構在後續對話持續以輸入計費，也因此能與前綴快取相容。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">治理與政策</i></div>
           <h3 class="item-title"><a href="https://blog.google/innovation-and-ai/technology/ai/dialogues-walter-isaacson/" target="_blank" rel="noopener">Walter Isaacson on curiosity and creativity in the AI age.<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Walter Isaacson joins Google to discuss how history’s greatest innovators inspire creativity and human judgment in the AI age. Watch the episode.</p>
-          
+          <ul class="item-points"><li>Google 節目《Dialogues on Technology and Society》最新一集由 Kent Walker 對談知名傳記作家華特．艾薩克森，主題聚焦 AI 時代的好奇心、創造力與人類判斷力。</li><li>對談從達文西、班傑明．富蘭克林與愛達．勒芙蕾絲切入，討論歷史上重大突破為何多半是團隊協作的結果，而非單一天才的靈光一閃。</li><li>兩人的主軸是：當資訊隨手就在口袋裡，好奇心與人類判斷力的價值反而更高，這正是 AI 普及後最需要重新強調的能力。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">模型發布</i><i class="chip chip--topic">開發者工具</i></div>
           <h3 class="item-title"><a href="https://blog.google/innovation-and-ai/technology/developers-tools/genie-4-in-gemini-api/" target="_blank" rel="noopener">Genie 4 is now available on the Gemini API.<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Build interactive 720p worlds with Genie 4 on the Google Gemini API. Generate coherent environments with native audio and real-time controls. Get started.</p>
-          
+          <ul class="item-points"><li>繼前一天正式發表後，Genie 4 即日起透過 Gemini API 的 Interactions API 與 Google AI Studio 開放給開發者，可用文字提示、參考圖片或兩者混合起頭，官方同步提供定價與 API 文件。</li><li>可生成連續的 720p 世界、每秒 24 幀並同步原生音訊，涵蓋環境音景、音效與角色對話；搭配即時鍵盤操作與文字提示，能在探索途中改變天氣、光線與物件。</li><li>Gemini 的推理能力負責維持世界狀態的一致與連貫，官方定位在互動體驗打樣、空間概念視覺化，以及機器人與 AI 代理的訓練場景。</li><li>所有輸出都嵌入不可察覺的 SynthID 浮水印；Google AI Studio 提供互動畫布與範例程式，開發者可先試玩再依 API 文件與定價頁面開始建置。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
-          <h3 class="item-title"><a href="https://blog.google/innovation-and-ai/products/gemini-app/computer-use-mac/" target="_blank" rel="noopener">Let Gemini tackle repetitive chores on your Mac<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">產品與功能</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://blog.google/innovation-and-ai/products/gemini-app/computer-use-mac/" target="_blank" rel="noopener">Let Gemini tackle repetitive chores on your Mac<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/gemini-computer-use-mac.html">導讀</a></h3>
           <p class="item-sum">The Gemini app for Mac now has computer use to help you with repetitive tasks.</p>
-          
+          <ul class="item-points"><li>Gemini 應用程式在 Mac 推出 computer use，可在隔離的背景視窗操作本機檔案、桌面應用與網頁，並在對話中提供即時預覽，主螢幕與游標不受打擾。</li><li>使用者可自行勾選 Gemini 能存取哪些應用程式，全程即時觀看每一步、隨時暫停，並在關鍵動作發生前逐一核准，控制權留在使用者手上。</li><li>官方示範包含在設計軟體批次調色與搭建複雜 3D 場景、從本機 PDF 擷取重量尺寸與地址填寫多箱運費報價，以及跨區域抓取儀表板數據與截圖做成 Google Slides 簡報。</li><li>目前在美國以英文推出，需搭載 Apple Silicon 的 Mac 並執行 macOS Sequoia 15.0 以上版本，限 18 歲以上的個人 Google 帳號，且須訂閱 Google AI Plus、Pro 或 Ultra 任一方案，可至 gemini.google/mac 下載。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -117,16 +117,16 @@
       <h2 class="co-tab">Google Developers</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">開源</i></div>
           <h3 class="item-title"><a href="https://developers.googleblog.com/multi-turn-agentic-reinforcement-learning-with-tunix-and-gemma-4-on-google-tpus/" target="_blank" rel="noopener">Multi-Turn Agentic Reinforcement Learning with Tunix and Gemma 4 on Google TPUs<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">This post walks developers through training a multi-turn, tool-using LLM agent using Tunix and Gemma 4 on Cloud TPUs. By leveraging agentic Group Relative Policy Optimization (GRPO) and asynchronous vLLM rollouts, the ap</p>
-          
+          <ul class="item-points"><li>Google 在單一 Cloud TPU v6e-8 主機上，用 Tunix 的代理式 RL 流程訓練 Gemma 4 E2B 玩 Plane Strike：6x6 棋盤藏一架 8 格飛機、共 4 種朝向，代理每回合只能打擊一格，全部命中或 23 次打擊後結束。</li><li>Gemma 4 E2B 開箱在保留棋盤上勝率僅 9.4%、平均 22.44 次打擊；經過 100 步代理式 GRPO 訓練後勝率達 95%，平均局長縮短到約 16 次打擊，同時學會可靠呼叫工具與空間推論。</li><li>流程分成四個模組：工具與聊天模板解析器、對話代理、軌跡收集與代理式 GRPO 學習器；環境繼承 BaseTaskEnv，同一個 GRPO 群組的 8 次 rollout 共用 seed，因此看到相同棋盤。</li><li>Gemma 4 以原生格式呼叫工具：工具宣告寫在系統提示的 &lt;|tool&gt;declaration 內，模型在 &lt;|tool_response&gt; 停下等待工具結果，再於同一回合繼續產生思考與下一次呼叫。</li><li>Tunix 另提供 ToolEnvironment、ToolAgent 與 ToolManager 等現成抽象，標準多工具代理不必自行串接訊息與觀察值，只有需要自訂回合控制時才需改寫解析器與代理。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">硬體與基礎設施</i><i class="chip chip--topic">開源</i></div>
           <h3 class="item-title"><a href="https://developers.googleblog.com/distributed-llm-training-across-metros-streaming-diloco-in-maxtext/" target="_blank" rel="noopener">Distributed LLM Training Across Metros: Streaming DiLoCo in MaxText<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Streaming DiLoCo in MaxText enables developers to efficiently train large language models across geographically distributed TPU slices by streaming parameter fragments instead of synchronizing full models at every step.</p>
-          
+          <ul class="item-points"><li>DiLoCo 由 Google DeepMind 提出，把訓練切成 M 個 learner 群組，各自以 AdamW 在本機資料上跑 H 步，實驗中 H 約 37 至 65，這段期間完全不進行跨群組通訊。</li><li>每隔 H 步做外層更新：各 learner 算出目前權重相對區間起始全域權重的差值，經 all-reduce 平均後以 SGD 加 Nesterov 動量更新全域權重，總通訊量因此降低 H 倍。</li><li>Streaming DiLoCo 把參數切成 P 等於層數加 1 個片段，每 Δh 步同步一個片段；H 等於 P 時每步只同步一個片段，把原本每 H 步一次的尖峰流量攤平成近乎均勻的小流量。</li><li>MaxText 把 token embedding、final layer norm 與輸出頭放在 Fragment 0，因詞彙表維度可能遠大於單層片段，會把大型矩陣切分併入各層片段，避免同步時出現流量尖峰。</li><li>在 MaxText 以 Qwen3-30B-A3B 與 Gemma4-26B-A4B 兩個模型跑 4,000 步驗證；通訊量由每步 65.5 GB 降到約 1.0 GB，減少 64 至 65 倍，因此跨資料中心、高延遲的 WAN 訓練不再被同步停滯拖垮整體吞吐。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -135,16 +135,16 @@
       <h2 class="co-tab">NVIDIA</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">硬體與基礎設施</i><i class="chip chip--topic">企業導入案例</i></div>
           <h3 class="item-title"><a href="https://blogs.nvidia.com/blog/microsoft-ignite-accelerated-computing-azure-windows-pcs/" target="_blank" rel="noopener">NVIDIA and Microsoft Expand Accelerated Computing From Azure to Windows PCs<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">NVIDIA and Microsoft are extending their full-stack collaboration to help organizations build, customize and deploy intelligent applications — from next-generation infrastructure on Azure to industrial systems and Window</p>
-          
+          <ul class="item-points"><li>Azure 資料中心已部署 NVIDIA Vera Rubin NVL72 系統，並開放 Azure 虛擬機器預覽，鎖定需要大量推理的代理式應用與大規模模型訓練、推論工作負載。</li><li>微軟以 NVIDIA Dynamo 推論軟體執行模型後訓練，並用 RTX PRO 6000 Blackwell GPU 加速 Bing 搜尋模型，同時與 NVIDIA 合作把機密運算延伸到裸機與機櫃級 AI 基礎設施。</li><li>在最新一輪 MLPerf Training v6.1 基準測試中，Azure 以 GB200 NVL72 系統擴展到 10,240 顆 GPU 訓練 DeepSeek-V3，是該輪最大規模；推論競賽則由 GB300 NVL72 在 DeepSeek-R1 互動吞吐上領先逾一成。</li><li>EY 運用 Microsoft Foundry 的 Programmed Training 服務客製化 NVIDIA Nemotron 開放模型，用來分類企業採購紀錄，在自家評估資料集上準確率提升 55%，成本比專有前沿模型低 15 倍。</li><li>Azure Local 新增支援 RTX PRO 6000 Blackwell GPU，並延伸到 Jetson Thor、Jetson Orin 邊緣平台，以執行機器視覺、機器人等工業應用；Windows 365 Cloud PC 的 Direct Stream 可串流兩路 4K 60fps，公開預覽預計 2027 年初登場。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://blogs.nvidia.com/blog/geforce-now-thursday-black-friday-2026/" target="_blank" rel="noopener">Season’s Streamings and Savings: Black Friday Deals Come to GeForce NOW<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">GeForce NOW is kicking off Black Friday with more reasons to make time for gaming. Six-month memberships are back for a limited time. Save 30% on the first six-month term of a Performance or Ultimate membership. Big gami</p>
-          
+          <ul class="item-points"><li>黑色星期五檔期回歸六個月期 Performance 與 Ultimate 會員，新申辦與符合資格的升級在部分地區可享首期六個月 30% 折扣，活動到 11 月 30 日週一為止、售完為止。</li><li>GeForce NOW 正式登上 Amazon 三款採用 Vega OS 的串流播放器，包含 Fire TV Stick HD、Fire TV Stick 4K Select 與 2026 年款 Fire TV Stick 4K，玩家接上手把就能在電視上玩，不必另外購買遊戲主機。</li><li>透過 Amazon 在支援的 Fire TV 裝置上直接購買 Performance 或 Ultimate 會員，首月可享 90% 折扣，活動自即日起一路跑到 12 月 31 日，僅限參與活動的國家與地區。</li><li>本週共有九款遊戲加入，其中五款 Bethesda 作品以 GOG 版本支援，包含《印第安納瓊斯：古老之圈》、Fallout 4、Skyrim、DOOM 與 DOOM Eternal，已持有 GOG 版者可串流遊玩、不必重複購買。</li><li>Ultimate 方案提供 GeForce RTX 5080 等級的雲端效能、單次最長八小時的遊玩時間、最高 5K 解析度或 360fps 串流，並帶來 DLSS 5 的 3D-Guided Neural Rendering，已支援 NBA 2K27 與《霍格華茲的傳承》。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -153,10 +153,10 @@
       <h2 class="co-tab">AMD</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-17</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-17</span><i class="chip chip--topic">硬體與基礎設施</i><i class="chip chip--topic">企業導入案例</i></div>
           <h3 class="item-title"><a href="https://www.amd.com/en/blogs/2026/more-ai-more-control-amd-instinct-mi350p-comes-to-windows.html" target="_blank" rel="noopener">More AI. More Control. AMD Instinct MI350P Comes to Windows Server.<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           
-          
+          <ul class="item-points"><li>AMD 與微軟共同宣布，AMD Instinct MI350P GPU 開始支援 Windows Server 2025 與即將推出的 Windows Server 2028，把 GPU 加速的 AI 推論正式帶進企業既有的 Windows 伺服器環境，讓模型服務可就地部署。</li><li>上市即支援 AMD Inference Microservices（AIMs）與 GPU 分割，IT 團隊可把一張 MI350P 切成多個分割區，分別提供給 embedding 或較小型語言模型等不同服務使用。</li><li>企業可在 Windows Server 就地執行推論，讓提示、檢索內容與回覆都留在自家環境，符合資料主權與存放地要求，並可套用自家的身分驗證、授權、保留與稽核政策。</li><li>搭配 SQL Server 2025 原生向量功能，本地 embedding 模型在 MI350P 上產生向量餵入既有 RAG 流程，把 embedding 推論留在企業內部；與微軟 SQL Server 團隊的示範已在規劃中。</li><li>以 EPYC 處理器整併既有工作負載可減少機櫃空間、電力與冷卻需求，替新增的 AI 基礎設施騰出容量，讓 CPU 與 GPU 投資能在同一份預算與容量規劃下進行。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -165,28 +165,28 @@
       <h2 class="co-tab">LangChain</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
-          <h3 class="item-title"><a href="https://www.langchain.com/blog/langsmith-tool-gateway" target="_blank" rel="noopener">LangSmith Tool Gateway: Secure, governed tool use for agents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">產品與功能</i><i class="chip chip--topic">資安與漏洞</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://www.langchain.com/blog/langsmith-tool-gateway" target="_blank" rel="noopener">LangSmith Tool Gateway: Secure, governed tool use for agents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/langsmith-tool-gateway.html">導讀</a></h3>
           <p class="item-sum">LangSmith Tool Gateway, now in Public Beta, handles credentials, identity, and access for every agent tool call, with policies, approvals, and traces.</p>
-          
+          <ul class="item-points"><li>Tool Gateway 以 Public Beta 推出，是 LangSmith 代理平台上集中管理工具呼叫憑證、身分與存取權限的受管工具層，呼叫端統一走同一個入口網址。</li><li>工具以 tool kit 形式發佈在單一網址，代理只看得到 kit 內的工具，可開放給團隊或限定個人；工具繁多時 search mode 只載入任務相關工具。</li><li>可透過網址加入任何第三方 MCP server，系統也內建 Google、Salesforce、GitHub 等常用服務的伺服器，並能串接搜尋與網頁讀取類工具。</li><li>每次呼叫對應兩種身分：以使用者本人身分行動時套用其憑證，並串接 Okta、Entra ID 等身分提供者；或以服務身分行動，適合排程與背景作業。</li><li>管理員可為整個團隊關閉某個 server，也能拒絕特定使用者使用特定工具；每次呼叫都留下工具、伺服器、使用者、結果與延遲的 trace 供稽核。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">產品與功能</i><i class="chip chip--topic">開發者工具</i></div>
           <h3 class="item-title"><a href="https://www.langchain.com/blog/fix-your-coding-agent-bill" target="_blank" rel="noopener">Your coding agent bill doubled. Here’s how to fix it.<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Learn why coding agent bills spiral out of control — and how to trace, compare, and govern spend across Claude Code, Cursor, Copilot, and more in one place.</p>
-          
+          <ul class="item-points"><li>問題出在資料碎片化：各家編碼代理的紀錄格式各異，Copilot 走 OpenTelemetry，Cursor 與 OpenCode 用 hook，難以並排比較花費。</li><li>LangSmith 把六款編碼代理的 session 收斂到同一套 trace 模型，中繼資料與查詢語法一致，Claude Code、Cursor、Copilot 都適用。</li><li>跨工具標準化後，token 用量、每 session 費用、工具呼叫與子代理活動都能正規化比較，可判斷 Cursor 或 Claude Code 在特定流程上是否划算。</li><li>Engine 會分析代理 session 並給出具體改善建議，例如同一 session 內重複呼叫工具取得相同脈絡時，建議合併呼叫，而不只是回報支出偏高。</li><li>LLM Gateway 可在使用者、團隊與組織層級設費用上限，也將支援把合適工作路由到開源模型，讓子代理用便宜模型處理雜活、壓低帳單。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">產品與功能</i><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">開源</i></div>
           <h3 class="item-title"><a href="https://www.langchain.com/blog/announcing-data-annotation-queue" target="_blank" rel="noopener">Announcing Data Annotation Queues<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Review logs, annotate data, and build datasets with LangSmith&#39;s Data Annotation Queues. Improve LLM app performance from prototype to production.</p>
-          
+          <ul class="item-points"><li>Data Annotation Queues 是 LangSmith 新功能，目前以 beta 開放報名，讓團隊檢視日誌、給回饋並從日誌建立資料集，補足應用專屬資料不足的缺口。</li><li>可先在 logs 頁面以篩選條件挑出資料點再加入佇列，例如只挑收到使用者負面回饋的樣本，集中檢視問題出在哪裡。</li><li>進入佇列後可逐筆檢視並留下標註，例如 good／bad 或語言分類，也可把資料點加入資料集；加入前可直接改文字修正答案，但仍須按下 Add to Dataset。</li><li>佇列底部提供 Move to end 與 Done 兩個動作：前者把資料點移到最後，等於先跳過、之後再回來處理；後者代表這筆資料點已完成審閱，可以離開待辦。</li><li>同時釋出開源套件 langfree，能從 LangSmith trace 擷取、轉換與整理 ChatOpenAI 執行紀錄，用於微調與評估，適合想自行客製標註流程的團隊。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">產品與功能</i><i class="chip chip--topic">開發者工具</i></div>
           <h3 class="item-title"><a href="https://www.langchain.com/blog/langsmith-alerts" target="_blank" rel="noopener">Catch production failures early with LangSmith Alerts<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Set up real‑time notifications on error rates, run latency &amp; feedback scores to spot failures before your customers do.</p>
-          
+          <ul class="item-points"><li>LangSmith 推出 Alerts，只要已把正式環境 trace 送進 LangSmith，就能依錯誤率、執行延遲與回饋分數設定警示，在故障影響使用者前先發現。</li><li>設定時可用篩選器把範圍縮小到特定 runs 子集，例如依模型、工具呼叫或 run 類型過濾，再搭配 5 分鐘或 15 分鐘聚合窗口與閾值調整靈敏度。</li><li>通知可透過 PagerDuty 送出，或設定自訂 webhook 把告警第一時間送至 Slack 等既有溝通管道，團隊不必另建通報流程。</li><li>以回饋分數（來自使用者輸入或線上評估）為基礎的警示，可作為品質下滑的早期預警，因為提示、模型或輸入的小幅改動都可能在真實情境造成退步。</li><li>官方表示後續將加入 run 次數與 LLM token 用量等新警示類型，以及可設定相對門檻的變化型警示，例如延遲比基準上升 25% 時觸發。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -195,10 +195,10 @@
       <h2 class="co-tab">OpenAI Developers</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://developers.openai.com/blog/prompting-multilingual-voice-agents" target="_blank" rel="noopener">Prompting GPT-Live for languages and regional accents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           
-          
+          <ul class="item-points"><li>GPT-Live 內建語音本身已帶語言或地區色彩，例如 Bossa 與 Tempo 偏向巴西葡萄牙語、Nira 是印地語；官方建議先用實際對話測試，因為內建語音開箱的自然度相當高。</li><li>選用內建語音時要用小寫 API 名稱，例如 nira；若要更精確的地區口音，可用 prompt-to-voice 依文字描述生成合成語音，並以 script_hint 欄位提供目標語言的示範語句。</li><li>印度英語情境的示範是把 session.audio.output.voice 設為 nira，並在 session instructions 要求以自然的印地語腔調說流利英語；西班牙案例則描述中北部半島卡斯提爾口音的成年女聲。</li><li>阿拉伯語案例以當代杜拜城市口音的成年男聲描述聲音，包含中低音高、溫暖音色與從容語速；語音設計只處理聲音，是否改用英語或確認訂單等行為要寫在 session instructions。</li><li>語音生成僅能使用原創的成人聲音、不得模仿真人；以錄音建立自訂語音需取得說話者明示同意與授權，且語音建立不適用零資料保留，開發者也要告知聽眾聽到的是 AI 語音。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -212,7 +212,7 @@
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">資料來源：OpenAI · Anthropic · Google DeepMind · Google Research · Google Blog · xAI · Meta AI · DeepSeek · Mistral · NVIDIA · AMD · OpenRouter · LangChain · Unsloth — 僅收錄官方第一手公告。</p>
   <p class="foot-md">原始資料：<a href="../md/2026-11-20.md" target="_blank" rel="noopener">2026-11-20.md</a></p>
-  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-20 07:00 (UTC+8)</p>
+  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-20 07:18 (UTC+8)</p>
 </div></footer>
 <script src="../assets/site.js" defer></script>
 </body>

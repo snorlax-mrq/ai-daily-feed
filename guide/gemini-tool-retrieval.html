@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 工具數十上百：只送名稱與描述，schema 用到才載入 · AI 每日動態檔案</title>
+<meta name="description" content="Gemini API 推出 Tool Retrieval（preview）：tools 加一個 tool_search、把工具標上 defer_loading: true，模型仍看得到每個工具的名稱與描述，參數 schema 按需載入。支援 Gemini 3.6 之後含所有 Gemini 4 模型，不另收費。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E9%96%8B%E7%99%BC%E8%80%85%E5%B7%A5%E5%85%B7" class="day-catalog">開發者工具</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E9%96%8B%E7%99%BC%E8%80%85%E5%B7%A5%E5%85%B7">開發者工具</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>工具數十上百：只送名稱與描述，schema 用到才載入</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Introducing Tool Retrieval in the Gemini API（Lucia Loher、Nora Kassner 執筆的 Gemini API 發布說明）</p>
+    <p class="g-meta">
+      <span>Google</span>·<span>2026-11-19 發布</span>·<span>2026-11-19 收錄</span>·
+      <a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemini-api-tool-retrieval/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>preview</b><span>Interactions API 中的預覽功能，還不是 GA</span></div>
+    <div class="g-stat"><b>Gemini 3.6 起</b><span>含所有 Gemini 4 模型，限 Interactions API</span></div>
+    <div class="g-stat"><b>不另收費</b><span>只多一小段固定輸入 token，其餘照標準價</span></div>
+    <div class="g-stat"><b>同一個請求</b><span>點名、補 schema、發 function_call 不換請求</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">Tool Retrieval 把工具庫拆成兩層：模型永遠看得到每個工具的名字與描述，參數 schema 則等真的要用才載入。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一個請求裡的三次交接</b> — 模型點名、API 補 schema、模型發 call</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">模型→API</span><span class="tr"><i>按名字點名 issue_refund</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">API→模型</span><span class="tr"><i>補上該工具完整 schema</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">模型→你的程式</span><span class="tr"><i>送出 function_call</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">程式→模型</span><span class="tr"><i>回 function_result</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重繪，非原文圖；原文只說前三步發生在同一個請求內，未給編號。第 04 步是原文所稱「之後就是一般的 function calling」。</p>
+    </figure>
+
+    <p class="g-p">原文的算術很直白：代理接上數十、甚至數百個工具後，每次請求都送完整參數 schema，輸入 token 與延遲一起膨脹。</p>
+    <p class="g-p">候選清單一長，工具挑選的準確度還會下降。原文把三件事並列，來源只有一個：每次重送整座工具庫。</p>
+    <p class="g-p">參數 schema 指的是工具參數那份 JSON 定義；它通常比名稱與描述長得多，被用到的頻率卻低（編輯推論）。</p>
+    <p class="g-p">開啟只要兩個動作：tools 陣列裡放一個 <code>tool_search</code>，再把想延後的工具標上 <code>defer_loading: true</code>。</p>
+    <p class="g-p">延後的工具沒有消失。模型照樣看得到每個工具的名稱與描述，知道有哪些可用，只有參數 schema 被擋在 context 外。</p>
+    <p class="g-p">模型真的要用時按名字點名，API 補進完整 schema，模型再發出 function_call——三步都在同一個請求裡完成。</p>
+    <p class="g-p">原文範例是一筆退款：50 多個延後函式裡，模型只挑中 issue_refund，帶上 order_id 與 amount 直接呼叫。</p>
+    <p class="g-p">這三步會以 tool_search_call、tool_search_result、function_call 出現在 interaction.steps。工具名字或描述寫壞，就從這裡查。</p>
+    <p class="g-p">名字與描述因此變成新的槓桿：schema 藏起來之後，模型只剩這兩樣線索可以挑工具（編輯推論）。</p>
+    <p class="g-p">不必全部延後。原文說可以把最常用的工具留在前面載入，只把長尾標成延後。</p>
+    <p class="g-p">延後是逐個工具決定的旗標，同一個請求裡可以一部分延後、一部分照舊全送。</p>
+    <p class="g-p">這也讓前綴快取接得上：延後的 schema 不佔 prompt 開頭，載入的 schema 落在對話後段，快取前綴每回合都相同。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">誰來執行搜尋：Gemini 端或你自己的註冊表</h2>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>兩種檢索位置</b> — 預設在伺服器，自建索引走客戶端</figcaption>
+      <div class="x-cmp">
+        <div><b>預設 · Gemini 端搜尋</b><p>不用建索引、不用自己託管，搜尋由 Gemini 在伺服器端跑</p><p>程式只多一個工具宣告與一個旗標</p><p>模型看到的工具得先列在請求裡</p><p>每次搜尋不另佔一趟往返</p></div>
+        <div class="after"><b>execution: client</b><p>由你的應用執行查詢，適合自有工具註冊表、embedding 索引或逐使用者權限過濾</p><p>每次搜尋多一個 round trip</p><p>工具不必事先宣告，可中途接上新整合</p></div>
+      </div>
+      <p class="x-src">本站整理，原文未給這張對照表；左欄「預設」「工具得先列在請求裡」是由原文 client 模式敘述反推的編輯推論，右欄出自原文敘述，未加入原文以外的數字。</p>
+    </figure>
+
+    <p class="g-p">伺服器端模式不用自己寫查詢參數；要定義搜尋參數的，是客戶端模式。</p>
+    <p class="g-p">沒有索引要建、要託管——原文特別點出這句：搜尋在 Gemini 端跑，你不必先做一份離線索引。</p>
+    <p class="g-p">代價寫得很清楚：客戶端檢索每次搜尋多一個往返，因為查詢在你的應用裡跑。</p>
+    <p class="g-p">換來的是彈性——工具不必事先宣告，使用者中途接上一個整合，新工具可以當場出現。</p>
+    <p class="g-p">遠端 MCP 伺服器能整包延後：對 mcp_server 標 defer_loading: true，該伺服器暴露的每個工具都按需載入，不必逐一列出。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帳怎麼算，以及原文沒給的數字</h2>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>項目</th><th>帳怎麼算</th><th>限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="項目"><b>功能本身</b></td><td data-l="帳怎麼算">不另收費</td><td data-l="限定語">輸入、輸出照該模型的標準價</td></tr>
+          <tr><td data-l="項目"><b>tool_search</b></td><td data-l="帳怎麼算">一小段固定輸入 token</td><td data-l="限定語">開了就付，與載不載入無關</td></tr>
+          <tr><td data-l="項目"><b>被載入的 schema</b></td><td data-l="帳怎麼算">從載入起算輸入，直到對話結束</td><td data-l="限定語">與一開始就宣告的工具同價</td></tr>
+          <tr><td data-l="項目"><b>沒載入的 schema</b></td><td data-l="帳怎麼算">不計</td><td data-l="限定語">省下的 token 全來自這一格</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">所以省不省，看沒載入的 schema 有沒有多過載入的。原文說大型工具庫通常是這樣，並補一句：拿你自己的流量去量。</p>
+    <p class="g-p">工具多、但你每次只用到少數幾個，才是這功能的主場（編輯推論）。</p>
+    <p class="g-p">常用工具若也一起延後，每次任務都要多一輪點名，等於白付那段固定 token（編輯推論）。</p>
+    <p class="g-p">支援範圍是 Gemini 3.6 之後的模型，含所有 Gemini 4 模型，限定在 Interactions API。</p>
+    <p class="g-p">原文的收尾建議是量自己的流量。省不省取決於你的工具庫形狀，不是取決於功能本身。</p>
+    <p class="g-p">狀態是 preview。原文沒給工具數量上限，也沒給任何 token 節省幅度——看到具體倍數，先回頭找它的基準。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>省的是 schema，不是工具。</b>名字與描述照送，模型才知道有什麼可挑。</p>
+      <p><b>常用工具別延後。</b>前載常用、延後長尾，才不會每次多繞一趟。</p>
+      <p><b>省多少要自己量。</b>原文只說大型工具庫通常划算，一個百分比都沒給。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenRouter Blog</span><a href="mcp-vs-cli-vs-skills.html">工具成本：MCP 貴在定義與結果，模型只是其次</a><span class="d">2026-11-11</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。圖解 A、B 為本站重繪／整理，原文未附機制圖。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-19 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
