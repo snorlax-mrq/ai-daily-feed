@@ -33,46 +33,46 @@
       <h2 class="co-tab">OpenAI</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">資安與漏洞</i><i class="chip chip--topic">治理與政策</i></div>
           <h3 class="item-title"><a href="https://openai.com/index/combatting-adversarial-distillation" target="_blank" rel="noopener">Combatting adversarial distillation<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">OpenAI’s layered approach to adversarial distillation combines model training, safeguards, detection, and enforcement to protect against capability extraction.</p>
-          
+          <ul class="item-points"><li>所謂「對抗式蒸餾」是指未經授權拿前沿模型的輸出去訓練另一個能力相近的模型，再以較弱的防護上線；在資安、生物等雙用途領域，這等於把原本會被拒答的能力搬到沒有對應防護的模型上。</li><li>OpenAI 的防線是組合拳：對抗式測試、模型訓練、分類器、API 層防護，加上對協同式能力抽取行為的調查；規格已對齊生物與資安領域的既有防護。</li><li>重點放在保護「受保護的推理過程」（chain-of-thought），因為推理軌跡含有最終答案沒說出的資訊，是蒸餾最值錢的訓練資料。</li><li>在 GPT‑6.2 Astra 與 Sol 上強化防護後，以強力自動紅隊做的自適應評測顯示，攻擊者還原先前推理內容的平均成功率從 GPT‑6 Astra 的 54.0% 降到 0.2%。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">企業導入案例</i><i class="chip chip--topic">模型發布</i></div>
           <h3 class="item-title"><a href="https://openai.com/business/customer-stories/hebbia" target="_blank" rel="noopener">Hebbia sees improvements in financial research with GPT-6 Astra<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Hebbia tested GPT-6 Astra for financial research. Its prerelease evaluations found gains in source coverage, citation relevance, and presentation quality.</p>
-          
+          <ul class="item-points"><li>金融研究平台 Hebbia 的 Matrix 把答案與背後文件連結起來，讓銀行家在看財報、客戶合約與管理層簡報時能追溯到出處；Hebbia 用 GPT‑6 Astra 測試「找對來源」與「做出符合 brief 的簡報」兩件事。</li><li>測試涵蓋約 2,000 份文件的資料室情境：模型要挑出支撐答案的文件或 Matrix 儲存格，再依使用者指定結構與規範產出原生的 PowerPoint 簡報。</li><li>GPT‑6 Astra 在引用正確來源類型上領先最佳替代模型 13.6 個百分點，引用的摘錄有 99.5% 與問題相關；在簡報需求達成率為 97.9%，領先 14.4 個百分點。</li><li>Hebbia 在 2026 年 8–9 月以預發布版本測試，各模型使用相同案例與評分標準，評分準則由領域專家撰寫或依原始文件稽核。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">研究與科學</i><i class="chip chip--topic">醫療健康</i></div>
           <h3 class="item-title"><a href="https://openai.com/index/introducing-medchembench" target="_blank" rel="noopener">Can AI help scientists identify promising drug candidates?<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">MedChemBench evaluates how well AI models interpret molecular structures, reason from experimental evidence, and select compounds in early drug discovery.</p>
-          
+          <ul class="item-points"><li>MedChemBench 以藥物化學研究中的推理任務為題，測試模型能否把分子結構與實驗證據連起來，解釋結果、比較化合物並預測性質。</li><li>題庫共 99 題，取自 117 篇論文與專利、涵蓋 761 個不同分子結構，分四類能力：分子結構重建、科學推理、排序與挑選、性質預測。</li><li>在 xhigh 推理設定下，GPT‑6.2 Astra 拿下 84.5% 可得分數，高於 GPT‑6 Astra 的 83.3%、GPT‑6.1 Sol 的 82.0%，明顯領先 GPT‑5.6 Sol 的 58.2%。</li><li>模型最強的是重建分子結構與解釋實驗證據，較弱的是挑選化合物與預測數值性質——而這正是藥物化學最難、需要權衡多個性質衝突的地方。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">資安與漏洞</i><i class="chip chip--topic">開發者工具</i></div>
           <h3 class="item-title"><a href="https://openai.com/business/learn/codex-security-plugin-demo" target="_blank" rel="noopener">Explore the Codex Security Plugin<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Watch a demo of the Codex Security Plugin and see the workflow in action, from getting started to reviewing the results shown in the recording.</p>
-          
+          <ul class="item-points"><li>這是 OpenAI 的產品示範頁，以錄影帶看 Codex 安全外掛的實際操作流程。</li><li>內容涵蓋兩段：一是外掛的安裝與起始設定，二是如何在錄影範例中檢視並判讀外掛回報的結果。</li><li>定位上屬於 Codex 在安全審查工作流的延伸，適合想了解資安檢查如何嵌進日常開發流程的團隊參考。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">資安與漏洞</i></div>
           <h3 class="item-title"><a href="https://openai.com/business/learn/pr-scans-demo" target="_blank" rel="noopener">See PR scans in action<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Watch a walkthrough of PR scans and see how the presenter reviews scan results in a pull request workflow.</p>
-          
+          <ul class="item-points"><li>產品示範影片，展示 PR 掃描（pull request 掃描）在實際工作流程中的樣貌。</li><li>影片中示範者在 pull request 介面裡逐項檢視掃描結果，說明如何從掃描報告走到具體的程式碼變更。</li><li>重點在把安全與品質檢查放在合併前的 PR 階段，而不是等上線後才回頭補救。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">資安與漏洞</i><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://openai.com/business/learn/daybreak-blue-onboarding-demo" target="_blank" rel="noopener">Get started with Daybreak Blue<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Watch a walkthrough of onboarding to Daybreak Blue, with a closer look at the setup experience and how to get started.</p>
-          
+          <ul class="item-points"><li>Daybreak Blue 的上手指引影片，聚焦初次設定時的實際操作體驗。</li><li>內容帶看從建立環境、完成必要設定，到可以開始使用為止的流程。</li><li>屬於 Daybreak 安全產品線的入門素材，適合在評估導入前先了解前置作業有多少。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">資安與漏洞</i><i class="chip chip--topic">企業導入案例</i></div>
           <h3 class="item-title"><a href="https://openai.com/business/learn/deploying-daybreak-red" target="_blank" rel="noopener">Deploying Daybreak Red<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Explore a reference architecture for supervised security investigations with Daybreak Red, including safety controls, setup, and monitoring.</p>
-          
+          <ul class="item-points"><li>Daybreak Red 的部署參考架構，主題是「人在監督迴圈中的安全調查」。</li><li>文件說明如何為受監督的安全調查建立隔離環境，涵蓋架構設計、安全控管、環境設定，以及如何執行與監控一次調查。</li><li>官方另提供完整指南 PDF，供要實際落地部署的團隊照著做。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -81,10 +81,10 @@
       <h2 class="co-tab">Anthropic</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">合作與收購</i><i class="chip chip--topic">治理與政策</i></div>
           <h3 class="item-title"><a href="https://www.anthropic.com/news/ipo-close" target="_blank" rel="noopener">Anthropic announces closing of initial public offering, including full exercise of underwriters’ option to purchase additional shares, and closing of concurrent private placement<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           
-          
+          <ul class="item-points"><li>Anthropic 完成 IPO 交割：共發行 11.27 億股 Class A 普通股，每股 83 美元，含承銷商超額配售選擇權 1.47 億股全數行使。</li><li>其中 Anthropic 賣出 11.03 億股、既有股東賣出 2,365 萬股；發行總毛收入約 935 億美元，Anthropic 實收約 916 億美元。</li><li>同步完成的私募由 AMD、Broadcom、Google、Micron、Microsoft、NVIDIA、TSMC Partners 認購 3.13 億股 Class N 普通股，總價約 260 億美元。</li><li>IPO 加私募合計毛收入約 1,195 億美元；Class A 普通股已於 2026 年 11 月 19 日在 Nasdaq Global Select Market 以代號「ANT」開始交易。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -93,10 +93,10 @@
       <h2 class="co-tab">Google Blog (AI)</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">企業導入案例</i><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://blog.google/company-news/outreach-and-initiatives/google-org/watch-duty-gemini-tool/" target="_blank" rel="noopener">How Watch Duty is using Gemini to get wildfire alerts out faster<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Watch Duty uses Gemini to turn noisy fire radio into text, spotting wildfire dispatches in under 30 seconds so alerts go out faster.</p>
-          
+          <ul class="item-points"><li>Google.org Fellowship 派出一組工程師與研究員，全職進駐非營利野火警報組織 Watch Duty 六個月，用超過 2 萬小時的歷史無線電錄音，訓練出能去除雜訊、把消防術語轉成可搜尋文字的 Gemini 工具。</li><li>在品質較差的 VHF 無線電音訊上，字錯率從 38% 降到 22.34%；目前每天從約 400 路訊號轉錄超過 200 小時語音，架構設計上可同時處理上萬路。</li><li>實際成效：志工對無線電轉錄工具的滿意度從 35.3% 升到 92.3%，且能在 30 秒內送出訊號，補上過去沒有自動派遣偵測的涵蓋缺口。</li><li>2026 年 7 月華盛頓 Railroad Fire 夜間起火，第一則 911 派遣就是靠這套工具在 30 秒內抓到，Watch Duty 因此首度在深夜發出會穿透勿擾模式的 Critical Alert，讓居民在火勢抵達前撤離。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -105,28 +105,28 @@
       <h2 class="co-tab">Google Developers</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
-          <h3 class="item-title"><a href="https://developers.googleblog.com/agent-anomaly-detection-safeguarding-agents-across-other-clouds/" target="_blank" rel="noopener">Agent Anomaly Detection: Safeguarding agents across other clouds<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">資安與漏洞</i></div>
+          <h3 class="item-title"><a href="https://developers.googleblog.com/agent-anomaly-detection-safeguarding-agents-across-other-clouds/" target="_blank" rel="noopener">Agent Anomaly Detection: Safeguarding agents across other clouds<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/agent-anomaly-multicloud.html">導讀</a></h3>
           <p class="item-sum">Agent Anomaly Detection now monitors ADK agents running across AWS, Azure, or on-premises by analyzing their traces and logs in your Google Cloud project. By ingesting OpenTelemetry-formatted data through the Telemetry A</p>
-          
+          <ul class="item-points"><li>Agent Anomaly Detection 進入 Private Preview，範圍從 Google Cloud 上的代理擴大到跑在 AWS Lambda、Microsoft Foundry 或地端的代理。</li><li>做法不碰代理的執行環境，只讀它的追蹤與日誌：只要這些遙測資料進到你的 Google Cloud 專案，就能偵測行為是否偏離預期邊界。</li><li>兩個必要條件：遙測要走 Telemetry API（保留識別代理的 resource attributes），並遵循 OpenTelemetry 慣例、把 prompt 與回覆記成 log events，因為偵測就是從對話紀錄讀行為。</li><li>跨雲代理需以 Workload Identity Federation 換取短效 Google 憑證（不必放服務帳號金鑰），再用 ADK 2.12.0 以上的 Google Cloud exporters 送資料；文中也展示在 AWS Lambda 與 Microsoft Foundry 代理上的實測發現。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
-          <h3 class="item-title"><a href="https://developers.googleblog.com/how-to-securely-connect-internal-cloud-run-mcp-servers-to-gemini-enterprise/" target="_blank" rel="noopener">How to securely connect internal Cloud Run MCP servers to Gemini Enterprise<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">資安與漏洞</i></div>
+          <h3 class="item-title"><a href="https://developers.googleblog.com/how-to-securely-connect-internal-cloud-run-mcp-servers-to-gemini-enterprise/" target="_blank" rel="noopener">How to securely connect internal Cloud Run MCP servers to Gemini Enterprise<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/cloud-run-mcp-gemini-enterprise.html">導讀</a></h3>
           <p class="item-sum">How to connect Gemini Enterprise privately to internal StreamableHTTP MCP servers on Cloud Run using Egress Agent Gateway, Private Service Connect, FQDN-scoped Private Cloud DNS, and dual-header OAuth 2.0 authentication.</p>
-          
+          <ul class="item-points"><li>企業用 Cloud Run 託管自建的 StreamableHTTP MCP 伺服器很合理（自動擴充、內建 TLS、整合 Cloud IAM），但從原型走到生產會撞上三個難題。</li><li>第一，內部僅限流量：啟用 internal ingress 後，Gemini Enterprise 的預設公開呼叫會在 Google 邊緣直接被回 404。</li><li>第二，雙重身分驗證：Cloud Run IAM 要確認請求來自授權的 Gemini Enterprise 實例，MCP 程式碼還要驗證登入使用者的 OAuth 2.0 access token。</li><li>第三，Shared VPC 規模下的 DNS 衝突：直接覆寫整個 *.run.app 會綁架解析、弄壞同網路其他 Cloud Run 服務，因此改用 FQDN 範圍限定的私有 DNS。</li><li>解法是 Egress Agent Gateway（Agent-to-Anywhere 模式）＋ PSC Network Attachment／Private Service Connect ＋ 限定 FQDN 的私有 DNS，並附上可執行範例與設定腳本。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
-          <h3 class="item-title"><a href="https://developers.googleblog.com/how-to-handle-user-connector-and-agent-auth-in-gemini-enterprise-with-a-custom-ui/" target="_blank" rel="noopener">How to handle user, connector, and agent auth in Gemini Enterprise with a custom UI<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">資安與漏洞</i></div>
+          <h3 class="item-title"><a href="https://developers.googleblog.com/how-to-handle-user-connector-and-agent-auth-in-gemini-enterprise-with-a-custom-ui/" target="_blank" rel="noopener">How to handle user, connector, and agent auth in Gemini Enterprise with a custom UI<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/gemini-enterprise-agent-auth.html">導讀</a></h3>
           <p class="item-sum">When building a custom enterprise UI on top of Gemini Enterprise&#39;s :streamAssist API, developers must manually implement three core authentication layers. These include authenticating users or workloads via Google Identi</p>
-          
+          <ul class="item-points"><li>用官方 Gemini Enterprise 網頁版時，身分驗證、依 ACL 過濾搜尋結果、第三方連接器的登入提示都由系統代勞；一旦自建前端直接呼叫 StreamAssist API，這三件事就落到自家前後端身上。</li><li>第一層是對 StreamAssist 的驗證：面向使用者的應用要走 Google Identity 或 Workforce Identity Federation 帶入員工身分；非個人化的後端機器人則可用 Workload Identity Federation 免金鑰驗證。</li><li>第二層是 Federated Connectors 的三腳 OAuth（3LO）：自建 UI 沒有內建 Connect 按鈕，必須自行探索連接器、檢查 Keystore 是否有有效 token、需要時跳出同意視窗、把 refresh token 存回 Keystore，並在查詢時帶上對應 data store。</li><li>第三層是自訂 ADK 代理的逐工具 OAuth：在根代理註冊時掛靜態 OAuth 設定會讓整個代理卡住，改用 GcpAuthProvider 包住受保護的子代理工具，才能只針對真正需要的工具要求授權。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
-          <h3 class="item-title"><a href="https://developers.googleblog.com/check-what-your-ai-agents-do-before-they-do-it-with-semantic-governance-policies/" target="_blank" rel="noopener">Check what your AI agents do before they do it, with Semantic governance policies<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">治理與政策</i><i class="chip chip--topic">資安與漏洞</i></div>
+          <h3 class="item-title"><a href="https://developers.googleblog.com/check-what-your-ai-agents-do-before-they-do-it-with-semantic-governance-policies/" target="_blank" rel="noopener">Check what your AI agents do before they do it, with Semantic governance policies<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/semantic-governance-policies.html">導讀</a></h3>
           <p class="item-sum">Semantic governance policies enable developers to govern AI agents by evaluating every proposed tool call inline before execution. Operating via Agent Gateway, the policy engine checks each action against user intent and</p>
-          
+          <ul class="item-points"><li>開場情境很具體：財報公布前兩天，員工要同事代理把初稿寄給自稱簽了 NDA 的投資人，還要副本到私人 Gmail；代理有讀檔與寄信權限，就照做了——權限管得住「能不能做」，管不住「這次該不該做」。</li><li>Semantic governance policies（Gemini 平台 Preview）在工具呼叫真正執行前先攔下來，同時比對兩件事：你用自然語言寫的規則（例如「財報發布前，季度結果只能寄給 @example.com」），以及使用者原始意圖。</li><li>意圖比對預設開啟，用來防劫持；政策引擎由 LLM judge 依對話脈絡、代理系統指令與工具描述做判斷，判定通過才放行。</li><li>政策執行點放在代理之外（目前支援 Agent Gateway），所有對模型的出口流量都經由它轉發，因此規則不會被系統指令說服、也不怕間接提示注入。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -135,16 +135,16 @@
       <h2 class="co-tab">AMD</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">硬體與基礎設施</i><i class="chip chip--topic">企業導入案例</i></div>
           <h3 class="item-title"><a href="https://www.amd.com/en/blogs/2026/bringing-enterprise-knowledge-to-ai-with-cohere-compass.html" target="_blank" rel="noopener">Bringing Enterprise Knowledge to AI with Cohere Compass, advanced by AMD<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           
-          
+          <ul class="item-points"><li>企業 AI 的效用取決於能否取用知識，但關鍵資訊散落在文件、簡報、技術手冊與內部倉庫，各有一套系統與權限，光有強模型不夠，還需要可靠的檢索。</li><li>Cohere Compass 是給開發者用的檢索平台，整合文件處理、索引與檢索，背後使用 Cohere 的 Embed、Rerank 與 Parse 模型，支援地端部署、角色權限與文件層級安全。</li><li>執行在 AMD 基礎設施上：Instinct GPU 加速模型推論、EPYC 處理器提供主機算力、ROCm 開源軟體負責 GPU 軟體層，讓檢索服務盡量貼近企業資料。</li><li>對需要把敏感資料留在自家環境的組織，這套組合主打資料控制權、部署彈性，以及隨文件量與應用需求擴充的空間。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">硬體與基礎設施</i><i class="chip chip--topic">開源</i></div>
           <h3 class="item-title"><a href="https://www.amd.com/en/blogs/2026/unlocking-the-amd-ryzen-ai-npu-for-unsloth-desktop.html" target="_blank" rel="noopener">AMD x Unsloth: Unlocking the World&#39;s First NPU for Unsloth Desktop<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           
-          
+          <ul class="item-points"><li>AMD 與 Unsloth 合作，讓 Unsloth Desktop 支援 AMD XDNA 2 架構 NPU，成為全球第一個支援 NPU 的同類應用，底層透過 Lemonade 與 FastFlowLM 整合。</li><li>透過 Unsloth Desktop 提供的 OpenAI 相容 API，這項整合可接入超過 100 個代理應用與工作流，文中點名 Hermes Agent、OpenClaw、Open WebUI、Cline、OMP 與 VS Code。</li><li>賣點是功耗效率：把可支援的推論工作卸載到 NPU，可延長電池續航，並把 CPU、GPU 留給其他應用（記憶體允許的前提下），適合不插電時長時間跑的低功耗常駐代理。</li><li>使用方式很簡單：在具備 XDNA 2 NPU 的 AMD 裝置安裝 Unsloth Desktop for Windows，於模型頁面用篩選器選 NPU，再下載對應模型；例如 Qwen 3.6 35B A3B 全上下文約需 28GB 可用記憶體給 NPU。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -153,10 +153,10 @@
       <h2 class="co-tab">LangChain</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
-          <h3 class="item-title"><a href="https://www.langchain.com/blog/agent-governance-observability" target="_blank" rel="noopener">Why agent governance starts with observability<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">治理與政策</i></div>
+          <h3 class="item-title"><a href="https://www.langchain.com/blog/agent-governance-observability" target="_blank" rel="noopener">Why agent governance starts with observability<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/agent-governance-observability.html">導讀</a></h3>
           <p class="item-sum">A strong AI agent governance strategy</p>
-          
+          <ul class="item-points"><li>LangChain 觀察到，真正把治理做起來的團隊都有兩個共同做法：對全公司所有代理維持中央視圖（避免昂貴或未授權的使用被漏掉），以及檢視每次執行的完整軌跡。</li><li>為什麼一定要看軌跡：代理是非確定性的，同樣的輸入可能走不同路徑、呼叫不同工具，問題往往只存在於特定任務與特定執行路徑上。</li><li>可觀測性是預防與偵測控制的地基：追蹤能驗證護欄是否真的生效，也是生產環境偵測控制的基礎；而偵測到的新問題再回饋成更嚴的護欄或新的回歸測試。</li><li>作者指出 OWASP Agentic AI Threats &amp; Mitigations、NIST AI Risk Management Framework、EU AI Act 對代理的規範只列出風險，沒有說明怎麼緩解、怎麼驗證治理有效——這正是可觀測性要補的洞。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -165,16 +165,16 @@
       <h2 class="co-tab">OpenAI Developers</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://developers.openai.com/blog/how-i-stay-in-the-flow-with-ultrafast" target="_blank" rel="noopener">How I stay in the flow with Ultrafast<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           
-          
+          <ul class="item-points"><li>GPT‑6.2 Astra 與 Sol 本週推出 Ultrafast 模式，Codex 內可達最高 4.5 倍的 token 生成速度；Sol Ultrafast 已開放給 200 美元的 Pro 方案，API 促銷價為標準價 3 倍（原為 6 倍）。</li><li>作者用它找回過去在 DevTools 調 CSS 的心流：先求有畫面，再一則一則給短回饋、即時看結果，而不是一次丟大任務、燒一堆推理 token 賭模型猜中心中所想。</li><li>實作要點：開 hot module reload 的 dev server、把網站開在內建瀏覽器、一次只給一個小指令、用標註直接指位置、搭配聽寫排隊多筆任務、先從 Light／Low 推理開始。</li><li>作者也提醒極限：若時間主要花在等建置、測試或編譯，整體加速有限——實測 Android 計時器任務在三種速度模式下分別為 16.7、16.0、15.7 秒，因為 18 個測試就吃掉約 13 秒。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
-          <h3 class="item-title"><a href="https://developers.openai.com/blog/time-awareness-and-async-input-for-personal-agents" target="_blank" rel="noopener">Time awareness and async input for personal agents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">開發者工具</i></div>
+          <h3 class="item-title"><a href="https://developers.openai.com/blog/time-awareness-and-async-input-for-personal-agents" target="_blank" rel="noopener">Time awareness and async input for personal agents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/time-awareness-async-input.html">導讀</a></h3>
           
-          
+          <ul class="item-points"><li>情境是典型痛點：15 分鐘後要見客戶，請代理整理簡報、留 3 分鐘閱讀；代理發現會議目的（技術評估或談價）沒說清楚，需要發問，但不能因此停擺。</li><li>Agents API 新增時間感知（experimental.time_awareness），會定期把目前時間提醒給模型，讓它知道剩 12 分鐘時該收斂成「確認最強發現＋開始寫」，時間充裕才繼續深挖。</li><li>非同步函式工具（async: true）讓代理發出 request_user_input_async 後繼續作業；應用端在截止前把使用者回覆以 tool_result 送回，沒回覆就回 status: no_answer。</li><li>文章同時給出 Responses API 手寫迴圈的做法：每次請求前補一行 developer 訊息寫入當前 UTC 時間，並用應用層計時器確保期限一到就交付已完成的簡報。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -188,7 +188,7 @@
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">資料來源：OpenAI · Anthropic · Google DeepMind · Google Research · Google Blog · xAI · Meta AI · DeepSeek · Mistral · NVIDIA · AMD · OpenRouter · LangChain · Unsloth — 僅收錄官方第一手公告。</p>
   <p class="foot-md">原始資料：<a href="../md/2026-11-21.md" target="_blank" rel="noopener">2026-11-21.md</a></p>
-  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-21 07:00 (UTC+8)</p>
+  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-21 07:14 (UTC+8)</p>
 </div></footer>
 <script src="../assets/site.js" defer></script>
 </body>

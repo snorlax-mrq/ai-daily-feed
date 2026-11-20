@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 雙跳私有路徑：內部 MCP 安全接進 Gemini Enterprise · AI 每日動態檔案</title>
+<meta name="description" content="把內部 Cloud Run 的 MCP 伺服器接進 Gemini Enterprise：internal ingress 造成 HTTP 404、沒設私有 DNS 造成 HTTP 502，解法是 Egress Agent Gateway 加 PSC Network Attachment 與 FQDN 限定的私有 DNS。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>雙跳私有路徑：內部 MCP 安全接進 Gemini Enterprise</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：How to securely connect internal Cloud Run MCP servers to Gemini Enterprise（Google Developers Blog 實作教學；含可執行範例與部署腳本）</p>
+    <p class="g-meta">
+      <span>Google Developers</span>·<span>2026-11-20 發布</span>·<span>2026-11-21 收錄</span>·
+      <a href="https://developers.googleblog.com/how-to-securely-connect-internal-cloud-run-mcp-servers-to-gemini-enterprise/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>HTTP 404</b><span>開 internal ingress 後，Gemini Enterprise 的預設公開呼叫在 Google 邊緣被拒</span></div>
+    <div class="g-stat"><b>HTTP 502</b><span>沒設私有 DNS，.run.app 解析到公網 IP，經 Network Attachment 連不出去而逾時</span></div>
+    <div class="g-stat"><b>兩跳</b><span>PSC Network Attachment 進 VPC，再由 PGA（子網 Private Google Access，199.36.153.8/30）或 PSC（240.0.0.10）進 Cloud Run</span></div>
+    <div class="g-stat"><b>2 個標頭</b><span>X-Serverless-Authorization 驗服務、Authorization Bearer 驗使用者，各驗一次</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">內部 MCP 要擋掉公網、要驗兩個身分、又不能動到共用 VPC 的 DNS；原文把三個症狀與三個對應機制一次講完。</p>
+
+    <h2 class="g-h2">原型進生產，三個看得到的錯誤</h2>
+    <p class="g-p">原文先講為什麼放 Cloud Run：StreamableHTTP 這類輕量 MCP 伺服器在 Cloud Run 上自動擴充、TLS 憑證由平台處理、與 Cloud IAM 原生整合。</p>
+    <p class="g-p">從原型搬進生產，撞到的是三個具體症狀，不是抽象的資安顧慮。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>難題</th><th>症狀（原文限定語）</th><th>對應機制</th></tr></thead>
+        <tbody>
+          <tr><td data-l="難題"><b>只收私有網路流量</b></td><td data-l="症狀">開 internal ingress 後，Gemini Enterprise 的預設公開呼叫在 Google 邊緣被拒，回 HTTP 404</td><td data-l="對應機制">Egress Agent Gateway＋PSC Network Attachment</td></tr>
+          <tr><td data-l="難題"><b>服務與使用者雙重驗證</b></td><td data-l="症狀">每次工具呼叫要有兩個獨立檢查：請求來自我授權的實例、以及簽入使用者的 OAuth 2.0 token</td><td data-l="對應機制">Cloud Run IAM＋應用層 OAuth 2.0 中介層</td></tr>
+          <tr><td data-l="難題"><b>共用 VPC 不能撞 DNS</b></td><td data-l="症狀">覆寫整個 *.run.app 網域會劫持 DNS，讓同一網路其他 Cloud Run 服務路由壞掉</td><td data-l="對應機制">FQDN 限定的私有 Cloud DNS 區</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">第三列是大企業才有的痛：原文說常見規模是數百個 Cloud Run 服務共用一個 Hub VPC，為一支 MCP 覆寫整個網域會連累別人。</p>
+    <p class="g-p">（編輯觀點：404 與 502 就是診斷線——一個是請求到不了服務、在 Google 邊緣被拒，一個是封包被解析到公網位址、在 VPC 內出不去而逾時。）</p>
+
+    <h2 class="g-h2">兩跳，加一次限定範圍的 DNS</h2>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/cloud-run-mcp-gemini-enterprise/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/cloud-run-mcp-gemini-enterprise/01.webp" alt="原文架構圖：Prompt 從企業使用者進入 Google 代管租戶的 Gemini Enterprise，經 OIDC 走 Egress Agent Gateway；Gateway 經 PSC Egress 進客戶 VPC 的 PSC Attachment，同時對 FQDN 限定的私有 DNS 做 DNS peering，再以 199.36.153.8/30 抵達 internal ingress 的 Private Cloud Run。" width="1200" height="491" loading="lazy" decoding="async"></a>
+      <figcaption>一張圖看完兩跳與一次查詢：最左是企業使用者，接著是 Google 代管租戶；中間是客戶 VPC（PSC Attachment 與 FQDN 限定的私有區），右側是只收內部流量的 Cloud Run。圖上 1、2、4、6 為資料平面路徑；3 是 DNS peering、5 是 PGA VIP 目標（虛線）。<span class="g-fig-src">圖／Google Developers，<a href="https://developers.googleblog.com/how-to-securely-connect-internal-cloud-run-mcp-servers-to-gemini-enterprise/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">Gemini Enterprise 跑在 Google 代管的租戶專案，要接內部 Cloud Run，得過兩跳網路與一次限定範圍的 DNS 查詢。</p>
+    <p class="g-p">這個前提決定了架構形狀：代管租戶專案與你的 VPC 之間沒有天然的網路交集，所以只能靠兩跳把封包送進來。</p>
+    <p class="g-p">第一跳進你的 VPC：區域性的 Egress Agent Gateway 以 Agent-to-Anywhere 模式，接上區域子網（us-central1 或 europe-west1）的 PSC Network Attachment。</p>
+    <p class="g-p">這等於在 VPC 內放一個受管網路介面，沒有公開 IP，也不必開任何入站防火牆規則。</p>
+    <p class="g-p">第二跳從 VPC 到無伺服器 Cloud Run：封包要私下抵達 Google 的 serverless 前端，Cloud Run 才認得出來源 VPC、符合 internal ingress。</p>
+    <p class="g-p">這一跳是分支：標準 VPC 走 Option A 子網 Private Google Access（199.36.153.8/30），不新增任何 VPC 端點，原文標為建議預設。</p>
+    <p class="g-p">分支另一邊是 Option B 全域 PSC 端點（240.0.0.10），指向 Google 內建的 all-apis 組合，Cloud Run 端不必掛負載平衡器或 service attachment。</p>
+    <p class="g-p">差別在路由：Option B 由 Google Cloud 自動注入一條 /32 內部路由，連 0.0.0.0/0 預設路由被刪掉的封閉 VPC 也通。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/cloud-run-mcp-gemini-enterprise/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/cloud-run-mcp-gemini-enterprise/02.webp" alt="原文對照表：Option A 子網 Private Google Access 用 199.36.153.8/30、不需額外 VPC 資源、走標準 0.0.0.0/0 路由，標為建議預設；Option B 全域 PSC 端點用 240.0.0.10，需一組全域內部 IP 與轉送規則，採自動注入的 240.0.0.10/32 專用路由，用於 0.0.0.0/0 被刪除或覆寫的封閉 VPC。" width="1200" height="307" loading="lazy" decoding="async"></a>
+      <figcaption>兩個分支的取捨寫在同一張表：Option A 零額外資源、靠預設路由；Option B 多一組全域 IP 與轉送規則，換來封閉 VPC 也通。<span class="g-fig-src">圖／Google Developers，<a href="https://developers.googleblog.com/how-to-securely-connect-internal-cloud-run-mcp-servers-to-gemini-enterprise/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">DNS 是第三件事，也是 HTTP 502 的來源：Gateway 收到工具呼叫後，先把主機名解析一次，再把封包丟進 VPC。</p>
+    <p class="g-p">沒有私有 DNS，.run.app 解析到公網 IP，而 PSC Network Attachment 不出公網，結果就是逾時。</p>
+    <p class="g-p">解法不是建 *.run.app 萬用字元區，而是只為這支 MCP 的完整 FQDN 建私有區，並且只把該網域 peering 給 Agent Gateway。</p>
+    <p class="g-p">Cloud DNS 採最長後綴比對，共用 VPC 裡其他 Cloud Run 服務照原樣解析；Gateway 連私有 VIP 時仍把服務主機名留在 TLS SNI 與 HTTP Host，Cloud Run 才路由到正確容器。</p>
+
+    <h2 class="g-h2">兩個標頭，兩層身分</h2>
+    <p class="g-p">身分拆成兩層，關鍵是兩個標頭各走各的、互不覆蓋。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>層</th><th>標頭</th><th>內容</th><th>誰驗、之後如何</th></tr></thead>
+        <tbody>
+          <tr><td data-l="層"><b>基礎設施</b></td><td data-l="標頭">X-Serverless-Authorization</td><td data-l="內容">專案 Gemini Enterprise 服務代理的 Google 簽發 OIDC ID token</td><td data-l="誰驗">Cloud Run IAM 在 serverless 邊緣對 Invoker 角色驗證，進容器前剝掉此標頭</td></tr>
+          <tr><td data-l="層"><b>應用</b></td><td data-l="標頭">Authorization: Bearer</td><td data-l="內容">簽入使用者本人的 OAuth 2.0 access token，原樣不動</td><td data-l="誰驗">MCP 伺服器內的中介層驗身分、執行逐使用者權限</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">原文附的 Python 中介層只做兩件事：/health 直接放行；其餘請求在 REQUIRE_OAUTH 開啟時，缺 token 或 token 無效一律回 401。</p>
+    <p class="g-p">兩種 401 的訊息不同：一種講 token 無效或過期，一種講缺 Bearer 標頭，除錯時先分清楚是哪一種。</p>
+    <p class="g-p">這個切法把「請求是不是我授權的實例發的」與「是哪個人發的」分開問，前者在邊緣解決，後者留給應用自己判。</p>
+
+    <h2 class="g-h2">五步接線與驗收</h2>
+    <p class="g-p">原文的 repo 有可跑的 StreamableHTTP MCP 伺服器、Dockerfile 與設定腳本，部署拆成五步。</p>
+    <p class="g-p">前三步是基礎設施：Cloud Run 開 internal-only 與 IAM 驗證，Invoker 只給 Gemini Enterprise 服務代理。</p>
+    <p class="g-p">接著建 VPC、PSC Network Attachment 與 Egress Agent Gateway，並套用 outbound 授權政策；再建 FQDN 限定的私有區、對 Gateway 設 DNS peering。</p>
+    <p class="g-p">後兩步是接線與驗收：主控台 Security Configuration 綁定 Gateway，註冊 Custom MCP Server 資料存放區（端點加 OAuth 2.0 用戶端憑證），開啟 egress 與 Actions 模式。</p>
+    <p class="g-p">驗收在 Cloud Logging：工具初始化、探索、執行三種呼叫都要看到經 Egress Agent Gateway 私有送達，兩道身分檢查都通過。</p>
+    <p class="g-p">原文的參考實作在公開 repo：含本地冒煙測試、涵蓋 Option A／B 的兩套路由腳本（含 Shared VPC IAM 綁定與 Cloud Logging 驗證），可先在自己的專案跑一遍再上生產。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>症狀就是診斷。</b>404 是 ingress 擋在邊緣，502 是 DNS 把封包送去公網。</p>
+      <p><b>DNS 只改一個名字。</b>萬用字元區在共用 VPC 是別人的事故。</p>
+      <p><b>兩道身分都不能省。</b>IAM 驗服務、OAuth 驗人（範例可用 REQUIRE_OAUTH 關掉）。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="semantic-governance-policies.html">動作前攔截：把越界判定搬出代理之外</a><span class="d">2026-11-20</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="agent-governance-observability.html">代理治理：先有觀測，護欄才算數</a><span class="d">2026-11-20</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="gemini-enterprise-agent-auth.html">自建前端接 StreamAssist：三層驗證自己扛</a><span class="d">2026-11-20</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；位址、錯誤碼與限定語出自原文。兩張架構／選項圖為原文圖（Google Developers），三個難題與兩個標頭的對照表為編輯整理（本站重繪）。原文未提供延遲或吞吐數據。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-21 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

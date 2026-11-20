@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 自建前端接 StreamAssist：三層驗證自己扛 · AI 每日動態檔案</title>
+<meta name="description" content="自建 Customer UI 直接呼叫 Gemini Enterprise StreamAssist API 時，官方 Web app 代勞的三層驗證變成自己的責任：對 StreamAssist 的身分（Google Identity／Workforce／Workload Identity Federation）、Federated Connectors 的 3LO 與 Keystore、自訂 ADK 代理用 GcpAuthProvider 逐工具 OAuth。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>自建前端接 StreamAssist：三層驗證自己扛</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">Google Developers 官方部落格技術教學，逐層拆解自建 Customer UI 呼叫 StreamAssist API 的身分驗證——原文附架構圖、逐步流程與 GitHub 可執行程式碼</p>
+    <p class="g-meta">
+      <span>Google Developers</span>·<span>2026-11-20 發布</span>·<span>2026-11-21 收錄</span>·
+      <a href="https://developers.googleblog.com/how-to-handle-user-connector-and-agent-auth-in-gemini-enterprise-with-a-custom-ui/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>3 層驗證</b><span>對 StreamAssist 的身分、Federated Connectors 的 3LO、自訂 ADK 代理的逐工具 OAuth</span></div>
+    <div class="g-stat"><b>3 種免金鑰模式</b><span>1A Google Identity／1B Workforce Identity Federation／1C Workload Identity Federation；皆無 Service Account JSON</span></div>
+    <div class="g-stat"><b>11 步與 19 步</b><span>連接器 3LO 是 11 步（原文 Figure 3）；ADK 逐工具 3LO 是 19 步（Figure 4）</span></div>
+    <div class="g-stat"><b>Discovery Engine User</b><span>每個呼叫 StreamAssist 的主體都要在此 GCP 專案具備；人類模式另需 Admin Console 指派授權</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">官方 Web app 在背後代勞的三件事，一旦換成自建前端直接打 StreamAssist API，就變成 Customer UI 與 Customer BE 的工作。</p>
+
+    <h2 class="g-h2">三層驗證：官方代勞的，現在是你的</h2>
+    <p class="g-p">用官方 Web app 時，IAM 全在背後：員工用 Google Identity 或 Workforce Identity Federation 登入，搜尋結果自動套用個人 ACL。</p>
+    <p class="g-p">Federated Connectors 與自訂代理的第三方登入提示，也自己跳在聊天介面裡。</p>
+    <p class="g-p">但只要自建介面嵌進內部入口網站、內網或業務系統，由 Customer BE 直接呼叫 StreamAssist，三條流程就落到你身上。</p>
+    <p class="g-p">原文把它們拆成三層，逐層給架構、元件流程與可執行的程式碼。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>層</th><th>憑證主體</th><th>原文機制與限定</th></tr></thead>
+        <tbody>
+          <tr><td data-l="層"><b>1 對 StreamAssist 驗證</b></td><td data-l="憑證主體">員工（1A／1B）或工作負載（1C）</td><td data-l="原文">Google Identity、Workforce Identity Federation、Workload Identity Federation 三種免金鑰模式</td></tr>
+          <tr><td data-l="層"><b>2 Federated Connectors</b></td><td data-l="憑證主體">每位員工各自的 3LO 授權</td><td data-l="原文">BE 發起查詢（Step 2），由 Gemini Enterprise 伺服器查 Keystore 有無有效 token（Step 3），沒有才跳 3LO；refresh token 存回 Keystore，BE 不須自己存</td></tr>
+          <tr><td data-l="層"><b>3 ADK 代理的逐工具 OAuth</b></td><td data-l="憑證主體">代理的 Agent Identity</td><td data-l="原文">受保護工具包 GcpAuthProvider（背後是 Token Vault），只在呼叫該工具時才跳 3LO</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/gemini-enterprise-agent-auth/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/gemini-enterprise-agent-auth/01.webp" alt="原文端到端驗證架構圖：左側 Custom Web UI 以 Google 或 Entra ID 登入，經 Token Exchange（Google OAuth／Workforce STS／Workload STS）取得 token 後呼叫 StreamAssist；中間 Gemini Enterprise 驗證後處理 grounding 與 Keystore；右側 Vertex AI Agent Engine 內的 Root Router Agent 與 Specialist Subagent，以 GcpAuthProvider 存取 3P Enterprise SaaS。" width="1200" height="494" loading="lazy" decoding="async"></a>
+      <figcaption>三層在同一張圖上：左邊是入口換 token，中間 Gemini Enterprise 管 grounding 與 Keystore，右邊代理走 Token Vault 的逐工具 3LO。三條路徑並存，誰也不取代誰。<span class="g-fig-src">圖／Google Developers，<a href="https://developers.googleblog.com/how-to-handle-user-connector-and-agent-auth-in-gemini-enterprise-with-a-custom-ui/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+    <p class="g-p">三層不是並列選項。第 2、3 層都踩在第 1 層上：先有員工身分，連接器與代理的授權才有主體。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">打 StreamAssist：三種免金鑰模式</h2>
+    <p class="g-p">1A 最短：Customer UI 用 Google Identity Services 帶 GCP scope 讓員工登入，Google 回傳該員工的 access token。</p>
+    <p class="g-p">1A 有前提：員工用 Google Workspace 或 Cloud Identity 登入，且引擎本身設成 Google Identity。</p>
+    <p class="g-p">Customer BE 把這顆 Bearer token 直接送給 StreamAssist，中間沒有額外跳轉。</p>
+    <p class="g-p">1B 給用 Microsoft Entra ID 或 Okta 登入的企業：把自建 app 的 Client ID 註冊到既有的 Workforce Pool OIDC Provider。</p>
+    <p class="g-p">BE 再拿 IdP 發的 OIDC token 到 Google STS 換短效 access token。</p>
+    <p class="g-p">換回來的身分代表那名 Workforce Pool 使用者，員工的群組權限與文件 ACL 照樣生效。</p>
+    <p class="g-p">1C 是機器身分：後端服務、Slack／Teams webhook 或非個人化的知識 bot，走專案的 Workload Identity Pool，硬碟上零金鑰。</p>
+    <p class="g-p">代價寫得清楚：Workload Identity Federation（模式 1C）認證的是機器，Gemini Enterprise 會把每個請求看成同一個工作負載身分。</p>
+    <p class="g-p">要逐使用者的文件 ACL、個人化的 3LO 連接器或受限的自訂代理，就只能走 1A 或 1B。</p>
+    <p class="g-p">三種模式都逃不掉前置條件：呼叫端要在此 GCP 專案有 Discovery Engine User 角色。</p>
+    <p class="g-p">人類模式還多一項：每位使用者（或 Workforce Pool 群組）要在 Admin Console 有啟用中的 Gemini Enterprise 授權。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">連接器與 ADK：差在授權粒度</h2>
+    <p class="g-p">原生 Federated Connectors 查的是即時第三方 API，因此逐使用者授權，走 3LO。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/gemini-enterprise-agent-auth/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/gemini-enterprise-agent-auth/02.webp" alt="原文連接器 3LO 流程圖：Customer UI 與 Customer BE 來回呼叫 GE Server；GE Server 存取 Keystore 與使用者對應表；3LO 同意視窗由 3P Auth Server 開啟，經 GE FE Server 的 oauth-redirect 以 postMessage 交回 Customer UI；流程分為 1–4 查 Keystore、5–7 同意與轉址、8–11 存 token 並確認。" width="1200" height="686" loading="lazy" decoding="async"></a>
+      <figcaption>連接器授權是「先查再問」：1–4 先查 Keystore，5–7 才開同意視窗並把回呼交給前端，8–11 把 refresh token 存回 Keystore。<span class="g-fig-src">圖／Google Developers，<a href="https://developers.googleblog.com/how-to-handle-user-connector-and-agent-auth-in-gemini-enterprise-with-a-custom-ui/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">3LO 的作用是收窄範圍：連接器只取該員工有權限的 Drive 檔案、SharePoint 網站、Jira 問題與 ServiceNow 事件。</p>
+    <p class="g-p">11 步分三個階段：查 Keystore、跳 3LO 同意視窗、把 refresh token 存回 Keystore。</p>
+    <p class="g-p">Customer BE 不須自己儲存第三方憑證（原文：never has to store third-party credentials in its own database）；回呼仍會經過 BE 轉交。</p>
+    <p class="g-p">自建網域有個坑。連接器固定回呼到 Google 管理的 /oauth-redirect，該頁預設只對官方 Web app 的 origin 發 postMessage。</p>
+    <p class="g-p">要讓第 7 步把回呼交回你的介面，得跟 Gemini Enterprise 團隊開啟自訂 origin 旗標。</p>
+    <p class="g-p">ADK 代理的麻煩在根層。靜態 OAuth 掛在根代理註冊上，第一回合還沒進到你的程式就被整包擋住。</p>
+    <p class="g-p">原文的例子：同時接 Google Drive 與 Microsoft SharePoint 的助理，使用者連問一句一般政策，也得先把所有登入走完。</p>
+    <p class="g-p">第二個問題是綁死官方介面：根層授權為官方 Web UI 而設計，不會透過 StreamAssist API 回傳工具層級的授權提示。</p>
+    <p class="g-p">解法是下放到工具：受保護工具用 AuthenticatedFunctionTool 包 GcpAuthProvider，指向 GCP Auth Manager 的 Auth Provider 資源。</p>
+    <p class="g-p">設定要回填到第三方 app：在 Cloud Console 為每個第三方 OAuth app 建一個 3LO Auth Provider。</p>
+    <p class="g-p">Default Continue URI 設成 Customer UI 的 /validateUserId，並把 GCP Auth Manager 的 /oauthcallback 加進 Entra ID 的 Redirect URI。</p>
+    <p class="g-p">代理部署到 Vertex AI Agent Engine 時開 Agent Identity，取得內建的 SPIFFE 身分，再授予 Agent Identity Service Agent 角色，才能從 Token Vault 取 token。</p>
+    <p class="g-p">19 步的差別在結尾：首次呼叫才跳 3LO，token 進了 Token Vault，之後同一個 session 單回合跑完、不再彈窗。</p>
+    <p class="g-p">原文把三層、可互動的測試介面、CLI 與 curl 指令都收進一個 GitHub repo：gemini-enterprise-custom-ui-auth，三個目錄對應三層。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>自建介面等於接手 IAM。</b>三層驗證要自己接線，不只是換個前端。</p>
+      <p><b>別在根層掛靜態 OAuth。</b>它會在第一回合前鎖死整個代理。</p>
+      <p><b>憑證留在 Keystore／Token Vault。</b>後端不必自建憑證庫。</p>
+    </div>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一主題的其他館藏</h2>
+    <div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="semantic-governance-policies.html">動作前攔截：把越界判定搬出代理之外</a><span class="d">2026-11-20</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="cloud-run-mcp-gemini-enterprise.html">雙跳私有路徑：內部 MCP 安全接進 Gemini Enterprise</a><span class="d">2026-11-20</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="agent-governance-observability.html">代理治理：先有觀測，護欄才算數</a><span class="d">2026-11-20</span></div>
+    </div>
+  </section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；三層架構、11 步與 19 步流程、模式編號均出自原文，未經第三方驗證。兩張圖為原文圖，自託管呈現。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-21 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

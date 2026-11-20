@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 代理的時間感：等到回覆是加分，準時交件是底線 · AI 每日動態檔案</title>
+<meta name="description" content="OpenAI 在 Agents API 加入時間感與非同步工具：示範 4:00 下指令、4:10 關閉未答問題、4:12 交件，讓代理邊等回覆邊寫簡報，並附 Responses API 手寫迴圈做法。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>代理的時間感：等到回覆是加分，準時交件是底線</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Time awareness and async input for personal agents（OpenAI 開發者部落格實作教學；用一場 15 分鐘後的會議簡報任務，示範 Agents API 的時間感與非同步提問，另附 Responses API 手寫迴圈的等價寫法）</p>
+    <p class="g-meta">
+      <span>OpenAI Developers</span>·<span>2026-11-20 發布</span>·<span>2026-11-21 收錄</span>·
+      <a href="https://developers.openai.com/blog/time-awareness-and-async-input-for-personal-agents" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>12 分鐘</b><span>會前 15 分鐘扣掉 3 分鐘閱讀後，代理可用來準備簡報的時間</span></div>
+    <div class="g-stat"><b>4:10</b><span>示範中關閉未答問題的時刻，比 4:12 的交件時間早兩分鐘</span></div>
+    <div class="g-stat"><b>true</b><span>experimental.time_awareness 的設定值；async 另外開在提問工具上</span></div>
+    <div class="g-stat"><b>no_answer</b><span>截止仍未回覆時回傳的狀態，讓代理照樣收斂成簡報</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">個人代理缺的不是更快的模型，而是知道現在幾點、還剩多少時間、以及問不到答案時怎麼收尾。</p>
+
+    <p class="g-p">原文的起點是一場 15 分鐘後的會議：先留 3 分鐘閱讀，代理實際只有 12 分鐘準備簡報。</p>
+    <p class="g-p">它會發現使用者沒說這場是技術評估還是報價討論，而這個差別決定要查什麼、簡報該寫什麼，於是決定先問。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一場會議簡報的交接</b> — 使用者、代理、應用程式誰把球傳給誰（本站重繪）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">使用者 → 代理</span><span class="tr"><i>任務自帶期限：會議 4:15，簡報 4:12 前送到</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">代理 ↔ 搜尋</span><span class="tr"><i>時間感定期提醒現在幾點，決定繼續查或開始寫</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">代理 → 應用程式</span><span class="tr"><i>request_user_input_async 提問，工具標記 async</i></span></span></li>
+        <li class="side"><span class="st">03b</span><span class="body"><span class="hop">旁支：應用程式 → 使用者</span><span class="tr"><i>顯示問題與建議選項；代理不等，研究照跑</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">使用者 → 應用程式</span><span class="tr"><i>4:10 前回覆，逾時則以 no_answer 結案</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">應用程式 → 代理</span><span class="tr"><i>tool_result 用 turn_id 與 call_id 對回同一個問題</i></span></span></li>
+        <li><span class="st">06</span><span class="body"><span class="hop">代理 → 應用程式</span><span class="tr"><i>turn 完成後取 phase 為 final_answer 的訊息</i></span></span></li>
+        <li><span class="st">07</span><span class="body"><span class="hop">應用程式 → 使用者</span><span class="tr"><i>4:12 交件，留下 3 分鐘閱讀</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重繪；原文以文字加示意插圖敘述，未給此編號順序。03b 是旁支，不佔主線。</p>
+    </figure>
+
+    <p class="g-p">期限也是提示詞的一部分：會議時間與交件時間都寫進使用者訊息，代理才有依據判斷還剩多少餘裕。</p>
+    <p class="g-p">期限愈近，原文說模型可以優先檢查最強的發現並開始寫，而不是再開一條研究線；期限給得寬，它就知道可以查得更深。</p>
+    <p class="g-p">時間感不是塞一個時鐘給模型就結束：應用程式要把「再 15 分鐘」換成絕對時間戳，模型與程式才共用同一份時間資料。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">四個環節，與最容易漏的接收端</h2>
+    <p class="g-p">要跑起這條流程，原文只動三個地方：開時間感、把內建搜尋設為即時模式、把提問做成非同步工具；第四個環節是回傳結果。</p>
+    <p class="g-p">真正會漏的是提問的接收端：非同步問題不會出現在 required_actions，那份清單只描述阻塞動作。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>環節</th><th>原文設定／事件</th><th>限定語與陷阱</th></tr></thead>
+        <tbody>
+          <tr><td data-l="環節"><b>時間感</b></td><td data-l="原文設定">experimental.time_awareness 設 true</td><td data-l="限定語">模型會定期收到當前時間提醒，可據此調整工作節奏</td></tr>
+          <tr><td data-l="環節"><b>提問工具</b></td><td data-l="原文設定">function tool request_user_input_async，async 設 true</td><td data-l="限定語">代理繼續工作，應用程式同時等使用者回覆</td></tr>
+          <tr><td data-l="環節"><b>事件入口</b></td><td data-l="原文設定">agent.session.turn.item.done 裡的 function_call</td><td data-l="限定語">問題與選項在 item.arguments；等 required_actions 會漏掉非同步問題</td></tr>
+          <tr><td data-l="環節"><b>回傳結果</b></td><td data-l="原文設定">answered 帶 answer，或 no_answer</td><td data-l="限定語">截止時同一個 call_id 仍待答，就回 no_answer；一個待答呼叫只回一次</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">提問工具還能帶 choices：介面可把回覆做成建議選項，替使用者省下打字的時間。</p>
+    <p class="g-p">示範中的應用程式在 4:10 關閉未答問題，比交件早兩分鐘；代理若提早跑完，介面上也要把待答問題關掉。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">兩條路：平台送時間，或自己送</h2>
+    <p class="g-p">同樣的行為，原文給了兩條實作路徑。用 Agents API，時間提醒由平台送；自己寫 Responses API 迴圈，就得自己送。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>時間提醒從哪裡來</b> — 兩條互斥的實作路徑（本站整理）</figcaption>
+      <div class="x-cmp">
+        <div><b>Agents API</b><p>experimental.time_awareness 設 true，模型就<strong>定期收到當前時間提醒</strong>，不必自己拼訊息。</p></div>
+        <div class="after"><b>Responses API 手寫迴圈</b><p>每次請求前，把當前 UTC 時間以 developer message <b>接在使用者輸入或工具結果之後</b>；instructions 與 tools 每次都送。</p></div>
+      </div>
+      <p class="x-src">原文未把兩者排成先後或優劣，此處並列為替代路徑。</p>
+    </figure>
+
+    <p class="g-p">手寫迴圈同樣在 tools 定義裡替提問工具標上 async，非同步行為才成立。</p>
+    <p class="g-p">手寫迴圈有兩個約定：請求保持序列，讓每一輪接續最新狀態；工具結果屬於前一輪的問題時，仍用最新完成的 response id 當 previous_response_id。</p>
+    <p class="g-p">計時器要罩住整個迴圈，連請求與串流都算在內；期限先到，就交最新完整版，或明說沒有已驗證的發現。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">交付才是驗收點</h2>
+    <p class="g-p">交付不是等 turn 自己結束：完成就送，並且至少留 3 分鐘給使用者讀。取回時找 role 為 assistant、phase 為 final_answer 的已完成訊息。</p>
+    <p class="g-p">串流提早斷掉不必重跑，列出 session 的 turns 就能確認已存的狀態，再取回完成的內容。</p>
+    <p class="g-p">原文也把責任劃清楚：收集使用者回覆是應用程式的責任，代理只負責拿到結果後繼續推進。</p>
+    <p class="g-p">清理也在流程裡：手寫迴圈交付後要刪掉已儲存的 response；Agents API 版本收尾時取消進行中的 session，再刪掉 session 與 agent。</p>
+    <p class="g-p">原文最後把這個模式定位成產品級慣例：ChatGPT 與其他 agent harness 也用同一套做法，在問清楚之前繼續做事。</p>
+    <p class="g-p">（編輯觀點：時間感解掉的是節奏，不是正確性。期限一到照樣交件，等於把取捨壓力交回提示詞與產品設計。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>時間感是輸入，不是自律。</b>模型不會自己看錶，得靠平台或呼叫端餵時間。</p>
+      <p><b>非同步提問要自己接。</b>事件流裡的 function_call 才是入口。</p>
+      <p><b>問不到也要能交件。</b>截止回 no_answer，代理才會收斂成一份可用簡報。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="performance-factory.html">效能工廠：任務帶狀態接力，人守合併與取捨</a><span class="d">2026-11-20</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="langsmith-tool-gateway.html">代理工具治理：一個 URL 收下憑證、身分與政策</a><span class="d">2026-11-20</span></div>
+      <div class="g-relrow"><span class="s">Google Blog</span><a href="gemini-computer-use-mac.html">Mac 代操：螢幕留給你，確認鍵留在你手上</a><span class="d">2026-11-20</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。正文兩張圖解均為本站重繪，非原文圖。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-21 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
