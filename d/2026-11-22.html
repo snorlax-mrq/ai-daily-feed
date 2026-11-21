@@ -33,10 +33,10 @@
       <h2 class="co-tab">Google Research</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
-          <h3 class="item-title"><a href="https://research.google/blog/how-google-duplex-evolved-to-also-call-businesses-for-you-in-gemini/" target="_blank" rel="noopener">How Google Duplex evolved to also call businesses for you in Gemini<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">產品與功能</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://research.google/blog/how-google-duplex-evolved-to-also-call-businesses-for-you-in-gemini/" target="_blank" rel="noopener">How Google Duplex evolved to also call businesses for you in Gemini<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/duplex-agent-calls.html">導讀</a></h3>
           <p class="item-sum">Generative AI</p>
-          
+          <ul class="item-points"><li>Google 本週把 2018 年發表的電話代打技術 Duplex 正式放進 Gemini App 的 Tasks：使用者用自然語言描述需求，代理就代為打電話給商家訂位、預約，處理現實生活的雜事。</li><li>技術架構歷經三代：早期是針對餐廳訂位等狹窄領域、用匿名通話資料訓練的客製 RNN；接著改成生成式模型搭配確定性狀態追蹤與政策護欄的混合堆疊；現在整套統一用 Gemini 做多模態理解、規劃與對話生成。</li><li>第三代拿掉了「固定垂直領域」的限制，改用自由文字任務描述來提示系統，因此能處理多條件需求（例如配合行事曆安排汽車保養），遇到櫃檯建議別的時段也能即時調整。</li><li>電話情境仍有預訓練解不掉的難題：網頁資料無法涵蓋忙碌商家的實際對話樣貌，近十年的目標導向通話經驗累積出語用常識（例如知道某些店家不接受訂位），並用來在通話前就配對合適商家。</li><li>Duplex 也早已默默支撐其他產品：疫情期間用它自動查證商家資訊、維持地圖資料正確，2023 年 Google 透露這些電話查證的商家資訊在搜尋與地圖上曝光超過一兆次；2019 年起也下放到 Pixel 的 Call Screen、Hold for Me 等通話功能。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -45,10 +45,10 @@
       <h2 class="co-tab">LangChain</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-21</span></div>
-          <h3 class="item-title"><a href="https://www.langchain.com/blog/knowledge-factory" target="_blank" rel="noopener">How to build a knowledge factory for AI agents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-21</span><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">開發者工具</i></div>
+          <h3 class="item-title"><a href="https://www.langchain.com/blog/knowledge-factory" target="_blank" rel="noopener">How to build a knowledge factory for AI agents<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/knowledge-factory.html">導讀</a></h3>
           <p class="item-sum">The knowledge factory is how LangChain keeps its agents&#39; company knowledge current: agents flag what&#39;s missing, and a curator agent fixes it in the background.</p>
-          
+          <ul class="item-points"><li>LangChain 認為企業導入代理卡關的不是模型，而是「知識」：公司怎麼做事、指標什麼意思、資料在哪、該信哪個來源，這些多半是資深員工腦中的隱性知識，需要被收集、整理、長期維護，這套系統就叫「知識工廠」。</li><li>知識工廠要維護三類內容：技能（Skills，公司要求的標準做法與腳本）、領域知識（產品、客戶、競品、政策等不常變動的事實）、資料存取指引（哪些資料在哪、怎麼查），而不是把資料再複製一份。</li><li>維運方式是兩段式：使用中的代理只負責「回報」缺什麼或哪裡錯（給它一個回報工具即可），真正的修訂交給背景定期跑的「策展代理」（curator agent）。讓執行任務的代理自己去改知識，會導致內容互相矛盾、難以收拾。</li><li>策展代理要看得到所有原始來源（Notion、Slack 等）與代理的執行軌跡，才能把大家實際怎麼用代理寫成技能；LangChain 自家的 GTM、內容工作室代理與 LangSmith Engine 都已這樣運作。</li><li>儲存形式其實最不重要——GitHub 上的 skill 檔、Notion 單一頁面、LangSmith Context Hub 的 OKF、Neo4j 知識圖都可以，重點是策展代理要會操作這些格式。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -62,7 +62,7 @@
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">資料來源：OpenAI · Anthropic · Google DeepMind · Google Research · Google Blog · xAI · Meta AI · DeepSeek · Mistral · NVIDIA · AMD · OpenRouter · LangChain · Unsloth — 僅收錄官方第一手公告。</p>
   <p class="foot-md">原始資料：<a href="../md/2026-11-22.md" target="_blank" rel="noopener">2026-11-22.md</a></p>
-  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-22 07:00 (UTC+8)</p>
+  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-22 07:05 (UTC+8)</p>
 </div></footer>
 <script src="../assets/site.js" defer></script>
 </body>

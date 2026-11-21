@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 電話代打進 Gemini：拿掉固定領域之後 · AI 每日動態檔案</title>
+<meta name="description" content="Google 把 2018 年的 Duplex 放進 Gemini App 的 Tasks：架構從受限領域的客製 RNN、生成式混合堆疊，走到統一用 Gemini 的自由文字任務描述；商家可退出、每次通話先揭露是 AI。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>電話代打進 Gemini：拿掉固定領域之後</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：How Google Duplex evolved to also call businesses for you in Gemini（Google Research 官方部落格技術回顧；從 2018 年的電話代打講到本週在 Gemini App 的 Tasks 上線，並交代三代架構與商家端設計）</p>
+    <p class="g-meta">
+      <span>Google Research</span>·<span>2026-11-20 發布</span>·<span>2026-11-22 收錄</span>·
+      <a href="https://research.google/blog/how-google-duplex-evolved-to-also-call-businesses-for-you-in-gemini/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>2018</b><span>Duplex 首次以自然語音打給本地商家</span></div>
+    <div class="g-stat"><b>3 代</b><span>架構：客製 RNN → 生成式混合堆疊 → 統一 Gemini</span></div>
+    <div class="g-stat"><b>逾 1 兆次</b><span>電話查證來的商家資訊在搜尋與地圖的累計曝光（2023 年原文數字）</span></div>
+    <div class="g-stat"><b>Gemini 4</b><span>Tasks in Gemini 用的世代，原文點名 Hydrogen 與 Neon</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">當 API 與訂位表單都不存在時，代理得改用電話這條通道。</p>
+
+    <p class="g-p">原文對這件事的形容很精確：真人通話節奏快、幾乎不照腳本，對方常在半句話裡改口。</p>
+    <p class="g-p">停半秒太久像斷線，搶先開口就變搶話。這要求語音理解、上下文推理與語音合成在同一個低延遲系統裡跑。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一次代打的交接</b> — 誰把球傳給誰（本站依原文敘述重排）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">使用者 → Tasks in Gemini</span><span class="tr"><i>用自然語言講需求：訂晚餐、預約剪髮</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">系統 → 選定的商家</span><span class="tr"><i>依過去對話的脈絡配對，先預判這個任務行不行得通</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">通話中（商家接起）</span><span class="tr"><i>開頭揭露是 Google 的自動化系統；串流推論把延遲壓到自然語速</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">結果 → 地圖與後續任務</span><span class="tr"><i>一次問到的細節（露天座位、停車、問答夜）可回答很多後續問題</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重繪。原文為文字敘述，未給此四步時序。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三代架構：把「領域」這個限制拿掉</h2>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>世代</th><th>做法</th><th>當時的難處</th></tr></thead>
+        <tbody>
+          <tr><td data-l="世代"><b>一・客製 RNN</b></td><td data-l="做法">限縮在狹窄領域，用匿名化的任務通話訓練；每種任務各蒐集大量資料（訂位流程 vs 查假日營業時間）</td><td data-l="難處">沒有預訓練世界知識，只能靠資料覆蓋每一種流程</td></tr>
+          <tr><td data-l="世代"><b>二・生成式混合</b></td><td data-l="做法">生成模型負責靈活措辭，確定性狀態追蹤與嚴格政策護欄負責收斂</td><td data-l="難處">早期生成模型較不可預測、也較慢</td></tr>
+          <tr><td data-l="世代"><b>三・統一 Gemini</b></td><td data-l="做法">以自由文字任務描述提示系統，由 Gemini 統一多模態理解、規劃與對話生成</td><td data-l="難處">剩下的是電話實況本身：噪音、停頓、商家的間接拒絕</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">第三代的重點是限制消失：模型變強之後，不必再為新任務重寫一套對話模型。</p>
+    <p class="g-p">原文舉的例子因此變得具體：靠窗座位、放嬰兒車的空間、依行事曆安排汽車保養，或櫃檯建議另一個時段。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">前線模型解不掉的兩件事</h2>
+    <p class="g-p">第一是語用接地。網頁資料沒有「忙碌商家怎麼接電話」這種樣貌，預訓練補不上。</p>
+    <p class="g-p">近十年的目標導向通話經驗補上了這段：知道某家店週末不收大團訂位，通話前就能判斷任務可行性。</p>
+    <p class="g-p">通話中它也用得上：此刻問什麼合理、怎麼聽懂禮貌的間接拒絕、怎麼把話講短。</p>
+    <p class="g-p">第二是延遲。壓縮電話線對上廚房杯盤、咖啡機與街頭噪音，回話必須落在自然語速的縫隙裡。</p>
+    <p class="g-p">原文說這靠低延遲串流推論，外加客製的聲學與節奏模型，處理背景噪音、停頓與「該停口」的時機。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">商家端：先揭露、可退出、不必安裝</h2>
+    <p class="g-p">每次通話開頭都明確說明是 Google 的自動化系統來電，原文把它列為第一條設計選擇。</p>
+    <p class="g-p">商家可在 Google Business Profile 關掉自動來電，或通話中直接說「請不要再打來」。</p>
+    <p class="g-p">另一條是零門檻：用店裡本來就有的電話，不必裝軟體、不必維護訂位系統、不必訓練員工。</p>
+    <p class="g-p">這次上線把它接進 Tasks in Gemini，原文說這等於補上「沒有結構化數位通道」時的那一格。</p>
+    <p class="g-p">同一批功能還包含分析水電帳單、透過 Agent Payments Protocol 處理付款，以及用 email 與 RCS 跟使用者協調。</p>
+    <p class="g-p">（編輯觀點：真正的門檻已經不是聽得懂，而是商家願不願意接這種電話；可退出與先揭露就是為此存在。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一套模型也已經在別的地方接電話</h2>
+    <p class="g-p">Duplex 並不是新產品線。疫情期間商家營業時間變動頻繁，它被用來自動查證商家資訊，至今仍是資料來源之一。</p>
+    <p class="g-p">2019 年起，連續五個 Pixel 世代陸續加入通話輔助；原文說這些模型至今仍驅動 Call Screen 與 Hold for Me。</p>
+    <p class="g-p">前者替你過濾陌生來電，後者在你仍在排隊時接手等待，等真人客服接通再把你接回來。</p>
+    <p class="g-p">2025 到 2026 年，基礎模型把代打擴到搜尋與 Ask Maps：查報價、查貨況、查服務空檔，從寵物美容到汽車維修。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>限制消失才是分水嶺。</b>新任務靠一句描述，不靠新管線。</p>
+      <p><b>電話的難在語用，不在語音。</b>懂「現在該問什麼」比聽得清楚更難。</p>
+      <p><b>代理愈能代打，揭露與退出愈重要。</b>接電話的人也有否決權。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain</span><a href="knowledge-factory.html">知識工廠：代理缺的不是模型，是公司的常備知識</a><span class="d">2026-11-21</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="semantic-governance-policies.html">動作前攔截：把越界判定搬出代理之外</a><span class="d">2026-11-20</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="cloud-run-mcp-gemini-enterprise.html">雙跳私有路徑：內部 MCP 安全接進 Gemini Enterprise</a><span class="d">2026-11-20</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述內容出自原文，圖解與小標為編輯整理。原文未提供可用機制圖，本頁時序圖與表格皆為本站依原文文字重排、重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-22 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 知識工廠：代理缺的不是模型，是公司的常備知識 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain 把企業導入代理的瓶頸指向「知識」：三類知識（skills、domain knowledge、data access）、工作中的代理負責回報缺口與建議、背景的策展代理定期修訂，儲存形式反而最不重要。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>知識工廠：代理缺的不是模型，是公司的常備知識</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：How to build a knowledge factory for AI agents（LangChain 官方部落格方法文；把「軟體工廠」的思路搬到知識工作上，說明知識工廠的三類內容、回報與策展的分工，並以營收報告為例走完一圈）</p>
+    <p class="g-meta">
+      <span>LangChain</span>·<span>2026-11-21 發布</span>·<span>2026-11-22 收錄</span>·
+      <a href="https://www.langchain.com/blog/knowledge-factory" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>3 類</b><span>要維護的知識：skills、domain knowledge、data access guidance</span></div>
+    <div class="g-stat"><b>2 個角色</b><span>工作中的代理負責回報缺口與建議，背景的策展代理負責改</span></div>
+    <div class="g-stat"><b>4 種</b><span>原文列的儲存形式：GitHub skill、Notion、Context Hub OKF、Neo4j</span></div>
+    <div class="g-stat"><b>0 個標準</b><span>語意記憶的表示法仍未收斂（原文說 skill 格式只解決程序記憶）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">導入代理卡住的不是模型，而是「這家公司怎麼做事」從沒被寫下來過。</p>
+
+    <p class="g-p">原文先把兩個常被混用的詞分開。context 是代理執行任務當下拿得到的東西；knowledge 是可重用的理解。</p>
+    <p class="g-p">後者包含指標怎麼算、該信哪個來源、某種狀況怎麼處理。它經常只存在最有效率那位員工的腦裡。</p>
+    <p class="g-p">知識工廠就是把散落的文件與經驗，整理成下一輪工作可用的知識。它是 context 的一種，但不該是唯一一種。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>類別</th><th>原文定義</th><th>原文舉的例子</th></tr></thead>
+        <tbody>
+          <tr><td data-l="類別"><b>Skills</b></td><td data-l="定義">公司要求「怎麼做」的程序、指令與腳本</td><td data-l="例子">用 LangChain 的規格寫營收報告</td></tr>
+          <tr><td data-l="類別"><b>Domain knowledge</b></td><td data-l="定義">業務怎麼運作：定義、政策、產品、客戶、競品</td><td data-l="例子">ARR 的計算方式（存在公司 wiki）</td></tr>
+          <tr><td data-l="類別"><b>Data access</b></td><td data-l="定義">資料在哪、該用哪個來源、怎麼查</td><td data-l="例子">BigQuery 與 Salesforce 的取數方式</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/www-langchain-com-blog-knowledge-factory/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/www-langchain-com-blog-knowledge-factory/01.webp" alt="原圖把知識分成三類：skills、domain knowledge 與 data access guidance，各自附上營收報告情境的範例" width="1200" height="600" loading="lazy" decoding="async"></a>
+      <figcaption>原圖把三類知識並排，並用同一份營收報告當貫穿例子：怎麼做、怎麼定義、去哪取數。<span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/knowledge-factory" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">界線也劃了：資料的 source of truth 若已完整、即時，就不必再維護一份副本，要寫的是「指引」。</p>
+    <p class="g-p">變動很快的數字因此不進知識庫。它已經躺在你的資料倉儲裡，直接餵給代理就好；知識工廠維護的是「怎麼查」。</p>
+    <p class="g-p">格式也留了餘地：技能已收斂成「程序記憶」的共識，語意記憶還沒有人定標準，太早規定只會綁住自己。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">回報與修訂分開：兩個代理各做一件事</h2>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/www-langchain-com-blog-knowledge-factory/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/www-langchain-com-blog-knowledge-factory/02.webp" alt="原圖畫出知識工廠的迴圈：工作中的代理把知識當 context 並回報缺失或錯誤，策展代理讀這些回報、代理 traces 與 Notion、Slack 等原始來源，再更新知識庫" width="1200" height="600" loading="lazy" decoding="async"></a>
+      <figcaption>原圖的迴圈可讀成三段：代理用知識、代理留下回報與 traces、策展代理接收後回頭更新知識庫；回報不直達知識庫，是經策展代理寫回。<span class="g-fig-src">圖／LangChain，<a href="https://www.langchain.com/blog/knowledge-factory" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">工作中的代理被賦予的是回報的責任：至少能說出哪裡錯，最好順便建議正確版本。</p>
+    <p class="g-p">原文的顧慮是「不該只由使用知識的代理維護」：它們擅長標記問題，修正卻得靠對底層知識的深入理解；讓只顧自己任務的代理去維護，知識會長成互相矛盾的一團。</p>
+    <p class="g-p">修訂交給策展代理，在背景按節奏跑。它要讀得到 Notion、Slack 這類原始來源，也要讀得到代理的 traces。</p>
+    <p class="g-p">有了 traces，它才能把「大家實際怎麼用代理」寫成 skill，而不是憑空發明流程。</p>
+    <p class="g-p">手動維護被直接否決：那是原文口中的「herculean effort」，人力終究跟不上。</p>
+    <p class="g-p">這個類比借自軟體工廠：先建好系統，再把量產交給代理，而不是要每個高手親自下場。</p>
+    <p class="g-p">至於知識放哪，原文說最不重要——GitHub 的 skill 檔、Notion 單頁、Context Hub 的 OKF、Neo4j 都行；前提只有一個：策展代理要會操作這些格式，原文認為這不算難。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">走一圈：一份營收報告怎麼把缺口補上</h2>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>知識工廠跑一圈</b> — 從取數到知識更新（本站依原文敘述重排）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">代理 → BigQuery／Salesforce</span><span class="tr"><i>取原始營收數字，這是 base context，不是知識</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">代理 → 回報工具</span><span class="tr"><i>發現欄位被改名，自己找到新欄位並標記建議</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">財務主管 ⇄ 代理</span><span class="tr"><i>同步修格式，並指定往後文件要用的新表頭</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">策展代理 → 知識庫</span><span class="tr"><i>當晚讀回報與 traces，更新取數與產報的 skill</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重繪；四步依原文敘述順序整理（原文以「After…」「That night…」交代先後），原文未提供此四步的流程圖。</p>
+    </figure>
+
+    <p class="g-p">這圈同時用到三類知識：GitHub 上的報告 skill、wiki 上的 ARR 定義、Context Hub 上的取數 skill。</p>
+    <p class="g-p">（編輯觀點：第 03 步是整篇的關鍵。）人類沒有去改文件，只是在協作中把偏好講出來，由策展代理事後抄進規則。</p>
+    <p class="g-p">（編輯觀點：這個結論很務實。）原文接著說：不要等文件寫完才讓代理上工。讓工作本身揭露缺什麼，補上就讓下一次更好。</p>
+    <p class="g-p">起點也一樣：挑一個重複發生的流程，看代理卡在哪，把那個缺口補起來。</p>
+    <p class="g-p">LangChain 自述自家 GTM 與內容工作室代理由知識工廠供給，LangSmith Engine 則為每個代理各維護一份；另正與少數客戶導入，原文未提供量化成效。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>知識工廠不是知識庫。</b>差別在有人回報、有人定期上門修。</p>
+      <p><b>別讓幹活的代理獨自維護規則。</b>它會為自己的任務把標準寫歪。</p>
+      <p><b>先做一條流程。</b>缺口是被工作逼出來的，不是先想出來的。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="semantic-governance-policies.html">動作前攔截：把越界判定搬出代理之外</a><span class="d">2026-11-20</span></div>
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="cloud-run-mcp-gemini-enterprise.html">雙跳私有路徑：內部 MCP 安全接進 Gemini Enterprise</a><span class="d">2026-11-20</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="agent-governance-observability.html">代理治理：先有觀測，護欄才算數</a><span class="d">2026-11-20</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述內容出自原文，圖解與小標為編輯整理。兩張示意圖為原文本站自託管、未經改作；時序圖為本站依原文文字重排。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-22 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
