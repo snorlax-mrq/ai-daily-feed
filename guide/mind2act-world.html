@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 具身評測：同樣沒做成，斷點才是資訊 · AI 每日動態檔案</title>
+<meta name="description" content="清華 mmlab@SIGS 聯合遠行光年等 16 家學校與機構發布 Mind2Act World，把機器人的「想」與「做」拆開考：9 個系統、56,700 回合；最佳 Agent 三組為 52.7%／39.0%／12.0%，並為失敗回合開診斷卡。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>具身評測：同樣沒做成，斷點才是資訊</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Mind2Act World 以「知行合一」診斷具身模型的進化方向（機器之心）</p>
+    <p class="g-meta">
+      <span>機器之心</span>·<span>2026-11-22 發布</span>·<span>2026-11-23 收錄</span>·
+      <a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&mid=2651075704&idx=1&sn=dd36e17788a25d918f6fbc5c3c0907cb" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>30 項任務</b><span>180 種配置＝3 檔難度 × 乾淨／隨機化場景；由清華 mmlab@SIGS 聯合遠行光年等 16 家學校與機構發布</span></div>
+    <div class="g-stat"><b>52.7% → 12.0%</b><span>GPT-6 Astra 在 Mind／Act／Mind2Act 三組的成功率，Agent 榜暫列第一</span></div>
+    <div class="g-stat"><b>56,700 回合</b><span>首批評測 9 個系統的模擬回合總數，榜單仍持續開放送測</span></div>
+    <div class="g-stat"><b>6%–11%</b><span>首個錯誤落在「協同」環節的佔比；物理執行才是最大宗的失敗</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">同一個 0 分藏著不同的病：這套基準把「想」與「做」分開考，再替每個失敗回合開一張診斷卡。</p>
+
+    <p class="g-p">成功率只說得出誰做成的多，說不出沒做成的部分差在哪裡。</p>
+    <p class="g-p">一道烹飪題，世界動作模型 InternW0 與 GPT-6 Astra 都沒做成，失敗方式卻相反。</p>
+    <p class="g-p">前者 300 個回合裡有 271 個是料沒下完就開火；後者 30 個回合裡有 21 個連食材罐都沒抓起來。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>從一個失敗回合到一張診斷卡</b> — 判定與歸因分兩段做</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>回合記錄</b><small>階段進展、關鍵事件、動作記錄</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>規則判定</b><small>規則判得動的失敗先判掉</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>大模型裁判</b><small>看影片與動作記錄補判</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>人工複核</b><small>裁判拿不準的才進來</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>首錯歸因</b><small>想／做／協同，只記第一個不可挽回的錯</small></div>
+      </div>
+      <p class="x-src">本站重繪。原文以文字描述此流程，未給流程圖，也未交代人工複核的佔比與各步耗時。</p>
+    </figure>
+
+    <p class="g-p">流程分兩段：先判定成敗，再回頭找原因，失敗回合才不會只剩一個 0。</p>
+    <p class="g-p">全部失敗回合彙總起來就是一張診斷卡，報告為三個系統各生成一張。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">接著把「想」與「做」拆成三組題</h2>
+
+    <p class="g-p">30 項任務分三組、各 10 項，覆蓋 5 個應用領域與 12 類能力。</p>
+    <p class="g-p">每項設 Easy、Medium、Hard 三檔，各在乾淨與隨機化場景（加雜物、換材質與光照）下測，合成 180 種配置。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>三組任務各自考什麼</b> — 三格並列，不是難度階梯</figcaption>
+      <p class="x-grid-h">並列三組，無先後順序；原文附任務總覽圖，未給此三格對照</p>
+      <div class="x-grid">
+        <div class="c"><b><i>①</i>Mind（想）</b><small>動作刻意簡單，考記憶與決策。例：蒸籠復原，逐層看過再依原順序疊回</small></div>
+        <div class="c"><b><i>②</i>Act（做）</b><small>目標直接給出，考精度與時機。例：從運動中的傳送帶抓取物件</small></div>
+        <div class="c"><b><i>③</i>Mind2Act（協同）</b><small>步驟環環相扣：記住的資訊決定當下動作，動作結果又決定下一步</small></div>
+      </div>
+      <p class="x-src">本站重繪。原文以文字與任務總覽圖呈現三類任務，未給此並列對照。</p>
+    </figure>
+
+    <p class="g-p">成敗只看物理結果：物體是否放穩、按鍵是否真的按下，不看模型怎麼描述自己做了什麼。</p>
+    <p class="g-p">這一點讓「想對」不能替代「做到」，也讓三組分數可以分開讀。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">想對一半，做對四成，合起來只剩 12%</h2>
+
+    <p class="g-p">9 個系統分兩類排名：3 個 Agent 靠工具呼叫操作機器人；4 個 VLA 與 2 個 WAM 用同一套 4,500 條示範微調。</p>
+    <p class="g-p">兩類的動作介面與預算不同，因此分開排名，不放在同一張榜上比。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>兩類系統各自的最好成績</b> — Agent 強在想，端到端強在做</figcaption>
+      <div class="x-bars">
+        <div class="x-bar"><b>Astra · Mind</b><div class="t"><span style="--p:100"></span></div><i>52.7</i></div>
+        <div class="x-bar"><b>Astra · Act</b><div class="t"><span style="--p:74"></span></div><i>39.0</i></div>
+        <div class="x-bar hot"><b>Astra · Mind2Act</b><div class="t"><span style="--p:23"></span></div><i>12.0</i></div>
+        <div class="x-bar"><b>VLA · Act 上限</b><div class="t"><span style="--p:37"></span></div><i>19.6</i></div>
+        <div class="x-bar"><b>VLA · Mind 上限</b><div class="t"><span style="--p:10"></span></div><i>5.4</i></div>
+        <div class="x-bar"><b>π0.5 · Mind2Act</b><div class="t"><span style="--p:7"></span></div><i>3.6</i></div>
+      </div>
+      <p class="x-src">本站重繪，數值取自原文敘述，非原文圖表。基準：2026-11 首批評測的成功率（%），條愈長愈好。VLA 取 4 個系統的區間上限；4 個 VLA 在 Mind 全數不超過 5.4%。</p>
+    </figure>
+
+    <p class="g-p">Agent 榜 GPT-6 Astra 暫列第一；端到端榜 InternW0 以 8.68 分（滿分 100）暫列第一。</p>
+    <p class="g-p">4 個 VLA 的 Act 成功率落在 12.0%–19.6%，這是它們最強的一格，仍然輸給 Agent 的 39.0%。</p>
+    
+    <p class="g-p">反過來，需要邊接觸邊修正的端托盤，GPT-6 Astra 的 30 個回合全在抬起時失去控制。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三張診斷卡：斷點長得完全不一樣</h2>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>系統</th><th>首錯的樣貌（原文數字）</th><th>報告給的方向</th></tr></thead>
+        <tbody>
+          <tr><td data-l="系統"><b>InternW0</b><br>WAM</td><td data-l="首錯">8,220 個失敗回合中 761 個是前置條件未滿足就行動；烹飪題 300 回合有 271 個料沒下完就開火</td><td data-l="方向">補「出錯後如何補救」的示範</td></tr>
+          <tr><td data-l="系統"><b>GPT-6 Astra</b><br>Agent</td><td data-l="首錯">589 個失敗回合中 55.3% 首錯在物理執行；459 個主動停下，其中 264 個停下時決策預算還剩三分之一以上</td><td data-l="方向">更細的運動工具、停止前先重試</td></tr>
+          <tr><td data-l="系統"><b>G0.5</b><br>VLA</td><td data-l="首錯">1,324 個失敗回合首錯是沒抓住或沒抓穩；搭橋過車 300 回合有 202 個始終沒抓起一塊積木</td><td data-l="方向">練抓取；從回合中斷處採示範</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">InternW0 的問題不是不會那些動作，是沒確認上一步的結果就往下走；報告認為訓練示範只含成功步驟。</p>
+    <p class="g-p">GPT-6 Astra 最常見的情形是運動規劃器拒絕它給的位姿，它便不再嘗試——缺的是重試，不是預算。</p>
+    <p class="g-p">G0.5 在白板復原的 300 個回合有 299 個停在把白板從支架取下之前。</p>
+    <p class="g-p">這種斷點直接決定資料預算：補完整長示範，大多落在模型還走不到的後半段；從中斷狀態採，才用在刀口上。</p>
+    
+    <p class="g-p">診斷卡因此給出三個動作：補狀態檢查、改運動工具、練抓取，效果仍待實驗檢驗。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">流程多半斷在前幾步，還沒輪到「協同」</h2>
+
+    <p class="g-p">Mind2Act 的低分很容易被讀成「想與做配合得不好」，逐回合看並非如此。</p>
+    <p class="g-p">所有系統的 Mind2Act 階段得分最多只比成功率高出 1.5 分，等於失敗回合幾乎沒拿到階段分。</p>
+    <p class="g-p">在沒有任何系統完成的 4 項 Mind2Act 任務上，各系統平均得分最高只有 1.2 分；搭橋過車與白板復原連第一個階段分都沒人拿到。</p>
+    <p class="g-p">三張診斷卡也指向同一件事：首錯落在協同環節的只佔 6%–11%，物理執行才是最大宗。</p>
+    <p class="g-p">難度曲線同樣單調：GPT-6 Astra 的 Mind 從 64% 降到 44%，Act 由 44% 到 34%，Mind2Act 從 26% 掉到 3%。</p>
+    <p class="g-p">Hard 加的是更多相互依賴的操作；若每步成功率都是 90%，連做十步全部成功的機率只有約 35%。</p>
+    <p class="g-p">（編輯推論：協同不是額外的一項能力，而是每一步都站得住之後自然出現的結果。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">成績之外的一筆帳：時間與成本</h2>
+
+    <p class="g-p">以上成功率有個前提：模型推理時，模擬時鐘是暫停的。</p>
+    
+    <p class="g-p">端到端策略一次動作預測只要 77–488 毫秒；GPT-6 Astra 在 Act 任務平均每次呼叫 9.2 秒。</p>
+    
+    <p class="g-p">成本方面，GPT-6 Astra 平均每個回合的 API 費用為 25.13 美元；這兩筆帳在成功率裡看不到。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">沒有萬能模型，只有越改越好的模型</h2>
+
+    <p class="g-p">團隊的結論是專屬化：沒有適合所有任務的模型，只有剛好適合當下任務的那一個。</p>
+    <p class="g-p">要先記住再決定的步驟交給 Agent；一個練熟動作就能覆蓋的步驟，端到端策略更快也更省。</p>
+    
+    <p class="g-p">第二條是自進化：哪一步斷、為什麼斷，變成要補的資料與要改的工具，再回同一批題目複測。</p>
+    <p class="g-p">評測程式碼、任務定義與評分器已以 MIT 開源；團隊下一步是本地可跑的 Mini World 與沙箱 Agent 評測。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>成功率分不出病灶，斷點才分得出。</b>同樣一個 0 分，該補的東西完全不同。</p>
+      <p><b>協同不是新能力，是最弱一步的總和。</b>首錯落在協同的只有 6%–11%。</p>
+      <p><b>評測要能回饋成清單，名次才有用。</b>診斷卡比榜單更能指導下一輪。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain</span><a href="knowledge-factory.html">知識工廠：代理缺的不是模型，是公司的常備知識</a><span class="d">2026-11-21</span></div>
+      <div class="g-relrow"><span class="s">量子位</span><a href="karpo-decision.html">決策獨立成一層：Karpo 把判斷壓進一次前向推理</a><span class="d">2026-11-21</span></div>
+      <div class="g-relrow"><span class="s">量子位</span><a href="groupassistbench.html">群組記憶的考卷：找得到，不等於用得上</a><span class="d">2026-11-21</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述資料出自原文，圖解與小標為編輯整理。原文另附任務總覽、成功率與診斷卡圖表，本頁未引用；圖解 A、B、C 皆為本站依原文文字重排、重繪，原文未給該排序與對照。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-23 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

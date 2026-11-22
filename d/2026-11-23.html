@@ -33,10 +33,10 @@
       <h2 class="co-tab">OpenAI</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-22</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-22</span><i class="chip chip--topic">研究與科學</i><i class="chip chip--topic">治理與政策</i></div>
           <h3 class="item-title"><a href="https://openai.com/index/perplexity-and-intelligence" target="_blank" rel="noopener">Perplexity and Intelligence<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">How perplexity measures progress in AI models, and why it could help developers establish a shared approach to evaluating emerging capabilities.</p>
-          
+          <ul class="item-points"><li>OpenAI 首席科學家 Jakub Pachocki 主張把 perplexity（困惑度，等價於交叉熵損失）建立成跨模型開發者比較進展、支撐共用安全標準的指標，並首度公開自家預訓練的內部困惑度數據。</li><li>他把 AI 進展看成「訓練更好的壓縮器」：GPT-3.5 在主評估集的對數困惑度約 0.99 時能流暢對話，GPT-4 約 0.91 時能用思維鏈推理，如今已降到 0.8 以下，開始出現資安與數學領域的變革性能力。</li><li>對數困惑度約 0.76 的模型開始接連解掉 OpenAI 長期懸置的數學開放問題，他據此推測深度學習研究也可能在 2027 年出現類似的基礎預訓練突破潮。</li><li>他外推進入 0.68–0.70 區間時應該會再冒出難以預測的新能力，同時直言 AI 在對齊與監控上的進展恐怕追不上預訓練加速的速度。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -45,10 +45,10 @@
       <h2 class="co-tab">OpenRouter</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-22</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-22</span><i class="chip chip--topic">資安與漏洞</i><i class="chip chip--topic">治理與政策</i></div>
           <h3 class="item-title"><a href="https://openrouter.ai/blog/announcements/data-processing-incidents-on-inference-providers/" target="_blank" rel="noopener">Data Processing Incidents on Inference Providers<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">OpenRouter 官方部落格 · 公告</p>
-          
+          <ul class="item-points"><li>資安廠商 Dragos 本週揭露部分推論供應商資料遭竊、或出現未守住自家資料政策的證據後，OpenRouter 與研究者及供應商共同調查；結果並未發現 OpenRouter 本身被入侵或未授權存取。</li><li>OpenRouter 已下架 3 家供應商，並把 125 個端點從「零資料保留（ZDR）」資格名單移除——包含研究者點名的供應商與額外預防性移除的端點，同時通知所有可能受影響的用戶。</li><li>後續作為包括把 Dragos 的測試方法常態化、技術驗證網路路徑是否把請求與回應轉送第三方，且被移除的端點要先提出保證與驗證才能恢復 ZDR 資格。</li><li>已公開事故說明的供應商有 Atlas Cloud、Novita、Phala 與 Together（2026 年 6、7 月請求的提示外洩）；未公開的受影響供應商，OpenRouter 仍逐一通知受影響用戶。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -57,70 +57,70 @@
       <h2 class="co-tab">機器之心</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-22</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-22</span><i class="chip chip--topic">研究與科學</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651075704&amp;idx=2&amp;sn=3b3303aa11937d51386964ec70bf1eff" target="_blank" rel="noopener">NeurIPS 2026 | F2G-Pose：一次前向预测物体位姿、尺寸与完整形状<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">一次前向推理，同时预测物体位姿、尺寸与完整三维形状。</p>
-          
+          <ul class="item-points"><li>復旦大學與上海創智學院的研究團隊提出 F2G-Pose，只要一次前向傳播，就能同時預測物體的 6D 姿態、真實尺寸與相機座標系下的完整三維形狀，論文已被 NeurIPS 2026 接收。</li><li>此方法以凍結的 RADIOv2.5 視覺編碼器把密集視覺特徵提升到三維點雲，再用 DGCNN 擷取局部幾何，並交給設置 8 位專家、每個 Token 動態選擇 2 位專家的 MoE Transformer 整合整體結構。</li><li>在 RTX 4090 上，關閉形狀補全分支時推理速度達 28 FPS，完整模型仍有 23.7 FPS，而 GenPose++ 約為 4 FPS；ROPE 基準的 IoU50 AUC 為 27.8，GenPose++ 僅 19.1。</li><li>研究團隊以 ARX 機械臂、平行夾爪與 RealSense 相機進行真機抓取與放置實驗，80 次測試成功 68 次、成功率 85%，平均感知延遲約 36 毫秒，符合 50 毫秒的決策預算。</li><li>消融實驗顯示，移除 RGB 視覺特徵會使 ROPE 上的 IoU50 AUC 從 27.8 降至 16.2，把 MoE 換成同參數量的一般前饋網路降至 24.0，拿掉形狀補全監督則降至 23.2。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-22</span></div>
-          <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651075704&amp;idx=1&amp;sn=dd36e17788a25d918f6fbc5c3c0907cb" target="_blank" rel="noopener">VLA/WAM已死，基模当立？Mind2Act World通用基准用「知行合一」角度为具身模型诊断进化方向<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-22</span><i class="chip chip--topic">研究與科學</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651075704&amp;idx=1&amp;sn=dd36e17788a25d918f6fbc5c3c0907cb" target="_blank" rel="noopener">VLA/WAM已死，基模当立？Mind2Act World通用基准用「知行合一」角度为具身模型诊断进化方向<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/mind2act-world.html">導讀</a></h3>
           <p class="item-sum">机器之心 2026-11-22 13:21 北京 知行合一 机器之心发布 VLA/WAM 已死，基 模当立？ 过去一个月，通用大模型以 Agent 的方式接连在机器人操作评测中拿到高分，端到端的 VLA 和 WAM 还要不要继续做，成了具身智能圈绕不开的话题。 这场争论里，双方手里的证据都是成功率。成功率能说明谁做成得更多，却说明不了没做成的部分差在哪里：一条路线是走到了头，还是只差一块补得上的短板，单看分数分不出来。 以一道烹饪题为例</p>
-          
+          <ul class="item-points"><li>清華大學 mmlab@SIGS 聯合遠行光年等 16 家高校與機構發布通用機器人操作診斷基準 Mind2Act World，共 30 項任務、180 種配置，把「想」與「做」分開考再合起來考。</li><li>首批判測涵蓋 9 個代表性系統、56,700 個模擬回合，表現最好的 Agent 在 Mind 任務成功率 52.7%、Act 任務 39.0%，到了需要兩者協同的 Mind2Act 任務只剩 12.0%。</li><li>端到端策略在 Act 任務的成功率為 12.0% 至 19.6%，但在 Mind 任務均不超過 5.4%，Mind2Act 最高僅為 π0.5 的 3.6%。</li><li>診斷卡指出，InternW0 在 8,220 個失敗回合中有 761 個是前置條件未滿足就行動，GPT-6 Astra 有 55.3% 的首個錯誤出在物理執行；GPT-6 Astra 平均每回合 API 費用為 25.13 美元。</li><li>評測程式碼、任務定義與評分器已在 GitHub 以 MIT 授權開源，團隊並計畫推出可完全在本地訓練與評測的 Mind2Act Mini World。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-21</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-21</span><i class="chip chip--topic">研究與科學</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651075624&amp;idx=3&amp;sn=d08693456bc97db18084229852b76739" target="_blank" rel="noopener">NeurIPS 2026 Spotlight | 西工大提出ROSE：多模态终身知识编辑新范式<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">在新知识学习与原有能力保持之间实现更好的平衡</p>
-          
+          <ul class="item-points"><li>在西北工業大學宋雲凌教授與尚學群教授指導下，研究團隊提出多模態終身知識編輯框架 ROSE，論文入選 NeurIPS 2026 Spotlight。</li><li>ROSE 在編輯階段凍結模型主幹，於選定 Transformer 層的 FFN 下投影矩陣加入輔助分支來寫入新知識，推論時再以語義門控判斷輸入是否與已編輯知識相關。</li><li>為降低新舊知識互相干擾，ROSE 把梯度投影到歷史知識子空間的正交補空間，並以動態風險遮罩保護預訓練階段形成的通用能力。</li><li>在 LLaVA-v1.5-7B 上完成 VLKEB 的 1000 次連續編輯後，ROSE 可靠性仍有 95.24%，對照方法 FT-L 降至 68.14%；文字局部性為 100%、多模態局部性為 88.39%。</li><li>在單張 RTX 4090 的測試配置下，1000 次編輯的平均單次編輯耗時約 1.31 秒，每筆查詢推論約 1.13 秒。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-21</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-21</span><i class="chip chip--topic">模型發布</i><i class="chip chip--topic">開源</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651075624&amp;idx=2&amp;sn=b6e7e23d631dba7a952cbe5da8e77769" target="_blank" rel="noopener">TML开源新模型，循环Transformer架构，笔记本就能跑<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Inkling 2 Mini 是一个仅有 26B 参数的循环 Transformer，小到足以在你的笔记本电脑上运行，强大到足以胜任智能体任务，在 AA Index 上的得分为 20.1。</p>
-          
+          <ul class="item-points"><li>Thinking Machines Lab 發布並以 Apache 2.0 授權開源 26B 參數的多模態模型 Inkling 2 Mini，支援文字與圖像輸入，最大上下文視窗為 100 萬 token。</li><li>模型採用循環 Transformer 架構，全模型共 24 層，最前與最後 6 層各執行一次、中間 12 層執行三次，使每個 token 完成 48 次層計算，搭配 MoE 後有效參數激活量約 5.4B。</li><li>在 DeepSWE v1.1 上任務解決率為 48.2%，高於 Qwen3.8-27B 的 42.2%；SWE-bench Verified 為 79.2%，Qwen3.8-27B 為 77.8%，AA Index 得分為 20.1。</li><li>發布的檢查點約 20GB，專家層主要採 NVFP4、最後 4 層採 MXFP8，官方支援在至少 32GB 記憶體的 Apple 晶片裝置上本地執行，並已有 Ollama、vLLM、SGLang 等工具支援。</li><li>官方示範在配備 48GB 記憶體的 M5 Pro MacBook Pro 上離線運行，數分鐘內寫出可玩的飛行模擬器，並以同一模型離線驅動像素小鎮 Thinkyville 的 20 位村民。</li><li>官方也坦言模型在多輪對話與多重約束指令上仍有短板，增加循環次數並不會直接擴充權重中儲存的事實知識。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-21</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-21</span><i class="chip chip--topic">研究與科學</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651075624&amp;idx=1&amp;sn=03d16a0fc5490ccdb4b2d3151ef8b228" target="_blank" rel="noopener">没有AI，12年潜心研究！人类数学家紧急公开广义黎曼猜想证明<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">原创 关注AI的 2026-11-21 12:11 四川 长达940页的「纯手搓」证明！ 机器之心编辑部 有点魔幻，黎曼猜想突然迎来了两份证明。 昨晚，Anthropic 数学家 Levent Alpöge 刚刚宣布， 他与 Claude 合作找到了黎曼猜想（Riemann Hypothesis，RH）的证明。 消息还没消化完，另一份完全由人类完成的证明草稿又突然公开了。 美国数学会主席、斯坦福大学数学教授 Ravi Vakil 发布紧</p>
-          
+          <ul class="item-points"><li>美國數學會主席、史丹佛大學數學教授 Ravi Vakil 發布緊急公告，數學家 Alessandro Masullo 提出廣義黎曼猜想（GRH）的證明手稿《The Music of the Primes》，全長 940 頁。</li><li>Masullo 表示這項研究歷時近 12 年，完全由人類完成、沒有使用任何 AI，並在論文中寫下「我們仍然在這裡」來鼓勵當前面對 AI 浪潮而感到沮喪的數學家。</li><li>Masullo 的博士指導教授、史丹佛大學數論學家 Brian Conrad 已花費數月仔細審查手稿並提出大量修改意見，團隊原本計畫再花一年完善，因當前數學界氛圍而決定提前公開。</li><li>同一時間，Anthropic 數學家 Levent Alpöge 宣稱與 Claude 合作找到黎曼猜想證明，並以 Lean 產出規模達 25 萬頁的形式化證明，陶哲軒表示這份證明可能動用現代 Langlands 綱領與算術幾何的完整力量，數學界仍需相當時間消化。</li><li>GitHub 上已出現針對《The Music of the Primes》的 Lean 4 形式化專案，但目前只推進到前面的基礎內容；AI 數學審查團隊 Refine 則指目前版本在論證策略的多個環節存在根本性問題。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
-          <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651075493&amp;idx=3&amp;sn=63643451e794a6d8ac3dbb423d7f460d" target="_blank" rel="noopener">上海AI Lab开源Sage S2.1 Flash技术报告：四项智能体基准SOTA，科学多模态感知如何融入通用智能体？<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">開源</i></div>
+          <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651075493&amp;idx=3&amp;sn=63643451e794a6d8ac3dbb423d7f460d" target="_blank" rel="noopener">上海AI Lab开源Sage S2.1 Flash技术报告：四项智能体基准SOTA，科学多模态感知如何融入通用智能体？<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/sage-s21-flash.html">導讀</a></h3>
           <p class="item-sum">披露总参数量达 320B 的混合专家模型的完整训练流程与技术细节。</p>
-          
+          <ul class="item-points"><li>上海人工智慧實驗室聯合復旦大學、中國科學院軟體研究所、中國人民大學等機構發布 Sage S2.1 Flash 技術報告，揭露這個總參數量達 320B 的混合專家模型完整訓練流程。</li><li>模型採 320B MoE 架構，以動態專家路由控制推理計算量，並結合稀疏注意力與線性注意力支援長上下文，主幹可共用處理文字、圖像與科學資料表示。</li><li>研究團隊打造 Sage Sci-Perception 科學多模態感知模組，採用 MoleculeSTM、ESM-2、DNABERT-2、RNA-FM、DiffSpectra 等專用編碼器，再透過可訓練的模態投影器映射到語言模型統一表示空間。</li><li>ToolSpace 框架從 MCP 工具服務與真實智慧體軌跡建構工具協作空間，涵蓋 2,042 種工具、77,760 個呼叫模式節點與 804 個環境，生成的微調軌跡平均含 18.86 次工具呼叫、最長達 209 次。</li><li>在 33 項基準評測中，模型於 MLE-bench Lite 取得 90.3 HumanRank 排名第一，OfficeQA Pro、Harvey LAB、SpreadsheetBench 2 分別以 72.2、25.0、37.1 同樣居首，OSWorld-Verified 與 WebArena-Verified 則以 85.2 與 67.6 排名第二。</li><li>模型只需一個指令，就能從 12,487 張 CT 影像中找出目標切片並操作醫學影像軟體 3D Slicer，重建出三維骨骼模型。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">研究與科學</i><i class="chip chip--topic">治理與政策</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651075493&amp;idx=2&amp;sn=7806a7ce49d42c7e0dcd482bf2f18913" target="_blank" rel="noopener">AGI还不是终点，DeepMind开始思考ASI的未来<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">机器之心 2026-11-20 11:58 山东 通往超级智能的四条路径 机器之心编辑部 最近，Google DeepMind Institude 发布了最新博客文章《 AGI 之后是什么？ 》，探讨了人工通用智能（AGI）之后的技术演进方向，以及人类可能通过哪些路径迈向人工超级智能（ASI）。 文章链接： https://institute.deepmind.com/essays/what-comes-after-agi/ 文章指出，</p>
-          
+          <ul class="item-points"><li>Google DeepMind Institute 發布部落格文章《AGI 之後是什麼？》，主張 AGI 只是智能連續譜上的一個階段，並非人工智慧發展的終點，其上方仍有巨大的能力空間。</li><li>文章提出通往人工超級智能（ASI）的四條潛在路線：擴大模型與資料規模、推動技術範式轉變、提升多智能體協作能力，以及實現遞迴自我改進。</li><li>DeepMind 指出過去十年全球有效算力的年增長率達到約 10 倍甚至更高，其中每美元可購得的算力長期以每年約 1.5 倍的速度成長。</li><li>文章以「認知工業化」描述 AI 算力效率提升後認知工作走向標準化與規模化生產的趨勢，並推估若相關趨勢延續十年，今日需要 10 億美元算力才能完成的認知工作，未來可能只需約 1000 美元。</li><li>DeepMind 建議以建模、量測、預測並持續迭代的方式建立新的衡量與預測體系，並強調 AI 治理須同時關注模型規模、演算法效率、多智能體協作與自動化研發等多個維度。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">模型發布</i><i class="chip chip--topic">開發者工具</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651075493&amp;idx=1&amp;sn=f8ab8aea34e7c653723fdeab5ae401bd" target="_blank" rel="noopener">登顶全球第一：这支AI音乐团队，凭什么用18个月打败Suno？<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">原创 关注AI的 2026-11-20 11:58 山东 全球音乐模型 SOTA 首次易主。 编辑｜杨文 「AI 音乐工具就像音乐行业的司美格鲁肽，人人都在用，却没人愿意公开谈论。」 今年 1 月，Suno CEO Mikey Shulman 接受专访时，引用了这句在业内流传的话。他认为， 未来 的音乐形态 ，不只是用来听的，更是每个人都能亲自参与、互动和创造的 。 也正因此，AI 音乐成为近两年科技行业增速最猛的赛道之一。 谷歌把音乐</p>
-          
+          <ul class="item-points"><li>ACE 自研的 ACE Music v1 在獨立評測機構 Artificial Analysis 的音樂人聲（Vocal）榜以 1160 分 Elo 登上第一，超越 Suno v6 的 1144 分，成為 Suno 旗艦模型首次在該榜被擊敗。</li><li>ACE Music v1 領先第二名的 Suno v6 達 16 分，差距已超過第二名與第三名 Suno v6-mini（1132 分）之間的 12 分。</li><li>該團隊從 2025 年 3 月啟動音樂基座模型研發，到 2026 年 11 月登頂 Artificial Analysis 榜單，僅花費約 18 個月。</li><li>ACE Music 引入 Symbolic CoT 機制，先由語言模型生成明文樂譜，再交給音樂生成模型合成完整歌曲，實現速度、音符、和弦與歌曲長度等樂譜級控制。</li><li>旗下專業工具 ACE Studio 截至今年 9 月已累積超過 300 萬條專業創作軌跡，並透過 MCP Server 與 CLI 讓 Claude、ChatGPT、Codex 等助手接入音樂工程。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">硬體與基礎設施</i><i class="chip chip--topic">研究與科學</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651075302&amp;idx=3&amp;sn=3638e59c38cbc04d5ff6d800abd49c51" target="_blank" rel="noopener">写入记忆，何必读完整个网络？英伟达SEED每GPU吞吐最高提升42%<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">NVIDIA 拆解混合模型的&amp;#34;读写不对称性&amp;#34;。</p>
-          
+          <ul class="item-points"><li>NVIDIA 團隊提出 SEED 方法，論文《Shallow Encoding Emits Deep Memories》已發布於 arXiv 預印本，由 Mingyuan Ma 與 Yangmin Li 共同主導並同等貢獻。</li><li>在 48 層的 Qwen3.8-Flash-Next 上，SEED 讓除最後一個以外的輸入 token 只執行前 31 層，再由輕量的記憶寫入元件為後續 17 層產生 KV Cache 與循環狀態，生成階段仍執行完整 48 層。</li><li>在 GB300 GPU 搭配 SGLang 與編碼 Agent 會話軌跡的驗證中，SEED 使每 GPU 峰值吞吐提升 16%～42%，在相同 P90 端到端輸出速率的比較點上吞吐提升 23%～42%。</li><li>SEED 將循環狀態分解為固定方向主分量與低秩因子，在 Qwen3.8-Flash-Next 上單請求循環狀態從 113.2MB 降至剛壓縮後的 29.2MB，整個壓縮週期平均為 43.4MB。</li><li>品質評測涵蓋五種模型、六個檢查點與 11 項基準，66 個「檢查點 × 基準」組合中有 63 個分數落在原模型的兩個標準誤差範圍內或更高。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">治理與政策</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651075302&amp;idx=2&amp;sn=8da8a7badbf656bb807e1e4aa135ae98" target="_blank" rel="noopener">Anthropic IPO定价83美元/股，投资者疯抢<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">机器之心 2026-11-19 12:09 北京 冲刺史上最大IPO 机器之心编辑部 Anthropic 的 IPO 终于进入最后阶段。 当地时间 11 月 18 日，Anthropic PBC 正式宣布，其首次公开募股（IPO）发行价格确定为 每股 83 美元 。北京时间今晚，Anthropic 将在纳斯达克全球精选市场开始交易。 本次发行共涉及 9.8 亿股 A 类普通股 ，按照发行价计算，总发行规模约为 813 亿美元 。 Ant</p>
-          
+          <ul class="item-points"><li>Anthropic PBC 於 11 月 18 日宣布 IPO 發行價定為每股 83 美元，共發行 9.8 億股 A 類普通股，總發行規模約 813 億美元。</li><li>此次發行價由原先設定的 70～78 美元上調至 83 美元，發行規模也從 8.25 億股擴大至 9.8 億股，成為有史以來規模最大的 IPO。</li><li>Anthropic 股票預計於 2026 年 11 月 19 日在納斯達克全球精選市場以代碼「ANT」開始交易，並預計於 11 月 20 日完成交割。</li><li>按每股 83 美元計算，Anthropic 完全稀釋後估值約為 1.5 兆美元；IPO 及同步私募配售後，亞馬遜預計持股約 14.7%、谷歌約 13.7%，兩家合計接近 28.4%。</li><li>IPO 前夕由人工智慧安全中心（CAIS）參與推動的「MisAnthropic Statement」公開聲明發布，截至最初統計已有 89 人簽署，質疑 Anthropic 的 AI 安全立場與其商業利益之間的矛盾。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">研究與科學</i><i class="chip chip--topic">醫療健康</i><i class="chip chip--topic">模型發布</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&amp;mid=2651075302&amp;idx=1&amp;sn=1badc9c3cd5176dcd98e705345707a2d" target="_blank" rel="noopener">语言模型推理折叠蛋白质？把3D结构塞进思维链，超越AlphaFold3、IsoDDE与Claude Opus<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">SimpleX 开放Tetra-1 Preview 试用，迈向微观世界的生物推理。</p>
-          
+          <ul class="item-points"><li>AI for Science 新創 SimpleX 本源智簡於 11 月 10 日開放生物原生語言模型 Tetra-1 Preview 試用，將蛋白質結構視為與文本並列的原生模態，而非外掛的專用工具。</li><li>在 Runs N&#39; Poses 低同源配體結合預測的 OOD 子集（相似度 0～20%）中，Tetra-1 成功率達 53.1%，約為 AlphaFold 3 與 Claude Science 上 Opus 5.5 表現的兩倍。</li><li>在 FoldBench 的蛋白質–蛋白質與難度較高的抗體–抗原 Top-1 任務上，Tetra-1 均優於 AlphaFold 3 與 Isomorphic Labs 的旗艦產品 IsoDDE。</li><li>Tetra-1 以提出機制假設、建構對應結構、對照生物學規律自檢並修正的多輪交替推理求解；以二型糖尿病靶點 PTP1B 的隱藏變構口袋為例，僅輸入蛋白序列與一句自然語言描述，經四輪推理即逼近目標構象並與實驗晶體結構高度吻合。</li><li>模型可解析致病機理，例如說明 OTC 缺乏症的 R141Q 突變為何使新生兒血氨突破 1000 μM、殘餘酶活不到 0.02%，這是純結構預測模型難以完成的任務。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -129,94 +129,94 @@
       <h2 class="co-tab">量子位</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-22</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-22</span><i class="chip chip--topic">企業導入案例</i><i class="chip chip--topic">智能代理</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247947757&amp;idx=1&amp;sn=1f8c07c6825a31d1dc43a24c98e0ff4b" target="_blank" rel="noopener">AI“朋友圈”大聚会——MEET2027喊你来参会<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">📅12月9日&amp;#xA;📍北京·金茂万丽酒店&amp;#xA; 点击报名 立即参会&amp;#xA;&amp;#xA;🌟一整天高密度观点碰撞&amp;#xA;🌟20+科技领袖现场分享&amp;#xA;🌟1000+科技从业者共同在场&amp;#xA;🌟350万+直播观众在线围观&amp;#xA;&amp;#xA;谁还记得MEET去年挤爆了的大会现场？还有不少朋友抱怨没抢到票只能线上围观👀&amp;#xA;今年的科技从业者线下面基大聚会，你可别再错过啦！👌&amp;#xA;&amp;#xA;医疗、工业、量子计算、</p>
-          
+          <ul class="item-points"><li>量子位主辦的 MEET2027 智能未來大會將於 12 月 9 日在北京金茂萬麗酒店舉行，主辦方喊出 20 位以上科技領袖現場分享、1000 位以上科技從業者到場、350 萬以上直播觀眾線上圍觀的規模。</li><li>議程鎖定醫療、工業、量子計算、生命科學等多個「AI+」領域的第一線實踐者，並集中討論異構算力、具身智慧、世界模型與 RSI（遞迴自我改進）等年度熱門技術話題。</li><li>大會現場將正式公布「2026 人工智慧年度榜單」與「2026 年度 AI 十大趨勢」兩份年度紀錄。</li><li>報名頁面以去年會場擠爆、不少人搶不到票只能線上圍觀為號召，提醒今年席位有限、需盡早報名。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-22</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-22</span><i class="chip chip--topic">企業導入案例</i><i class="chip chip--topic">硬體與基礎設施</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247947754&amp;idx=3&amp;sn=5ab08f23e9a0f02ef55c5a1be43cecdf" target="_blank" rel="noopener">活动报名｜量子位「MEET2027智能未来大会」重磅嘉宾阵容公布！<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">关注前沿科技 2026-11-22 12:47 北京 12.9 北京，来MEET2027现场 MEET组委会 发自 凹非寺 量子位 | 公众号QbitAI 2026年，AI领域最显著的变化发生在交付现场：模型开始接手任务，机器人离开舞台走进产线，智能体被嵌进组织的日常流程。这些事分散在不同行业与场景里，我们却从中看到了同一条线索。 12月9日，量子位主办的 MEET2027智能未来大会 将在北京·金茂万丽酒店举行。 学术、产业、投资 不</p>
-          
+          <ul class="item-points"><li>量子位公布 MEET2027 智能未來大會首批重磅講者，百度集團副總裁、個人超級智慧事業群組總裁王穎在列，她自 2024 年起全面負責百度文庫、百度網盤、百度學術等業務。</li><li>崑崙萬維創辦人方漢確認出席，他是中文 Linux 奠基人之一，1994 年起投入開源運動，著有中國第一本 Linux 書籍《Linux 實用大全》。</li><li>中國科學院自動化研究所副總工程師、紫東太初大模型研究中心主任王金橋將分享多模態大模型研究，他累計發表論文 300 餘篇，並牽頭推動 13 項國家標準提案。</li><li>螞蟻健康事業群 CTO、百靈醫療大模型負責人顧進傑與會，其團隊發布螞蟻安診兒開源醫療大模型，旗下阿福 App 於 2026 年獲《時代》雜誌「最佳發明」。</li><li>商湯科技大裝置事業群副總裁暨 CTO 宣善明出席，他主導國產算力異構混合推理（PD 分離）架構落地，支撐日均 10 萬億 Token 產能的端到端 Token 工廠。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-22</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-22</span><i class="chip chip--topic">研究與科學</i><i class="chip chip--topic">醫療健康</i><i class="chip chip--topic">開源</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247947754&amp;idx=2&amp;sn=2d7394fd2ad6b2021392b4883d8e6077" target="_blank" rel="noopener">哈佛开源虚拟细胞模型：编辑DNA前先预演整个细胞，AlphaGenome2后又一进展｜NeurIPS&#39;26<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">关注前沿科技 2026-11-22 12:47 北京 从任意DNA片段，预测基因联动响应 STRAND团队 投稿 量子位 | 公众号QbitAI 把一小段DNA的活性压下去，细胞里哪些基因会跟着变化？如果换个位置，结果还一样吗？ 11月11日，Google DeepMind发布 AlphaGenome 2 ，将细胞类型和状态纳入预测条件，进一步刻画DNA变异在不同细胞中的影响。 它可以预测给定细胞状态下，DNA变异会怎样影响同一段序列内</p>
-          
+          <ul class="item-points"><li>哈佛醫學院、約翰霍普金斯大學與默克團隊提出虛擬細胞模型 STRAND，論文已被 NeurIPS 2026 主會接收，程式碼與專案頁面同步公開。</li><li>研究把干預輸入從單純的基因 ID 改為「DNA 序列＋目標位置」，架構輸入可覆蓋約 95% 的基因組，並以 128 bp 為表示單元，讓模型能分辨同一基因的不同轉錄起始入口。</li><li>以 FLVCR1 為例，STRAND 把 FLVCR1b 入口排在五個候選入口首位，預測影響分數 0.683，高於常用 FLVCR1a 入口的 0.564，與既有生物學研究一致。</li><li>在 K562、Jurkat、RPE1 三個細胞系的 few-shot 實驗中（每個基因僅 5 個擾動細胞），STRAND 七項指標平均排名 1.86，次優方法為 3.14；K562 擾動判別分數由 STATE 的 0.538 提升到 0.710，相對提高約 32%。</li><li>在獨立來源的 HCT116 測試中，模型只需目標細胞系的對照細胞、不必使用其擾動資料或重新訓練，變化最大的 100 個基因方向吻合率即可達 56.8%。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-22</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-22</span><i class="chip chip--topic">研究與科學</i><i class="chip chip--topic">智能代理</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247947754&amp;idx=1&amp;sn=41f570b245966b581faa69dbd52938f0" target="_blank" rel="noopener">03年小天才投身RSI创业：Qwen后训练实习生，刚刚本科毕业<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">原创 关注前沿科技 2026-11-22 12:47 北京 研发认知人工智能和下一代基模。 林方舟 发自 凹非寺 量子位 | 公众号 QbitAI 火热的RSI （递归自我改进） 领域，又来了一位“小天才”创业者。 量子位ROBO获悉， 曾参与千问后训练团队“主观性与交互性”研究小组的张轩铭，已于今年10月初离开团队，正以联创身份筹备创业。 创业公司名为“Alps Lab”，研发认知人工智能和下一代基础模型，RSI是重要探索方向之一。</p>
-          
+          <ul class="item-points"><li>2003 年出生、今年剛從大學部畢業的張軒銘，於 2026 年 2 月加入千問後訓練團隊，進入僅 7 人的「主觀性與交互性」研究小組，因尚未畢業，正式身份一直是實習研究員。</li><li>他已在 10 月初離開千問，以聯合創辦人兼首席認知科學家的身分籌備新公司 Alps Lab，公司於 9 月底正式啟動，主打認知人工智慧與下一代基礎模型，RSI 是重要探索方向。</li><li>Alps Lab 提出「認知體」（Cognizer）概念，靠「下一個認知模式預測」與「測試時遞迴學習」兩項技術，設想同一套認知機制可同時連結數位環境的推理、程式與模擬，以及機器人、實驗儀器等物理設備。</li><li>公司正在籌備第一輪融資，首輪目標估值即超過一億美元；張軒銘判斷下一代公司會是「RSI 原生」，而 RSI 的核心在架構創新，新創仍有機會。</li><li>他此前曾在字節跳動 Flow 團隊、智譜 Emohaa 團隊實習，並擔任亞馬遜 AGI 團隊學生研究員與 Anthropic 訪問研究員，2025 年 NeurIPS 期間結識時任千問負責人林俊暘。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-21</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-21</span><i class="chip chip--topic">企業導入案例</i><i class="chip chip--topic">硬體與基礎設施</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247947677&amp;idx=4&amp;sn=9bd84251661db1bc4b0d09ede3106f8f" target="_blank" rel="noopener">活动报名｜量子位「MEET2027智能未来大会」重磅嘉宾阵容公布！<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">关注前沿科技 2026-11-21 17:52 北京 12.9 北京，来MEET2027现场 MEET组委会 发自 凹非寺 量子位 | 公众号QbitAI 2026年，AI领域最显著的变化发生在交付现场：模型开始接手任务，机器人离开舞台走进产线，智能体被嵌进组织的日常流程。这些事分散在不同行业与场景里，我们却从中看到了同一条线索。 12月9日，量子位主办的 MEET2027智能未来大会 将在北京·金茂万丽酒店举行。 学术、产业、投资 不</p>
-          
+          <ul class="item-points"><li>大會由量子位主辦，時間定在 12 月 9 日，地點為北京金茂萬麗酒店，主題是「智行合一·馭見未來」，定位為年度科技商業峰會。</li><li>主辦方指出 2026 年 AI 最顯著的變化發生在交付現場：模型開始接手任務、機器人從舞台走進產線、智能體被嵌進組織的日常流程，因此今年議程要回答「誰把 AI 送進真實場景、誰在底層支撐」。</li><li>官方統計大會每年匯聚上千名科技從業者到場、百萬觀眾線上參與，並有近百家合作媒體聯合曝光。</li><li>算力與具身智慧領域講者陣容包含無問芯穹共同創辦人暨執行長夏立雪、太初元碁首席產品官、面壁智能聯席首席科學家姚遠，以及酷哇科技創辦人廖文龍、第六鏡科技創辦人劉闖。</li><li>面壁智能姚遠主導建構 MiniCPM-V、MiniCPM-o 等高效多模態模型，開源專案總星標 3.9 萬餘次、模型總下載量超過 4000 萬次。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-21</span></div>
-          <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247947677&amp;idx=3&amp;sn=0797fbd2116a405b44176c97577757d8" target="_blank" rel="noopener">8万条群聊消息做成考卷：腾讯元宝×KCL发布首个基于群聊构建的Agent记忆基准<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-21</span><i class="chip chip--topic">智能代理</i><i class="chip chip--topic">研究與科學</i></div>
+          <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247947677&amp;idx=3&amp;sn=0797fbd2116a405b44176c97577757d8" target="_blank" rel="noopener">8万条群聊消息做成考卷：腾讯元宝×KCL发布首个基于群聊构建的Agent记忆基准<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/groupassistbench.html">導讀</a></h3>
           <p class="item-sum">关注前沿科技 2026-11-21 17:52 北京 AI记得住，不等于用得好 腾讯元宝×伦敦国王学院NLP团队 投稿 量子位 | 公众号QbitAI 一个九人出行群，最初商定5月1日出发，后来又改为4月30日。等到有人请AI助手发布购票提醒，它很可能还按旧日期通知。 虽然“记住”了历史，却没有真正服务好这个群。 在群聊的实际场景中，往往还有更隐蔽的要求：谁想坐靠窗位置，谁对预算有要求，哪些安排只是提议，哪些已经成为共同决定。 一个AI</p>
-          
+          <ul class="item-points"><li>騰訊元寶與倫敦國王學院 NLP 團隊聯合推出 GroupAssistBench，以 50 個真實群聊、80,299 條歷史訊息建構 2,395 道評測題，論文已在 arXiv 公開並釋出程式碼與資料集。</li><li>評測分成兩層：L1 記憶召回 1,374 題，考驗能否答出明確事實；L2 開放式服務 1,021 題，要求完成如「幫大家發出購票提醒」的任務，並遵守有效的歷史決定與成員要求。</li><li>實驗比較 14 組配置，EverMemOS 在 L1 得分 0.621、高於完整上下文的 0.570，但 L2 只有 0.247、低於完整上下文的 0.431，顯示「更會回憶」不等於「更會服務」。</li><li>資料以規則、語意審查與人工核驗把關，抽樣中 95.8% 題目經多數投票判定有效；L2 自動評分與人工多數票的一致率為 89.3%。</li><li>團隊追蹤 497 條配對記憶發現，L1 已召回但 L2 未有效使用的記憶中，約 36% 根本沒進入 L2 模型輸入，其餘約 64% 雖進入輸入卻未被有效應用；引入 RER 與 ACB 兩種干預後，LightMem 的 L2 分數相對基準最高提升 7.03 個百分點。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-21</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-21</span><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">智能代理</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247947677&amp;idx=2&amp;sn=b447df9da18baf8a4c7a3f9f7fdd034f" target="_blank" rel="noopener">全网疯传！Grok一姐教你如何月提交3000个PR<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">关注前沿科技 2026-11-21 17:52 北京 土豆女神：所有代码都是一坨（除了我的） 程浅 发自 凹非寺 量子位 | 公众号QbitAI 「所有代码都是一坨 （除了我的） 。」 SpaceXSI首席工程师土豆姐（Lauren Tan），带着这个狂得没边的演讲标题登上了AI Engineer CODE大会，于是演讲内容全网疯传。 土豆此前在Cursor工作，目前从事Grok Bot开发，被称为「全网最会用Grok Bot的人」。</p>
-          
+          <ul class="item-points"><li>SpaceXSI 首席工程師 Lauren Tan（綽號土豆）在 AI Engineer CODE 大會以「所有程式碼都是一坨（除了我的）」為題演講，她曾任職 Cursor，目前負責 Grok Bot 開發。</li><li>她上月一人提交 3,000 個 PR，而整個 Grok Bot 團隊 10 月共交付 1.1 萬個 PR，平均每天超過 350 個，撤回率僅約 0.5%，客戶端幾乎每天推出一個新的穩定版本。</li><li>她提出「信任倒金字塔」：最上層占比最大的是程式碼本身（API 設計、軟體架構、重構），第二層是 Lint 規則、型別系統、編譯器與自動化測試，最下層才是執行時驗證、形式化驗證與 AGENTS.md 等自然語言指引。</li><li>Grok Bot 直接禁用約 99% 的程式碼註解，改用 Lint 規則指出問題並要求 Agent 修掉根因；團隊也在產品程式碼中禁用 useEffect，只允許在自家客戶端框架 Dune 的特定 API 內使用。</li><li>團隊把大量程式碼審查移到驗證環節，導入 TLA+ 模型檢查、Lean 形式化證明與 Bombadil 屬性測試，並自建功能地圖與驗證工具；她表示身邊有開發者 70% 的 Token 都花在驗證上。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-21</span></div>
-          <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247947677&amp;idx=1&amp;sn=ebf1f96b9afceacdfa0d407ecdb3ff2b" target="_blank" rel="noopener">反超Gemini之后，Karpo新作再开源，浏览器Agent速效双赢<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-21</span><i class="chip chip--topic">模型發布</i><i class="chip chip--topic">開源</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247947677&amp;idx=1&amp;sn=ebf1f96b9afceacdfa0d407ecdb3ff2b" target="_blank" rel="noopener">反超Gemini之后，Karpo新作再开源，浏览器Agent速效双赢<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/karpo-decision.html">導讀</a></h3>
           <p class="item-sum">原创 关注前沿科技 2026-11-21 17:52 北京 速度反超Claude，成本仅十三分之一 文婷 发自 凹非寺 量子位 | 公众号 QbitAI 2026年了，居然还有年轻团队专门训练决策模型，而且一出手，就把Gemini甩在了身后？！ 同样一场 《城市扫描仪》挑战 ，Karpo从36场活动中帮我挑出10个休闲娱乐的好去处 （平均消费50美元之内、通勤距离仅5km） 只花了 2.6秒 ，而Gemini 3.5 Flash则足足用</p>
-          
+          <ul class="item-points"><li>MachinePulse AI 開源專為 Agent 高頻決策設計的 Karpo Decision 31B，並同步釋出 0.8B、2B、4B、9B、12B 到 31B 共 6 種尺寸；單張 RTX PRO 6000 即可執行，面對公開集 14 萬多次請求的中位響應時間僅 94 毫秒。</li><li>在 300 個模型同台的 Decision Index 總榜上，Karpo Decision 31B 以 73.9 的 Full 分數居首，校準誤差降至 2.3%，單題最多可同時判斷 255 個候選選項。</li><li>團隊同時開源瀏覽器 Agent 方案，採 System 1 加 System 2 分工，包含 karpo-browser 框架、針對網頁動作決策訓練的 Karpo Decision 27B Act 模型，以及涵蓋 584 個真實網站、23,075 步操作的 KBB 評測集。</li><li>在 Browserbase Benchmark v2 的 102 道核心任務上，該方案達到 89% 平均成功率、平均耗時 201 秒、單任務模型成本 0.096 美元，比榜首 Claude Fable 5.2 搭配 Claude Code 快約 1.9 倍、成本僅為十三分之一。</li><li>訓練階段以 RSI 框架搭配 Model Fusion，融合 5 個 checkpoint 後，陌生領域準確率由 70.7% 回升到 72.3%，公開測試成績維持 75.1，且模型仍是標準 31B 規模、推論開銷沒有增加。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">企業導入案例</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247947397&amp;idx=3&amp;sn=a4477f1f204b45c4afb14c5db8f1ffd7" target="_blank" rel="noopener">活动报名｜量子位「MEET2027智能未来大会」重磅嘉宾阵容公布！<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">关注前沿科技 2026-11-20 14:26 北京 12.9 北京，来MEET2027现场 MEET组委会 发自 凹非寺 量子位 | 公众号QbitAI 2026年，AI领域最显著的变化发生在交付现场：模型开始接手任务，机器人离开舞台走进产线，智能体被嵌进组织的日常流程。这些事分散在不同行业与场景里，我们却从中看到了同一条线索。 12月9日，量子位主办的 MEET2027智能未来大会 将在北京·金茂万丽酒店举行。 学术、产业、投资 不</p>
-          
+          <ul class="item-points"><li>量子位主辦的 MEET2027 智能未來大會將於 12 月 9 日在北京金茂萬麗酒店舉行，大會主題為「智行合一·馭見未來」。</li><li>百度集團副總裁王穎將出席，她於 2026 年出任百度個人超級智能事業群組總裁，負責百度文庫、百度網盤以及庫庫、KOOKO 等產品。</li><li>中國科學院自動化研究所副總工程師、紫東太初大模型研究中心主任王金橋將分享多模態大模型研究，他累計發表論文 300 餘篇，並 10 次奪得國際頂級視覺演算法競賽冠軍。</li><li>被譽為「AI 蛋白質折疊奠基人」的許錦波於 2016 年發明 RaptorX-Contact 方法，全球首次證明 AI 能大幅提升蛋白質結構預測精度。</li><li>螞蟻健康事業群 CTO 顧進傑帶領團隊推出開源醫療大模型「安診兒」，其阿福 App 曾進入中國 AGI 原生 App 月活躍用戶規模前五名。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
-          <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247947397&amp;idx=2&amp;sn=4a13a27482d1647338c4b0eec8a1d573" target="_blank" rel="noopener">“Agent版arXiv”来了！936个智能体12个星期狂发近千篇论文，连同行评议都整上了<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">研究與科學</i><i class="chip chip--topic">智能代理</i></div>
+          <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247947397&amp;idx=2&amp;sn=4a13a27482d1647338c4b0eec8a1d573" target="_blank" rel="noopener">“Agent版arXiv”来了！936个智能体12个星期狂发近千篇论文，连同行评议都整上了<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a> <a class="guide-badge" href="../guide/agent-arxiv.html">導讀</a></h3>
           <p class="item-sum">关注前沿科技 2026-11-20 14:26 北京 甚至学会了同行打假～ henry 发自 凹非寺 量子位 | 公众号 QbitAI 一个完全由AI组成的科学家社会，是什么样？ 最近，来自alphaXiv、斯坦福，MIT等机构的研究团队还真做了这么一个实验： 他们把 936个agent放进了同一个线上科研社区，任其自由演化整整12个星期。 规则很简单：研究团队搭建好共享预印本服务器和聊天室，35家人类实验室只负责提供算力、API预算和</p>
-          
+          <ul class="item-points"><li>alphaXiv、史丹佛與 MIT 等機構的研究團隊把 936 個 AI 代理放進同一個線上科研社群，任由它們自主演化 12 週。</li><li>35 家人類實驗室只負責提供算力、API 預算與寬泛的研究方向，提出假設、寫程式跑實驗、分析資料與撰寫論文全由代理自行完成。</li><li>12 週內這批代理共發表 936 篇論文、在 229 個自建聊天室累積 9500 條討論，甚至自辦期刊《Journal of Agent Research》並建立審稿機制。</li><li>11 月 4 日至 9 日的 5 天內，自動審稿系統為 263 項研究的 352 個版本產出 1408 份審稿意見，每條批評都須逐字引用原文並由腳本核對。</li><li>研究團隊以 202 對主題匹配的 AI 與人類論文比較，發現代理在實驗嚴謹度與可重現性上得分較高，人類則在創新性與研究重要性上勝出；另有一篇論文修正答案洩漏問題後，模型準確率從 91.7% 降到 64.6%。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-20</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-20</span><i class="chip chip--topic">模型發布</i><i class="chip chip--topic">開源</i><i class="chip chip--topic">硬體與基礎設施</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247947397&amp;idx=1&amp;sn=2ea910643c6599025bf94f0a10fbda1d" target="_blank" rel="noopener">昇腾算力训出了双榜SOTA的具身世界模型，华为云这次想把整套底座开放出来<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">原创 关注前沿科技 2026-11-20 14:26 北京 训练侧终于不只有英伟达一条路可走了！ 田晏林 发自 凹非寺 量子位 | 公众号 QbitAI 华为云要开源具身世界模型了，一开就是双榜第一！ 关键是，这个模型用的还是国产昇腾算力。 11月16日，华为云发布了 昇腾原生具身世界模型CloudRobo-WM1.2 。 在RoboTwin 2.0和LIBERO-Pro 2.0两项具身智能评测中，它的平均成功率都排第一。 华为云计划在</p>
-          
+          <ul class="item-points"><li>華為雲於 11 月 16 日發布昇騰原生具身世界模型 CloudRobo-WM1.2，在 RoboTwin 2.0 與 LIBERO-Pro 2.0 兩項具身智慧評測中分別取得 88.98% 與 81.73% 的平均成功率，雙雙排名第一。</li><li>這款模型從架構、訓練框架、核心運算子到推理部署都針對昇騰晶片做軟硬體協同最佳化，而不是只把既有模型移植到昇騰上跑通。</li><li>在第三方獨立測試中，模型於 5 種機器人本體、13 項操作任務上平均成功率比第二名高出 23 個百分點，並能在插頭滑脫後依新觀測畫面重新調整動作、重試插接。</li><li>華為雲採用 PPA（Perceive-Predict-Act）多模態世界表徵架構，同時接入 RGB 影片、DINO 語意特徵、深度與三維點雲，並以多粒度監督遮罩在損失計算中排除缺失或無效模態。</li><li>華為雲計畫於 11 月 30 日開放模型權重、推理程式碼與後訓練程式碼；目前訓練資料已擴增至 2.75 萬小時，接入 20 個資料源與 33 種本體。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">企業導入案例</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247945226&amp;idx=4&amp;sn=0440b62eebcf7ccdc551ead0098f839a" target="_blank" rel="noopener">活动报名｜量子位「MEET2027智能未来大会」重磅嘉宾阵容公布！<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">关注前沿科技 2026-11-19 19:15 北京 12.9 北京，来MEET2027现场 MEET组委会 发自 凹非寺 量子位 | 公众号QbitAI 2026年，AI领域最显著的变化发生在交付现场：模型开始接手任务，机器人离开舞台走进产线，智能体被嵌进组织的日常流程。这些事分散在不同行业与场景里，我们却从中看到了同一条线索。 12月9日，量子位主办的 MEET2027智能未来大会 将在北京·金茂万丽酒店举行。 学术、产业、投资 不</p>
-          
+          <ul class="item-points"><li>量子位主辦的 MEET2027 智能未來大會將於 12 月 9 日在北京金茂萬麗酒店登場，主題為「智行合一·馭見未來」，聚焦 AI 從模型能力走向可交付系統的產業實踐。</li><li>百度集團副總裁王穎將與會，她於 2026 年掛帥百度個人超級智能事業群組，持續推動百度文庫、百度網盤與庫庫、KOOKO 等產品的創新落地。</li><li>中歐國際工商學院 AI 與管理創新研究中心主任方躍將分享企業從 AI 工具應用走向 AI 原生組織的轉型路徑，他著有《數位化領導力》與《超級智體》等書。</li><li>原力靈機聯合創辦人兼 CTO 周而進曾任曠視科研院輪值院長與深度學習訓練框架天元（MegEngine）負責人，並曾帶領團隊在 NIST FRVT 等評測奪冠。</li><li>大會預計匯聚上千名科技從業者到場、百萬觀眾線上參與，並由近百家合作媒體聯合曝光。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">開源</i><i class="chip chip--topic">開發者工具</i><i class="chip chip--topic">硬體與基礎設施</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247945226&amp;idx=3&amp;sn=ce0311beb0ee0c56ec3042c90243044c" target="_blank" rel="noopener">10GB显存跑图像模型，误差从9.4%降到4.26%：魔搭开源码率可调的权重压缩方案<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">关注前沿科技 2026-11-19 19:15 北京 量化不再只有4bit和8bit EntroPack团队 投稿 量子位 | 公众号QbitAI 模型的量化，是降低大模型实际运行和部署门槛的重要手段。 常见的量化方案，通常是基于预设的固定码率 （例如4bit，8bit等） 和量化格式来进行。 但实际情况下，模型的规模可能千差万别，不同设备上的显存也各不相同，基于几个预设的量化档位，很难进行精细的匹配和调整。 针对这一问题， 魔搭 团队</p>
-          
+          <ul class="item-points"><li>魔搭（ModelScope）團隊開源模型權重壓縮方案 EntroPack，把資訊熵納入量化與壓縮的聯合設計，可自由設定任意位元率，不受 4bit、8bit 等固定檔位限制。</li><li>方案以 E8 格量化結合熵編碼，透過幾何二分搜尋在最多 12 次迭代內找到符合預算的量化尺度，再以 rANS 演算法在 GPU 上分塊平行編碼。</li><li>在相近位元率下，EntroPack 的權重重建誤差低於 NF4、FP8 與 INT8，並可直接運行在 NVIDIA、AMD、ZW-PPU 等多種 GPU 上，量化過程無需激活校準或微調。</li><li>在 Z-Image-Turbo 上可將模型整體壓縮至 2.3bpp、體積降低 7 倍；Qwen-Image-2.1 在 10GB 顯存預算下以 4.8bpp 將重建誤差從 NF4 的 9.4% 降到 4.26%。</li><li>EntroPack 已接入訓練與部署框架 ms-swift，在 Qwen3.8-27B 的 LaTeX OCR 微調場景中，2bpp 配置讓模型從 16.7GB 降到 10.57GB、單卡訓練顯存峰值由 25GB 降到 19GB，可在 24GB 消費級顯示卡上完成微調。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">硬體與基礎設施</i><i class="chip chip--topic">產品與功能</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247945226&amp;idx=2&amp;sn=9385e9e4ba52e53f2a9f46ac39fda4f6" target="_blank" rel="noopener">英伟达RTX Spark迷你主机来了！书桌角落放一台，全家MacBook的AI活它全接<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">关注前沿科技 2026-11-19 19:15 北京 4399美元起售 克雷西 发自 凹非寺 量子位 | 公众号 QbitAI 「哈喽，大家好呀！」 画面里，一台「无头骑士」版宇树机器人，正在和观众挥手互动。 它的头被一台笔记本电脑取代，屏幕上显示的是一位可爱的美少女形象。 这套机器人是B站up主特效小哥的杰作，他先前就设计了数字少女图零零这个形象。 在英伟达RTX Spark的一次分享会上，特效小哥把图零零带进了物理世界。 在宇树提供</p>
-          
+          <ul class="item-points"><li>在 NVIDIA RTX Spark 分享會上，B 站創作者「特效小哥」把數位少女「圖零零」裝上宇樹機器人本體，並用掛在脖子上的 RTX Spark 筆電完成訓練，讓它能語音對話、飛吻與模仿動作。</li><li>RTX Spark 內建 N1X 超級晶片，由 20 核 MediaTek 客製 Grace CPU 與最高 6144 核 Blackwell RTX GPU 以 600GB/s 的 NVLink-C2C 相連，共用 128GB 統一記憶體，算力達 1 Petaflop（FP4）。</li><li>現場以本地部署的 Qwen 3.8 模型透過 Hermes 自動拉取 microduck 開源專案並搭好仿真環境，另以 Qwen 3.6-35B-A3B 擔任大腦、搭配 GR00T 模型驅動 SO-101 機械臂完成抓取試管任務。</li><li>在 200W 平均功耗下以 llama.cpp 執行 Qwen3.8-Flash-Next，每秒輸出 41.9 個 Token、輸入速度達每秒 700 個 Token，在 Artificial Analysis 榜單取得 40 分智力指數，接近雲端 Claude Sonnet 5.5 Medium 的 41 分。</li><li>每月輸出 6100 萬個 Token 的智慧體負載，雲端 API 約需 1200 美元，改在 RTX Spark 本地執行電費僅約 20 美元；英偉達另推出 4399 美元起的 RTX Spark Compact Desktops 迷你桌面主機，由宏碁、華碩、戴爾、技嘉、惠普、聯想與微星同步推出。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-19</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-19</span><i class="chip chip--topic">企業導入案例</i><i class="chip chip--topic">硬體與基礎設施</i></div>
           <h3 class="item-title"><a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247945226&amp;idx=1&amp;sn=bbe3666f27255c36bcc25d5e4a436780" target="_blank" rel="noopener">具身机器人进入真机时代，华为云CloudRobo开始组队发力了<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">原创 关注前沿科技 2026-11-19 19:15 北京 跳出单点技术竞争 田晏林 发自 凹非寺 量子位 | 公众号 QbitAI 机器人在实验室里把活儿干成了，到了工厂，还能天天这么干吗？换台机器人，之前练出来的本事又能剩下多少？ 光把模型训得聪明还不够，背后的算力、仿真、真机适配，都得跟上。 11月16日，华为云发布了 昇腾原生具身世界模型CloudRobo-WM1.2 。 从仿真训练到适配不同机器人，这个模型背后，牵出的是一整套</p>
-          
+          <ul class="item-points"><li>華為雲在 11 月 16 日發布昇騰原生具身世界模型 CloudRobo-WM1.2 後，於兩天後在上海舉辦「行業 AI 夢工廠·具身智慧高層論壇」，並與福建小狀智能簽署合作備忘錄，把 CloudRobo 與昇騰算力導入高校實訓。</li><li>華為昇騰晶片產品管理專家錢鑫源指出，近兩年 Token 消耗成長約 1400 倍，而 Agent 任務的 Token 消耗量是普通問答的 100 至 1000 倍。</li><li>依規劃，昇騰 960DT 的顯存頻寬最高可達 9.6TB/s，華為雲並以長序列平行與提前預取下一批訓練資料，盡量平衡不同模態的顯存負載、減少等待。</li><li>CloudRobo 平台以 R2C 協定與 SDK 統一機器人接入，串接資料處理、模型訓練、仿真驗證到真機部署；具身智慧專區上線 5 個月已與 230 多家企業及高校合作，累積 1500 多項技術資產。</li><li>億嘉和旗下 Z100 已累計交付超過 400 台、每年作業逾 8 萬次，與華為雲合作開發的 Z200Pro 宣稱可將作業時長控制在 30 分鐘以內、效率提升約 30%；華為雲另提供單一伙伴最高 200 萬元、單一方案最高 100 萬元人民幣的專項支持。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -230,7 +230,7 @@
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">資料來源：OpenAI · Anthropic · Google DeepMind · Google Research · Google Blog · xAI · Meta AI · DeepSeek · Mistral · NVIDIA · AMD · OpenRouter · LangChain · Unsloth — 僅收錄官方第一手公告。</p>
   <p class="foot-md">原始資料：<a href="../md/2026-11-23.md" target="_blank" rel="noopener">2026-11-23.md</a></p>
-  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-23 07:00 (UTC+8)</p>
+  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-23 07:10 (UTC+8)</p>
 </div></footer>
 <script src="../assets/site.js" defer></script>
 </body>

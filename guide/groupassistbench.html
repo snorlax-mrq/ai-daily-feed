@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 群組記憶的考卷：找得到，不等於用得上 · AI 每日動態檔案</title>
+<meta name="description" content="騰訊元寶與倫敦國王學院以 50 個真實群組、80,299 條訊息建 2,395 道題：EverMemOS 的 L1 召回 0.621 高於完整上下文 0.570，L2 服務 0.247 卻低於 0.431。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>群組記憶的考卷：找得到，不等於用得上</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：騰訊元寶×倫敦國王學院 NLP 團隊的 GroupAssistBench，以 50 個真實群組、80,299 條訊息建 2,395 道題，並測試 RER、ACB 兩種干預（量子位整理）。</p>
+    <p class="g-meta">
+      <span>量子位</span>·<span>2026-11-21 發布</span>·<span>2026-11-23 收錄</span>·
+      <a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&mid=2247947677&idx=3&sn=0797fbd2116a405b44176c97577757d8" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>80,299 條</b><span>50 個真實群組對話的歷史訊息量，經匿名化與隱私審查</span></div>
+    <div class="g-stat"><b>2,395 題</b><span>L1 事實召回 1,374 題＋L2 開放式服務 1,021 題</span></div>
+    <div class="g-stat"><b>0.247 / 0.621</b><span>EverMemOS 的 L2 與 L1 分數；L1 高於完整上下文，L2 低於它</span></div>
+    <div class="g-stat"><b>89.3%</b><span>自動評分與人工多數票一致率（60 道 L2、180 份回答）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">GroupAssistBench 把「群組對話記憶」當考科：量的是代理能否把記住的東西用對人、用對時間。</p>
+
+    <p class="g-p">原文的例子很日常：九人出遊群把出發日從 5 月 1 日改成 4 月 30 日，助手提醒購票時仍可能報舊日期。</p>
+    <p class="g-p">它「記得」了歷史，卻沒服務好這個群。群組對話的難處不在長度，而在同一個安排被多人改寫。</p>
+    <p class="g-p">誰想坐靠窗、誰卡預算、哪句只是提議、哪句已成決定，往往沒有標記，只能從對話本身判讀。</p>
+    <p class="g-p">既有評測多用事實問答，近期才看下游；群組對話多了多人補寫、安排隨討論更新兩層難度。</p>
+    <p class="g-p">公開前資料經匿名化與隱私審查，公開版不含原始群組的身分資訊；建構走程序規則、語義審查、人工核驗三道關卡。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>出題流程</b> — 從群組對話到 2,395 道題（本站依原文敘述重排）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>取來源</b><small>真實部署群助手的群組；公開版去識別化</small></div>
+        <span class="ar" aria-hidden="true">→</span>
+        <div class="fn"><b>篩題</b><small>比對「給歷史／不給歷史」，只留真的需要記憶的請求</small></div>
+        <span class="ar" aria-hidden="true">→</span>
+        <div class="fn"><b>錨定</b><small>為必需事實建記憶錨點，定位來源訊息與證據片段</small></div>
+        <span class="ar" aria-hidden="true">→</span>
+        <div class="fn"><b>截斷</b><small>各題設歷史截止點，擋掉提問之後的訊息</small></div>
+        <span class="ar" aria-hidden="true">→</span>
+        <div class="fn hot"><b>出題與核驗</b><small>分 L1／L2 出題，程序規則＋語義審查＋人工核驗</small></div>
+      </div>
+      <p class="x-src">本站重繪；原文僅以文字描述建構過程，未給此流程圖與步驟編號，順序依原文段落重排。抽樣核驗中 95.8% 題目經多數投票判定有效。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">兩層考題：回憶事實，與完成服務</h2>
+    <p class="g-p">L1 有明確參考事實，例如「最初約定哪天出發」，對錯可判。</p>
+    <p class="g-p">L2 要真的做完一件事，例如「幫大家發出出行與購票提醒」，沒有標準措辭，但必須守住仍有效的決定與成員要求。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>層</th><th>題目要求</th><th>題數</th><th>給分方式</th></tr></thead>
+        <tbody>
+          <tr><td data-l="層"><b>L1 記憶召回</b></td><td data-l="題目要求">答案是可核對的事實（例：最初約定的出發日）</td><td class="n" data-l="題數">1,374</td><td data-l="給分">對錯可判，直接比對</td></tr>
+          <tr><td data-l="層"><b>L2 記憶使用</b></td><td data-l="題目要求">完成一項服務（例：發出出行與購票提醒）</td><td class="n" data-l="題數">1,021</td><td data-l="給分">每題客製評分準則：Grounding／Service／Penalty</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-hint">表格可左右滑動</p>
+
+    <div class="x-grid-h" style="margin-top:16px">依賴形式（本站依原文整理；原文強調這描述資訊依賴，不是難度排序）</div>
+    <div class="x-grid">
+      <div class="c"><b><i>M1</i>單條記憶</b><small>一個事實即可回答</small></div>
+      <div class="c"><b><i>M2</i>多記憶整合</b><small>需拼接不同成員、不同時段的多條訊息</small></div>
+      <div class="c"><b><i>M3</i>更新與衝突</b><small>舊決定何時被取代、誰的約束仍適用</small></div>
+    </div>
+
+    <p class="g-p">L2 沒有唯一答案，字串比對判不了服務好壞，於是每題都綁一組與歷史證據相連的評分準則。</p>
+    <p class="g-p">Grounding 查回答有沒有體現必要事實，Service 查任務是否完成，Penalty 罰違反決定、忽略成員限制與使用過時資訊。</p>
+    <p class="g-p">原文舉例：購票提醒要用新日期，也要顧人數、交通與座位偏好；拿到錯的日期就該扣分。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">反差：更會回憶，不一定更會服務</h2>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>配置</th><th>L1 召回</th><th>L2 服務</th></tr></thead>
+        <tbody>
+          <tr><td data-l="配置"><b>完整上下文</b></td><td class="n" data-l="L1 召回">0.570</td><td class="n win" data-l="L2 服務">0.431</td></tr>
+          <tr><td data-l="配置"><b>EverMemOS</b></td><td class="n win" data-l="L1 召回">0.621</td><td class="n" data-l="L2 服務">0.247</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-src">原文數字；兩者使用相同任務模型。14 組配置中原文只舉這一組反差，其餘未列分數；分數應在各自指標內比較。</p>
+
+    <p class="g-p">同一個記憶系統，召回分數高於完整上下文，服務分數卻只有 0.247。原文的結論只有一句：更會回憶，並不必然更會服務。</p>
+    <p class="g-p">L2 要的是挑對記憶再落成行動：檢索對了，還得判斷哪條仍有效、對誰有效。</p>
+    <p class="g-p">為追這段落差，研究追蹤 497 條配對記憶：同一段歷史既被 L1 直接問，也被某題 L2 真實依賴。</p>
+    <p class="g-p">結果分兩路：約 36% 的記憶根本沒進 L2 模型的輸入；其餘約 64% 進了輸入，卻沒在回答裡被判有效應用。</p>
+    <p class="g-p">原文自己加了限定：這兩個數字只說明該類配對記憶的去向，不是全部 L2 任務的失敗率。</p>
+    <p class="g-p">（編輯推論：前一路是檢索線索不足——「幫大家安排一下」不會點名要哪條偏好；後一路是證據給了，模型不知道怎麼拿它約束這一句。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">兩種輕量干預：整理證據，寫明約束</h2>
+    <p class="g-p">原文稱這兩種干預「輕量」，動的是檢索後的整理與回答前的約束寫法。</p>
+    <p class="g-p">RER 在檢索後梳理人物、事件、時間與決定之間的關係，需要時補進相關證據。</p>
+    <p class="g-p">ACB 把已到手的事實整理成帶主體、帶範圍、帶有效狀態的約束，讓模型知道該拿它擋哪一句。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>L2 平均分提升</b> — 單位為百分點，對各自基線（條愈長愈好）</figcaption>
+      <div class="x-bars">
+        <div class="x-bar"><b>RER｜LightMem</b><div class="t"><span style="--p:89"></span></div><i>+6.28</i></div>
+        <div class="x-bar"><b>ACB｜xMemory</b><div class="t"><span style="--p:56"></span></div><i>+3.94</i></div>
+        <div class="x-bar"><b>ACB｜EverMemOS</b><div class="t"><span style="--p:45"></span></div><i>+3.16</i></div>
+        <div class="x-bar hot"><b>組合｜LightMem</b><div class="t"><span style="--p:100"></span></div><i>+7.03</i></div>
+        <div class="x-bar"><b>組合｜xMemory</b><div class="t"><span style="--p:66"></span></div><i>+4.64</i></div>
+        <div class="x-bar"><b>組合｜EverMemOS</b><div class="t"><span style="--p:63"></span></div><i>+4.43</i></div>
+      </div>
+      <p class="x-src">本站重繪；數字取自原文敘述的 L2 平均分提升，組合列為「相對各自基線」。原文未給信賴區間與其他配置的增幅。</p>
+    </figure>
+
+    <p class="g-p">原文也把定位講清楚：兩種機制各自的獨立貢獻仍需細分，不能把所有提升都算成「多找回幾條記憶」。</p>
+    <p class="g-p">（編輯推論：槓桿在證據形狀而非模型本身，因此最容易搬到自己家的代理上。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">為什麼值得放進館藏</h2>
+    <p class="g-p">團隊自稱這是首個以群組對話建構的代理記憶基準（原文主張，未經第三方驗證）；論文已上 arXiv，程式碼與資料集開放。</p>
+    <p class="g-p">它的判準也換了：記憶的價值不只看存了多少、搜得多快，還看何時該用、對誰適用、哪些已經失效。</p>
+    
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>召回與服務要分開量。</b>L1 高分不代表 L2 服務得住。</p>
+      <p><b>群組的難點是衝突，不是長度。</b>舊決定何時失效才是主戰場。</p>
+      <p><b>干預的槓桿在證據形式。</b>動檢索後的整理，也能提升服務分。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">機器之心</span><a href="mind2act-world.html">具身評測：同樣沒做成，斷點才是資訊</a><span class="d">2026-11-22</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="knowledge-factory.html">知識工廠：代理缺的不是模型，是公司的常備知識</a><span class="d">2026-11-21</span></div>
+      <div class="g-relrow"><span class="s">量子位</span><a href="karpo-decision.html">決策獨立成一層：Karpo 把判斷壓進一次前向推理</a><span class="d">2026-11-21</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。原文未提供可用的機制圖，本頁流程圖、分數條與依賴形式格皆為本站依原文文字重排、重繪，原文未給此排序與分組。分數出自論文自建評測，未經第三方複核。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-23 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

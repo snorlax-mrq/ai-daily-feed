@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 科學模態接進通用代理：資料不是重點，可驗證環境才是 · AI 每日動態檔案</title>
+<meta name="description" content="上海 AI Lab 開源 320B 混合專家模型 Sage S2.1 Flash：用模態投影器讀分子與光譜，用 ToolSpace 自動長出工具呼叫資料，七領域 33 項基準中四項自報第一。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>科學模態接進通用代理：資料不是重點，可驗證環境才是</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：上海人工智能實驗室等機構發布 Sage S2.1 Flash 技術報告，公開 320B 混合專家主幹與訓練環境（機器之心）</p>
+    <p class="g-meta">
+      <span>機器之心</span>·<span>2026-11-20 發布</span>·<span>2026-11-23 收錄</span>·
+      <a href="https://mp.weixin.qq.com/s?__biz=MzA3MzI4MjgzMw==&mid=2651075493&amp;idx=3&amp;sn=63643451e794a6d8ac3dbb423d7f460d" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>320B</b><span>混合專家主幹總參數量，以動態專家路由控制推理計算量</span></div>
+    <div class="g-stat"><b>4 項第一</b><span>七領域 33 項基準中，第一與第二各四項（原文自報）</span></div>
+    <div class="g-stat"><b>2,042 種</b><span>ToolSpace 工具數，另有 804 個環境、77,760 個呼叫模式節點</span></div>
+    <div class="g-stat"><b>12,487 張</b><span>CT 影像為輸入，單一指令重建三維骨骼模型</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">上海 AI Lab 開源的 320B 混合專家模型，把科學模態與工具操作收進同一主幹；真正的差異是它自己造的可驗證訓練環境。</p>
+
+    <p class="g-p">這是上海人工智能實驗室聯合復旦大學、中國科學院軟體研究所等機構發布的技術報告，主體是 Sage S2.1 Flash。</p>
+    <p class="g-p">主幹採混合專家（MoE）架構，總參數 320B，靠動態專家路由決定每次推理動用多少計算。</p>
+    <p class="g-p">報告同時釋出模型與程式碼：GitHub 上的 InternLM/Sage-S2.1-Flash，論文編號 arXiv 2611.21072。</p>
+    <p class="g-p">長上下文由稀疏注意力與線性注意力搭配撐起；同一份共享上下文裡，文字、影像與科學資料表示一起被處理。</p>
+    <p class="g-p">原文的架構主張很明確：主幹先提供共享推理能力，再為接入科學專用模態留出位置。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>三層堆疊</b> — 交付物、訓練環境、320B 主幹（本站重繪）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>3 · 交付層</b><small>任務結束時交出什麼</small><span class="pi">artifact</span></div>
+          <div class="ring-inner">可再編輯的 Blender／CAD 模型檔、試算表、可互動的研究應用</div>
+        </div>
+        <div class="ring">
+          <div class="ring-lb"><b>2 · 可驗證訓練環境</b><small>代理練功與被評分的地方</small><span class="pi">env</span></div>
+          <div class="ring-inner">ToolSpace 工具協作空間、ML Coding 的 Harbor 容器、視覺互動的介面截圖序列</div>
+        </div>
+        <div class="ring ring--core">
+          <div class="ring-lb"><b>1 · 主幹</b><small>共享推理</small><span class="pi">core</span></div>
+          <div class="ring-inner"><b>320B MoE</b> — 動態專家路由；Sci-Perception 投影器把分子、蛋白質、核酸、光譜接進同一表示空間</div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑</b>：環境跑出的成功軌跡與驗證結果，回頭生成下一批訓練資料。</span></div>
+      <p class="x-src">本站重繪，非原文圖；原文以段落分別敘述主幹、模態與訓練環境，未給此三層堆疊、層序與回饋方向。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">科學模態：五個專用編碼器接一個投影器</h2>
+    <p class="g-p">分子、蛋白質、核酸、光譜四類資料不進主幹，先各自交給專用編碼器。</p>
+    <p class="g-p">原文點名五個：MoleculeSTM 讀分子結構、ESM-2 讀蛋白質序列、DNABERT-2 讀 DNA、RNA-FM 讀 RNA、DiffSpectra 讀光譜。</p>
+    <p class="g-p">它們抽出的是原子連接與連續測量訊號，不是文字描述。</p>
+    <p class="g-p">再經一個可訓練的模態投影器，映射到語言模型的統一表示空間，主幹才接得上。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>科學資料的一條路</b> — 編碼、投影、任務、獎勵（本站依原文重排）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>1 專用編碼器</b><small>MoleculeSTM／ESM-2／DNABERT-2／RNA-FM／DiffSpectra</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>2 模態投影器</b><small>可訓練，映射到統一表示空間</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>3 主幹推理</b><small>與文字、影像共用同一上下文</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>4 可驗證任務</b><small>性質分類、交互作用位點預測、原子計數、結構關係查詢</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>5 獎勵訊號</b><small>分類準確性、集合重疊度、數值誤差</small></div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖；原文未給此五步順序，獎勵實際回頭改權重，圖中僅畫單向。</p>
+    </figure>
+
+    <p class="g-p">獎勵之所以給得出來，是因為答案能自動判對錯：分類對不對、兩個集合重不重疊、數值差多少。</p>
+    <p class="g-p">訓練同時用監督學習與強化學習，先把模態接上，再用獎勵把科學理解推上去。</p>
+    <p class="g-p">（編輯觀點：獎勵只要能量測，模態就不必靠人寫標註，這是它能一路擴到光譜的原因。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">工具呼叫資料：自動生成，靠執行結果篩</h2>
+    <p class="g-p">ToolSpace 從 MCP 工具服務與真實 agent 軌跡裡，抽出工具定義、呼叫參數與執行結果。</p>
+    <p class="g-p">抽完建成工具組合圖，圖上只記三種關係：資料怎麼傳、環境狀態怎麼變、失敗後怎麼恢復。</p>
+    <p class="g-p">再用狀態感知隨機遊走生成跨工具、跨環境的呼叫序列，確保序列真的能跑。</p>
+    <p class="g-p">三道關卡：執行條件檢查、失敗回滾、重新取樣。</p>
+    <p class="g-p">環境另覆蓋檢索、軟體工程、資安與生產力工具，含多跳檢索與漏洞分析。</p>
+    <p class="g-p">法律文件與三維工程設計也各自建了資料收集、任務合成到結果驗證的一條龍流程。</p>
+    <p class="g-p">成功軌跡改寫成自然語言任務，並生成驗證程式，檢查最終狀態、關鍵中間狀態與輸出欄位。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>訓練管線</th><th>來源</th><th>怎麼判對錯</th></tr></thead>
+        <tbody>
+          <tr><td data-l="管線"><b>ToolSpace</b></td><td data-l="來源">MCP 工具服務、真實 agent 軌跡；2,042 種工具、804 個環境</td><td data-l="判準">執行條件檢查、失敗回滾、最終狀態與輸出欄位的驗證程式</td></tr>
+          <tr><td data-l="管線"><b>ML Coding</b></td><td data-l="來源">4,936 條 Kaggle 資料來源、2,960 篇論文，以及 Hugging Face、GitHub 的程式與資料</td><td data-l="判準">Harbor 隔離容器內跑；看執行結果、預測指標與模型權重</td></tr>
+          <tr><td data-l="管線"><b>視覺智能體</b></td><td data-l="來源">介面截圖，先單步點擊、再連續操作</td><td data-l="判準">每步讀畫面、判斷進度，依新截圖決定下一步</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">規模數字值得記：微調軌跡平均含 18.86 次工具呼叫，最長 209 次，平均跨越 2.29 個環境。</p>
+    <p class="g-p">ML Coding 的任務分四類：預測建模、演算法實作、論文復現與模型後訓練。</p>
+    <p class="g-p">但它最關鍵的設計是填空：移除損失函數、特徵變換或參數更新，要模型自己補回核心程式碼。</p>
+    <p class="g-p">視覺訓練分兩階段：先認介面元素與單步點擊，再拉長成連續操作，逼模型追蹤環境狀態。</p>
+    <p class="g-p">第二階段難在步驟依賴：前一步留下的畫面，決定下一步還能不能做。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">成績單：四項第一、四項第二</h2>
+    <p class="g-p">評測涵蓋智能代理程式開發、辦公生產力、工具使用、機器學習工程、深度研究、資訊檢索與視覺互動，共 33 項基準。</p>
+    
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>基準</th><th>領域</th><th>分數</th><th>原文名次</th></tr></thead>
+        <tbody>
+          <tr><td data-l="基準"><b>MLE-bench Lite</b></td><td data-l="領域">機器學習工程</td><td data-l="分數" class="n">90.3 HumanRank</td><td data-l="名次" class="win">第一</td></tr>
+          <tr><td data-l="基準"><b>OfficeQA Pro</b></td><td data-l="領域">辦公生產力</td><td data-l="分數" class="n">72.2</td><td data-l="名次" class="win">第一</td></tr>
+          <tr><td data-l="基準"><b>Harvey LAB</b></td><td data-l="領域">法律專業任務</td><td data-l="分數" class="n">25.0</td><td data-l="名次" class="win">第一</td></tr>
+          <tr><td data-l="基準"><b>SpreadsheetBench 2</b></td><td data-l="領域">試算表</td><td data-l="分數" class="n">37.1</td><td data-l="名次" class="win">第一</td></tr>
+          <tr><td data-l="基準"><b>PostTrainBench</b></td><td data-l="領域">模型後訓練</td><td data-l="分數" class="n">39.2</td><td data-l="名次">第二</td></tr>
+          <tr><td data-l="基準"><b>PaperBench</b></td><td data-l="領域">論文復現</td><td data-l="分數" class="n">88.0</td><td data-l="名次">第二</td></tr>
+          <tr><td data-l="基準"><b>OSWorld-Verified</b></td><td data-l="領域">桌面操作</td><td data-l="分數" class="n">85.2</td><td data-l="名次">第二</td></tr>
+          <tr><td data-l="基準"><b>WebArena-Verified</b></td><td data-l="領域">網頁互動</td><td data-l="分數" class="n">67.6</td><td data-l="名次">第二</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="x-src">名次與分數皆為原文（研究團隊自報）敘述，榜單日期未載；Harvey LAB 領域歸類為編輯依名稱推定。</p>
+
+    <p class="g-p">（編輯推論：原文只給自家分數與名次，沒列對手的名字與差距，四項第一目前無法從公開資訊複核。）</p>
+    <p class="g-p">整合度看案例最清楚：從 12,487 張 CT 影像裡挑出屬於目標序列的切片，再操作 3D Slicer 重建骨骼模型。</p>
+    <p class="g-p">光學量子儲存那則案例最完整：檢索文獻、抽出實驗參數、跑模擬計算與視覺化，交付可互動的研究應用。</p>
+    <p class="g-p">同樣的流程也用在 Blender 與 CAD 建模，以及 Fiji、EEGLAB、QGIS 的顯微影像、腦電與遙測分析。</p>
+    
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>320B 開源不等於便宜。</b>真正省算力的是動態專家路由。</p>
+      <p><b>科學模態不難接，難的是可驗證任務。</b>獎勵訊號決定它學到什麼。</p>
+      <p><b>四項第一是自報的。</b>沒有對手分數，只能當待複核的宣稱。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">機器之心</span><a href="mind2act-world.html">具身評測：同樣沒做成，斷點才是資訊</a><span class="d">2026-11-22</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="knowledge-factory.html">知識工廠：代理缺的不是模型，是公司的常備知識</a><span class="d">2026-11-21</span></div>
+      <div class="g-relrow"><span class="s">量子位</span><a href="karpo-decision.html">決策獨立成一層：Karpo 把判斷壓進一次前向推理</a><span class="d">2026-11-21</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數字出自原文，圖解與小標為編輯整理。原文未提供可用機制圖，本頁堆疊圖與流程圖皆為本站依原文文字重繪，排序與分層為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-23 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

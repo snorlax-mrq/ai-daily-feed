@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 決策獨立成一層：Karpo 把判斷壓進一次前向推理 · AI 每日動態檔案</title>
+<meta name="description" content="Karpo Decision 31B 開源：Decision Index 73.9 分居首，公開集 14 萬次請求中位 94 毫秒；另開源 System 1＋System 2 瀏覽器方案，102 題 89% 成功率、單任務模型成本 0.096 美元（廠商自報）。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>決策獨立成一層：Karpo 把判斷壓進一次前向推理</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：量子位評測報導，以 Decision Index（73.9 Full 分）與 Browserbase Benchmark v2（89%／201 秒／0.096 美元）兩組數字開場，再拆 Readout Head、Branch Attention、RLCD 與 RSI 訓練法，中段穿插官網點餐小遊戲與兩項實測。</p>
+    <p class="g-meta">
+      <span>量子位</span>·<span>2026-11-21 發布</span>·<span>2026-11-23 收錄</span>·
+      <a href="https://mp.weixin.qq.com/s?__biz=MzIzNjc1NzUzMw==&amp;mid=2247947677&amp;idx=1&amp;sn=ebf1f96b9afceacdfa0d407ecdb3ff2b" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>73.9</b><span>Decision Index 總榜 Full 分，300 個模型中居首（廠商公布）</span></div>
+    <div class="g-stat"><b>94 毫秒</b><span>公開集 14 萬多次請求的中位回應時間，單張 RTX PRO 6000</span></div>
+    <div class="g-stat"><b>0.096 美元</b><span>Browserbase v2 單任務模型成本，配 89% 平均成功率、201 秒平均耗時（廠商自報）</span></div>
+    <div class="g-stat"><b>78%</b><span>三輪實測中由決策模型完成的網頁操作，僅占 14% 耗時、13% 成本</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">高頻小判斷不必再逐字生成答案；Karpo 把打分壓進一次前向推理，模型、瀏覽器框架與評測集一併開源。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">這個題目忽然變熱的理由</h2>
+    <p class="g-p">今年 9 月 Jev 爆紅後，決策模型成了熱門題目；Jev 背後的 TypeSafe AI 在 24 天內估值達 75 億美元。</p>
+    <p class="g-p">OpenAI、微軟、亞馬遜、Cloudflare 相繼進場。理由很直接：每次選工具都叫通用大模型，慢又貴。</p>
+    <p class="g-p">Jev 與 Gemini Decision 1 能給決策機率，但都不開源；已開放權重的 GLiDE，原文認為速度與判斷力未必同時拉滿。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">誰動腦，誰動手</h2>
+    <p class="g-p">決策模型的賣點不是答得更聰明，是把每一次判斷的固定成本壓到可以忽略。</p>
+    <p class="g-p">原文的例子很尋常：訂餐廳時，通用模型理解需求、拆解任務、準備要填的資料。</p>
+    <p class="g-p">真正落到頁面上選輸入框、點按鈕的，是 27B Act，單次決策時延中位數 931 毫秒。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>System 1＋System 2 的分工</b> — 框架包住兩個模型（本站重繪）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>1 · karpo-browser</b><small>外層：讀頁、執行、接住異常</small><span class="pi">TypeScript</span></div>
+          <div class="ring-inner"><b>開源的執行框架</b> — 讀取網頁、執行操作、處理頁面變化與執行異常</div>
+        </div>
+        <div class="ring">
+          <div class="ring-lb"><b>2 · System 2</b><small>動腦：理解需求、拆任務、備妥要填的資訊</small><span class="pi">DeepSeek V4.1 Flash</span></div>
+          <div class="ring-inner"><b>通用大模型負責規劃</b> — 只在需要理解與取捨時出手</div>
+        </div>
+        <div class="ring ring--core">
+          <div class="ring-lb"><b>3 · System 1</b><small>動手：選輸入框、點按鈕、決定下一步動作</small><span class="pi">Karpo Decision 27B Act</span></div>
+          <div class="ring-inner"><b>每個動作一次決策</b> — 單次決策時延中位數 931 毫秒</div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑</b>：頁面變化與執行異常由框架接住；原文未寫是否重規劃（編輯推論：重規劃仍回到 System 2）。</span></div>
+      <p class="x-src">本站重繪，非原文圖；原文以文字敘述「System 2 動腦、System 1 動手」，未給這三者的內外關係。</p>
+    </figure>
+
+    <p class="g-p">三輪、102 道任務的實測裡，約 78% 的操作由決策模型完成，卻只占 14% 耗時、13% 成本。</p>
+    <p class="g-p">貴的算力留給規劃，便宜的重複判斷留給小模型——這是分工的全部理由。</p>
+    <p class="g-p">karpo-browser 以 TypeScript 寫成，透過 MCP 就能接進 Claude Code、Codex，不必從頭搭一套瀏覽器代理。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">快與省：先對齊基準</h2>
+    <p class="g-p">同一個任務、同一批題目，才比得出「近 6 倍」。這組是同題對比，出自廠商敘述，不在公開排行榜上。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>同一場《城市掃描儀》任務的完成時間</b> — 36 場活動挑 10 個去處（本站重繪；條愈短愈好）</figcaption>
+      <div class="x-bars">
+        <div class="x-bar hot"><b>Karpo 31B</b><span class="t"><span style="--p:17"></span></span><i>2.6 秒</i></div>
+        <div class="x-bar"><b>Gemini 3.5 Flash</b><span class="t"><span style="--p:100"></span></span><i>14.96 秒</i></div>
+      </div>
+      <p class="x-src">基準：原文所述的同一場《城市掃描儀》任務（36 場活動、挑 10 個去處，平均消費 50 美元內、通勤 5km 內），2026-11-21 發布時的同題對比；條愈短愈好。兩者皆 36 題，Karpo 全對。數字為 MachinePulse 自報，無第三方驗證。</p>
+    </figure>
+
+    <p class="g-p">另一組基準是 Browserbase v2 的 102 道核心任務；成本與耗時都按單一任務平均計。</p>
+    <p class="g-p">原文稱比榜首 Claude Fable 5.2 + Claude Code 快約 1.9 倍，模型成本只有對方的十三分之一。</p>
+    <p class="g-p">把門檻放寬到 80% 成功率、250 秒內、0.15 美元內，原文說整個排行榜 91 筆紀錄無一達成（廠商自報）。</p>
+    <p class="g-p">它自測 102 題全集、跑 3 次取平均；排行榜其他模型是 38 題跑 1 次，這點原文有註記。</p>
+    <p class="g-p">長期成本看 JevBench 的 GPU 估算：每 1,000 次決策約 0.025 美元，1 美元可跑近 4 萬次。</p>
+    <p class="g-p">成本壓到這個量級，開發者才敢在流程裡多插幾道檢查，而不是省著用。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">一次前向推理，換掉逐字生成</h2>
+    <p class="g-p">通用模型做選擇題要逐字生成答案，再由程式從文字裡解析選項，輸出 token 就是延遲與帳單。</p>
+    <p class="g-p">Readout Head 改在固定位置為各候選打分，分數直接轉成機率，輸出 token 因此降到 0。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>題型</th><th>判斷什麼</th><th>原文限定語</th></tr></thead>
+        <tbody>
+          <tr><td data-l="題型"><b>Choice</b></td><td data-l="判斷">下一步該呼叫哪個工具</td><td data-l="限定語">單題最多 255 個候選一起打分</td></tr>
+          <tr><td data-l="題型"><b>Noul</b></td><td data-l="判斷">任務到底完成了沒</td><td data-l="限定語">直接回傳「已完成」的機率</td></tr>
+          <tr><td data-l="題型"><b>Score</b></td><td data-l="判斷">搜尋結果多相關、推薦多合口味</td><td data-l="限定語">對各評分等級給機率，再由系統算分</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">三種題型共用同一個 Readout Head。表格為本站依原文整理，原文將三者並列，未給先後順序。</p>
+    <p class="g-p">多題一起送時靠 Branch Attention（支援 256K 上下文）：共用背景只算一次，各題的選項各自打分，互不干擾。</p>
+    <p class="g-p">一張 RTX PRO 6000、1K–4K token 的單題請求，中位 371 毫秒；一次塞 16–63 題也只要 653 毫秒。</p>
+    <p class="g-p">題數變多，耗時卻沒有等比增加，才是「高頻」在帳單上站得住的原因。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">訓練後段把偏科扳回來</h2>
+    <p class="g-p">訓練後段出現偏科：公開測試從 73.1 升到 75.1，13 個陌生領域卻從 72.1 掉到 70.7。</p>
+    <p class="g-p">RSI 的作法是先訓練多個候選模型、逐一評估，再從 5 個 checkpoint 做權重平均（3 個全參數微調、2 個 LoRA）。</p>
+    <p class="g-p">融合版本只有勝過現行模型才晉級。公開分維持 75.1，陌生領域回到 72.3，結構與參數量不變，仍是 31B。</p>
+    <p class="g-p">同一套 13 領域測試，72.3% 高於 KnowLine 31B Gen1 的 71.5%、Sieve 31B v3 的 70.4%、GLiDE 1.2 的 69.1%。</p>
+    <p class="g-p">校準同樣靠訓練：RLCD 依整組預測機率給獎勵，JevBench 公開題的 ECE 為 2.3%。</p>
+    <p class="g-p">校準準了才有意義：開發者能依機率設執行閾值，把握不足時把決定權交還人類。</p>
+    <p class="g-p">開源的是 0.8B 到 31B 共 6 款尺寸，加上 27B Act、karpo-browser 與 KBB（584 個網站、23,075 步操作）。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">除了快，還聽得出弦外之音</h2>
+    <p class="g-p">評測段落有兩個小實驗：8 筆技術搜尋結果裡，308 毫秒挑出 4 筆符合的，另 4 個干擾項也沒被誤判進來。</p>
+    <p class="g-p">6 道語氣題 232 毫秒答完；「頁面載入慢了一些，但結果準確，整體還可以」拿到 91% 中性、8% 認可、約 0.2% 不滿。</p>
+    <p class="g-p">反諷句「不錯嘛，今天終於沒把線上服務弄崩」被判 88% 負面、10% 正面、2% 中性——客服與回饋分析要的就是這個。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>決策該獨立成一層。</b>每次點按鈕都叫大模型，等於用最貴的算力做最便宜的事。</p>
+      <p><b>比速度先對齊基準。</b>任務、題數、跑法不同，倍數就沒有意義。</p>
+      <p><b>開源不等於可用。</b>真正的門檻是 72.3% 的不偏科與 2.3% 的校準。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">機器之心</span><a href="mind2act-world.html">具身評測：同樣沒做成，斷點才是資訊</a><span class="d">2026-11-22</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="knowledge-factory.html">知識工廠：代理缺的不是模型，是公司的常備知識</a><span class="d">2026-11-21</span></div>
+      <div class="g-relrow"><span class="s">量子位</span><a href="groupassistbench.html">群組記憶的考卷：找得到，不等於用得上</a><span class="d">2026-11-21</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數字出自原文，圖解與小標為編輯整理。原文未提供可用機制圖，本頁分工圖、時間比較圖與題型表皆為本站依原文文字重繪、重排。原文所有成效數字均為廠商自報，無第三方驗證。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-23 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
