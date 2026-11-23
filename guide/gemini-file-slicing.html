@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 只為看到的那幾頁付費：Gemini API 把切片搬到伺服器端 · AI 每日動態檔案</title>
+<meta name="description" content="Gemini API 新增檔案切片控制，可指定頁面、工作表範圍與影音片段，只為模型實際檢視的部分計費；並原生支援 Office 與 OpenDocument。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>只為看到的那幾頁付費：Gemini API 把切片搬到伺服器端</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Google 在 Gemini API 推出檔案切片控制與原生 Office 檔案上傳，讓代理指定要看的頁面與片段</p>
+    <p class="g-meta">
+      <span>Google Blog（AI）</span>·<span>2026-11-23 發布</span>·<span>2026-11-24 收錄</span>·
+      <a href="https://blog.google/innovation-and-ai/technology/developers-tools/file-slicing-controls/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>4 類媒體</b><span>文件與簡報、試算表、影片、音訊都可指定範圍切片</span></div>
+    <div class="g-stat"><b>14 倍</b><span>Vercel 引述：抽單頁文字比整份 PDF 渲染少用的 token（原文引述，無獨立複核）</span></div>
+    <div class="g-stat"><b>1 次上傳</b><span>Files API 的 URI 可跨多輪與工具呼叫重複使用</span></div>
+    <div class="g-stat"><b>所有 Gemini 4</b><span>原生切片支援全系列；既有檔案大小與頁數上限不變</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">過去 API 只吃整份檔案，代理只好在客戶端自己切；現在切片、算繪與 token 化都搬到伺服器端，只為真正檢視的頁面計費。</p>
+
+    <p class="g-p">知識工作藏在密集的 PDF、簡報、多分頁活頁簿與長錄音裡，整份丟進去多半是浪費。</p>
+    <p class="g-p">原本的做法是在 harness 裡跑 LibreOffice、PDF 算繪器與 ffmpeg，先切好再上傳。</p>
+    <p class="g-p">代價是記憶體膨脹、本機磁碟被抽出的影格塞滿，企業平台還得為每個使用者維護沙箱。</p>
+    <p class="g-p">把檔案攤平成純文字也一樣有代價：版面、圖表與表格結構會先被丟掉。</p>
+    <p class="g-p">新做法是把 Files API 的 URI 放進使用者回合或 function response，由 API 端依需要切片與算繪。</p>
+    <p class="g-p">可控制的維度有四種：範圍、內容層、解析度與影格率，這也是「只為檢視部分計費」的計算基礎。</p>
+    <p class="g-p">官方把它定位成「讓 harness 具備多模態，而不必在本地膨脹」：檔案不落地，抽取與算繪都在雲端。</p>
+    <p class="g-p">對企業平台而言，這也把「每人一個沙箱」的成本，換成按 token 計費的 API 呼叫。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>切片位置換了</b> — 從客戶端 harness 移到 API 伺服器端（本站依原文重排）</figcaption>
+      <div class="x-cmp">
+        <div><b>改前 · 客戶端切</b><p>整份上傳，由客戶端自行算繪與切片</p><p>harness 內跑 LibreOffice／PDF 算繪器／ffmpeg，記憶體與磁碟自行吸收，平台為每人開沙箱</p></div>
+        <div class="after"><b>改後 · 伺服器端切</b><p>上傳一次，指定頁面、工作表範圍或時間片段</p><p>API 端切片、算繪與 token 化，只為模型實際檢視的部分計費</p></div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖；原文以段落描述前後差異，未做並列對照。箭頭與「改前／改後」為編輯整理。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">四類媒體，各有一套切片旋鈕</h2>
+    <p class="g-p">文件、試算表、影片、音訊的切片維度不同，可選的內容層也不一樣。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>媒體</th><th>可切範圍</th><th>可選內容層</th></tr></thead>
+        <tbody>
+          <tr><td data-l="媒體"><b>文件與簡報</b><small>PDF、Office、OpenDocument</small></td><td data-l="範圍">頁碼區間（start_page／end_page）、解析度 low／medium／high</td><td data-l="內容層">page_text、page_image</td></tr>
+          <tr><td data-l="媒體"><b>試算表</b><small>.xlsx／.xls／.ods</small></td><td data-l="範圍">工作表分頁（sheet_index）、可見儲存格範圍（visible_cells）、解析度</td><td data-l="內容層">data、formulas、visuals</td></tr>
+          <tr><td data-l="媒體"><b>影片</b></td><td data-l="範圍">時間區段（start_offset／end_offset）、fps、解析度</td><td data-l="內容層">transcript、frames、audio</td></tr>
+          <tr><td data-l="媒體"><b>音訊</b></td><td data-l="範圍">時間區段（start_offset／end_offset）</td><td data-l="內容層">原文未列</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">參數省略時有預設：文件與簡報走保留版面的頁面圖像；試算表預設帶入所有分頁的計算值、公式與工作表名稱。</p>
+    <p class="g-p">四類媒體對應四種閱讀習慣：PDF 與簡報看頁、活頁簿看工作表與儲存格、影片與音訊看時間軸。</p>
+    <p class="g-p">例如試算表可只取某個分頁的可見儲存格與公式，略過視覺層；對大型活頁簿特別省。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">兩段式讀法：先掃描，再放大</h2>
+    <p class="g-p">官方示範的省法是把同一份 Word 檔上傳一次，先用抽取文字掃過全文，再回頭看單頁高解析圖像。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>同一個 URI：先取文字層，再取單頁高解析圖像</b> — 兩次呼叫、不同內容層（本站依原文程式碼整理）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>1 上傳一次</b><small>Files API 取得 doc.uri</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>2 文字層掃描</b><small>只取 page_text（未指定解析度），問「哪一頁有營收橋接圖」</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>3 單頁高解析</b><small>start_page／end_page 指定該頁，page_image 讀圖表與註腳</small></div>
+      </div>
+      <p class="x-src">本站整理自原文範例程式碼；原文兩次呼叫分別使用 gemini-4-hydrogen 與 gemini-4-neon。原文未畫流程圖。</p>
+    </figure>
+
+    <p class="g-p">同一個 URI 可以跨回合重用，代理也能在 function response 的 function_result 裡直接指定要看哪一段，少一輪來回。</p>
+    <p class="g-p">範例裡掃描用的是文字層，放大那一步才拉高解析度並只取 page_image，兩次呼叫各取所需。</p>
+    <p class="g-p">對 agent harness 來說，檔案處理從「先下載、再轉檔、再切片」縮成一次 API 呼叫。</p>
+    <p class="g-p">對多輪工作流來說，這等於把「先看目錄再翻頁」的習慣交給模型自己決定。</p>
+    <p class="g-p">官方把這種省法叫「skim cheap, then zoom in」：先便宜掃過，再對真正重要的地方花高解析度 token。</p>
+    <p class="g-p">（編輯觀點：真正省下的不只是 token，還有平台為切片而養的沙箱與算繪管線。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">兩家早期採用者怎麼算這筆帳</h2>
+    <p class="g-p">官方引用兩個合作夥伴的數字，兩者都是自家測試、未公開樣本與方法。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>來源</th><th>比較情境</th><th>結果</th><th>性質</th></tr></thead>
+        <tbody>
+          <tr><td data-l="來源"><b>Vercel</b></td><td data-l="情境">抽單頁文字 vs 整份 PDF 算繪</td><td data-l="結果" class="n">少 14 倍 token</td><td data-l="性質">引述，未公開方法</td></tr>
+          <tr><td data-l="來源"><b>LiteLLM</b></td><td data-l="情境">PDF 切片</td><td data-l="結果" class="n">prompt token 減 67%</td><td data-l="性質">自家測試</td></tr>
+          <tr><td data-l="來源"><b>LiteLLM</b></td><td data-l="情境">活頁簿切片</td><td data-l="結果" class="n">prompt token 減 33%</td><td data-l="性質">自家測試</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">LiteLLM 的說法是：多數送 PDF、簡報與試算表的使用者，只需要幾頁或一張工作表。</p>
+    <p class="g-p">它也表示這項功能可透過 LiteLLM 既有的 Gemini 路由使用，客戶端不必額外設定。</p>
+    <p class="g-p">（編輯觀點：三組數字的基準不同，14 倍講的是整份算繪的浪費，67% 與 33% 講的是自家流量組成，不能相加比較。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>省 token 只是表面。</b>真正拆掉的是客戶端的算繪與沙箱。</p>
+      <p><b>切片要交給代理決定。</b>它才知道下一輪該看哪一頁。</p>
+      <p><b>不指定就回預設。</b>文件全頁算繪、試算表全分頁，費用照付。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="semantic-governance.html">動作才是防線：意圖劫持擋在工具呼叫之前</a><span class="d">2026-11-23</span></div>
+      <div class="g-relrow"><span class="s">Claude（Anthropic）</span><a href="claude-ship.html">PR 之後也交給代理：審查、修復、核准拆成三層</a><span class="d">2026-11-23</span></div>
+      <div class="g-relrow"><span class="s">Google DeepMind</span><a href="quantum-agents-lean.html">代理寫量子電路：Lean 當裁判，成本砍一個量級</a><span class="d">2026-11-23</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數字出自原文引述的合作夥伴說法，無獨立複核。圖解 A、B 為本站依原文敘述與範例程式碼重繪，原文未提供對照圖或流程圖。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-24 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

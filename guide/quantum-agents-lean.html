@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 代理寫量子電路：Lean 當裁判，成本砍一個量級 · AI 每日動態檔案</title>
+<meta name="description" content="DeepMind 用多組 Gemini 4 代理團隊改良量子電路，結果全以 Lean 形式化驗證：融合計算成本降 11.8 倍、Grover 實作加速 2.57 倍、arcsin 加速 290 倍。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>代理寫量子電路：Lean 當裁判，成本砍一個量級</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Google DeepMind 與 Google Quantum AI 發表用 Gemini 4 代理團隊改良量子演算法的成果</p>
+    <p class="g-meta">
+      <span>Google DeepMind</span>·<span>2026-11-23 發布</span>·<span>2026-11-24 收錄</span>·
+      <a href="https://deepmind.google/blog/finding-faster-quantum-algorithms-with-agents-and-formal-verification/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>11.8 倍</b><span>慣性局限融合關鍵性質的計算成本降幅</span></div>
+    <div class="g-stat"><b>5,650 → 4,338</b><span>同一演算法所需錯誤更正量子位元</span></div>
+    <div class="g-stat"><b>290 倍</b><span>arcsin 常式（量子演算法載入數值常用）的加速</span></div>
+    <div class="g-stat"><b>每 4 小時</b><span>各代理團隊在虛擬會議交換、辯論與比較想法的頻率</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">量子電路沒法在現有硬體上試跑，所以 Google DeepMind 與 Google Quantum AI 的團隊讓代理提想法、讓 Lean 定理證明器當裁判——過不了證明的點子，進不了共享筆記。</p>
+
+    <p class="g-p">問題背景很實際：即使是最好的量子演算法，有些應用所需的資源仍超過早期硬體能給的。</p>
+    <p class="g-p">既然無法實測，唯一的檢驗方式就是數學證明。團隊用 Lean 逐條證明每個結果。</p>
+    <p class="g-p">做法是為每個問題派出獨立代理團隊找演算法改進，先過 Lean 驗證，才寫進共享筆記。</p>
+    <p class="g-p">獨立意味著同一題會有多條路線競爭；共享筆記則讓已驗證的結果成為其他團隊的起點。</p>
+    <p class="g-p">研究人員的工作因此往前移：設定問題、監督進度，而不是手動設計電路。</p>
+    <p class="g-p">原文說，量子演算法的領域知識加上這套團隊編制，才一起生成這些結果。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一個想法的四個關卡</b> — 提案、證明、共享、競賽（本站依原文重排）</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>1 獨立團隊提案</b><small>每個問題一組 Gemini 4 代理，互不共享</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>2 Lean 驗證</b><small>用形式化證明確認電路真的成立</small></div>
+        <div class="ar">→</div>
+        <div class="fn"><b>3 進共享筆記</b><small>通過證明的想法才寫入，供其他團隊取用</small></div>
+        <div class="ar">→</div>
+        <div class="fn hot"><b>4 四小時虛擬會議</b><small>交換、辯論、比較；成本隨時間逐步下降</small></div>
+      </div>
+      <p class="x-src">本站重繪，非原文圖；原文另有一段動畫示意（代理團隊 → 通過 Lean 檢查 → 最佳程式全隊共享），本圖改為靜態四個關卡呈現，循環僅畫一輪。</p>
+    </figure>
+
+    <p class="g-p">原文描述成本隨時間逐步下降，直到實驗結束——這比較像一場持續數天的錦標賽，而不是一次跑分。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">五項改善，五種幅度</h2>
+    <p class="g-p">選擇的題目都指向長期難題：潔淨能源與藥物設計；方法本身不限於這些領域。</p>
+    <p class="g-p">原文另把 Grover 與 arcsin 歸為基本演算法與算術積木，而非應用問題。</p>
+    <p class="g-p">慣性局限融合用雷射壓縮氫燃料直到點火，量子電腦被期待能算的正是這類關鍵性質。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>項目</th><th>改善</th><th>備註</th></tr></thead>
+        <tbody>
+          <tr><td data-l="項目"><b>慣性局限融合</b></td><td data-l="改善">成本降 11.8 倍</td><td data-l="備註">量子位元由 5,650 降到 4,338</td></tr>
+          <tr><td data-l="項目"><b>常見光敏分子</b></td><td data-l="改善">模擬成本降為 1/8</td><td data-l="備註">簡化粒子位置與電力的追蹤方式</td></tr>
+          <tr><td data-l="項目"><b>Cytochrome P450</b></td><td data-l="改善">2.5 倍</td><td data-l="備註">代謝多數藥物的酵素；量子位元 481 → 333</td></tr>
+          <tr><td data-l="項目"><b>Grover 演算法</b></td><td data-l="改善">2.57 倍</td><td data-l="備註">僅特定實作，非整個演算法</td></tr>
+          <tr><td data-l="項目"><b>arcsin 常式</b></td><td data-l="改善">290 倍</td><td data-l="備註">許多演算法載入數值時的共用積木</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">成本是量子位元數與操作數的綜合指標（原文圖示為 qubits × T gates），因此「降 11.8 倍」與「位元變少」是兩個數字，表格分開列。</p>
+    <p class="g-p">arcsin 這類常式不顯眼，卻是許多演算法把數值載入量子態的必要步驟，改善會外溢到別的演算法。</p>
+    <p class="g-p">原文坦言，這些電路若真的拿去做科學模擬，仍會超過第一批錯誤更正量子電腦的能力。</p>
+    <p class="g-p">五項裡兩項直接降量子位元需求（融合與 P450），其餘降的是操作成本；對早期硬體，位元數往往才是硬上限（編輯觀點）。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">為什麼要形式化驗證，而不是跑分</h2>
+    <p class="g-p">跑分不存在，因為電路本來就跑不動——證明是唯一可用的裁判。</p>
+    <p class="g-p">團隊把 Lean 程式庫、問題規格與已驗證解法開源在 GitHub，讓外部能複核與延伸。</p>
+    <p class="g-p">（編輯觀點：形式化驗證的成本不在算力，而在把問題寫成機器能檢查的規格——那也是人類專家真正貢獻的地方。）</p>
+    <p class="g-p">開源的三件套（程式庫、規格、解法）讓外部團隊能直接接手，不必重跑一次搜尋。</p>
+    <p class="g-p">（編輯觀點：這套模式真正的產出不是幾個倍數，而是「代理提案 + 機器證明」的科研工作流。）</p>
+    <p class="g-p">（編輯觀點：但證明只保證電路符合規格，不保證規格本身選對了問題——那仍是人的工作。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>沒有跑分，就讓證明當裁判。</b>這是代理進入硬科學的前置條件。</p>
+      <p><b>多隊競爭＋共享筆記。</b>想法要過關才能被別人接手。</p>
+      <p><b>倍數要看清分母。</b>2.57 倍只限特定 Grover 實作。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="semantic-governance.html">動作才是防線：意圖劫持擋在工具呼叫之前</a><span class="d">2026-11-23</span></div>
+      <div class="g-relrow"><span class="s">Claude（Anthropic）</span><a href="claude-ship.html">PR 之後也交給代理：審查、修復、核准拆成三層</a><span class="d">2026-11-23</span></div>
+      <div class="g-relrow"><span class="s">Google Blog（AI）</span><a href="gemini-file-slicing.html">只為看到的那幾頁付費：Gemini API 把切片搬到伺服器端</a><span class="d">2026-11-23</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，屬 Google DeepMind 自報、無第三方複核。原文以動畫（figure 1）呈現流程，圖解 A 為本站改繪的靜態版本，四個關卡的取捨與一輪循環為編輯整理。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-24 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

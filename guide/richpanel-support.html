@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 客服代理的瓶頸不在模型：先把它要用的工具寫下來 · AI 每日動態檔案</title>
+<meta name="description" content="Richpanel 用 GPT-6 Astra 與 6.1 Sol 打造 Boss AI 設定客服代理的工具與流程，再用 GPT-6 Luna 跑對話；近半年完成約 300 個部署，稱 30 天內自動化五成。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>客服代理的瓶頸不在模型：先把它要用的工具寫下來</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：OpenAI 客戶案例，Richpanel 用多個 GPT-6 系列模型分工，把客服代理的設定工作交給另一個代理</p>
+    <p class="g-meta">
+      <span>OpenAI</span>·<span>2026-11-23 發布</span>·<span>2026-11-24 收錄</span>·
+      <a href="https://openai.com/business/customer-stories/richpanel-ai-customer-support" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>50%／30 天</b><span>對客戶的自動化保證，未達退費；公司稱全部部署達標（自報）</span></div>
+    <div class="g-stat"><b>約 300 個</b><span>近半年完成的 AI 客服部署數</span></div>
+    <div class="g-stat"><b>20–30 種</b><span>人類客服日常動用的工具數，流程多半沒寫下來</span></div>
+    <div class="g-stat"><b>3 個具名模型</b><span>Astra 與 6.1 Sol 建流程、6 Luna 跑對話；原文另提其他 OpenAI 模型</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">Richpanel 的觀察很直白：客服代理答得出來，卻常常做不了事——缺的不是智慧，是工具權限與沒被寫下來的流程。</p>
+
+    <p class="g-p">執行長 Amit RG 說，人類客服可能動用二、三十種工具，處理程序卻很少被文件化。</p>
+    <p class="g-p">所以部署一個代理，往往得派前線工程師到客戶端接系統、定義它怎麼做事。</p>
+    <p class="g-p">對多數公司來說，問題不是不想做，而是沒有工程師可以外派。</p>
+    <p class="g-p">他的問題是：那個前線工程師，能不能本身就是一個代理？</p>
+    <p class="g-p">於是有了 Boss AI：一個管理代理，負責寫流程、定義前線代理、copilot 與品管代理該怎麼呼叫工具。</p>
+    <p class="g-p">它的產出是可執行的程序：把工具與呼叫方式固定下來。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>兩層分工</b> — 誰設定、誰執行（本站依原文重排）</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>1 · Boss AI</b><small>部署前先建好工具與流程</small><span class="pi">Astra／6.1 Sol</span></div>
+          <div class="ring-inner">寫出前線代理要遵循的程序，並定義工具怎麼被呼叫；原文稱許多公司沒有多餘工程師可派</div>
+        </div>
+        <div class="ring ring--core">
+          <div class="ring-lb"><b>2 · 前線代理</b><small>設計上要接數十萬次對話</small><span class="pi">6 Luna 等</span></div>
+          <div class="ring-inner">依 Boss AI 寫好的流程與工具執行任務，成本直接決定這門生意划不划算</div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋路徑</b>：copilot 協助真人、品管代理負責品質；Amit 稱兩者採相同取捨（成本與智慧平衡），原文未列模型。</span></div>
+      <p class="x-src">本站重繪，非原文圖；原文分別描述 Boss AI 與各代理的模型選擇，未給此分層與回饋方向。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">同一家公司的三種模型帳</h2>
+    <p class="g-p">模型選擇不是「都用最強」，而是依工作性質分工。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>角色</th><th>用哪個模型</th><th>理由</th></tr></thead>
+        <tbody>
+          <tr><td data-l="角色"><b>Boss AI</b></td><td data-l="模型">GPT-6 Astra、GPT-6.1 Sol</td><td data-l="理由">建立工具與流程時，正確性優先</td></tr>
+          <tr><td data-l="角色"><b>前線對話</b></td><td data-l="模型">GPT-6 Luna 等</td><td data-l="理由">量大，每次互動成本直接影響毛利</td></tr>
+          <tr><td data-l="角色"><b>copilot／品管</b></td><td data-l="模型">原文未列型號</td><td data-l="理由">Amir 稱採相同取捨（成本與智慧平衡）</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">Amit 的說法是「重要的是成本與智慧的平衡」；客戶原本可能就用低成本外包客服，自動化必須算得過。</p>
+    <p class="g-p">前線代理設計上要處理數十萬次對話，任何一點單位成本都會被放大。</p>
+    <p class="g-p">這也是為什麼「建流程」與「跑對話」得用不同等級的模型，而不能一套打到底。</p>
+    <p class="g-p">他也把功勞歸給 OpenAI：模型能處理長上下文與更長的任務，同時維持成本效率。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">成績單與它的邊界</h2>
+    <p class="g-p">官方數字是截至 2026 年 10 月訪談的近半年約 300 個部署、每個都在 30 天內達到五成自動化，並稱客戶滿意度勝過人工。</p>
+    <p class="g-p">這些全是公司自報與客戶引述，原文未提供第三方稽核或抽樣方法。</p>
+    <p class="g-p">部署流程因此從「派人進駐」變成「代理自己讀客戶系統」，這是它能半年做約 300 個案子的原因（公司說法）。</p>
+    <p class="g-p">（編輯觀點：這個案例真正的洞見不是模型多強，而是把「部署工程師」也變成代理——人力瓶頸被搬到可複製的那一側。）</p>
+    <p class="g-p">（編輯觀點：但流程由代理寫、又由代理執行，錯誤會一起被規模化，品管代理的抽查設計才是關鍵。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">這套做法可複製嗎</h2>
+    <p class="g-p">Boss AI 讀客戶既有的系統與文件，產出的是可重跑的流程，而不是一段寫在聊天裡的指示。</p>
+    <p class="g-p">對沒有專職 AI 工程師的公司，這等於把導入顧問的工作產品化。</p>
+    <p class="g-p">限制也明顯：客戶系統改動而流程沒更新時，錯誤會安靜地累積。</p>
+    <p class="g-p">也因此，「把流程寫成文件」從內部衛生變成可直接計價的產出。</p>
+    <p class="g-p">原文未說明 Boss AI 如何驗證自己寫的流程正確。</p>
+    <p class="g-p">五成自動化的另一半仍由真人處理，這也是 copilot 存在的理由。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>先補流程，再談模型。</b>工具與程序沒寫下來，代理只會答不會做。</p>
+      <p><b>把設定工作也代理化。</b>部署工程師正是規模化的瓶頸。</p>
+      <p><b>成本要分段算。</b>建流程用強模型，跑量用便宜模型。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="semantic-governance.html">動作才是防線：意圖劫持擋在工具呼叫之前</a><span class="d">2026-11-23</span></div>
+      <div class="g-relrow"><span class="s">Claude（Anthropic）</span><a href="claude-ship.html">PR 之後也交給代理：審查、修復、核准拆成三層</a><span class="d">2026-11-23</span></div>
+      <div class="g-relrow"><span class="s">Google Blog（AI）</span><a href="gemini-file-slicing.html">只為看到的那幾頁付費：Gemini API 把切片搬到伺服器端</a><span class="d">2026-11-23</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自 OpenAI 客戶案例，屬廠商與客戶自報、無第三方驗證。原文無可用機制圖，圖解 A 與表格皆為本站依文字重繪。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-24 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

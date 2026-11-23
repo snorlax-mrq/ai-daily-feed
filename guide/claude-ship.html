@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — PR 之後也交給代理：審查、修復、核准拆成三層 · AI 每日動態檔案</title>
+<meta name="description" content="Anthropic 推出 Claude Ship：Code Review 找問題、PR Steward 修到綠、Claude Approvals 依政策檔判定能否合併；官方稱團隊合併 PR 數倍增、回退率降逾四成。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>PR 之後也交給代理：審查、修復、核准拆成三層</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Anthropic 發表 Claude Ship 測試版，把 PR 的審查、修復與核准拆成三個代理元件</p>
+    <p class="g-meta">
+      <span>Claude（Anthropic）</span>·<span>2026-11-23 發布</span>·<span>2026-11-24 收錄</span>·
+      <a href="https://claude.com/resources/articles/introducing-claude-ship" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>3 個元件</b><span>Code Review 已 GA，PR Steward 與 Claude Approvals 為 beta</span></div>
+    <div class="g-stat"><b>2 倍以上</b><span>Claude Code 團隊 6 到 9 月的合併 PR 數（Anthropic 自報）</span></div>
+    <div class="g-stat"><b>逾 40%</b><span>同期被回退 PR 佔比的降幅（Anthropic 自報）</span></div>
+    <div class="g-stat"><b>token 計費</b><span>Team 與 Enterprise 方案、GitHub repo 可用</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">Anthropic 把 PR 開啟之後的三件事拆開：找問題、修到綠、決定能不能合併，分別交給三個代理，核准權獨立於修碼權之外。</p>
+
+    <p class="g-p">原本的節奏是：送出 PR、去做下一件事、被 review 打回來、回頭改、再等一次、最後找人核准。</p>
+    <p class="g-p">團隊想保留人工核准，是因為程式每行都由人寫時還跟得上；但當程式大多由代理寫成，這個假設就鬆動了。</p>
+    <p class="g-p">Claude Ship 的答案不是做一個全能代理，而是把責任切給三個元件，各自有明確的「不做」。</p>
+    <p class="g-p">從權限看，三者的界線很清楚：Code Review 只能留言，PR Steward 能推 commit，只有 Claude Approvals 能給核准。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>元件</th><th>負責</th><th>明確不做</th><th>狀態</th></tr></thead>
+        <tbody>
+          <tr><td data-l="元件"><b>Code Review</b></td><td data-l="負責">多角度審查、對抗式驗證發現、貼回 PR；可選 Quick／Standard／Deep</td><td data-l="不做">不改程式</td><td data-l="狀態">GA</td></tr>
+          <tr><td data-l="元件"><b>PR Steward</b></td><td data-l="負責">處理 CI 失敗、合併衝突與審查意見，每次推送留言說明改了什麼、如何還原</td><td data-l="不做">不核准、不合併</td><td data-l="狀態">beta</td></tr>
+          <tr><td data-l="元件"><b>Claude Approvals</b></td><td data-l="負責">依 repo 裡的政策檔判定能否自行核准，或要求人工簽核</td><td data-l="不做">不主動改碼</td><td data-l="狀態">beta</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">政策檔寫在 repo 的預設分支上，官方形容它像「更聰明的 CODEOWNERS」。</p>
+    <p class="g-p">Claude Code 團隊自己就是重度使用者——Claude 寫了他們多數的程式碼，這也是他們想做 Claude Ship 的起點。</p>
+    <p class="g-p">核准者可以把 Code Review 的發現、甚至團隊自己的分類器，都當成判定訊號。</p>
+    <p class="g-p">政策檔放在版本控制裡，核准與否的規則因此可被審計、也可回滾。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">看得到的三件事：問題、修復、判定</h2>
+    <p class="g-p">官方釋出的操作畫面，剛好對應三個元件的產出。</p>
+    <p class="g-p">Code Review 的發現會先經過對抗式驗證與分類，才貼回 PR。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/claude-com-resources-articles-introducin/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/claude-com-resources-articles-introducin/01.webp" alt="Code Review 在 pull request 上張貼發現的畫面。" width="1200" height="851" loading="lazy" decoding="async"></a>
+      <figcaption>Code Review 把發現分類後直接貼在 PR 上，開發者不必離開原工作流就能看到問題。<span class="g-fig-src">圖／Anthropic，原文</span></figcaption>
+    </figure>
+
+    <p class="g-p">PR Steward 進場後，處理的是「怎麼讓它變綠」，而不是「它該不該合併」。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/claude-com-resources-articles-introducin/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/claude-com-resources-articles-introducin/02.webp" alt="PR Steward 在 pull request 上進行修復的畫面。" width="1200" height="1050" loading="lazy" decoding="async"></a>
+      <figcaption>PR Steward 直接動手改 CI 失敗與審查意見；每次推送都留言交代改動與還原方式（原文另述開發者可用 @claude stop 叫停）。<span class="g-fig-src">圖／Anthropic，原文</span></figcaption>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">一輪 PR 的交接長什麼樣</h2>
+    <p class="g-p">開發者在 Claude Code 裡打 <code>/ship</code>，之後的球就在幾個代理之間傳。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一輪 PR 的交接</b> — 誰把球傳給誰（本站依原文重排）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">開發者 → Claude Code</span><span class="tr"><i>送出 /ship：推送、開 PR</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">Code Review → PR</span><span class="tr"><i>貼上分類後的發現與嚴重度</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">PR Steward → 分支</span><span class="tr"><i>修 CI、解衝突、回應審查意見並留言</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">Claude Approvals → 分支保護</span><span class="tr"><i>依政策檔給綠燈，或要求人工簽核</i></span></span></li>
+        <li class="side"><span class="st">04b</span><span class="body"><span class="hop">旁支：人 → 合併</span><span class="tr"><i>政策要求簽核、或權限不足時由人接手</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重繪，非原文圖；原文以段落分別描述三個元件，未畫出交接順序。實際可合併範圍仍受開發者權限與分支規則限制。</p>
+    </figure>
+
+    <p class="g-p">管理員逐 repo 開啟，選審查等級、設定執行時機與花費上限，既有的必要檢查與分支保護照用。</p>
+    <p class="g-p">對產品經理這類非工程角色差別最明顯：讀到客戶回饋、和 Claude 討論後開一個 PR，就能去做下一件事。</p>
+    <p class="g-p">官方建議先讓核准政策跑觀察模式，確認判定合理後，再讓分支保護要求它的綠燈。</p>
+    <p class="g-p">成本按 token 計，取決於 PR 數量與大小、審查等級、執行頻率，以及 PR Steward 實際做多少事。</p>
+    <p class="g-p">官方也承認這會增加支出，但把上限交給管理員設定，而不是寫死在方案裡。</p>
+    <p class="g-p">想試的團隊可以先在單一 repo 開 Code Review 與 PR Steward，跑幾週看誤報率，再開核准政策的觀察模式。</p>
+    <p class="g-p">（編輯觀點：兩個 beta 元件的政策格式與判定訊號還可能改；把政策寫成 repo 裡的文件，比硬編進 CI 好遷移。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">成績與代價</h2>
+    <p class="g-p">官方給的內部數據是合併 PR 數倍增、回退率降逾四成，皆為 Anthropic 自報，沒有第三方複核。</p>
+    <p class="g-p">原文另限定，Claude 的審查只是團隊流程中的一層，成效不能全算在它頭上。</p>
+    <p class="g-p">文中兩則客戶引述：TELUS 明確表示人仍在迴圈裡、時間改花在真正需要的變更上；Carvana 則看重減少處理審查意見的時間與流程客製。</p>
+    <p class="g-p">官方舉的例子是：某次 Analytics API 文件讓客戶誤解權限，產品經理請 Claude 開 PR，當晚就完成審查、簽核與合併。</p>
+    <p class="g-p">（編輯觀點：真正的新意在權限設計。修碼與核准分屬不同代理，才有機會把「代理自己說沒問題」擋在門外。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>修碼與核准要分開。</b>同一個代理不該自己改、自己准。</p>
+      <p><b>政策檔是新的治理介面。</b>比 CODEOWNERS 多了訊號與條件。</p>
+      <p><b>先跑觀察模式。</b>核准自動化出錯，代價比慢一天高。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers</span><a href="semantic-governance.html">動作才是防線：意圖劫持擋在工具呼叫之前</a><span class="d">2026-11-23</span></div>
+      <div class="g-relrow"><span class="s">Google Blog（AI）</span><a href="gemini-file-slicing.html">只為看到的那幾頁付費：Gemini API 把切片搬到伺服器端</a><span class="d">2026-11-23</span></div>
+      <div class="g-relrow"><span class="s">Google DeepMind</span><a href="quantum-agents-lean.html">代理寫量子電路：Lean 當裁判，成本砍一個量級</a><span class="d">2026-11-23</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，屬 Anthropic 自報、無第三方驗證。操作畫面圖出自原文，圖解 A 為本站依原文敘述重排，原文未給此交接順序。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-24 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
