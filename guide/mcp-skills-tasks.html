@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — MCP 不再是工具清單：skills 帶知識，長任務搬到背景 · AI 每日動態檔案</title>
+<meta name="description" content="Skills over MCP 進入 beta：伺服器可連 skills 一起發布、Claude 只在需要時載入；Tasks 與 Elicitation 轉正式可用、File Uploads 即將推出。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>MCP 不再是工具清單：skills 帶知識，長任務搬到背景</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：官方產品公告，宣布 Skills over MCP 進入 public beta、Tasks 與 Elicitation 轉為正式可用、File Uploads 即將推出</p>
+    <p class="g-meta">
+      <span>Claude（Anthropic）</span>·<span>2026-11-24 發布</span>·<span>2026-11-25 收錄</span>·
+      <a href="https://claude.com/resources/articles/skills-over-mcp-tasks-and-more" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>逾 7 億次</b><span>MCP 每月 SDK 下載次數；原文未給統計基準日</span></div>
+    <div class="g-stat"><b>逾 1 萬個</b><span>Claude 可用的 MCP connector 數量</span></div>
+    <div class="g-stat"><b>逾 85%</b><span>多伺服器情境下，Tool search 可減少的工具定義上下文佔用</span></div>
+    <div class="g-stat"><b>2026-07-28</b><span>最新 MCP spec 版本，改為 stateless（無狀態）</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">MCP 伺服器可連 skills 一起發布，Claude 只在需要時載入；Tasks 與 Elicitation 轉為正式可用：長工作搬到背景，關鍵處停下來問人。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">skills 補的是「怎麼做」</h2>
+    <p class="g-p">原文的框架是：Claude 現在對待一台 MCP 伺服器，更像對待另一個 agent——向它學習、委派工作、沿途交換輸入與檔案。</p>
+    <p class="g-p">第一步是把「做法」也交付出來。tool 的名稱與描述只說明它做得到什麼，沒有交代某一類工作該怎麼處理。</p>
+    <p class="g-p">Skills over MCP 因此在 tools 之外多開一個通道：伺服器可一併發布 skills，用來承接更長、多步驟的工作。</p>
+    <p class="g-p">skill 的內容可以是某類工作的最佳實務、逐步流程，也可以是依個別帳號或組織客製的 playbook。</p>
+    <p class="g-p">載入時機才是設計重點：Claude 只在需要時才載入 skill，伺服器因此能夾帶大量領域知識，同時讓常態上下文佔用維持在低檔。</p>
+    <p class="g-p">skill 隨伺服器更新，開發者把工具與指引一起交付，使用者不必另外安裝任何東西。</p>
+    <p class="g-p">同一個伺服器，不同客戶需要的做法並不一樣；skill 正好讓知識依帳號或組織分開帶。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/claude-com-resources-articles-skills-ove/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/claude-com-resources-articles-skills-ove/01.webp" alt="MCP 伺服器向 Claude 交付三層：skills 帶領域知識、tools 是可發起的動作、resources 是可拉進來的脈絡" width="1200" height="675" loading="lazy" decoding="async"></a>
+      <figcaption>官方圖：一個伺服器同時交付三層——skills 帶知識、tools 是動作、resources 是脈絡；skill 只在需要時載入。<span class="g-fig-src">圖／Claude（Anthropic），<a href="https://claude.com/resources/articles/skills-over-mcp-tasks-and-more" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">首批採用者各自把自家專業度包成 skill，讓 Claude 接上後就有可遵循的做法。</p>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>首批採用者各自包了什麼</b> — 四個案例並列</figcaption>
+      <p class="x-grid-h">四項並列，無先後順序；原文只列名單，未給成效數字</p>
+      <div class="x-grid">
+        <div class="c"><b><i>①</i>Shopify</b><small>陪 Claude 從設計到更新商家的線上商店，端到端完成</small></div>
+        <div class="c"><b><i>②</i>HubSpot</b><small>帶客戶上線，在 Claude 內完成設定</small></div>
+        <div class="c"><b><i>③</i>Atlassian</b><small>取用組織深層脈絡，做洞察與工作分析</small></div>
+        <div class="c"><b><i>④</i>Carta</b><small>依上傳文件草擬並發行股權（coming soon）</small></div>
+      </div>
+      <p class="x-src">本站整理自原文敘述，非原文圖；原文未給這四家的排序、權重或量化成效，1–4 僅為編號。</p>
+    </figure>
+    <p class="g-p">可用範圍（public beta）：Pro、Max、Ultra 預設開啟，Claude 與 Claude Code 皆有；Team 需管理員啟用，Enterprise 即將支援。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">長任務搬去背景，簽核留在人手上</h2>
+    <p class="g-p">原文的觀察是：production 裡的 agent 正在接下更長、後果更重的工作。</p>
+    <p class="g-p">舊限制很硬：tool call 必須跑完，Claude 才能往下走。</p>
+    <p class="g-p">Tasks 讓伺服器在背景執行耗時操作，甚至一整個 agent loop；Claude 繼續做別的事，結果好了再取。</p>
+    <p class="g-p">原文的例子是 ZoomInfo：用它跑更深的客戶與聯絡人研究，過去要好幾輪 prompt 才做得完。</p>
+    <p class="g-p">但長任務會撞到另一種風險：有些動作不該由伺服器自己決定，例如花錢或刪資料。</p>
+    <p class="g-p">Elicitation 讓伺服器中途暫停，用表單或連結向使用者要一個確認，拿到後從原處繼續。</p>
+    <p class="g-p">原文把兩件事放在同一個理由下：伺服器既要能跑長工作，也要能在關鍵處停下來問人。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/claude-com-resources-articles-skills-ove/02.webp" target="_blank" rel="noopener"><img src="../assets/guide/claude-com-resources-articles-skills-ove/02.webp" alt="Tasks：Claude 把長任務交給 MCP 伺服器後繼續工作，結果好了再取回" width="1200" height="586" loading="lazy" decoding="async"></a>
+      <figcaption>官方圖：Tasks 讓 Claude 交出長任務後繼續做別的事，完成再取回。（Elicitation 的中途簽核不在本圖，見下文。）<span class="g-fig-src">圖／Claude（Anthropic），<a href="https://claude.com/resources/articles/skills-over-mcp-tasks-and-more" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">三個具名例子都落在不可逆的動作上（編輯歸納）：Supabase 建付費專案前確認費用、跑破壞性 SQL 前先問。</p>
+    <p class="g-p">Railway 在移除服務這類可能造成破壞的變更前詢問；GitHub 要求先輸入 repo 名稱，才讓 agent 刪除。</p>
+    <p class="g-p">（編輯觀點：Tasks 與 Elicitation 要合起來看——少了中途暫停，背景長任務就是無人看管的破壞風險。）</p>
+    <p class="g-p">File Uploads 補上最後一段：File Uploads 上線後，Claude 將可把 PDF、試算表、圖片直接交給伺服器，不經過上下文視窗。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">三項能力的邊界不同</h2>
+    <p class="g-p">三項能力常被混為一談，其實各解一個問題：一個處理時間，一個處理權限，一個處理檔案。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>能力</th><th>解決什麼</th><th>具名採用</th><th>原文狀態</th></tr></thead>
+        <tbody>
+          <tr><td data-l="能力"><b>Tasks</b></td><td data-l="解決什麼">tool call 不再阻塞，長工作與 agent loop 移到背景</td><td data-l="具名採用">ZoomInfo：更深的客戶與聯絡人研究</td><td data-l="原文狀態">GA；Pro、Max、Ultra 已可用，Team／Enterprise 推出中</td></tr>
+          <tr><td data-l="能力"><b>Elicitation</b></td><td data-l="解決什麼">花錢、刪資料等動作前的使用者簽核</td><td data-l="具名採用">Supabase、Railway、GitHub</td><td data-l="原文狀態">GA；Claude 與 Claude Code 皆有，Pro、Max、Ultra 已可用</td></tr>
+          <tr><td data-l="能力"><b>File Uploads</b></td><td data-l="解決什麼">檔案走專用通道，不佔上下文視窗</td><td data-l="具名採用">原文未列</td><td data-l="原文狀態">即將推出；含符合條件的 Team、Enterprise</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">原文強調這些屬開放 MCP spec 及其 extensions，支援的伺服器在任何相容 client 都能用，不只 Claude。</p>
+    <p class="g-p">（編輯觀點：這正是 MCP 與單一產品功能的差別——同一份 skill 或 Task 實作，換 client 不必重寫。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">兩年底座：規模、效率與授權</h2>
+    <p class="g-p">生態規模是底座：MCP 每月 SDK 下載逾 7 億次，Claude 的 MCP connector 逾 1 萬個。</p>
+    <p class="g-p">效率是第一個變化。Tool search 只在需要時載入 tool 定義，多伺服器情境下可減少逾 85% 的佔用。</p>
+    <p class="g-p">可規模化是第二個：最新 spec 是 stateless 的 2026-07-28 版，跨 Claude 產品支援，建置與維運都變簡單。</p>
+    <p class="g-p">第三是授權與介面。Enterprise Managed Auth 讓管理員一次授權支援的伺服器，使用者之後自動連上。</p>
+    <p class="g-p">MCP Apps 則把完整介面帶進 Claude，可以放在對話旁邊，也可以全螢幕。</p>
+    <p class="g-p">（編輯觀點：四個變化指向同一件事——把維護責任往伺服器與 spec 收，client 端盡量保持一致。）</p>
+    <p class="g-p">（編輯觀點：skills 才是這次真正的位置調整——伺服器從「提供動作」變成「連同做事方法一起交付」。）</p>
+    <p class="g-p">（編輯觀點：代價是行為可能無感改變。skill 隨伺服器更新，使用者不必安裝，版本也不在自己手上。）</p>
+    <p class="g-p">原文收在兩年：MCP 由 Agentic AI Foundation 託管，被形容為 agent 之間訊息與 orchestration 的基礎。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>skills 補的是做法，不是能力。</b>工具描述再全，也說不清某類工作怎麼做。</p>
+      <p><b>長任務要離開對話迴圈。</b>Tasks 讓伺服器背景跑，Claude 不必等。</p>
+      <p><b>簽核點要寫進流程。</b>花錢與刪除先確認，比事後補救便宜。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="agent-retrieval.html">檢索管線外包：檔案丟進去，答案自帶頁碼</a><span class="d">2026-11-24</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="ifood-remote-agents.html">iFood 代理規模化：缺的是執行層，不是模型</a><span class="d">2026-11-24</span></div>
+      <div class="g-relrow"><span class="s">OpenAI（官方部落格）</span><a href="intentful-dots.html">Intentful 的提案流程：條件寫清楚，dot 就能從研究做到一頁提案</a><span class="d">2026-11-24</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）。引述數據出自原文；兩張官方示意圖為原文所有、本站自託管，其餘圖解（採用者並列）與表格為本站依原文文字整理，非原文圖。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-25 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

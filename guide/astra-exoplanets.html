@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 候選不等於確認：Codex 與 Astra 幫業餘者跑完行星搜尋 · AI 每日動態檔案</title>
+<meta name="description" content="兩位業餘天文學家用 Codex 與 Astra 掃公開望遠鏡資料：Bond 查約 10 萬顆 Kepler 恆星、Byrd 分析約 1,900 萬顆星；SETI Institute 獨立重跑命中 2 個訊號，都還不是已確認行星。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>候選不等於確認：Codex 與 Astra 幫業餘者跑完行星搜尋</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：OpenAI 報導——兩位業餘天文學家用 Codex 與 Astra 分析公開望遠鏡資料，再把系外行星候選交給專業天文學家</p>
+    <p class="g-meta">
+      <span>OpenAI</span>·<span>2026-11-24 發布</span>·<span>2026-11-25 收錄</span>·
+      <a href="https://openai.com/index/searching-for-distant-planets-with-astra" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>6,400+ 顆</b><span>1992 年首次公布以來已確認的系外行星（NASA Exoplanet Archive，原文連結；統計截止日原文未給）</span></div>
+    <div class="g-stat"><b>約 10 萬顆</b><span>Bond 用 Codex 掃過的 Kepler 恆星數（任務執行 2009–2018）</span></div>
+    <div class="g-stat"><b>約 1,900 萬顆</b><span>Byrd 用 Astra 分析的恆星資料量</span></div>
+    <div class="g-stat"><b>2 個訊號</b><span>SETI Institute 天文學家獨立重跑後，與 Bond 結果重合的數量</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">代理把這類搜尋的人力壓到一個人做得完：Bond 與 Byrd 各掃約 10 萬與 1,900 萬顆星，產出仍是候選。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>兩條並行路徑</b> — 同一件事、兩套工具、兩個驗證去向</figcaption>
+      <div class="x-cmp">
+        <div><b>Bond · Codex · 約 10 萬顆</b>
+          <p>OpenAI 工程師。掃 Kepler（2009–2018）約 10 萬顆恆星，200 多個訊號裡有 10 個來自已知行星。</p>
+          <p>驗證去向：<b>SETI Institute</b> 天文學家獨立重跑，命中其中 2 個訊號。</p>
+        </div>
+        <div><b>Byrd · Astra · 約 1,900 萬顆</b>
+          <p>Primitive 創辦人。試過幾個模型後選 Astra，分析約 1,900 萬顆星，首輪 49 個候選。</p>
+          <p>驗證去向：最強 1 個送 <b>TESS</b> 任務研究者，排入進一步分析；另 2 個待提交。</p>
+        </div>
+      </div>
+      <p class="x-src">本站重繪，原文未給此對照。兩人是各自獨立作業的兩條路徑，不是先後接力；左右欄的訊號數與驗證去向照原文敘述，未做換算。</p>
+    </figure>
+
+    <p class="g-p">原文先補背景：業餘社群本來就在做這件事——有人翻公開資料找凹陷，有人用自家望遠鏡守下一次凹陷。</p>
+    <p class="g-p">Bond 是 OpenAI 的工程師，因為拍夜空而愛上天文。他用 Codex 搜尋克卜勒望遠鏡約 10 萬顆恆星的觀測。</p>
+    <p class="g-p">兩人都是業餘天文學家：一個是 OpenAI 工程師，一個是新創創辦人；相同的是搜尋程式都由自己跑完。</p>
+    <p class="g-p">他做的其實是程式工作：Codex 比較已發表的方法，把它們組成一支搜尋程式，再測改動是否讓搜尋變好。</p>
+    <p class="g-p">兩個代理分工——一個掃光變曲線找訊號，另一個對被標記的候選做細部檢查。</p>
+    <p class="g-p">被掃出的已知行星成了程式的自我檢查：這些舊訊號抓得到，Bond 才相信它認得他要找的東西。</p>
+    <p class="g-p">Byrd 是電子郵件基礎設施新創 Primitive 的創辦人，向來喜歡天文。他試過幾個模型後選了 Astra，分析約 1,900 萬顆星。</p>
+    <p class="g-p">他請 Astra 回顧已發表方法、寫出搜尋軟體、對候選做初步檢查，並設計兩套搜尋：一套廣泛找候選，一套專攻恆星適居帶。</p>
+    <p class="g-p">第一輪就交出候選清單。兩人各自獨立作業，不是接力。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">一道凹陷，兩個量級的規模</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>從公開資料到專業驗證</b> — 候選在哪一步停下</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>公開資料</b><small>Kepler（2009–2018）、TESS（2018 起）與其他公開檔案</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>找規律性亮度下降</b><small>凌日在光變曲線上留下按週期重複的凹陷</small></div>
+        <span class="ar">→</span>
+        <div class="fn hot"><b>候選訊號</b><small>Bond 200+、Byrd 首輪 49</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>專業天文學家獨立驗證</b><small>SETI Institute 重跑、TESS 任務佇列</small></div>
+      </div>
+      <p class="x-src">本站重繪，原文未畫流程圖。第二格是原文對凌日法的描述；「代理寫程式、跑掃描」發生在第二到第三格之間，原文未給步驟編號。第三格是候選，不是確認。</p>
+    </figure>
+
+    <p class="g-p">行星從恆星前方經過時會遮掉一小部分星光；亮度隨時間畫成光變曲線，就是一道凹陷。凹陷按固定週期回來，就知道何時再守。</p>
+    <p class="g-p">這條路徑不是新的。2017 年研究者用克卜勒 1.5 萬個已被人工檢視的訊號訓練神經網路，讓模型學會哪些星光型態最可能來自行星。</p>
+    <p class="g-p">把模型用在較弱的訊號上，其中一個把研究者帶到 Kepler-90 的第八顆行星。</p>
+    <p class="g-p">原文說得直白：在數千顆星裡找這個模式，有一部分是寫程式的問題——方法早已發表，缺的是比較、組合與測試。</p>
+    <p class="g-p">Codex 在這裡同時當作者與測試者：每次改動都由程式跑一輪，看搜尋有沒有變好。</p>
+    <p class="g-p">原文沒說兩人的程式是否開源，也沒給執行時間或算力成本。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>掃過的恆星數</b> — 同一個單位，兩個不同資料集</figcaption>
+      <div class="x-bars">
+        <div class="x-bar hot"><b>Bond／Kepler</b><span class="t"><span style="--p:1"></span></span><i>約 10 萬顆</i></div>
+        <div class="x-bar"><b>Byrd／Astra</b><span class="t"><span style="--p:100"></span></span><i>約 1,900 萬顆</i></div>
+      </div>
+      <p class="x-src">2026-11-24 原文所述的搜尋規模；條愈長＝掃過的恆星愈多。本站重繪：條長為可視性呈現，實際比例約 1:190（10 萬 vs 1,900 萬顆）。資料集不同（Kepler vs TESS 與其他公開檔案），只比數量、不比命中率；原文未給兩人的誤報率或偵測效率。</p>
+    </figure>
+
+    <p class="g-p">規模是兩人的分水嶺，但資料集不同：Bond 用 Kepler 的資料，Byrd 用 TESS 與其他公開檔案，只能比掃過的星數。</p>
+    <p class="g-p">原文沒有比較兩者的觀測方式，只給了任務年代：Kepler 2009–2018、TESS 2018 年起。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">候選不是確認</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 D · <b>同一道凹陷的三種可能</b> — 並列解釋，不是處理步驟</figcaption>
+      <div class="x-grid">
+        <div class="c"><b><i>a</i>行星凌日</b><small>行星從恆星前方經過，遮掉一小部分星光——要找的訊號</small></div>
+        <div class="c"><b><i>b</i>雙星互食</b><small>兩顆星互相遮掩，產生類似的亮度凹陷</small></div>
+        <div class="c"><b><i>c</i>儀器溫度</b><small>望遠鏡內部溫度變化，足以讓恆星看起來變暗</small></div>
+      </div>
+      <p class="x-src">本站重繪，原文未列成清單，只以段落敘述 b、c 兩項。三格為互不排序的並列解釋，非處理順序；原文未給各解釋在真實資料中的占比。</p>
+    </figure>
+
+    <p class="g-p">星光變暗的理由不只行星。原文點名兩種：兩顆星互相遮掩會產生類似凹陷；望遠鏡內部溫度變化也足以讓儀器失真。</p>
+    <p class="g-p">統計可以說明行星是最可能的解釋，但要確認成因，原文給的時間尺度是數個月到數年。</p>
+    <p class="g-p">原文的措辭是最可能，不是已證實；兩人交出的是值得細看的位置，不是新行星。</p>
+    <p class="g-p">Bond 的兩個訊號各有名字：KIC 5689121 每 13.8 天凹陷一次，若成因是行星，直徑約地球 2.4 倍。</p>
+    <p class="g-p">另一顆 KIC 6691030 較暗、位在北天，4.8 天凹陷一次，與比海王星小的行星相符。</p>
+    <p class="g-p">被獨立重跑命中的，就是這兩顆。</p>
+    <p class="g-p">Byrd 送進 TESS 任務研究者的，只是他候選清單裡最強的一個；另外兩個還在等提交，搜尋也還在跑。</p>
+    <p class="g-p">（編輯觀點：代理真正壓縮的是工時——方法本來就公開，貴的是把它們拼成管線並反覆重跑，這件事現在一個人做得完。）</p>
+    <p class="g-p">原文沒給兩人的誤報率、偵測效率，也沒說 200 多個訊號裡有多少是新候選。</p>
+    <p class="g-p">Byrd 試過幾個模型才定案，原文只給結論，沒說試了哪些、為何淘汰——選型過程無從複核。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>候選不是發現。</b>被獨立重跑命中的 2 個訊號，成因仍待確認。</p>
+      <p><b>規模差兩個量級。</b>10 萬 vs 1,900 萬顆星，資料集不同，不能直接比戰果。</p>
+      <p><b>代理省的是工時。</b>方法早已公開，缺的是組裝、測試與反覆重跑。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="agent-retrieval.html">檢索管線外包：檔案丟進去，答案自帶頁碼</a><span class="d">2026-11-24</span></div>
+      <div class="g-relrow"><span class="s">Claude（Anthropic）</span><a href="mcp-skills-tasks.html">MCP 不再是工具清單：skills 帶知識，長任務搬到背景</a><span class="d">2026-11-24</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="ifood-remote-agents.html">iFood 代理規模化：缺的是執行層，不是模型</a><span class="d">2026-11-24</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。原文配有攝影與 TESS 星空覆蓋圖，本頁未引用；四張圖解皆為本站重繪，原文未給該對照與排序。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-25 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

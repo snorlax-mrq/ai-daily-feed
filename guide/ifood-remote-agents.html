@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — iFood 代理規模化：缺的是執行層，不是模型 · AI 每日動態檔案</title>
+<meta name="description" content="iFood 自建 Remote Agents Platform，把 15,000 個 repo 的維護工作變成 REST 呼叫：逾 25,000 次任務、逾 270 億 token、平均每次 0.04 美元；安全平台修補準確率自報翻倍。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>iFood 代理規模化：缺的是執行層，不是模型</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：OpenAI 客戶案例〈How iFood scales coding agents across 15,000 repositories〉——案例訪談兼架構說明（受訪者 Victor Coelho，iFood 資深軟體工程師）</p>
+    <p class="g-meta">
+      <span>OpenAI</span>·<span>2026-11-24 發布</span>·<span>2026-11-25 收錄</span>·
+      <a href="https://openai.com/business/customer-stories/ifood" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>逾 15,000 個 repo</b><span>iFood 維護的程式碼儲存庫，每個都要週期性驗證、修依賴、跑分析</span></div>
+    <div class="g-stat"><b>逾 25,000 次任務</b><span>平台累計完成數，覆蓋全部 15,000 個 repo</span></div>
+    <div class="g-stat"><b>逾 270 億 token</b><span>同期累計消耗；全部執行都用 GPT-5.6 Luna</span></div>
+    <div class="g-stat"><b>平均 US$0.04／次</b><span>每次執行成本，原文稱規模化後成為架構決策</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">iFood 把 repo 維護變成一通 REST 呼叫：交出 prompt 與環境需求，回來一份 merge request，判斷留給沙箱裡的 agent。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一支 API 的三段交接</b> — 誰把球傳給誰（本站重繪）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">使用者 → 平台 REST API</span><span class="tr"><i>送出 prompt 與環境需求；這支 API 就是平台的入口與介面</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">平台 → 遠端 runner（隔離 sandbox）</span><span class="tr"><i>平台管整個生命週期，執行交給獨立沙箱；進度可即時監看</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">runner → 使用者</span><span class="tr"><i>結果稍後取回；流程尾端自動發 merge request</i></span></span></li>
+      </ul>
+      <p class="x-src">本站重繪，非原文圖：原文以一段文字敘述這三步，未給圖示；三步的先後是原文寫明的，非編輯推定。</p>
+    </figure>
+
+    <p class="g-p">原文稱這是一個三步的 cycle，對外敘述更直白：工程任務變成 API 呼叫，交辦後成果以 merge request 回來。</p>
+    <p class="g-p">平台自己管生命週期，沙箱只是執行單位；使用者只需要 prompt 與環境需求兩樣輸入。</p>
+
+    <p class="g-p">問題不在任務本身。驗證程式碼符合內部標準、修脆弱依賴、跑一份分析，單看都不難。</p>
+    <p class="g-p">難的是同樣的事乘以一萬五千次，還要週期性重來，每次都得有人記得去做。</p>
+    <p class="g-p">原文引 Coelho 的話：「解決一個 repo 很容易，挑戰在於規模化。」</p>
+    <p class="g-p">平台之前，各團隊各寫一套解法，最後都撞上同一道牆。</p>
+    <p class="g-p">原文的診斷很明確：缺的不是智慧、也不是場景，而是執行基礎設施——一個專用 runtime。</p>
+    <p class="g-p">（編輯觀點：這一步把「跑 agent」從開發者本機的臨時動作，變成可排隊、可計價的服務呼叫。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">兩段固定手續，夾住中間的判斷</h2>
+    <p class="g-p">runner 內部交錯兩種步驟：deterministic 與 agentic。這個組合讓整體流程可預測。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>階段</th><th>執行者</th><th>做什麼</th></tr></thead>
+        <tbody>
+          <tr>
+            <td data-l="階段"><b>開頭・deterministic</b></td>
+            <td data-l="執行者">平台固定步驟</td>
+            <td data-l="做什麼">clone repo、匯入 agent 可用的 skills、建立工作分支</td>
+          </tr>
+          <tr>
+            <td data-l="階段"><b>中間・agentic</b></td>
+            <td data-l="執行者">沙箱內的 GPT-5.6 Luna</td>
+            <td data-l="做什麼">自行判斷與修改；Ubuntu 預裝 8 種語言工具鏈，沙箱外可連 Nexus、GitLab、Docker、Snyk、Kubernetes、AWS</td>
+          </tr>
+          <tr>
+            <td data-l="階段"><b>結尾・deterministic</b></td>
+            <td data-l="執行者">平台固定步驟</td>
+            <td data-l="做什麼">發 merge request、釋出產出的 artifacts</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">原文只用一句話交代這個設計：「就是這兩件事的組合。」</p>
+    <p class="g-p">agent 的判斷因此被框在一個區間裡：前面有人幫它 clone 與開分支，後面有人收尾。</p>
+    <p class="g-p">固定步驟管可預測的部分，agent 只管中間需要判斷的部分——界線畫在工具鏈，不在 prompt。</p>
+    <p class="g-p">沙箱預裝 Python、Java、Kotlin、C#、TypeScript、Rust、JavaScript、Go，另加通用工具。</p>
+    <p class="g-p">這是把「跑得起來的環境」變成平台責任，而不是每個任務各自準備一次。</p>
+    <p class="g-p">（編輯推論：八種語言加六個外部系統，等於把「環境」也標準化；這才是各團隊碎片化解法收不回來的那一層。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">選型看三件事，驗收看一份契約</h2>
+    <p class="g-p">選 GPT-5.6 Luna 是三個因素一起看，不是單項取勝。</p>
+    <p class="g-p">原文的說法：同級 checkpoint 中，它在智慧、效率、執行速度（多快做完任務）三者平衡最好。</p>
+    <p class="g-p">一次性用途看不出這個平衡值多少；平台看得出。</p>
+    <p class="g-p">數萬 token 的量級下，平均每次 0.04 美元不再是細節，而是架構決策。</p>
+    <p class="g-p">要注意原文只給累計值與平均成本，沒有中位數，也沒有單次任務的成本區間。</p>
+    <p class="g-p">驗收也自動化：執行完成後，用 OpenAI 的 Structured Outputs 要求輸出符合預先定義的契約。</p>
+    <p class="g-p">契約一致，成功與失敗都能從回應結構辨識，不必逐筆打開來看。</p>
+    <p class="g-p">驗收發生在 session 之後的那一步，與執行本身分開——這是規模化的關鍵設計。</p>
+    <p class="g-p">第一個主要用戶是內部安全平台：掃 15,000 個 repo 的脆弱依賴，並嘗試修補。</p>
+    <p class="g-p">原文的副標就是成效：透過安全平台修補的漏洞數。</p>
+    <p class="g-p">改用平台後，修補準確率與已解決漏洞數都超過原本兩倍（iFood／OpenAI 自報，無第三方驗證）。</p>
+    <p class="g-p">安全團隊沒有自建 agentic runtime，也沒有變成 orchestration 專家，只是呼叫一支 API。</p>
+    <p class="g-p">非同步的價值寫得很克制：開發者開會時丟一個修補、一份效能分析進去，不必守著。</p>
+    <p class="g-p">用詞值得注意：原文強調的是「釋放」開發者的時間，不是「取代」開發者。</p>
+    <p class="g-p">例行工作不再搶注意力；增益來自不必監看，而不是任務變快。</p>
+    <p class="g-p">靈感來自 OpenAI 的 Batch API 與 Agents API，連介面設計、資源組織都一併參考。</p>
+    <p class="g-p">下一步是擴到更多情境；能不能規模化，取決於每次任務的成本。</p>
+    <p class="g-p">（編輯推論：新增情境的邊際成本，會決定這個平台是留在安全掃描，還是變成公司的通用執行層。）</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>門檻在執行層。</b>模型誰都買得到，sandbox 與 runner 才是差異。</p>
+      <p><b>成本是架構約束。</b>每次 0.04 美元，15,000 個 repo 才進得了預算。</p>
+      <p><b>翻倍成效待驗。</b>客戶自報、無第三方與對照組，別當通則引用。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="agent-retrieval.html">檢索管線外包：檔案丟進去，答案自帶頁碼</a><span class="d">2026-11-24</span></div>
+      <div class="g-relrow"><span class="s">Claude（Anthropic）</span><a href="mcp-skills-tasks.html">MCP 不再是工具清單：skills 帶知識，長任務搬到背景</a><span class="d">2026-11-24</span></div>
+      <div class="g-relrow"><span class="s">OpenAI（官方部落格）</span><a href="intentful-dots.html">Intentful 的提案流程：條件寫清楚，dot 就能從研究做到一頁提案</a><span class="d">2026-11-24</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。圖解 A 與「兩段固定手續」表格為本站重繪：原文為文字敘述，未給流程圖，也未給「固定步驟 vs agentic」的表格對照。修補準確率與漏洞數為 iFood／OpenAI 自報，無第三方驗證。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-25 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

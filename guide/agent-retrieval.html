@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 檢索管線外包：檔案丟進去，答案自帶頁碼 · AI 每日動態檔案</title>
+<meta name="description" content="Google Agent Retrieval（前身 Vector Search 2.0）新增託管導入與 SearchDocuments：18 份 PDF 約 9 分鐘就能依頁碼搜尋，19 分鐘影片每次查詢 0.3–0.5 秒、畫面與口白同時命中。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>檢索管線外包：檔案丟進去，答案自帶頁碼</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Google Developers Blog 的實作教學，逐段示範建立 data store、匯入文件與影片，到用一次呼叫完成帶引用的搜尋（作者 Kaz Sato，Staff Developer Advocate）。</p>
+    <p class="g-meta">
+      <span>Google Developers Blog</span>·<span>2026-11-24 發布</span>·<span>2026-11-25 收錄</span>·
+      <a href="https://developers.googleblog.com/from-files-to-cited-answers-in-one-api-call-managed-ingestion-and-searchdocuments-in-agent-retrieval/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>約 9 分鐘</b><span>18 份 Alphabet 投資人 PDF 從公開 bucket 到可依頁碼搜尋（Google 自測）</span></div>
+    <div class="g-stat"><b>0.3–0.5 秒</b><span>19 分鐘影片每次查詢，含開啟音訊 embedding 的版本</span></div>
+    <div class="g-stat"><b>5 種文件＋4 種影片</b><span>格式：PDF／DOCX／PPTX／XLSX／TXT；MP4／MOV／WebM／MKV 等</span></div>
+    <div class="g-stat"><b>2 個區域</b><span>v1beta、走 REST；Public Preview 期間只開 us-east4 與 europe-west4</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">把檔案丟進 Cloud Storage，解析、切段與向量都交給服務；代理呼叫一次 API，就拿回帶頁碼或時間戳的段落。</p>
+
+    <h2 class="g-h2">匯入與查詢，各剩一次呼叫</h2>
+    <p class="g-p">原文開場先把成本講清楚：代理要回答 PDF 裡的問題，得先有人建管線——解析、切段、embed、寫進向量資料庫，最後還要學會它的 schema。</p>
+    <p class="g-p">影片更貴：轉檔、切成片段、embed 畫格，還要記住每個片段來自哪支影片的第幾秒。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>從 bucket 到帶頁碼答案</b> — 一次匯入、一次查詢，球在各段之間怎麼傳（本站重繪）</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">你的 bucket → data store</span><span class="tr"><i>給 <em>gs://bucket/reports/*.pdf</em> 這類 URI 樣式，或給 JSONL manifest 自訂 document ID 與 metadata</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">data store → 解析與切段</span><span class="tr"><i>chunk（預設 100–500 token）或 page（一頁一段）；layout 解析另外抓表格與標題</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">切段 → Gemini Embedding 2</span><span class="tr"><i>服務產生向量，連同 schema 寫進 backing Collection</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">代理 → SearchDocuments</span><span class="tr"><i>只傳 data store 與文字查詢，混合搜尋自動跑</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">SearchDocuments → 代理</span><span class="tr"><i>段落＋來源 URI＋頁碼範圍，影片則換成起訖秒數</i></span></span></li>
+        <li class="side"><span class="st">旁支</span><span class="body"><span class="hop">重複匯入 → 既有文件</span><span class="tr"><i>更新而不新增；內容沒變的檔案直接跳過</i></span></span></li>
+      </ul>
+      <p class="x-src">本站依原文敘述重繪，原文沒有這張流程圖；01→05 的順序取自原文「先匯入、後查詢」的陳述，旁支不屬於主序。實測數字為 Google 自測。</p>
+    </figure>
+
+    <p class="g-p">託管導入把前段變成設定：data store 指向 Cloud Storage，服務自己解析、切段，用 Gemini Embedding 2 產生向量。</p>
+    <p class="g-p">文件與影片各用一種 document_type：文件是 UNSTRUCTURED，影片是 VIDEO，兩者分開建 data store。</p>
+    <p class="g-p">查詢端只剩 data store 加一句文字查詢；Collection 名稱、向量欄位、task type、輸出欄位都不必傳。</p>
+    <p class="g-p">文件查詢自動跑混合搜尋：語意與全文各查一次再融合，改寫過的問題與精確專有名詞都接得住。</p>
+    <p class="g-p">回傳單位是段落不是檔案，同一個 PDF 可以回好幾筆，各帶自己的頁碼範圍。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">六段線換了負責人</h2>
+    <p class="g-p">原文用一張對照表講差別；六列講的是責任轉移（編輯觀點），不是功能變強。</p>
+
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>工作</th><th>以前：自己接 Collection</th><th>託管後：data store＋SearchDocuments</th></tr></thead>
+        <tbody>
+          <tr><td data-l="工作"><b>解析檔案</b></td><td data-l="以前">自己處理 PDF、Office 檔與影片轉檔</td><td data-l="託管後">服務解析，格式清單見上方資料卡</td></tr>
+          <tr><td data-l="工作"><b>切段</b></td><td data-l="以前">自己決定邊界，自己記位置</td><td data-l="託管後">chunk 或 page，分頁文件（如 PDF）兩者都記頁碼</td></tr>
+          <tr><td data-l="工作"><b>產生向量</b></td><td data-l="以前">自己跑 embedding job 再寫入</td><td data-l="託管後">Gemini Embedding 2，寫進 backing Collection</td></tr>
+          <tr><td data-l="工作"><b>懂 schema</b></td><td data-l="以前">查詢前先弄清楚欄位怎麼存</td><td data-l="託管後">不必傳 Collection、向量欄位、輸出欄位</td></tr>
+          <tr><td data-l="工作"><b>組查詢</b></td><td data-l="以前">semantic 與 text 自己挑、自己併</td><td data-l="託管後">混合搜尋自動；reranking 一個開關</td></tr>
+          <tr><td data-l="工作"><b>標出處</b></td><td data-l="以前">自己回頭追原文第幾頁</td><td data-l="託管後">每筆結果自帶 URI 與頁碼或起訖秒</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="g-p">原文的結論也是這句：好的檢索需要什麼沒變，變的是誰來建。</p>
+    <p class="g-p">以前要維護 parser、chunker、embedding job 與 schema；現在這些都不在你手上（編輯推論：代價是查詢端少了可微調的欄位）。</p>
+    <p class="g-p">需要細控仍有退路：背後的 Collection 就是一般 Agent Retrieval Collection，可以直接查。</p>
+    <p class="g-p">過濾走結果讀回的路徑（metadata、頁碼），也能只查指定 document_ids；原文示範用 page-1 過濾，把五份財報頭版的 CEO 談話一次撈出來。</p>
+    <p class="g-p">排序同理：reranking 開啟後候選取多於 top_k，再用 Ranking API 重排。</p>
+    <p class="g-p">原文實測很說明問題：問「Alphabet 有多少員工」，純混合搜尋前五名有兩頁是資產負債表；開 rerank 後每筆都在講人數，含年報的 190,234 人。</p>
+    <p class="g-p">匯入是 long-running operation，失敗的檔案可以指定寫到某個 GCS 前綴，回頭再跑一次。</p>
+    <p class="g-p">原文給的判準很直白：資料本來就是檔案，就交給 data store；只有需要它給不了的控制，才降到 Collection。</p>
+    <p class="g-p">前提要一併讀：API 在 v1beta、走 REST，Python SDK 還在規劃。</p>
+    <p class="g-p">服務帳號要拿到 roles/vectorsearch.serviceAgent，否則它讀不到你的 bucket。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">影片的兩個旋鈕：窗長與音訊</h2>
+    <p class="g-p">影片 data store 只有兩個參數值得記：窗長與音訊。</p>
+    <p class="g-p">預設 30 秒一窗；10–20 秒換精準時間戳，最長 80 秒換主題式查詢需要的上下文。</p>
+    <p class="g-p">音訊預設關閉，只 embed 畫面，所以查「某人講了什麼」會落空。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>同一個問題，兩種音訊設定</b> — 差別在 embed 了什麼（本站整理，原文以表格截圖呈現兩案）</figcaption>
+      <div class="x-cmp">
+        <div class="cmp">
+          <p class="cmp-h">audio_mode: DISABLED（預設）</p>
+          <p>只 embed 畫面。畫面是講者本人時，問他講的內容也對不上，因為聲音從未進入向量。</p>
+        </div>
+        <div class="cmp">
+          <p class="cmp-h">audio_mode: ENABLED</p>
+          <p>第一軌音訊與畫格一起 embed。原文把同一批影片放進兩個 data store 對問，<b>只有開音訊的找到 keynote 正確片段</b>，不需轉錄或字幕。</p>
+        </div>
+      </div>
+      <p class="x-src">本站整理；原文用表格截圖呈現兩案，未給此並列版。並列比較、不帶順序。</p>
+    </figure>
+
+    <p class="g-p">原文的影片示範用場景描述查詢：「機器正在分揀小黃瓜」命中機器學習影片的 03:20–03:40，全片沒有標籤也沒有字幕。</p>
+    <p class="g-p">影片的匯入成本比文件高（編輯觀點：這是最容易低估的一段）。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>匯入到底要等多久</b> — 從 bucket 到可查詢的時間（基準：Google 自測，2026-11；單位分鐘，條愈短愈好）</figcaption>
+      <div class="x-bars">
+        <div class="x-bar"><b>18 份 PDF</b><span class="t"><span style="--p:20"></span></span><i>約 9 分鐘</i></div>
+        <div class="x-bar hot"><b>5 支影片</b><span class="t"><span style="--p:78"></span></span><i>20–45 分鐘</i></div>
+      </div>
+      <p class="x-src">兩列輸入不對等（文件 1 個 data store、影片 2 個），本圖只比同一件事：匯入耗時。影片每個片段都要轉檔與 embed，是量級差異的來源。</p>
+    </figure>
+
+    <p class="g-p">排程形狀也被規定：同一個 data store 一次跑一個匯入，不同 data store 之間才能平行。</p>
+    <p class="g-p">成本分兩層看：Public Preview 期間託管導入不另收費，GA 起才計價。</p>
+    <p class="g-p">介面目前只給 REST，原文明說 Python SDK 還在規劃；要細部控制時，仍可直接查背後的 Collection。</p>
+    <p class="g-p">backing Collection 照 Agent Retrieval 標準價另計，這筆帳不會因為換了 API 就消失。</p>
+    <p class="g-p">還有一個限制要記住：reranking_spec 不支援 VIDEO data store，排序微調只在文件端有。</p>
+    <p class="g-p">刪 data store 要帶 force 與 backing_collection_deleted。</p>
+    <p class="g-p">否則背後的 Collection 會留下來繼續計費；原文實測清除約 20 分鐘。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>瓶頸在匯入，不在查詢。</b>影片匯入以分鐘計，查詢只花零點幾秒。</p>
+      <p><b>切段策略決定引用品質。</b>chunk 與 page 換的是精度。</p>
+      <p><b>頁碼就是採用門檻。</b>說不出出處的答案，沒人敢放進產品。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">Claude（Anthropic）</span><a href="mcp-skills-tasks.html">MCP 不再是工具清單：skills 帶知識，長任務搬到背景</a><span class="d">2026-11-24</span></div>
+      <div class="g-relrow"><span class="s">OpenAI</span><a href="ifood-remote-agents.html">iFood 代理規模化：缺的是執行層，不是模型</a><span class="d">2026-11-24</span></div>
+      <div class="g-relrow"><span class="s">OpenAI（官方部落格）</span><a href="intentful-dots.html">Intentful 的提案流程：條件寫清楚，dot 就能從研究做到一頁提案</a><span class="d">2026-11-24</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；實測數字出自 Google 自測、原文敘述且無第三方驗證。圖解 A–C 與表格為本站重繪／整理，原文只有前後對照圖與表格截圖，未給流程圖與此並列版。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-25 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
