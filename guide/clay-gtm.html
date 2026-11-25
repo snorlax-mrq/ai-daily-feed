@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 業務代理搬進 ChatGPT 與 Codex：Clay 的三檔模型分工 · AI 每日動態檔案</title>
+<meta name="description" content="Clay 以 GPT-6 Sol 為主力、Astra 處理難題、Luna 負責成本敏感工作，另用其他模型補齊能力；兩個外掛把銷售情報送進 Codex 與 ChatGPT，讓業務不必離開慣用工具。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>業務代理搬進 ChatGPT 與 Codex：Clay 的三檔模型分工</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：OpenAI 客戶案例——Clay 用 GPT-6 系列驅動代理，並以外掛把銷售情報帶進業務原本的工具</p>
+    <p class="g-meta">
+      <span>OpenAI</span>·<span>2026-11-24 發布</span>·<span>2026-11-26 收錄</span>·
+      <a href="https://openai.com/business/customer-stories/clay-plugins-openai" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>3 檔＋其他</b><span>Sol 主力、Astra 攻難題、Luna 顧成本；原文另提「及其他模型」</span></div>
+    <div class="g-stat"><b>2 個外掛</b><span>Codex 外掛建 play，ChatGPT 外掛讓業務查客戶</span></div>
+    <div class="g-stat"><b>1 套 API</b><span>不同價位共用同一 Responses API（Clay AI 負責人 Jeff Barg 說法）</span></div>
+    <div class="g-stat"><b>代理不只一隻</b><span>Claygent 做研究與資料補齊，另有代理協助建流程、協調其他代理</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">問題不是沒有資料，而是資料太多卻不知道哪一條能打動客戶。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>三檔模型各吃什麼工作</b> — 「原文限定」欄寫的是原文沒說的部分</figcaption>
+      <div class="x-scroll">
+        <table class="x-tbl">
+          <thead><tr><th>模型</th><th>分工</th><th>原文限定</th></tr></thead>
+          <tbody>
+            <tr><td data-l="模型"><b>GPT-6 Sol</b></td><td data-l="分工">主要模型；原文引述它對 GTM play 有「很好的直覺」</td><td data-l="原文">未給單價、用量占比，也未說它專做研究或文案</td></tr>
+            <tr><td data-l="模型"><b>GPT-6 Astra</b></td><td data-l="分工">較難的任務，含寫程式與測試</td><td data-l="原文">原文以「更難的任務」概括，未列判斷門檻</td></tr>
+            <tr><td data-l="模型"><b>GPT-6 Luna</b></td><td data-l="分工">成本敏感的工作</td><td data-l="原文">原文未說明成本上限或觸發條件</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="x-src">本站整理自原文敘述，原文未以表格呈現，也未說明三檔之間如何路由（是人工指定或自動分派）。</p>
+    </figure>
+
+    <p class="g-p">Clay 自稱「自學式營收引擎」：使用者先建公司與人名清單，再用代理補齊紀錄，最後套進 GTM play。</p>
+    <p class="g-p">原文強調那個「range」：同一組模型要同時支撐背景研究與文案，也要支撐使用者直接互動的代理。</p>
+    <p class="g-p">分工邏輯是按任務難度與成本切，不是按功能切——這點從三檔模型的說明方式就看得出來。</p>
+    <p class="g-p">選擇上的關鍵不是分數，而是介面一致：Jeff Barg 說，不同價位共用同一套 Responses API 對他們很有吸引力。</p>
+    <p class="g-p">他對 Sol 的評語是「對 GTM play 有很好的直覺，能建長跨度、以結果為導向的任務」——屬主觀評價，原文未附任何評測分數。</p>
+    <p class="g-p">原文開頭把 Clay 定義為「自學式營收引擎」，但沒有解釋它怎麼自學；唯一接近的線索是結尾那句「代理從結果中學習」的願景。</p>
+    <p class="g-p">兩隻代理的職責也分開寫：Claygent 負責研究、資格判斷、補齊與訊號偵測；另一隻負責幫使用者建流程、協調其他 Clay 代理。</p>
+    <p class="g-p">原文沒說這兩隻怎麼互相呼叫，也沒說一個 play 裡會同時跑幾隻代理。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">把能力送到業務已經在用的地方</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>兩個外掛接的入口不同</b> — 不是同一件事的兩步</figcaption>
+      <div class="x-cmp">
+        <div><b>Codex 外掛</b>
+          <p>給建置者：在 Codex 裡建立並執行 GTM play。</p>
+          <p>同時讓業務取得可研究的資料，理解手上的案子。</p>
+        </div>
+        <div><b>ChatGPT 外掛</b>
+          <p>給業務：不離開對話就能研究潛在客戶。</p>
+          <p>原文引述：把豐富的客戶脈絡帶進他們原本工作的地方。</p>
+        </div>
+      </div>
+      <p class="x-src">本站重繪，原文以段落描述兩個外掛，未畫對照圖；原文未區分先後，且 Codex 外掛同時服務建置者與業務。</p>
+    </figure>
+
+    <p class="g-p">原文舉的用法很具體：業務把自家系統與公開資料集併起來看，決定該怎麼講產品價值。</p>
+    <p class="g-p">Jeff Barg 對成效的說法是「客戶很愛用 Codex 做銷售上的各種任務」、「最好的業務被賦能最多」——客戶案例的自述，無第三方驗證。</p>
+    <p class="g-p">ChatGPT 外掛他給的說法是「很成功」，同樣沒有數字。</p>
+    <p class="g-p">下一步方向是語音與 inbound：用 GPT-Live-1 以聲音操作 Clay 與 Codex，並開發能直接向潛在客戶展示產品或服務的代理。</p>
+    <p class="g-p">他也提到 Decisions API 是另一條把模型接進 Clay 的路，但原文沒有給出具體用法。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">連開發流程也被同一個模型吃掉</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>從寫程式到 PR 的閉環</b> — 受訪者描述的工作方式</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>寫程式</b><small>由 Astra 產出</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>加測試</b><small>同一輪補上</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>跑測試、驗功能</b><small>代理自行執行並記錄</small></div>
+        <span class="ar">→</span>
+        <div class="fn hot"><b>上傳 PR</b><small>把過程與結果一起交付</small></div>
+      </div>
+      <p class="x-src">本站重繪自受訪者引述，原文未畫此流程；「閉環」與省下大量手動驗證時間皆為受訪者個人描述，無量化數據。</p>
+    </figure>
+
+    <p class="g-p">這段值得注意的地方不在工具，而在驗證被納入代理的工作範圍：不只寫，還要跑、要記錄、要交付。</p>
+    <p class="g-p">Clay 的方向是把 GTM 流程從頭做到尾，讓代理從結果中學習、愈跑愈好——目前是宣示，不是已完成的能力。</p>
+    <p class="g-p">（編輯觀點：客戶案例的重點通常是「代理被放在既有工作流的哪一格」——Clay 選的是業務與建置者各自已在用的那一格。）</p>
+    <p class="g-p">原文沒有揭露 Clay 的用量規模、成本節省或成交率變化，全部成效敘述均為公司與受訪者自述。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>分檔不是省錢而已。</b>難題與成本敏感工作本來就該分開配。</p>
+      <p><b>外掛是通路策略。</b>把代理送進業務捨不得離開的介面。</p>
+      <p><b>驗證也交給代理。</b>寫完就跑、就記錄，才叫閉環。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain</span><a href="iso42001-langsmith.html">治理證據就在 trace 裡：LangChain 取得 ISO/IEC 42001</a><span class="d">2026-11-25</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="agent-lake.html">代理資料湖：trace 多到看不完，除錯要換一層引擎</a><span class="d">2026-11-25</span></div>
+      <div class="g-relrow"><span class="s">Google Research</span><a href="social-reasoning.html">使用者轉述的現實：助理的社交推理為何失準</a><span class="d">2026-11-25</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。三張圖解皆為本站重繪或整理，原文為客戶案例、未提供可引用的圖；文中成效敘述為 Clay 與受訪者自述，無第三方驗證。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-26 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

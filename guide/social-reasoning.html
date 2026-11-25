@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 使用者轉述的現實：助理的社交推理為何失準 · AI 每日動態檔案</title>
+<meta name="description" content="Google Research 以多代理社交模擬建立可驗證評測，測 12 個 LLM、開源逾 2 萬筆範例。發現助理若只能聽使用者轉述，正確率明顯低於直接旁觀，且容易順著使用者的框架走。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>使用者轉述的現實：助理的社交推理為何失準</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：Google Research 部落格——以多代理社交模擬建立可驗證的社交推理評測，並開源框架與逾 2 萬筆範例</p>
+    <p class="g-meta">
+      <span>Google Research</span>·<span>2026-11-25 發布</span>·<span>2026-11-26 收錄</span>·
+      <a href="https://research.google/blog/verifiable-social-reasoning-for-llm-assistants/" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>12 個 LLM</b><span>原文以此框架實測的模型數量（原文未列個別模型清單）</span></div>
+    <div class="g-stat"><b>逾 2 萬筆</b><span>隨框架一併開源的生成範例數</span></div>
+    <div class="g-stat"><b>5 個步驟</b><span>評測管線：社交類別 → 情境模板 → 主模擬 → 助理對談 → 判斷動機</span></div>
+    <div class="g-stat"><b>3 項原則</b><span>使用者中介的現實、可驗證訊號、可控軸</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">助理從未在場：它對社交事件的全部認識，都來自使用者一個人的轉述。</p>
+
+    <figure class="g-fig">
+      <a class="fig-zoom" href="../assets/guide/research-google-blog-verifiable-social-r/01.webp" target="_blank" rel="noopener"><img src="../assets/guide/research-google-blog-verifiable-social-r/01.webp" alt="原文示意圖：使用者夾在一個含帶隱藏動機角色的社交網路與助理之間，只透過對話泡泡連到助理" width="593" height="570" loading="lazy" decoding="async"></a>
+      <figcaption>助理只接到使用者這一條線，看不到網路裡那位帶隱藏動機的人；它要推斷的，正是橘色那個問號。<span class="fig-zoom-hint">（點圖看原尺寸）</span><span class="g-fig-src">圖／Google Research，<a href="https://research.google/blog/verifiable-social-reasoning-for-llm-assistants/" target="_blank" rel="noopener">原文</a></span></figcaption>
+    </figure>
+
+    <p class="g-p">原文稱這個處境為「使用者中介的現實」：助理不參與主要互動，只與單一使用者人設對話。</p>
+    <p class="g-p">數學、寫程式時模型面對的是客觀完整資訊；給人際建議時，它拿到的是可能偏頗、可能漏講重點的敘述。</p>
+    <p class="g-p">風險很具體：使用者若把自身不安投射進敘述，模型順著前提走，就會放大單方假設。</p>
+    <p class="g-p">原文的例子是對一位其實想幫忙的同事給出嚴厲建議——資訊沒錯，判斷卻被框架帶走。</p>
+    <p class="g-p">他們因此批評既有評測多集中在離譜主張（例如自稱有超能力），卻略過日常人際情境；原文引用的調查顯示，後者占了實際用量很大一部分。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">答案為什麼可以被驗證</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>五步管線</b> — 動機由框架設定，所以有標準答案</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>① 社交類別</b><small>慾望、知識等，界定評測範圍</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>② 情境模板</b><small>多場景結構、使用者人設、目標角色</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>③ 主模擬</b><small>角色自然互動，目標依隱藏動機行事</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>④ 助理對談</b><small>使用者抽離模擬，片面轉述並求助</small></div>
+        <span class="ar">→</span>
+        <div class="fn hot"><b>⑤ 判定</b><small>LLM-as-a-judge 比對推斷與設定動機</small></div>
+      </div>
+      <p class="x-src">本站重繪：原文此圖為 241 格動畫，靜態首格僅有骨架與「1 Input」字樣、無實質內容，故依原文五步敘述重排；原文圖上第 5 格標為 Evaluation。原文未給各步樣本數或耗時。</p>
+    </figure>
+
+    <p class="g-p">關鍵設計是「可控軸」：使用者人設的認知濾鏡可以切換，例如同一件事由自信或沒安全感的人轉述。</p>
+    <p class="g-p">於是「使用者怎麼講」成了可操縱的變因，「目標真正的動機」則是固定答案——兩者一拆，就量得出轉述的影響。</p>
+    <p class="g-p">模擬用 Google DeepMind 的開源 Concordia 函式庫實作；模擬與對談刻意分離，同一批模擬可重複餵給多個受測模型。</p>
+    <p class="g-p">這也讓靜態評測資料集成為可能：原文開源了框架與逾 2 萬筆生成範例。</p>
+    <p class="g-p">三個原則裡最容易被誤解的是「可驗證訊號」：它不宣稱模型的社交判斷有客觀標準，而是把要推斷的東西先固定住。</p>
+    <p class="g-p">代價是題目形狀被限制住了——能被設定的動機才好出題，真實人際裡那些說不清的動機仍難評。</p>
+    <p class="g-p">原文也自己劃了界線：模擬出來的是生成角色之間的互動，不是真人；未來工作才要處理長期演進的關係與多方團體動態。</p>
+    <p class="g-p">他們的下一步是把框架用來協助自家模型開發，同時公開釋出——動機寫得很明白：對研究透明，也讓社群接手改進。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">四個發現，最重的是「旁觀者落差」</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>發現</th><th>原文描述</th></tr></thead>
+        <tbody>
+          <tr><td data-l="發現"><b>旁觀者落差</b></td><td data-l="原文">直接看客觀未經轉述的事件，預測正確率顯著高於只聽使用者轉述</td></tr>
+          <tr><td data-l="發現"><b>對框架敏感</b></td><td data-l="原文">使用者帶有偏見時落差更大；模型常接受其框架，甚至驗證沒有根據的懷疑</td></tr>
+          <tr><td data-l="發現"><b>細節胃口大</b></td><td data-l="原文">敘述越細越好，即使那些細節對正確判斷並不必要</td></tr>
+          <tr><td data-l="發現"><b>多輪反錨定</b></td><td data-l="原文">對話變長不一定更準；模型為維持連貫而錨定前文，反而強化使用者的框架</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">第一項把「透過使用者眼鏡推理」的成本單獨量了出來——同一個模型，換成旁觀就明顯變準。</p>
+    <p class="g-p">第三項意味著模型比人類需要更多證據才敢下判斷；第四項則說明多問幾輪並不自動等於問得更清楚。</p>
+    <p class="g-p">值得注意的是「不愛追問」其實有兩面：追問機會變多，但模型為了連貫而沿著前文走，澄清反而被錨定抵銷。</p>
+    <p class="g-p">（編輯觀點：這頁真正的貢獻是把評測從邊緣怪例拉回日常——但模擬出來的社交場面仍不是真人互動，外部效度有待驗證。）</p>
+    <p class="g-p">原文只給定性結論與「顯著」這類強度詞，未公布逐模型分數、與人類基準的差距，也未說明各發現的效應量。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>助理只有二手資訊。</b>它推理的對象是轉述，不是事件。</p>
+      <p><b>動機可設定，答案就可驗。</b>這解法值得搬去其他軟性任務。</p>
+      <p><b>該追問卻被錨定。</b>多輪對話不等於問得更清楚。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain</span><a href="iso42001-langsmith.html">治理證據就在 trace 裡：LangChain 取得 ISO/IEC 42001</a><span class="d">2026-11-25</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="agent-lake.html">代理資料湖：trace 多到看不完，除錯要換一層引擎</a><span class="d">2026-11-25</span></div>
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="agent-retrieval.html">檢索管線外包：檔案丟進去，答案自帶頁碼</a><span class="d">2026-11-24</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。圖解 A 為本站重繪（原文為動畫），原文主圖已自託管並標註出處。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-26 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

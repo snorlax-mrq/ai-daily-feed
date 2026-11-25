@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 代理資料湖：trace 多到看不完，除錯要換一層引擎 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain 主張把代理 trace 當成新的企業語料：SmithDB 負責存、Insights／Engine／SmithTune 負責查與修。Engine 至今分析逾 6,000 萬條生產 trace，微調後的模型在內部基準拿下 96 分。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>代理資料湖：trace 多到看不完，除錯要換一層引擎</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain 官方部落格——把代理 trace 視為新的企業資料，主張需要專屬儲存與「智慧運算」才做得動</p>
+    <p class="g-meta">
+      <span>LangChain</span>·<span>2026-11-25 發布</span>·<span>2026-11-26 收錄</span>·
+      <a href="https://www.langchain.com/blog/the-agent-lake" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>數十億次／月</b><span>LangSmith 每月匯入的代理執行 trace 量（原文自述）</span></div>
+    <div class="g-stat"><b>6,000 萬條以上</b><span>Engine 至今分析過的客戶生產 trace（原文自述）</span></div>
+    <div class="g-stat"><b>96 分</b><span>微調後 Kimi K3 在 IssueBench 子集的分數；基線 Kimi K3 為 90、GPT-5.6 Sol 為 87（LangChain 內部基準，自述）</span></div>
+    <div class="g-stat"><b>4 種來源</b><span>outcome 的產生方式：使用者、系統觀察、LLM 代理評分、人工標註</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">trace 是「代理做了什麼」的系統紀錄；當它變長又變多，逐條人工除錯就撐不住了。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一份語料，多種引擎</b> — 代理資料湖借用資料湖的分工</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>智慧運算</b><small>線上評測器、AI Search、Insights、Engine、SmithTune</small></div>
+          <div class="ring-inner"><b>SmithDB — 為 trace 打造的共享語料</b>（trace 與 thread）；outcome 同樣留在代理資料湖</div>
+        </div>
+      </div>
+      <p class="x-src">本站重繪，原文以文字類比資料湖並附一張流程圖，未畫此巢狀圖；原文的關係是「智慧運算跑在語料之上」，圖中包覆僅示意同一個湖，不是包含關係。</p>
+    </figure>
+
+    <p class="g-p">trace 含使用者意圖、執行軌跡與最後結果。最簡單的用法是當除錯工具：把步驟畫出來，看哪一步壞了。</p>
+    <p class="g-p">但代理變強、進了生產，trace 又長又多，逐條人工檢視不再可行。原文說要規模化地用 trace 驅動改善，需要兩件事：為 trace 最佳化的資料庫，以及設計來查詢與處理它的「智慧運算」。</p>
+    <p class="g-p">第一件已有成品：SmithDB。第二件是近幾個月的重點，理由是 trace 本身就是非結構化的推理紀錄，分析它也需要智慧。</p>
+    <p class="g-p">架構因此長得像資料湖：一份共享語料，加上許多跑在上面的引擎。差別是 Snowflake、Databricks 的儲存與運算，都不是為代理資料設計的。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">湖裡裝什麼：trace，還有 outcome</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>維度</th><th>原文例子</th><th>形式／數量</th></tr></thead>
+        <tbody>
+          <tr><td data-l="維度"><b>怎麼對應</b></td><td data-l="原文">單一 trace 的倒讚、整段對話的低分</td><td data-l="形狀">一對一</td></tr>
+          <tr><td data-l="維度"><b>怎麼對應</b></td><td data-l="原文">合併的 PR：一段 thread 可開多個，一個 PR 也可由多段貢獻</td><td data-l="形狀">多對多</td></tr>
+          <tr><td data-l="維度"><b>怎麼產生</b></td><td data-l="原文">使用者直接給、觀察代理互動的系統、LLM-as-a-judge 代理指標、人工在標註佇列標記</td><td data-l="形狀">四種來源</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">湖裡多數是 trace：從使用者輸入、每一次模型呼叫與工具呼叫，到最後輸出；多輪對話以 thread 分組，讓整段互動可一起讀。</p>
+    <p class="g-p">規模是自述數字：LangSmith 每月匯入數十億次執行的 trace，客戶 Clay 每天送上數億筆事件。</p>
+    <p class="g-p">湖裡還有 outcome。trace 說代理怎麼做，outcome 說這樣做有沒有用；原文認為判斷 ROI 靠的是後者。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">第一件事：撈出值得看的那幾條</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>兩種篩選路徑</b> — 事前定義訊號，或當場用自然語言問</figcaption>
+      <div class="x-cmp">
+        <div><b>線上評測器</b>
+          <p>用調校過的評測提示持續替 trace 打分，例如幻覺、毒性、使用者滿意度。</p>
+          <p>代價：要先想好要量什麼；LLM 評測本身不便宜。</p>
+        </div>
+        <div><b>AI Search</b>
+          <p>用自然語言搜 trace，例如「使用者被惹毛的 thread」「含 PII 的 trace」。</p>
+          <p>做法：對搜尋結果再跑一次決策模型當語意濾網，並可與結構化條件並用。</p>
+        </div>
+      </div>
+      <p class="x-src">本站整理自原文，兩者為互補而非先後步驟；原文未給各自的準確率、延遲或成本數字。</p>
+    </figure>
+
+    <p class="g-p">線上評測器是起點：LangSmith 內建一批調校過的提示，直接替 trace 打幻覺、毒性與滿意度分數。</p>
+    <p class="g-p">原文提醒別照單全收——要確認這些評測抓到的是你關心的訊號，不對就調整。成本是另一道牆。</p>
+    <p class="g-p">原文提到 TypeSafe AI 在 9 月推出 decision model，讓生產 trace 的分類變便宜；LangSmith 已提供數個，這條低成本路線仍在研究中。</p>
+    <p class="g-p">評分留在 trace 上的好處是查詢容易：用 feedback 篩選就撈得到；代價是要先定義要量的訊號。</p>
+    <p class="g-p">若想在當下就找、不想事先建評測器，就用 AI Search：自然語言加上語意濾網，可再疊結構化條件。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">第二件事：把改善迴圈自動化</h2>
+    <p class="g-p">撈出高訊號只是迴圈的一段。之後還得有人判斷它們代表什麼、代理該改哪裡；在客戶的量級下，這段也得自動化，於是 LangChain 自己做代理來跑。</p>
+    <p class="g-p">Insights 回答「人到底怎麼用你的代理」：問一句「我的代理在哪裡失敗」，它把近期 trace 分組，並持續把新對話歸類，看得出哪類需求正在惡化。</p>
+    <p class="g-p">Engine 找可修的問題：定期掃 trace，把重複失敗聚成 issue；接上程式庫後查根因、開修補 PR，v2 起還能在團隊看到之前先拿評測集驗證修法。</p>
+    <p class="g-p">若改了 harness 仍反覆犯同一個錯，下一步常是訓練專屬模型，而湖裡已有現成語料：SmithTune 用最佳軌跡微調，再回 LangSmith 與基線比較。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>同一份內部基準的三個分數</b> — 微調後高 6 分</figcaption>
+      <div class="x-bars">
+        <div class="x-bar hot"><b>微調後 Kimi K3</b><span class="t"><span style="--p:100"></span></span><i>96</i></div>
+        <div class="x-bar"><b>基線 Kimi K3</b><span class="t"><span style="--p:94"></span></span><i>90</i></div>
+        <div class="x-bar"><b>GPT-5.6 Sol</b><span class="t"><span style="--p:91"></span></span><i>87</i></div>
+      </div>
+      <p class="x-src">分數愈高愈好。原始分數見 2026-11-25 原文；評測為 LangChain 內部基準 IssueBench 的一個子集（任務是偵測與分組 trace 中的問題），屬自報、無第三方驗證；條長為可視性呈現，非等比例。</p>
+    </figure>
+
+    <p class="g-p">原文以 Engine 自己當例：用某個代理的軌跡微調 Kimi K3，在 IssueBench 子集上拿下 96 分，基線 Kimi K3 為 90、GPT-5.6 Sol 為 87。</p>
+    <p class="g-p">原文的收尾很直白：價值不在單一條 trace，而在你能在湖上做的事。</p>
+    <p class="g-p">（編輯觀點：這其實是把 LLM 可觀測性推進成資料工程問題——儲存、語料治理與查詢成本，才是規模化的瓶頸。）</p>
+    <p class="g-p">原文沒公布 SmithDB 的查詢延遲、儲存成本與資料保留政策；6,000 萬條與各項分數皆為自述。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>trace 是新的企業資料。</b>儲存與查詢都要為它重做。</p>
+      <p><b>找訊號要自動化。</b>評測器事前定義，AI Search 事後追問。</p>
+      <p><b>別只存過程。</b>沒有 outcome，說不出代理值不值。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain</span><a href="iso42001-langsmith.html">治理證據就在 trace 裡：LangChain 取得 ISO/IEC 42001</a><span class="d">2026-11-25</span></div>
+      <div class="g-relrow"><span class="s">Google Research</span><a href="social-reasoning.html">使用者轉述的現實：助理的社交推理為何失準</a><span class="d">2026-11-25</span></div>
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="agent-retrieval.html">檢索管線外包：檔案丟進去，答案自帶頁碼</a><span class="d">2026-11-24</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。圖解 A、B、C 與 outcome 表皆為本站重繪或整理，原文未給該圖與排序。規模、分數與效能敘述為 LangChain 自述，無第三方驗證。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-26 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

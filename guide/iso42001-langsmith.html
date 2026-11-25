@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 治理證據就在 trace 裡：LangChain 取得 ISO/IEC 42001 · AI 每日動態檔案</title>
+<meta name="description" content="LangChain 通過 ISO/IEC 42001 驗證，範圍涵蓋所有會在自己託管模型上跑推論的 GA LangSmith 功能。稽核歸結成四問，答案就藏在 trace、評測與權限設定裡，每年再受一次監督稽核。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>治理證據就在 trace 裡：LangChain 取得 ISO/IEC 42001</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：LangChain 官方部落格——說明如何用 LangSmith 既有的權限設定、追蹤與評測通過 AI 管理系統國際標準驗證</p>
+    <p class="g-meta">
+      <span>LangChain</span>·<span>2026-11-25 發布</span>·<span>2026-11-26 收錄</span>·
+      <a href="https://www.langchain.com/blog/ai-governance-iso-iec-42001-langsmith" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>ISO/IEC 42001</b><span>AI 管理系統國際標準；驗證範圍是所有 GA 的 LangSmith 功能中「會在自己託管模型上執行推論」者（原文未列功能清單）</span></div>
+    <div class="g-stat"><b>4 個問題</b><span>原文把稽核歸結成四問：允許做什麼／怎麼證明有效／怎麼證明做了什麼／怎麼持續改善</span></div>
+    <div class="g-stat"><b>每年 1 次</b><span>監督稽核；每年新推出的 AI 功能會陸續納入範圍</span></div>
+    <div class="g-stat"><b>2 人團隊</b><span>原文稱以 Security Agent 撐起治理計畫的政策、證據、風險評估與盤點</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">治理代理的稽核證據不是另寫一套文件，而是工程師平常除錯就在看的 trace、評測與權限設定。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>三層控管包住一次代理執行</b> — 誰決定能力、憑證與暫停</figcaption>
+      <div class="x-stack">
+        <div class="ring">
+          <div class="ring-lb"><b>1 · 工作區權限</b><small>哪些整合可用、誰能新增能力</small></div>
+          <div class="ring-inner"><b>2 · 代理設定 × 3 · 工具設定</b> — 代理用共享憑證或呼叫者的 OAuth（建立時固定）；每個工具設為 Auto 或 Ask</div>
+        </div>
+      </div>
+      <div class="x-fb"><span class="ic">↺</span><span><b>回饋</b>：每次暫停、核准與駁回都寫進 trace，事後成為稽核證據</span></div>
+      <p class="x-src">本站重繪自原文對 Fleet 三層控管的描述；原文未畫此巢狀圖，也未給層與層之間的否決順序。圖中把第 2、3 層併置呈現，原文為獨立三層。</p>
+    </figure>
+
+    <p class="g-p">原文先把問題講清楚：企業已把客戶資料、甚至營運系統交給代理，而代理是非確定性的——每次執行可能走不同路徑，途中還會改動其他系統。</p>
+    <p class="g-p">治理難，所以需要共同標準。ISO/IEC 42001 規範企業怎麼治理 AI 系統、系統內建哪些控制；認證先做內部稽核，再由外部稽核員確認系統照文件運作。</p>
+    <p class="g-p">對每個納入範圍的 AI 系統，稽核最後收斂成四問，原文也照這四問分節回答。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">四問，先從權限邊界看起</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>稽核的四個提問</b> — 原文依此順序逐節回答</figcaption>
+      <div class="x-grid">
+        <div class="c"><b><i>①</i>允許做什麼</b><small>權限邊界、誰能呼叫、誰核准新能力</small></div>
+        <div class="c"><b><i>②</i>怎麼證明有效</b><small>測試結果，以及測試資料的來源</small></div>
+        <div class="c"><b><i>③</i>怎麼證明做了什麼</b><small>生命週期的活動紀錄與上線後監控</small></div>
+        <div class="c"><b><i>④</i>怎麼持續改善</b><small>生產所學要回流到系統本身</small></div>
+      </div>
+      <p class="x-src">本站整理，四個問題見原文「the audit came down to four questions」條列。四問是文件要求的分區，不是執行步驟；原文在此順序下逐節說明。</p>
+    </figure>
+
+    <p class="g-p">第一問是權限邊界。演示方式很具體：請代理用一個需要核准的工具對 Slack 發文，執行因此暫停，他們附理由駁回，代理回報駁回且沒有重試。</p>
+    <p class="g-p">這一幕能當證據，是因為 trace 記下整個過程——審批要求與它真的被執行，都在同一份紀錄裡。</p>
+    <p class="g-p">變更控制走同一條路：系統提示在 Fleet 打開，就看得到誰可檢視、誰有權編輯。</p>
+    <p class="g-p">不在程式庫管提示的團隊，則用 Prompt 與 Context Hub 的版本提交與可移動標籤，追蹤發布並還原舊版。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">「可重現」指的是資料集與評測器</h2>
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 C · <b>一份能被稽核的評測</b> — 固定的是測試，不是輸出</figcaption>
+      <div class="x-flow">
+        <div class="fn"><b>定義預期行為</b><small>先寫下要測什麼、怎麼量</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>固定資料集與評測器</b><small>分數變動才歸因於代理行為</small></div>
+        <span class="ar">→</span>
+        <div class="fn"><b>驗證評測器</b><small>空白可過的測試丟棄；先餵已知正確答案</small></div>
+        <span class="ar">→</span>
+        <div class="fn hot"><b>PR 留下帶日期紀錄</b><small>含範例來源與評分程式碼</small></div>
+      </div>
+      <p class="x-src">本站重繪，原文以段落描述這些要求、未畫流程圖，也未給各步驟的工時或順序編號。</p>
+    </figure>
+
+    <p class="g-p">第二問是「怎麼證明它有效」。稽核員要兩樣東西：某個版本的測試結果，以及測試資料從哪來。</p>
+    <p class="g-p">代理評測難重現——同樣輸入不保證同樣輸出。原文的說法是：能固定的是資料集與評測器，這樣分數變動才分得清是代理行為、還是測試本身變了。</p>
+    <p class="g-p">他們的答案很硬：評測資料只來自自家跑的系統，不取自客戶工作區。</p>
+    <p class="g-p">每個測試都記錄範例來源與評分程式碼，變更走 PR，留下帶日期的紀錄與審查者；於是版本歷史加上實驗，就構成那批測試結果的來歷。</p>
+    <p class="g-p">他們也測評測本身：空白答案能過的測試直接丟棄、重複的 trace 移除；評分器先餵一題已知正確的答案，沒拿滿分就先查評分器。</p>
+    <p class="g-p">有寫入權限的代理另要驗提示注入與資料外洩，LangSmith 內建涵蓋多數此類風險的預製評測器；需判斷的項目交給 LLM-as-judge，人工複核走標註佇列。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">第三、四問：紀錄，然後回頭修</h2>
+    <p class="g-p">第三問要的是系統生命週期的活動紀錄與上線後監控。trace 能重建一次執行：輸入、輸出、工具呼叫、錯誤，連需要核准時的暫停與續跑都在同一份紀錄。</p>
+    <p class="g-p">稽核員因此不必拼湊不同日誌；同一套評測也能跑在生產 trace 上，結果以回饋分數附在該次執行。</p>
+    <p class="g-p">審查者點開被標記的回應，就看得到導致它的那些動作；人工修正也會存回 trace，成為後續評測的材料。</p>
+    <p class="g-p">第四問要求系統持續改善。原文以 Engine 示範：它把重複失敗分組、進原始碼查根因、開出修補 PR，還能在 preview 環境先驗證，再走團隊原本的審查。</p>
+    <p class="g-p">被修正的那次失誤，之後會變成評測資料集裡的範例——一次事故就換來一條回歸測試。</p>
+    <p class="g-p">組織層面的政策、角色與風險評估同樣交給代理：Security Agent 以 Deep Agents 打造、跑在 LangSmith 上，自身執行被追蹤，工具也受同一套審批設定約束。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 D · <b>Security Agent 的四組技能</b> — 治理工作被拆成可重複的動作</figcaption>
+      <div class="x-grid">
+        <div class="c"><b><i>a</i>政策與對照</b><small>索引每條政策與條文已涵蓋什麼，控制項只寫一次</small></div>
+        <div class="c"><b><i>b</i>證據</b><small>為每個控制項寫敘述；能從 API 讀的就持續監控</small></div>
+        <div class="c"><b><i>c</i>風險與影響</b><small>先讀程式碼才給分，超過門檻的進缺失清單</small></div>
+        <div class="c"><b><i>d</i>盤點與功能審查</b><small>藍圖上每個 AI 功能都有負責人與範圍決定，每月審</small></div>
+      </div>
+      <p class="x-src">本站整理自原文的技能清單，原文為條列、未畫成四格；四者為並列技能，無先後順序。</p>
+    </figure>
+
+    <p class="g-p">原文說這讓兩人的團隊撐起治理計畫，也支援 SOC 2、ISO 27001、GDPR、HIPAA 等多套規範的盤查。</p>
+    <p class="g-p">（編輯觀點：這篇的價值不在證書，而在示範「合規證據＝既有觀測資料」——若為稽核另做一套，那才是真正的成本。）</p>
+    <p class="g-p">原文沒給稽核工時、費用或缺失項數，也沒量化 Security Agent 省下多少人工。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>合規靠既有觀測。</b>trace 與評測同時是除錯工具與稽核證據。</p>
+      <p><b>預設關閉才答得出來。</b>四問問的是邊界，不是事後補救。</p>
+      <p><b>重現的是測試不是輸出。</b>固定資料集與評測器，才說得清分數變化。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain</span><a href="agent-lake.html">代理資料湖：trace 多到看不完，除錯要換一層引擎</a><span class="d">2026-11-25</span></div>
+      <div class="g-relrow"><span class="s">Google Research</span><a href="social-reasoning.html">使用者轉述的現實：助理的社交推理為何失準</a><span class="d">2026-11-25</span></div>
+      <div class="g-relrow"><span class="s">Google Developers Blog</span><a href="agent-retrieval.html">檢索管線外包：檔案丟進去，答案自帶頁碼</a><span class="d">2026-11-24</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述數據出自原文，圖解與小標為編輯整理。四張圖解皆為本站重繪或整理，原文未給該巢狀圖、四問圖與流程圖。驗證由 LangChain 對外說明，證書可向 trust.langchain.com 索取，本站未獨立查證。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-26 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>

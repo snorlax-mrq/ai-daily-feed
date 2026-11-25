@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>導讀 — 值班代理：Codex 在告警響起時接手查線索 · AI 每日動態檔案</title>
+<meta name="description" content="OpenAI 把生產事故處理拆成八步四群：Codex 讀 Grafana、Kubernetes 與部署歷史彙整線索、附引用提出根因，再由具名核准者放行；被否決就改提案，沒復原就回頭查。">
+<script>(function(){var t=null;try{t=localStorage.getItem("ai-news-theme")}catch(e){}if(t!=="light"&&t!=="dark")t=matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light";document.documentElement.dataset.theme=t})();(function(){var f=null;try{f=localStorage.getItem("ai-news-font")}catch(e){}if(f==="lg"||f==="xl")document.documentElement.dataset.font=f})();</script>
+<link rel="stylesheet" href="../assets/archive.css">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+  <a class="mark" href="../index.html" aria-label="回館藏目錄"><span class="seal" aria-hidden="true"></span>AI 每日動態檔案</a>
+  <nav class="bar-nav"><a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86" class="day-catalog">智能代理</a><a href="../index.html" class="day-catalog">目錄</a></nav>
+  <button id="fontBtn" class="font-btn" type="button" aria-label="字級：點擊切換 標準／放大／特大" title="字級：點擊切換 標準／放大／特大">A</button>
+  <button id="themeBtn" class="theme-btn" type="button" aria-label="切換深淺色">
+    <svg class="ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5 5l1.6 1.6M17.4 17.4 19 19M19 5l-1.6 1.6M6.6 17.4 5 19"/></svg>
+    <svg class="ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13.2A8.1 8.1 0 0 1 10.8 4 7.6 7.6 0 1 0 20 13.2Z"/></svg>
+  </button>
+</div></header>
+<main class="wrap">
+
+  <p class="g-crumb"><a href="../topics.html">主題目錄</a> › <a href="../topics.html?t=%E6%99%BA%E8%83%BD%E4%BB%A3%E7%90%86">智能代理</a> › 導讀</p>
+  <header class="g-head">
+    <div class="day-title-row">
+      <h1>值班代理：Codex 在告警響起時接手查線索</h1>
+      <span class="stamp">導讀</span>
+    </div>
+    <p class="g-orig">原文：OpenAI 開發者部落格——示範把 Codex 嵌入既有生產監控流程，跨 Grafana、Kubernetes 與 Codex Security 做根因調查</p>
+    <p class="g-meta">
+      <span>OpenAI Developers</span>·<span>2026-11-24 發布</span>·<span>2026-11-26 收錄</span>·
+      <a href="https://developers.openai.com/blog/production-monitoring-with-codex" target="_blank" rel="noopener">閱讀官方原文<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </p>
+  </header>
+
+  <div class="g-stats">
+    <div class="g-stat"><b>8 步・4 群</b><span>證據、推理、行動與核准、驗證與學習（原文流程圖編號）</span></div>
+    <div class="g-stat"><b>3 套工具</b><span>示範串接 Grafana、Kubernetes 與 Codex Security</span></div>
+    <div class="g-stat"><b>唯讀優先</b><span>依漸進揭露原則，先小範圍、必要時再擴大</span></div>
+    <div class="g-stat"><b>多代理：可選</b><span>執行代理做根因分析、審查代理挑戰假設；原文寫「也可以試試」</span></div>
+  </div>
+
+  <section class="g-sec">
+    <p class="g-p" style="margin-top:24px;font-size:1.19em;font-weight:600">這頁談的不是更強的模型，而是把代理接上團隊原本就在用的那幾套系統。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 A · <b>一次告警的處理鏈</b> — 原文八步，本站按群組合併為五段</figcaption>
+      <ul class="x-seq">
+        <li><span class="st">01</span><span class="body"><span class="hop">證據：觸發 → 蒐集</span><span class="tr"><i>告警或操作請求；log、trace、指標、執行時狀態</i></span></span></li>
+        <li><span class="st">02</span><span class="body"><span class="hop">推理：串接 → 假設</span><span class="tr"><i>程式碼、部署、設定、事故史；可被區分測試的成因</i></span></span></li>
+        <li><span class="st">03</span><span class="body"><span class="hop">行動：提出有界動作</span><span class="tr"><i>具體、可逆、連回證據，最好附還原計畫</i></span></span></li>
+        <li><span class="st">04</span><span class="body"><span class="hop">核准：具名的人放行</span><span class="tr"><i>由具名核准者授權，通過才套用變更</i></span></span></li>
+        <li><span class="st">05</span><span class="body"><span class="hop">驗證與學習</span><span class="tr"><i>用事前議定的可信訊號確認復原，再記錄結果</i></span></span></li>
+      </ul>
+      <div class="x-fb"><span class="ic">↺</span><span><b>兩條回頭路（原文流程圖明畫）</b>：提案被否決 → 修訂提案；未復原 → 回頭繼續調查</span></div>
+      <p class="x-src">本站重繪，依原文八步四群合併為五段（01 含原文步驟 1–2、02 含 3–4、05 含 7–8）；原文未給各步耗時。</p>
+    </figure>
+
+    <p class="g-p">原文先描述現況：半夜告警響，值班工程師得自己翻 log、指標與程式碼，逐項驗證「是剛上線的版本？流量尖峰？還是依賴掛掉？」</p>
+    <p class="g-p">痛點不在單一工具，而在跨平台比對；根因常常要窮舉搜尋才浮得出來。</p>
+    <p class="g-p">每一步原文都寫明了輸入：告警或操作請求、log 與 trace 與執行時狀態、程式碼與部署與設定與事故史。</p>
+    <p class="g-p">假設還要是「能區分測試」的——你得能設計出一個測試，把這個假設排除掉。</p>
+    <p class="g-p">原文對證據的定義很寬：log、trace、指標與執行時狀態都算，重點是它們既能被代理取用，也能被審查者回查。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">先給對上下文，再談判斷</h2>
+    <div class="x-scroll">
+      <table class="x-tbl">
+        <thead><tr><th>原則</th><th>原文做法</th></tr></thead>
+        <tbody>
+          <tr><td data-l="原則"><b>漸進揭露</b></td><td data-l="原文">先小範圍、必要時再擴張；存取以唯讀為主</td></tr>
+          <tr><td data-l="原則"><b>權限粒度</b></td><td data-l="原文">在各系統建服務帳號，控制 Codex 能碰的資源</td></tr>
+          <tr><td data-l="原則"><b>可稽核</b></td><td data-l="原文">要求每個判斷附證據與引用，審查者才看得懂理由</td></tr>
+          <tr><td data-l="原則"><b>不亂動</b></td><td data-l="原文">提出的動作要具體、可逆，且連回證據</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="g-p">原文用一個很實用的比喻：想像你要讓新進 SRE 上手這套監控，你會給他哪些資訊？那就是該餵給代理的上下文。</p>
+    <p class="g-p">有了上下文，代理才能把各來源線索拼成根因假設；「每個判斷附引用」等於強迫它交出可被檢查的推理。</p>
+
+    <figure class="x-fig">
+      <figcaption class="x-cap">圖解 B · <b>三層各管一件事</b> — 證據、執行、模型不在同一層</figcaption>
+      <div class="x-grid">
+        <div class="c"><b>可觀測性平台</b><small>偵測告警、存放證據</small></div>
+        <div class="c"><b>Codex 執行環境</b><small>接起證據、程式碼與工具</small></div>
+        <div class="c"><b>模型推論層</b><small>提供 OpenAI 模型</small></div>
+      </div>
+      <p class="x-src">本站整理自原文的三層架構描述（原文以三個標籤並列），非流程圖；三者為並列的層，不是先後步驟。</p>
+    </figure>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">人還是守門人</h2>
+    <p class="g-p">修法要是「有界」的：具體、可逆、連回證據，最好再附一份還原計畫；形式可以是報告，也可以是 PR。</p>
+    <p class="g-p">接著是人：具名核准者授權才套用變更。若被否決，流程回到修訂提案；若變更後沒復原，就回到調查。</p>
+    <p class="g-p">這兩條回頭箭頭是原文流程圖上明畫的，也是「代理不能自己放行」的具體形狀。</p>
+    <p class="g-p">事後還有兩件事：用事前議定的可信訊號確認復原，以及把發現、決策、結果與後續事項寫成紀錄。</p>
+    <p class="g-p">原文建議先在幾個代表性情境上排練，例如過去的真實事故；每次排練都是把摩擦點磨掉的機會。</p>
+    <p class="g-p">排練後再談可重複：列出 Codex 用了哪些連接器，再用更少來源重跑同一事故，看它在哪裡證據不足。</p>
+    <p class="g-p">也可以比較單代理與加上審查代理的差別——原文關心的指標是找出根因與緩解的時間，以及被糾正的頻率。</p>
+    <p class="g-p">流程穩定後，原文建議把它寫成 Codex skill 或 plugin，讓知識不再只存在少數人身上。</p>
+    <p class="g-p">原文對多代理的措辭是「也可以試試」，並非必要配置；先跑單代理、再加審查代理比較，才是它描述的順序。</p>
+    <p class="g-p">（編輯觀點：這篇真正可搬走的是紀律——唯讀起步、附引用、人核准；換成任何代理或任何監控堆疊都成立。）</p>
+    <p class="g-p">原文是示範教學，未提供調查耗時、誤判率或節省工時的量化數據。</p>
+  </section>
+
+  <section class="g-sec">
+    <h2 class="g-h2">帶走三件事</h2>
+    <div class="x-take">
+      <p><b>瓶頸是跨平台比對。</b>代理的價值在彙整，不在單點查詢。</p>
+      <p><b>唯讀起步、附引用。</b>可稽核性換來的是可被檢查的推論。</p>
+      <p><b>核准權留給人。</b>代理提議、人放行、再一起驗證。</p>
+    </div>
+  </section>
+
+  <section class="g-sec"><h2 class="g-h2">同一主題的其他館藏</h2><div class="g-rel">
+      <div class="g-relrow"><span class="s">LangChain</span><a href="iso42001-langsmith.html">治理證據就在 trace 裡：LangChain 取得 ISO/IEC 42001</a><span class="d">2026-11-25</span></div>
+      <div class="g-relrow"><span class="s">LangChain</span><a href="agent-lake.html">代理資料湖：trace 多到看不完，除錯要換一層引擎</a><span class="d">2026-11-25</span></div>
+      <div class="g-relrow"><span class="s">Google Research</span><a href="social-reasoning.html">使用者轉述的現實：助理的社交推理為何失準</a><span class="d">2026-11-25</span></div>
+    </div></section>
+
+  <p class="g-note">導讀為本站編輯內容（AI 摘解自原文與館藏重點，非官方文件）；引述做法出自原文，圖解與小標為編輯整理。兩張圖解皆為本站重繪／整理，原文有流程圖（本站合併為五段）與三層標籤；原文為示範教學，無成效數據。內容經對照原文的獨立事實審查後發布。</p>
+</main>
+<footer class="foot"><div class="foot-in">
+  <p class="foot-src">AI 每日動態檔案 — 僅收錄官方第一手公告，導讀頁為編輯加值內容。</p>
+  <p class="foot-gen">館藏導讀 · 建置於 2026-11-26 (UTC+8)</p>
+</div></footer>
+<script src="../assets/site.js" defer></script>
+</body>
+</html>
