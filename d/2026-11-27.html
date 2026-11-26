@@ -33,10 +33,10 @@
       <h2 class="co-tab">NVIDIA</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-26</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-26</span><i class="chip chip--topic">產品與功能</i><i class="chip chip--topic">硬體與基礎設施</i></div>
           <h3 class="item-title"><a href="https://blogs.nvidia.com/blog/geforce-now-thursday-community-war-thunder-reward/" target="_blank" rel="noopener">Come for the Games, Stay for the Community With GeForce NOW<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">Good games bring people together. This GFN Thursday, GeForce NOW is celebrating the members, creators and community moderators who turn every session into something worth sharing. From friendships formed in online lobbie</p>
-          
+          <ul class="item-points"><li>本週 GFN Thursday 主題是社群，GeForce NOW 找來多位大使談雲端遊戲如何讓他們在低規格筆電、電視、手機、平板與 Steam Deck 上持續玩到新作，並在線上大廳認識朋友、甚至成為社群版主。</li><li>促銷方面，Black Friday 期間新會員與符合條件的升級者，Performance 或 Ultimate 六個月方案首期可享 7 折，活動到 11 月 30 日（週一）止、部分地區限量；透過 Amazon 購買 Fire TV Stick 另有首月 9 折的獨立優惠。</li><li>《War Thunder》在 GeForce NOW 上支援 NVIDIA DLSS 5，官方稱其 3D-Guided Neural Rendering 讓照明與材質更擬真（從戰車裝甲到戰艦周圍的水面），Ultimate 會員可以 RTX 5080 等級的雲端效能體驗，不必升級昂貴的實體 PC。</li><li>所有會員層級都可領取 Ready for Battle Pack 獎勵，本週另有 12 款新遊戲加入 GeForce NOW 遊戲庫；Ultimate 方案主打最高 5K 解析度或 360 fps、單次 session 最長 8 小時，並由雲端代管下載與更新。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -45,22 +45,22 @@
       <h2 class="co-tab">AMD</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-25</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-25</span><i class="chip chip--topic">產品與功能</i><i class="chip chip--topic">資安與漏洞</i></div>
           <h3 class="item-title"><a href="https://www.amd.com/en/blogs/2026/Admin_Isnt_for_Everyone_Roles_in_ADMP_4_0.html" target="_blank" rel="noopener">ADMP_4_0_Roles_Explained_Admin_Standard_Read_Only<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           
-          
+          <ul class="item-points"><li>AMD 用一篇導覽說明 ADMP 4.0（AMD Device Management Portal）的三種角色：Admin 擁有入口網站治理與全部裝置管理權限；Standard 只做日常裝置工作（設定 Manageability 與 ADMA、探索、電源、開機、KVM、升級、上傳／刪除軟體檔案），但沒有入口網站驗證與維護權；Read-Only 只能看裝置清單與資訊、匯出清單、下載日誌、改外觀與送 Bug 回報。</li><li>官方的一句話結論是「Admin 什麼都能做，Standard 做裝置的工作但不持有入口網站治理的鑰匙」，因此給一線技術人員 Standard 才是最小權限；把所有需要重開機的人都發超級管理員帳號，是資安衛生的大忌。</li><li>安裝流程是跑 ADMP-4.0.x.exe，首次啟動由三步嚮導建立後端資料庫（SQLite 免設定，或先備妥 SQL Server／PostgreSQL）、建立初始管理員、選擇登入方式；之後在 Portal users 新增 Standard 帳號並在 Manageability 設定中指定其可管理的裝置範圍。</li><li>文中特別提醒 super admin 並不在 Portal users 清單裡、也不是碰不得：一旦有第二個 admin，對方就能重設它的密碼、甚至刪掉它，所以應把它視為「第一個 admin」而非永久 root，且永遠保留至少一個可用的本機 admin 當 SSO 鎖死時的緊急通道（Break-Glass）。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-24</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-24</span><i class="chip chip--topic">硬體與基礎設施</i></div>
           <h3 class="item-title"><a href="https://www.amd.com/en/blogs/2026/when-is-the-best-time-of-year-to-buy-a-gaming-pc.html" target="_blank" rel="noopener">When is the best time of year to buy a gaming PC?<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           
-          
+          <ul class="item-points"><li>AMD 的核心建議不是「哪個月最便宜」，而是「當合適的整台系統降到你的目標價、且你已準備好使用與測試時就買」；文中唯一標明的 2026 年具名零售時點是 11 月 27 日黑色星期五，但那只是一個比價檢查點，不保證你想要的配置當天最便宜。</li><li>實作方法是先寫下想玩的遊戲、體驗、期限與可接受價格，形成一個可以反覆回頭檢視的「決策觸發點」，而不是每次看到新公告就重新搜尋；比價時要對齊完全相同零組件、記憶體配置、儲存、作業系統、機況與保固，處理器家族或 RAM 容量相同不代表兩台 PC 等價。</li><li>成本要用「到手總價」算：以標價為起點，加上實際配送地址的稅、運費、必要配件、會員條件與加值服務，並在結帳頁確認最終金額；折扣百分比是相對參考價，不能證明那是最低的到手成本。</li><li>官方也提醒別把贈品當折現：獎勵要等確認該筆訂單的完整現行條款後才算數，購買期限與兌換期限要分開看，過期的購買窗口不算有效；下單前應讀退貨、保固、維修與價格保護條款，DIY 組裝則抓在可組裝並測試的退貨窗內下單。</li></ul>
         </article></li>
 <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-24</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-24</span><i class="chip chip--topic">硬體與基礎設施</i></div>
           <h3 class="item-title"><a href="https://www.amd.com/en/blogs/2026/are-there-any-good-gaming-deals-right-now.html" target="_blank" rel="noopener">Are there any good gaming deals right now?<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           
-          
+          <ul class="item-points"><li>AMD 直接回答「現在有好康嗎」：有，優惠橫跨 CPU、GPU、桌機、筆電與掌機，其中 Ryzen X3D 處理器 379.99 美元起被點名性價比突出；部分整機有較大幅度的公告折扣，但可能需要門市自取、輸入促銷碼或等待補貨。</li><li>遊戲綑綁方面，符合條件的購買可搭配兩款 AMD Game 組合，但官方強調各項遊戲優惠條件不一，必須逐筆確認現行條款，過期的購買窗口不算有效。</li><li>文中列出的零售商範例是以查價當下產品頁可見的配置與標價為準，且多為美國通路（Micro Center 限定門市自取、Newegg 需促銷碼、Amazon 等），不代表實際結帳成立或效能實測；下單前要再確認賣家、保固、運費與所選版本。</li><li>方法論上，AMD 明說這些是「有日期的標價觀察」，不是全市場排名也不是實測推薦；兩台都掛 AMD 硬體的系統可能是不同效能等級、不能互換比較，且標價只含特定產品與配置，稅、運費、螢幕與配件都要另外檢查。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -69,10 +69,10 @@
       <h2 class="co-tab">OpenRouter</h2>
       <ol class="items">
         <li><article class="item">
-          <div class="item-meta"><span class="item-date">2026-11-26</span></div>
+          <div class="item-meta"><span class="item-date">2026-11-26</span><i class="chip chip--topic">研究與科學</i><i class="chip chip--topic">硬體與基礎設施</i></div>
           <h3 class="item-title"><a href="https://openrouter.ai/blog/insights/is-jevons-paradox-holding/" target="_blank" rel="noopener">Is Jevons Paradox holding?<svg class="ext" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a></h3>
           <p class="item-sum">OpenRouter 官方部落格 · 洞察分析</p>
-          
+          <ul class="item-points"><li>OpenRouter 統計，2026 年至今平台 token 用量成長 44 倍，但總支出只成長 7.6 倍；今年秋天起用量仍持續攀升，支出卻從 10 月初之後幾乎只微幅上升。</li><li>官方用「彈性」衡量用量對價格的反應（價格每降 1% 換得多少 token 增幅）：Q1、Q2 分別是 5.4 與 5.5，屬典型傑文斯悖論區間，Q3 掉到 1.6，Q4 至目前為 1.2。</li><li>這不是第一次下墜：2024 年 12 月與 2025 年 11 月彈性也曾掉到約 1，之後都隨新一波模型發布回升，因此目前可能只是兩波之間的安靜期，而非長期結構改變。</li><li>月度成長率拆開看，上半年支出幾乎跟著 token 同步成長，7 月起分道揚鑣：token 每月仍成長約 39%，支出成長跟不上；同期間每 token 成本（尤其 Claude、GPT 等閉源模型家族）仍持續明顯下降。</li><li>客群行為也不同：企業客戶比 AI 原生新創更在意成本，傾向把降價直接當成省下來的預算，而不是拿去買更多 token；官方認為 2026 年初真正能自主作業的編碼代理（agentic coding）是傑文斯悖論先前能維持那麼強的原因之一，並拋出「下一波躍進會是什麼」的問題。</li></ul>
         </article></li>
       </ol>
     </section>
@@ -86,7 +86,7 @@
 <footer class="foot"><div class="foot-in">
   <p class="foot-src">資料來源：OpenAI · Anthropic · Google DeepMind · Google Research · Google Blog · xAI · Meta AI · DeepSeek · Mistral · NVIDIA · AMD · OpenRouter · LangChain · Unsloth — 僅收錄官方第一手公告。</p>
   <p class="foot-md">原始資料：<a href="../md/2026-11-27.md" target="_blank" rel="noopener">2026-11-27.md</a></p>
-  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-27 07:00 (UTC+8)</p>
+  <p class="foot-gen">由 fetch.ts 每日自動彙整 · 建置於 2026-11-27 07:02 (UTC+8)</p>
 </div></footer>
 <script src="../assets/site.js" defer></script>
 </body>
